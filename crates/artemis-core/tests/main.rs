@@ -1,5 +1,3 @@
-use std::{sync::Arc, time::Duration};
-
 use artemis_core::{
     collectors::{block_collector::BlockCollector, mempool_collector::MempoolCollector},
     executors::mempool_executor::{MempoolExecutor, SubmitTxToMempool},
@@ -11,6 +9,7 @@ use ethers::{
     types::{BlockNumber, TransactionRequest, U256},
     utils::{Anvil, AnvilInstance},
 };
+use std::{sync::Arc, time::Duration};
 use tokio::time::sleep;
 
 /// Spawns Anvil and instantiates an Http provider.

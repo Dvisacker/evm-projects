@@ -21,7 +21,6 @@ pub struct OpenSeaApiConfig {
 }
 
 impl OpenSeaV2Client {
-
     /// Create a new client with the given configuration.
     pub fn new(cfg: OpenSeaApiConfig) -> Self {
         let mut builder = ClientBuilder::new();
@@ -37,7 +36,7 @@ impl OpenSeaV2Client {
         Self { client }
     }
 
-    /// Call the fulfill listing endpoint, which returns the arguments necessary 
+    /// Call the fulfill listing endpoint, which returns the arguments necessary
     /// to fulfill an order onchain.
     pub async fn fulfill_listing(
         &self,
@@ -57,6 +56,7 @@ impl OpenSeaV2Client {
 
 #[cfg(test)]
 mod tests {
+
     use super::*;
     use std::path::PathBuf;
 
@@ -67,6 +67,18 @@ mod tests {
         println!("{}", d.display());
         let res = std::fs::read_to_string(d).unwrap();
         let res: FulfillListingResponse = serde_json::from_str(&res).unwrap();
+        assert_eq!(res.protocol, "seaport1.4");
         assert_eq!(res.fulfillment_data.transaction.value, 1780000000000000000);
+    }
+
+    #[test]
+    fn can_deserialize_seaport_v5_response() {
+        let mut d = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+        d.push("resources/sample_response_1.5.json");
+        println!("{}", d.display());
+        let res = std::fs::read_to_string(d).unwrap();
+        let res: FulfillListingResponse = serde_json::from_str(&res).unwrap();
+        assert_eq!(res.protocol, "seaport1.5");
+        assert_eq!(res.fulfillment_data.transaction.value, 20000000000000000);
     }
 }
