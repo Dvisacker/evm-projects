@@ -7,18 +7,16 @@ pub use lssvm_pair_enumerable_eth::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod lssvm_pair_enumerable_eth {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"enum CurveErrorCodes.Error\",\"name\":\"error\",\"type\":\"uint8\",\"components\":[]}],\"type\":\"error\",\"name\":\"BondingCurveError\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"Ownable_NewOwnerZeroAddress\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"Ownable_NotOwner\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"a\",\"type\":\"address\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"AssetRecipientChange\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"uint128\",\"name\":\"newDelta\",\"type\":\"uint128\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"DeltaUpdate\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"uint96\",\"name\":\"newFee\",\"type\":\"uint96\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"FeeUpdate\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[],\"type\":\"event\",\"name\":\"NFTWithdrawal\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\",\"components\":[],\"indexed\":true}],\"type\":\"event\",\"name\":\"OwnershipTransferred\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"uint128\",\"name\":\"newSpotPrice\",\"type\":\"uint128\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"SpotPriceUpdate\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[],\"type\":\"event\",\"name\":\"SwapNFTInPair\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[],\"type\":\"event\",\"name\":\"SwapNFTOutPair\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"TokenDeposit\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"TokenWithdrawal\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[],\"stateMutability\":\"payable\",\"type\":\"fallback\",\"outputs\":[]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"assetRecipient\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"\",\"type\":\"address\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"bondingCurve\",\"outputs\":[{\"internalType\":\"contract ICurve\",\"name\":\"_bondingCurve\",\"type\":\"address\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address payable\",\"name\":\"target\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"call\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address payable\",\"name\":\"newRecipient\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"changeAssetRecipient\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"uint128\",\"name\":\"newDelta\",\"type\":\"uint128\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"changeDelta\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"uint96\",\"name\":\"newFee\",\"type\":\"uint96\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"changeFee\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"uint128\",\"name\":\"newSpotPrice\",\"type\":\"uint128\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"changeSpotPrice\",\"outputs\":[]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"delta\",\"outputs\":[{\"internalType\":\"uint128\",\"name\":\"\",\"type\":\"uint128\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"factory\",\"outputs\":[{\"internalType\":\"contract ILSSVMPairFactoryLike\",\"name\":\"_factory\",\"type\":\"address\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"fee\",\"outputs\":[{\"internalType\":\"uint96\",\"name\":\"\",\"type\":\"uint96\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"getAllHeldIds\",\"outputs\":[{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"getAssetRecipient\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"_assetRecipient\",\"type\":\"address\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"numNFTs\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"getBuyNFTQuote\",\"outputs\":[{\"internalType\":\"enum CurveErrorCodes.Error\",\"name\":\"error\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"newSpotPrice\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"newDelta\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"inputAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"protocolFee\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"numNFTs\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"getSellNFTQuote\",\"outputs\":[{\"internalType\":\"enum CurveErrorCodes.Error\",\"name\":\"error\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"newSpotPrice\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"newDelta\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"outputAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"protocolFee\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_owner\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"_assetRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint128\",\"name\":\"_delta\",\"type\":\"uint128\",\"components\":[]},{\"internalType\":\"uint96\",\"name\":\"_fee\",\"type\":\"uint96\",\"components\":[]},{\"internalType\":\"uint128\",\"name\":\"_spotPrice\",\"type\":\"uint128\",\"components\":[]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"initialize\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"bytes[]\",\"name\":\"calls\",\"type\":\"bytes[]\",\"components\":[]},{\"internalType\":\"bool\",\"name\":\"revertOnFail\",\"type\":\"bool\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"multicall\",\"outputs\":[]},{\"inputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"nft\",\"outputs\":[{\"internalType\":\"contract IERC721\",\"name\":\"_nft\",\"type\":\"address\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"\",\"type\":\"uint256[]\",\"components\":[]},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"onERC1155BatchReceived\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"onERC1155Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"onERC721Received\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"pairVariant\",\"outputs\":[{\"internalType\":\"enum ILSSVMPairFactoryLike.PairVariant\",\"name\":\"\",\"type\":\"uint8\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"poolType\",\"outputs\":[{\"internalType\":\"enum LSSVMPair.PoolType\",\"name\":\"_poolType\",\"type\":\"uint8\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"spotPrice\",\"outputs\":[{\"internalType\":\"uint128\",\"name\":\"\",\"type\":\"uint128\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"interfaceId\",\"type\":\"bytes4\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"minExpectedTokenOutput\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"tokenRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"bool\",\"name\":\"isRouter\",\"type\":\"bool\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"routerCaller\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"swapNFTsForToken\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"outputAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"numNFTs\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"maxExpectedTokenInput\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"nftRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"bool\",\"name\":\"isRouter\",\"type\":\"bool\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"routerCaller\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"swapTokenForAnyNFTs\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"inputAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"maxExpectedTokenInput\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"nftRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"bool\",\"name\":\"isRouter\",\"type\":\"bool\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"routerCaller\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"swapTokenForSpecificNFTs\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"inputAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"transferOwnership\",\"outputs\":[]},{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"withdrawAllETH\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"contract IERC1155\",\"name\":\"a\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"withdrawERC1155\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"contract ERC20\",\"name\":\"a\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"withdrawERC20\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"contract IERC721\",\"name\":\"a\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"withdrawERC721\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"withdrawETH\",\"outputs\":[]},{\"inputs\":[],\"stateMutability\":\"payable\",\"type\":\"receive\",\"outputs\":[]}]";
     ///The parsed JSON ABI of the contract.
-    pub static LSSVMPAIRENUMERABLEETH_ABI: ::ethers::contract::Lazy<
-        ::ethers::core::abi::Abi,
-    > = ::ethers::contract::Lazy::new(|| {
-        ::ethers::core::utils::__serde_json::from_str(__ABI)
-            .expect("ABI is always valid")
-    });
+    pub static LSSVMPAIRENUMERABLEETH_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         96,
@@ -14672,9 +14670,8 @@ pub mod lssvm_pair_enumerable_eth {
         51,
     ];
     ///The bytecode of the contract.
-    pub static LSSVMPAIRENUMERABLEETH_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __BYTECODE,
-    );
+    pub static LSSVMPAIRENUMERABLEETH_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__BYTECODE);
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -29296,9 +29293,8 @@ pub mod lssvm_pair_enumerable_eth {
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static LSSVMPAIRENUMERABLEETH_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __DEPLOYED_BYTECODE,
-    );
+    pub static LSSVMPAIRENUMERABLEETH_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
     pub struct LSSVMPairEnumerableETH<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for LSSVMPairEnumerableETH<M> {
         fn clone(&self) -> Self {
@@ -29330,13 +29326,11 @@ pub mod lssvm_pair_enumerable_eth {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    LSSVMPAIRENUMERABLEETH_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                LSSVMPAIRENUMERABLEETH_ABI.clone(),
+                client,
+            ))
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -29380,10 +29374,7 @@ pub mod lssvm_pair_enumerable_eth {
         ///Calls the contract's `assetRecipient` (0x3bfa67fe) function
         pub fn asset_recipient(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Address,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
             self.0
                 .method_hash([59, 250, 103, 254], ())
                 .expect("method not found (this should never happen)")
@@ -29391,10 +29382,7 @@ pub mod lssvm_pair_enumerable_eth {
         ///Calls the contract's `bondingCurve` (0xeff1d50e) function
         pub fn bonding_curve(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Address,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
             self.0
                 .method_hash([239, 241, 213, 14], ())
                 .expect("method not found (this should never happen)")
@@ -29454,10 +29442,7 @@ pub mod lssvm_pair_enumerable_eth {
         ///Calls the contract's `factory` (0xc45a0155) function
         pub fn factory(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Address,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
             self.0
                 .method_hash([196, 90, 1, 85], ())
                 .expect("method not found (this should never happen)")
@@ -29482,10 +29467,7 @@ pub mod lssvm_pair_enumerable_eth {
         ///Calls the contract's `getAssetRecipient` (0x79eac6c2) function
         pub fn get_asset_recipient(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Address,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
             self.0
                 .method_hash([121, 234, 198, 194], ())
                 .expect("method not found (this should never happen)")
@@ -29555,10 +29537,7 @@ pub mod lssvm_pair_enumerable_eth {
         ///Calls the contract's `nft` (0x47ccca02) function
         pub fn nft(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Address,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
             self.0
                 .method_hash([71, 204, 202, 2], ())
                 .expect("method not found (this should never happen)")
@@ -29604,10 +29583,7 @@ pub mod lssvm_pair_enumerable_eth {
         ///Calls the contract's `owner` (0x8da5cb5b) function
         pub fn owner(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Address,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
             self.0
                 .method_hash([141, 165, 203, 91], ())
                 .expect("method not found (this should never happen)")
@@ -29715,9 +29691,7 @@ pub mod lssvm_pair_enumerable_eth {
                 .expect("method not found (this should never happen)")
         }
         ///Calls the contract's `withdrawAllETH` (0x90386bbf) function
-        pub fn withdraw_all_eth(
-            &self,
-        ) -> ::ethers::contract::builders::ContractCall<M, ()> {
+        pub fn withdraw_all_eth(&self) -> ::ethers::contract::builders::ContractCall<M, ()> {
             self.0
                 .method_hash([144, 56, 107, 191], ())
                 .expect("method not found (this should never happen)")
@@ -29765,116 +29739,84 @@ pub mod lssvm_pair_enumerable_eth {
         ///Gets the contract's `AssetRecipientChange` event
         pub fn asset_recipient_change_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            AssetRecipientChangeFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, AssetRecipientChangeFilter>
+        {
             self.0.event()
         }
         ///Gets the contract's `DeltaUpdate` event
         pub fn delta_update_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            DeltaUpdateFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, DeltaUpdateFilter>
+        {
             self.0.event()
         }
         ///Gets the contract's `FeeUpdate` event
         pub fn fee_update_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            FeeUpdateFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, FeeUpdateFilter> {
             self.0.event()
         }
         ///Gets the contract's `NFTWithdrawal` event
         pub fn nft_withdrawal_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            NftwithdrawalFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, NftwithdrawalFilter>
+        {
             self.0.event()
         }
         ///Gets the contract's `OwnershipTransferred` event
         pub fn ownership_transferred_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            OwnershipTransferredFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, OwnershipTransferredFilter>
+        {
             self.0.event()
         }
         ///Gets the contract's `SpotPriceUpdate` event
         pub fn spot_price_update_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            SpotPriceUpdateFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, SpotPriceUpdateFilter>
+        {
             self.0.event()
         }
         ///Gets the contract's `SwapNFTInPair` event
         pub fn swap_nft_in_pair_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            SwapNFTInPairFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, SwapNFTInPairFilter>
+        {
             self.0.event()
         }
         ///Gets the contract's `SwapNFTOutPair` event
         pub fn swap_nft_out_pair_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            SwapNFTOutPairFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, SwapNFTOutPairFilter>
+        {
             self.0.event()
         }
         ///Gets the contract's `TokenDeposit` event
         pub fn token_deposit_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            TokenDepositFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, TokenDepositFilter>
+        {
             self.0.event()
         }
         ///Gets the contract's `TokenWithdrawal` event
         pub fn token_withdrawal_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            TokenWithdrawalFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, TokenWithdrawalFilter>
+        {
             self.0.event()
         }
         /// Returns an `Event` builder for all the events of this contract.
         pub fn events(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            LSSVMPairEnumerableETHEvents,
-        > {
-            self.0.event_with_filter(::core::default::Default::default())
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, LSSVMPairEnumerableETHEvents>
+        {
+            self.0
+                .event_with_filter(::core::default::Default::default())
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for LSSVMPairEnumerableETH<M> {
+        for LSSVMPairEnumerableETH<M>
+    {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -29888,7 +29830,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "BondingCurveError", abi = "BondingCurveError(uint8)")]
     pub struct BondingCurveError {
@@ -29903,7 +29845,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "Ownable_NewOwnerZeroAddress",
@@ -29919,7 +29861,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "Ownable_NotOwner", abi = "Ownable_NotOwner()")]
     pub struct Ownable_NotOwner;
@@ -29938,24 +29880,22 @@ pub mod lssvm_pair_enumerable_eth {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::RevertString(decoded));
             }
-            if let Ok(decoded)
-                = <BondingCurveError as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <BondingCurveError as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::BondingCurveError(decoded));
             }
-            if let Ok(decoded)
-                = <Ownable_NewOwnerZeroAddress as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <Ownable_NewOwnerZeroAddress as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::Ownable_NewOwnerZeroAddress(decoded));
             }
-            if let Ok(decoded)
-                = <Ownable_NotOwner as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <Ownable_NotOwner as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::Ownable_NotOwner(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -29964,15 +29904,11 @@ pub mod lssvm_pair_enumerable_eth {
     impl ::ethers::core::abi::AbiEncode for LSSVMPairEnumerableETHErrors {
         fn encode(self) -> ::std::vec::Vec<u8> {
             match self {
-                Self::BondingCurveError(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::BondingCurveError(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::Ownable_NewOwnerZeroAddress(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::Ownable_NotOwner(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::Ownable_NotOwner(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::RevertString(s) => ::ethers::core::abi::AbiEncode::encode(s),
             }
         }
@@ -29982,15 +29918,17 @@ pub mod lssvm_pair_enumerable_eth {
             match selector {
                 [0x08, 0xc3, 0x79, 0xa0] => true,
                 _ if selector
-                    == <BondingCurveError as ::ethers::contract::EthError>::selector() => {
+                    == <BondingCurveError as ::ethers::contract::EthError>::selector() =>
+                {
                     true
                 }
                 _ if selector
-                    == <Ownable_NewOwnerZeroAddress as ::ethers::contract::EthError>::selector() => {
+                    == <Ownable_NewOwnerZeroAddress as ::ethers::contract::EthError>::selector(
+                    ) =>
+                {
                     true
                 }
-                _ if selector
-                    == <Ownable_NotOwner as ::ethers::contract::EthError>::selector() => {
+                _ if selector == <Ownable_NotOwner as ::ethers::contract::EthError>::selector() => {
                     true
                 }
                 _ => false,
@@ -30001,9 +29939,7 @@ pub mod lssvm_pair_enumerable_eth {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             match self {
                 Self::BondingCurveError(element) => ::core::fmt::Display::fmt(element, f),
-                Self::Ownable_NewOwnerZeroAddress(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::Ownable_NewOwnerZeroAddress(element) => ::core::fmt::Display::fmt(element, f),
                 Self::Ownable_NotOwner(element) => ::core::fmt::Display::fmt(element, f),
                 Self::RevertString(s) => ::core::fmt::Display::fmt(s, f),
             }
@@ -30019,8 +29955,7 @@ pub mod lssvm_pair_enumerable_eth {
             Self::BondingCurveError(value)
         }
     }
-    impl ::core::convert::From<Ownable_NewOwnerZeroAddress>
-    for LSSVMPairEnumerableETHErrors {
+    impl ::core::convert::From<Ownable_NewOwnerZeroAddress> for LSSVMPairEnumerableETHErrors {
         fn from(value: Ownable_NewOwnerZeroAddress) -> Self {
             Self::Ownable_NewOwnerZeroAddress(value)
         }
@@ -30038,7 +29973,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "AssetRecipientChange", abi = "AssetRecipientChange(address)")]
     pub struct AssetRecipientChangeFilter {
@@ -30052,7 +29987,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "DeltaUpdate", abi = "DeltaUpdate(uint128)")]
     pub struct DeltaUpdateFilter {
@@ -30066,7 +30001,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "FeeUpdate", abi = "FeeUpdate(uint96)")]
     pub struct FeeUpdateFilter {
@@ -30080,7 +30015,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "NFTWithdrawal", abi = "NFTWithdrawal()")]
     pub struct NftwithdrawalFilter;
@@ -30092,7 +30027,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "OwnershipTransferred", abi = "OwnershipTransferred(address)")]
     pub struct OwnershipTransferredFilter {
@@ -30107,7 +30042,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "SpotPriceUpdate", abi = "SpotPriceUpdate(uint128)")]
     pub struct SpotPriceUpdateFilter {
@@ -30121,7 +30056,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "SwapNFTInPair", abi = "SwapNFTInPair()")]
     pub struct SwapNFTInPairFilter;
@@ -30133,7 +30068,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "SwapNFTOutPair", abi = "SwapNFTOutPair()")]
     pub struct SwapNFTOutPairFilter;
@@ -30145,7 +30080,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "TokenDeposit", abi = "TokenDeposit(uint256)")]
     pub struct TokenDepositFilter {
@@ -30159,7 +30094,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "TokenWithdrawal", abi = "TokenWithdrawal(uint256)")]
     pub struct TokenWithdrawalFilter {
@@ -30184,9 +30119,9 @@ pub mod lssvm_pair_enumerable_eth {
             log: &::ethers::core::abi::RawLog,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::Error> {
             if let Ok(decoded) = AssetRecipientChangeFilter::decode_log(log) {
-                return Ok(
-                    LSSVMPairEnumerableETHEvents::AssetRecipientChangeFilter(decoded),
-                );
+                return Ok(LSSVMPairEnumerableETHEvents::AssetRecipientChangeFilter(
+                    decoded,
+                ));
             }
             if let Ok(decoded) = DeltaUpdateFilter::decode_log(log) {
                 return Ok(LSSVMPairEnumerableETHEvents::DeltaUpdateFilter(decoded));
@@ -30198,9 +30133,9 @@ pub mod lssvm_pair_enumerable_eth {
                 return Ok(LSSVMPairEnumerableETHEvents::NftwithdrawalFilter(decoded));
             }
             if let Ok(decoded) = OwnershipTransferredFilter::decode_log(log) {
-                return Ok(
-                    LSSVMPairEnumerableETHEvents::OwnershipTransferredFilter(decoded),
-                );
+                return Ok(LSSVMPairEnumerableETHEvents::OwnershipTransferredFilter(
+                    decoded,
+                ));
             }
             if let Ok(decoded) = SpotPriceUpdateFilter::decode_log(log) {
                 return Ok(LSSVMPairEnumerableETHEvents::SpotPriceUpdateFilter(decoded));
@@ -30223,37 +30158,20 @@ pub mod lssvm_pair_enumerable_eth {
     impl ::core::fmt::Display for LSSVMPairEnumerableETHEvents {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             match self {
-                Self::AssetRecipientChangeFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::AssetRecipientChangeFilter(element) => ::core::fmt::Display::fmt(element, f),
                 Self::DeltaUpdateFilter(element) => ::core::fmt::Display::fmt(element, f),
                 Self::FeeUpdateFilter(element) => ::core::fmt::Display::fmt(element, f),
-                Self::NftwithdrawalFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::OwnershipTransferredFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::SpotPriceUpdateFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::SwapNFTInPairFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::SwapNFTOutPairFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::TokenDepositFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::TokenWithdrawalFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::NftwithdrawalFilter(element) => ::core::fmt::Display::fmt(element, f),
+                Self::OwnershipTransferredFilter(element) => ::core::fmt::Display::fmt(element, f),
+                Self::SpotPriceUpdateFilter(element) => ::core::fmt::Display::fmt(element, f),
+                Self::SwapNFTInPairFilter(element) => ::core::fmt::Display::fmt(element, f),
+                Self::SwapNFTOutPairFilter(element) => ::core::fmt::Display::fmt(element, f),
+                Self::TokenDepositFilter(element) => ::core::fmt::Display::fmt(element, f),
+                Self::TokenWithdrawalFilter(element) => ::core::fmt::Display::fmt(element, f),
             }
         }
     }
-    impl ::core::convert::From<AssetRecipientChangeFilter>
-    for LSSVMPairEnumerableETHEvents {
+    impl ::core::convert::From<AssetRecipientChangeFilter> for LSSVMPairEnumerableETHEvents {
         fn from(value: AssetRecipientChangeFilter) -> Self {
             Self::AssetRecipientChangeFilter(value)
         }
@@ -30273,8 +30191,7 @@ pub mod lssvm_pair_enumerable_eth {
             Self::NftwithdrawalFilter(value)
         }
     }
-    impl ::core::convert::From<OwnershipTransferredFilter>
-    for LSSVMPairEnumerableETHEvents {
+    impl ::core::convert::From<OwnershipTransferredFilter> for LSSVMPairEnumerableETHEvents {
         fn from(value: OwnershipTransferredFilter) -> Self {
             Self::OwnershipTransferredFilter(value)
         }
@@ -30313,7 +30230,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "assetRecipient", abi = "assetRecipient()")]
     pub struct AssetRecipientCall;
@@ -30326,7 +30243,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "bondingCurve", abi = "bondingCurve()")]
     pub struct BondingCurveCall;
@@ -30339,7 +30256,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "call", abi = "call(address,bytes)")]
     pub struct CallCall {
@@ -30355,7 +30272,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "changeAssetRecipient", abi = "changeAssetRecipient(address)")]
     pub struct ChangeAssetRecipientCall {
@@ -30370,7 +30287,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "changeDelta", abi = "changeDelta(uint128)")]
     pub struct ChangeDeltaCall {
@@ -30385,7 +30302,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "changeFee", abi = "changeFee(uint96)")]
     pub struct ChangeFeeCall {
@@ -30400,7 +30317,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "changeSpotPrice", abi = "changeSpotPrice(uint128)")]
     pub struct ChangeSpotPriceCall {
@@ -30415,7 +30332,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "delta", abi = "delta()")]
     pub struct DeltaCall;
@@ -30428,7 +30345,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "factory", abi = "factory()")]
     pub struct FactoryCall;
@@ -30441,7 +30358,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "fee", abi = "fee()")]
     pub struct FeeCall;
@@ -30454,7 +30371,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "getAllHeldIds", abi = "getAllHeldIds()")]
     pub struct GetAllHeldIdsCall;
@@ -30467,7 +30384,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "getAssetRecipient", abi = "getAssetRecipient()")]
     pub struct GetAssetRecipientCall;
@@ -30480,7 +30397,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "getBuyNFTQuote", abi = "getBuyNFTQuote(uint256)")]
     pub struct GetBuyNFTQuoteCall {
@@ -30495,7 +30412,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "getSellNFTQuote", abi = "getSellNFTQuote(uint256)")]
     pub struct GetSellNFTQuoteCall {
@@ -30510,7 +30427,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "initialize",
@@ -30532,7 +30449,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "multicall", abi = "multicall(bytes[],bool)")]
     pub struct MulticallCall {
@@ -30548,7 +30465,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "nft", abi = "nft()")]
     pub struct NftCall;
@@ -30561,7 +30478,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "onERC1155BatchReceived",
@@ -30583,7 +30500,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "onERC1155Received",
@@ -30605,7 +30522,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "onERC721Received",
@@ -30626,7 +30543,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "owner", abi = "owner()")]
     pub struct OwnerCall;
@@ -30639,7 +30556,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "pairVariant", abi = "pairVariant()")]
     pub struct PairVariantCall;
@@ -30652,7 +30569,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "poolType", abi = "poolType()")]
     pub struct PoolTypeCall;
@@ -30665,7 +30582,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "spotPrice", abi = "spotPrice()")]
     pub struct SpotPriceCall;
@@ -30678,7 +30595,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "supportsInterface", abi = "supportsInterface(bytes4)")]
     pub struct SupportsInterfaceCall {
@@ -30693,7 +30610,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "swapNFTsForToken",
@@ -30715,7 +30632,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "swapTokenForAnyNFTs",
@@ -30737,7 +30654,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "swapTokenForSpecificNFTs",
@@ -30759,7 +30676,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "transferOwnership", abi = "transferOwnership(address)")]
     pub struct TransferOwnershipCall {
@@ -30774,7 +30691,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "withdrawAllETH", abi = "withdrawAllETH()")]
     pub struct WithdrawAllETHCall;
@@ -30787,7 +30704,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "withdrawERC1155",
@@ -30807,7 +30724,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "withdrawERC20", abi = "withdrawERC20(address,uint256)")]
     pub struct WithdrawERC20Call {
@@ -30823,7 +30740,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "withdrawERC721", abi = "withdrawERC721(address,uint256[])")]
     pub struct WithdrawERC721Call {
@@ -30839,7 +30756,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "withdrawETH", abi = "withdrawETH(uint256)")]
     pub struct WithdrawETHCall {
@@ -30888,160 +30805,143 @@ pub mod lssvm_pair_enumerable_eth {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <AssetRecipientCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <AssetRecipientCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::AssetRecipient(decoded));
             }
-            if let Ok(decoded)
-                = <BondingCurveCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <BondingCurveCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::BondingCurve(decoded));
             }
-            if let Ok(decoded)
-                = <CallCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <CallCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Call(decoded));
             }
-            if let Ok(decoded)
-                = <ChangeAssetRecipientCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <ChangeAssetRecipientCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ChangeAssetRecipient(decoded));
             }
-            if let Ok(decoded)
-                = <ChangeDeltaCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <ChangeDeltaCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::ChangeDelta(decoded));
             }
-            if let Ok(decoded)
-                = <ChangeFeeCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <ChangeFeeCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::ChangeFee(decoded));
             }
-            if let Ok(decoded)
-                = <ChangeSpotPriceCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <ChangeSpotPriceCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ChangeSpotPrice(decoded));
             }
-            if let Ok(decoded)
-                = <DeltaCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <DeltaCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Delta(decoded));
             }
-            if let Ok(decoded)
-                = <FactoryCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <FactoryCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Factory(decoded));
             }
-            if let Ok(decoded)
-                = <FeeCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <FeeCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Fee(decoded));
             }
-            if let Ok(decoded)
-                = <GetAllHeldIdsCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <GetAllHeldIdsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::GetAllHeldIds(decoded));
             }
-            if let Ok(decoded)
-                = <GetAssetRecipientCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <GetAssetRecipientCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::GetAssetRecipient(decoded));
             }
-            if let Ok(decoded)
-                = <GetBuyNFTQuoteCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <GetBuyNFTQuoteCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::GetBuyNFTQuote(decoded));
             }
-            if let Ok(decoded)
-                = <GetSellNFTQuoteCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <GetSellNFTQuoteCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::GetSellNFTQuote(decoded));
             }
-            if let Ok(decoded)
-                = <InitializeCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <InitializeCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Initialize(decoded));
             }
-            if let Ok(decoded)
-                = <MulticallCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <MulticallCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Multicall(decoded));
             }
-            if let Ok(decoded)
-                = <NftCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <NftCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Nft(decoded));
             }
-            if let Ok(decoded)
-                = <OnERC1155BatchReceivedCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <OnERC1155BatchReceivedCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::OnERC1155BatchReceived(decoded));
             }
-            if let Ok(decoded)
-                = <OnERC1155ReceivedCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <OnERC1155ReceivedCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::OnERC1155Received(decoded));
             }
-            if let Ok(decoded)
-                = <OnERC721ReceivedCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <OnERC721ReceivedCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::OnERC721Received(decoded));
             }
-            if let Ok(decoded)
-                = <OwnerCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <OwnerCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Owner(decoded));
             }
-            if let Ok(decoded)
-                = <PairVariantCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <PairVariantCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::PairVariant(decoded));
             }
-            if let Ok(decoded)
-                = <PoolTypeCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <PoolTypeCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::PoolType(decoded));
             }
-            if let Ok(decoded)
-                = <SpotPriceCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <SpotPriceCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::SpotPrice(decoded));
             }
-            if let Ok(decoded)
-                = <SupportsInterfaceCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <SupportsInterfaceCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::SupportsInterface(decoded));
             }
-            if let Ok(decoded)
-                = <SwapNFTsForTokenCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <SwapNFTsForTokenCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::SwapNFTsForToken(decoded));
             }
-            if let Ok(decoded)
-                = <SwapTokenForAnyNFTsCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <SwapTokenForAnyNFTsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::SwapTokenForAnyNFTs(decoded));
             }
-            if let Ok(decoded)
-                = <SwapTokenForSpecificNFTsCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <SwapTokenForSpecificNFTsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::SwapTokenForSpecificNFTs(decoded));
             }
-            if let Ok(decoded)
-                = <TransferOwnershipCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <TransferOwnershipCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::TransferOwnership(decoded));
             }
-            if let Ok(decoded)
-                = <WithdrawAllETHCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <WithdrawAllETHCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::WithdrawAllETH(decoded));
             }
-            if let Ok(decoded)
-                = <WithdrawERC1155Call as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <WithdrawERC1155Call as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::WithdrawERC1155(decoded));
             }
-            if let Ok(decoded)
-                = <WithdrawERC20Call as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <WithdrawERC20Call as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::WithdrawERC20(decoded));
             }
-            if let Ok(decoded)
-                = <WithdrawERC721Call as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <WithdrawERC721Call as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::WithdrawERC721(decoded));
             }
-            if let Ok(decoded)
-                = <WithdrawETHCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <WithdrawETHCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::WithdrawETH(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -31050,96 +30950,48 @@ pub mod lssvm_pair_enumerable_eth {
     impl ::ethers::core::abi::AbiEncode for LSSVMPairEnumerableETHCalls {
         fn encode(self) -> Vec<u8> {
             match self {
-                Self::AssetRecipient(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::BondingCurve(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::AssetRecipient(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::BondingCurve(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::Call(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::ChangeAssetRecipient(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::ChangeDelta(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::ChangeFee(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::ChangeSpotPrice(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::ChangeDelta(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::ChangeFee(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::ChangeSpotPrice(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::Delta(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::Factory(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::Fee(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::GetAllHeldIds(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::GetAssetRecipient(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::GetBuyNFTQuote(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::GetSellNFTQuote(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::Initialize(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::Multicall(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::GetAllHeldIds(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::GetAssetRecipient(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::GetBuyNFTQuote(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::GetSellNFTQuote(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::Initialize(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::Multicall(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::Nft(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::OnERC1155BatchReceived(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::OnERC1155Received(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::OnERC721Received(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::OnERC1155Received(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::OnERC721Received(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::Owner(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::PairVariant(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::PoolType(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::SpotPrice(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::SupportsInterface(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::SwapNFTsForToken(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::PairVariant(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::PoolType(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::SpotPrice(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::SupportsInterface(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::SwapNFTsForToken(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::SwapTokenForAnyNFTs(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
                 Self::SwapTokenForSpecificNFTs(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::TransferOwnership(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::WithdrawAllETH(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::WithdrawERC1155(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::WithdrawERC20(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::WithdrawERC721(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::WithdrawETH(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::TransferOwnership(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::WithdrawAllETH(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::WithdrawERC1155(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::WithdrawERC20(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::WithdrawERC721(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::WithdrawETH(element) => ::ethers::core::abi::AbiEncode::encode(element),
             }
         }
     }
@@ -31149,9 +31001,7 @@ pub mod lssvm_pair_enumerable_eth {
                 Self::AssetRecipient(element) => ::core::fmt::Display::fmt(element, f),
                 Self::BondingCurve(element) => ::core::fmt::Display::fmt(element, f),
                 Self::Call(element) => ::core::fmt::Display::fmt(element, f),
-                Self::ChangeAssetRecipient(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::ChangeAssetRecipient(element) => ::core::fmt::Display::fmt(element, f),
                 Self::ChangeDelta(element) => ::core::fmt::Display::fmt(element, f),
                 Self::ChangeFee(element) => ::core::fmt::Display::fmt(element, f),
                 Self::ChangeSpotPrice(element) => ::core::fmt::Display::fmt(element, f),
@@ -31165,9 +31015,7 @@ pub mod lssvm_pair_enumerable_eth {
                 Self::Initialize(element) => ::core::fmt::Display::fmt(element, f),
                 Self::Multicall(element) => ::core::fmt::Display::fmt(element, f),
                 Self::Nft(element) => ::core::fmt::Display::fmt(element, f),
-                Self::OnERC1155BatchReceived(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::OnERC1155BatchReceived(element) => ::core::fmt::Display::fmt(element, f),
                 Self::OnERC1155Received(element) => ::core::fmt::Display::fmt(element, f),
                 Self::OnERC721Received(element) => ::core::fmt::Display::fmt(element, f),
                 Self::Owner(element) => ::core::fmt::Display::fmt(element, f),
@@ -31176,12 +31024,8 @@ pub mod lssvm_pair_enumerable_eth {
                 Self::SpotPrice(element) => ::core::fmt::Display::fmt(element, f),
                 Self::SupportsInterface(element) => ::core::fmt::Display::fmt(element, f),
                 Self::SwapNFTsForToken(element) => ::core::fmt::Display::fmt(element, f),
-                Self::SwapTokenForAnyNFTs(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::SwapTokenForSpecificNFTs(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::SwapTokenForAnyNFTs(element) => ::core::fmt::Display::fmt(element, f),
+                Self::SwapTokenForSpecificNFTs(element) => ::core::fmt::Display::fmt(element, f),
                 Self::TransferOwnership(element) => ::core::fmt::Display::fmt(element, f),
                 Self::WithdrawAllETH(element) => ::core::fmt::Display::fmt(element, f),
                 Self::WithdrawERC1155(element) => ::core::fmt::Display::fmt(element, f),
@@ -31206,8 +31050,7 @@ pub mod lssvm_pair_enumerable_eth {
             Self::Call(value)
         }
     }
-    impl ::core::convert::From<ChangeAssetRecipientCall>
-    for LSSVMPairEnumerableETHCalls {
+    impl ::core::convert::From<ChangeAssetRecipientCall> for LSSVMPairEnumerableETHCalls {
         fn from(value: ChangeAssetRecipientCall) -> Self {
             Self::ChangeAssetRecipient(value)
         }
@@ -31277,8 +31120,7 @@ pub mod lssvm_pair_enumerable_eth {
             Self::Nft(value)
         }
     }
-    impl ::core::convert::From<OnERC1155BatchReceivedCall>
-    for LSSVMPairEnumerableETHCalls {
+    impl ::core::convert::From<OnERC1155BatchReceivedCall> for LSSVMPairEnumerableETHCalls {
         fn from(value: OnERC1155BatchReceivedCall) -> Self {
             Self::OnERC1155BatchReceived(value)
         }
@@ -31328,8 +31170,7 @@ pub mod lssvm_pair_enumerable_eth {
             Self::SwapTokenForAnyNFTs(value)
         }
     }
-    impl ::core::convert::From<SwapTokenForSpecificNFTsCall>
-    for LSSVMPairEnumerableETHCalls {
+    impl ::core::convert::From<SwapTokenForSpecificNFTsCall> for LSSVMPairEnumerableETHCalls {
         fn from(value: SwapTokenForSpecificNFTsCall) -> Self {
             Self::SwapTokenForSpecificNFTs(value)
         }
@@ -31373,7 +31214,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct AssetRecipientReturn(pub ::ethers::core::types::Address);
     ///Container type for all return fields from the `bondingCurve` function with signature `bondingCurve()` and selector `0xeff1d50e`
@@ -31385,7 +31226,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct BondingCurveReturn {
         pub bonding_curve: ::ethers::core::types::Address,
@@ -31399,7 +31240,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct DeltaReturn(pub u128);
     ///Container type for all return fields from the `factory` function with signature `factory()` and selector `0xc45a0155`
@@ -31411,7 +31252,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct FactoryReturn {
         pub factory: ::ethers::core::types::Address,
@@ -31425,7 +31266,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct FeeReturn(pub u128);
     ///Container type for all return fields from the `getAllHeldIds` function with signature `getAllHeldIds()` and selector `0x2f4fefaf`
@@ -31437,7 +31278,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct GetAllHeldIdsReturn(pub ::std::vec::Vec<::ethers::core::types::U256>);
     ///Container type for all return fields from the `getAssetRecipient` function with signature `getAssetRecipient()` and selector `0x79eac6c2`
@@ -31449,7 +31290,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct GetAssetRecipientReturn {
         pub asset_recipient: ::ethers::core::types::Address,
@@ -31463,7 +31304,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct GetBuyNFTQuoteReturn {
         pub error: u8,
@@ -31481,7 +31322,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct GetSellNFTQuoteReturn {
         pub error: u8,
@@ -31499,7 +31340,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct NftReturn {
         pub nft: ::ethers::core::types::Address,
@@ -31513,7 +31354,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct OnERC1155BatchReceivedReturn(pub [u8; 4]);
     ///Container type for all return fields from the `onERC1155Received` function with signature `onERC1155Received(address,address,uint256,uint256,bytes)` and selector `0xf23a6e61`
@@ -31525,7 +31366,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct OnERC1155ReceivedReturn(pub [u8; 4]);
     ///Container type for all return fields from the `onERC721Received` function with signature `onERC721Received(address,address,uint256,bytes)` and selector `0x150b7a02`
@@ -31537,7 +31378,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct OnERC721ReceivedReturn(pub [u8; 4]);
     ///Container type for all return fields from the `owner` function with signature `owner()` and selector `0x8da5cb5b`
@@ -31549,7 +31390,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct OwnerReturn(pub ::ethers::core::types::Address);
     ///Container type for all return fields from the `pairVariant` function with signature `pairVariant()` and selector `0x3053fc58`
@@ -31561,7 +31402,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct PairVariantReturn(pub u8);
     ///Container type for all return fields from the `poolType` function with signature `poolType()` and selector `0xb1dd61b6`
@@ -31573,7 +31414,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct PoolTypeReturn {
         pub pool_type: u8,
@@ -31587,7 +31428,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct SpotPriceReturn(pub u128);
     ///Container type for all return fields from the `supportsInterface` function with signature `supportsInterface(bytes4)` and selector `0x01ffc9a7`
@@ -31599,7 +31440,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct SupportsInterfaceReturn(pub bool);
     ///Container type for all return fields from the `swapNFTsForToken` function with signature `swapNFTsForToken(uint256[],uint256,address,bool,address)` and selector `0xb1d3f1c1`
@@ -31611,7 +31452,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct SwapNFTsForTokenReturn {
         pub output_amount: ::ethers::core::types::U256,
@@ -31625,7 +31466,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct SwapTokenForAnyNFTsReturn {
         pub input_amount: ::ethers::core::types::U256,
@@ -31639,7 +31480,7 @@ pub mod lssvm_pair_enumerable_eth {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct SwapTokenForSpecificNFTsReturn {
         pub input_amount: ::ethers::core::types::U256,

@@ -7,14 +7,16 @@ pub use blind_arb::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod blind_arb {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\",\"components\":[],\"indexed\":true}],\"type\":\"event\",\"name\":\"OwnershipTransferred\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"v2Pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"v3Pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amountIn\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"percentageToPayToCoinbase\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"executeArb__WETH_token0\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"v2Pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"v3Pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amountIn\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"percentageToPayToCoinbase\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"executeArb__WETH_token1\",\"outputs\":[]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"transferOwnership\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"int256\",\"name\":\"amount0Delta\",\"type\":\"int256\",\"components\":[]},{\"internalType\":\"int256\",\"name\":\"amount1Delta\",\"type\":\"int256\",\"components\":[]},{\"internalType\":\"bytes\",\"name\":\"_data\",\"type\":\"bytes\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"uniswapV3SwapCallback\",\"outputs\":[]},{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"withdrawETHToOwner\",\"outputs\":[]},{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"withdrawWETHToOwner\",\"outputs\":[]},{\"inputs\":[],\"stateMutability\":\"payable\",\"type\":\"receive\",\"outputs\":[]}]";
     ///The parsed JSON ABI of the contract.
-    pub static BLINDARB_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
-    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
+    pub static BLINDARB_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         96,
@@ -3724,9 +3726,8 @@ pub mod blind_arb {
         51,
     ];
     ///The bytecode of the contract.
-    pub static BLINDARB_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __BYTECODE,
-    );
+    pub static BLINDARB_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__BYTECODE);
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -7323,9 +7324,8 @@ pub mod blind_arb {
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static BLINDARB_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __DEPLOYED_BYTECODE,
-    );
+    pub static BLINDARB_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
     pub struct BlindArb<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for BlindArb<M> {
         fn clone(&self) -> Self {
@@ -7345,7 +7345,9 @@ pub mod blind_arb {
     }
     impl<M> ::core::fmt::Debug for BlindArb<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(BlindArb)).field(&self.address()).finish()
+            f.debug_tuple(stringify!(BlindArb))
+                .field(&self.address())
+                .finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> BlindArb<M> {
@@ -7355,13 +7357,11 @@ pub mod blind_arb {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    BLINDARB_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                BLINDARB_ABI.clone(),
+                client,
+            ))
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -7435,10 +7435,7 @@ pub mod blind_arb {
         ///Calls the contract's `owner` (0x8da5cb5b) function
         pub fn owner(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Address,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
             self.0
                 .method_hash([141, 165, 203, 91], ())
                 .expect("method not found (this should never happen)")
@@ -7464,17 +7461,13 @@ pub mod blind_arb {
                 .expect("method not found (this should never happen)")
         }
         ///Calls the contract's `withdrawETHToOwner` (0x77432b8c) function
-        pub fn withdraw_eth_to_owner(
-            &self,
-        ) -> ::ethers::contract::builders::ContractCall<M, ()> {
+        pub fn withdraw_eth_to_owner(&self) -> ::ethers::contract::builders::ContractCall<M, ()> {
             self.0
                 .method_hash([119, 67, 43, 140], ())
                 .expect("method not found (this should never happen)")
         }
         ///Calls the contract's `withdrawWETHToOwner` (0xea3e506c) function
-        pub fn withdraw_weth_to_owner(
-            &self,
-        ) -> ::ethers::contract::builders::ContractCall<M, ()> {
+        pub fn withdraw_weth_to_owner(&self) -> ::ethers::contract::builders::ContractCall<M, ()> {
             self.0
                 .method_hash([234, 62, 80, 108], ())
                 .expect("method not found (this should never happen)")
@@ -7482,26 +7475,20 @@ pub mod blind_arb {
         ///Gets the contract's `OwnershipTransferred` event
         pub fn ownership_transferred_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            OwnershipTransferredFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, OwnershipTransferredFilter>
+        {
             self.0.event()
         }
         /// Returns an `Event` builder for all the events of this contract.
         pub fn events(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            OwnershipTransferredFilter,
-        > {
-            self.0.event_with_filter(::core::default::Default::default())
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, OwnershipTransferredFilter>
+        {
+            self.0
+                .event_with_filter(::core::default::Default::default())
         }
     }
-    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for BlindArb<M> {
+    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>> for BlindArb<M> {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -7514,7 +7501,7 @@ pub mod blind_arb {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(
         name = "OwnershipTransferred",
@@ -7535,7 +7522,7 @@ pub mod blind_arb {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "executeArb__WETH_token0",
@@ -7556,7 +7543,7 @@ pub mod blind_arb {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "executeArb__WETH_token1",
@@ -7577,7 +7564,7 @@ pub mod blind_arb {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "owner", abi = "owner()")]
     pub struct OwnerCall;
@@ -7590,7 +7577,7 @@ pub mod blind_arb {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "transferOwnership", abi = "transferOwnership(address)")]
     pub struct TransferOwnershipCall {
@@ -7605,7 +7592,7 @@ pub mod blind_arb {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "uniswapV3SwapCallback",
@@ -7625,7 +7612,7 @@ pub mod blind_arb {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "withdrawETHToOwner", abi = "withdrawETHToOwner()")]
     pub struct WithdrawETHToOwnerCall;
@@ -7638,7 +7625,7 @@ pub mod blind_arb {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "withdrawWETHToOwner", abi = "withdrawWETHToOwner()")]
     pub struct WithdrawWETHToOwnerCall;
@@ -7658,44 +7645,37 @@ pub mod blind_arb {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <ExecuteArbWETHToken0Call as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <ExecuteArbWETHToken0Call as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ExecuteArbWETHToken0(decoded));
             }
-            if let Ok(decoded)
-                = <ExecuteArbWETHToken1Call as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <ExecuteArbWETHToken1Call as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ExecuteArbWETHToken1(decoded));
             }
-            if let Ok(decoded)
-                = <OwnerCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <OwnerCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Owner(decoded));
             }
-            if let Ok(decoded)
-                = <TransferOwnershipCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <TransferOwnershipCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::TransferOwnership(decoded));
             }
-            if let Ok(decoded)
-                = <UniswapV3SwapCallbackCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <UniswapV3SwapCallbackCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::UniswapV3SwapCallback(decoded));
             }
-            if let Ok(decoded)
-                = <WithdrawETHToOwnerCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <WithdrawETHToOwnerCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::WithdrawETHToOwner(decoded));
             }
-            if let Ok(decoded)
-                = <WithdrawWETHToOwnerCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <WithdrawWETHToOwnerCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::WithdrawWETHToOwner(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -7711,9 +7691,7 @@ pub mod blind_arb {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
                 Self::Owner(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::TransferOwnership(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::TransferOwnership(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::UniswapV3SwapCallback(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
@@ -7729,23 +7707,13 @@ pub mod blind_arb {
     impl ::core::fmt::Display for BlindArbCalls {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             match self {
-                Self::ExecuteArbWETHToken0(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::ExecuteArbWETHToken1(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::ExecuteArbWETHToken0(element) => ::core::fmt::Display::fmt(element, f),
+                Self::ExecuteArbWETHToken1(element) => ::core::fmt::Display::fmt(element, f),
                 Self::Owner(element) => ::core::fmt::Display::fmt(element, f),
                 Self::TransferOwnership(element) => ::core::fmt::Display::fmt(element, f),
-                Self::UniswapV3SwapCallback(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::WithdrawETHToOwner(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::WithdrawWETHToOwner(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::UniswapV3SwapCallback(element) => ::core::fmt::Display::fmt(element, f),
+                Self::WithdrawETHToOwner(element) => ::core::fmt::Display::fmt(element, f),
+                Self::WithdrawWETHToOwner(element) => ::core::fmt::Display::fmt(element, f),
             }
         }
     }
@@ -7793,7 +7761,7 @@ pub mod blind_arb {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct OwnerReturn(pub ::ethers::core::types::Address);
 }

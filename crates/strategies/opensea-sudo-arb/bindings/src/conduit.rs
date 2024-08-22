@@ -7,15 +7,17 @@ pub use conduit::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod conduit {
     pub use super::super::shared_types::*;
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"type\":\"error\",\"name\":\"BadReturnValueFromERC20OnTransfer\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"channel\",\"type\":\"address\",\"components\":[]}],\"type\":\"error\",\"name\":\"ChannelClosed\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"channel\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"bool\",\"name\":\"isOpen\",\"type\":\"bool\",\"components\":[]}],\"type\":\"error\",\"name\":\"ChannelStatusAlreadySet\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"identifiers\",\"type\":\"uint256[]\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\",\"components\":[]}],\"type\":\"error\",\"name\":\"ERC1155BatchTransferGenericFailure\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"Invalid1155BatchTransferEncoding\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidController\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidERC721TransferAmount\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidItemType\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"MissingItemAmount\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\",\"components\":[]}],\"type\":\"error\",\"name\":\"NoContract\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"type\":\"error\",\"name\":\"TokenTransferGenericFailure\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"UnusedItemParameters\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"channel\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"bool\",\"name\":\"open\",\"type\":\"bool\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"ChannelUpdated\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"struct ConduitTransfer[]\",\"name\":\"transfers\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ConduitItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"execute\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"magicValue\",\"type\":\"bytes4\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct ConduitBatch1155Transfer[]\",\"name\":\"batchTransfers\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\",\"components\":[]}]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"executeBatch1155\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"magicValue\",\"type\":\"bytes4\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct ConduitTransfer[]\",\"name\":\"standardTransfers\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ConduitItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"struct ConduitBatch1155Transfer[]\",\"name\":\"batchTransfers\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\",\"components\":[]}]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"executeWithBatch1155\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"magicValue\",\"type\":\"bytes4\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"channel\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"bool\",\"name\":\"isOpen\",\"type\":\"bool\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"updateChannel\",\"outputs\":[]}]";
     ///The parsed JSON ABI of the contract.
-    pub static CONDUIT_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
-    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
+    pub static CONDUIT_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         96,
@@ -2807,9 +2809,8 @@ pub mod conduit {
         51,
     ];
     ///The bytecode of the contract.
-    pub static CONDUIT_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __BYTECODE,
-    );
+    pub static CONDUIT_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__BYTECODE);
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -5553,9 +5554,8 @@ pub mod conduit {
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static CONDUIT_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __DEPLOYED_BYTECODE,
-    );
+    pub static CONDUIT_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
     pub struct Conduit<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for Conduit<M> {
         fn clone(&self) -> Self {
@@ -5575,7 +5575,9 @@ pub mod conduit {
     }
     impl<M> ::core::fmt::Debug for Conduit<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(Conduit)).field(&self.address()).finish()
+            f.debug_tuple(stringify!(Conduit))
+                .field(&self.address())
+                .finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> Conduit<M> {
@@ -5585,13 +5587,11 @@ pub mod conduit {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    CONDUIT_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                CONDUIT_ABI.clone(),
+                client,
+            ))
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -5673,26 +5673,20 @@ pub mod conduit {
         ///Gets the contract's `ChannelUpdated` event
         pub fn channel_updated_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            ChannelUpdatedFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, ChannelUpdatedFilter>
+        {
             self.0.event()
         }
         /// Returns an `Event` builder for all the events of this contract.
         pub fn events(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            ChannelUpdatedFilter,
-        > {
-            self.0.event_with_filter(::core::default::Default::default())
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, ChannelUpdatedFilter>
+        {
+            self.0
+                .event_with_filter(::core::default::Default::default())
         }
     }
-    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for Conduit<M> {
+    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>> for Conduit<M> {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -5706,7 +5700,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "BadReturnValueFromERC20OnTransfer",
@@ -5727,7 +5721,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "ChannelClosed", abi = "ChannelClosed(address)")]
     pub struct ChannelClosed {
@@ -5742,7 +5736,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "ChannelStatusAlreadySet",
@@ -5761,7 +5755,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "ERC1155BatchTransferGenericFailure",
@@ -5783,7 +5777,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "Invalid1155BatchTransferEncoding",
@@ -5799,7 +5793,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidController", abi = "InvalidController()")]
     pub struct InvalidController;
@@ -5812,7 +5806,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "InvalidERC721TransferAmount",
@@ -5828,7 +5822,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidItemType", abi = "InvalidItemType()")]
     pub struct InvalidItemType;
@@ -5841,7 +5835,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "MissingItemAmount", abi = "MissingItemAmount()")]
     pub struct MissingItemAmount;
@@ -5854,7 +5848,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "NoContract", abi = "NoContract(address)")]
     pub struct NoContract {
@@ -5869,7 +5863,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "TokenTransferGenericFailure",
@@ -5891,7 +5885,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "UnusedItemParameters", abi = "UnusedItemParameters()")]
     pub struct UnusedItemParameters;
@@ -5919,72 +5913,61 @@ pub mod conduit {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::RevertString(decoded));
             }
-            if let Ok(decoded)
-                = <BadReturnValueFromERC20OnTransfer as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <BadReturnValueFromERC20OnTransfer as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::BadReturnValueFromERC20OnTransfer(decoded));
             }
-            if let Ok(decoded)
-                = <ChannelClosed as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <ChannelClosed as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::ChannelClosed(decoded));
             }
-            if let Ok(decoded)
-                = <ChannelStatusAlreadySet as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <ChannelStatusAlreadySet as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ChannelStatusAlreadySet(decoded));
             }
-            if let Ok(decoded)
-                = <ERC1155BatchTransferGenericFailure as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <ERC1155BatchTransferGenericFailure as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ERC1155BatchTransferGenericFailure(decoded));
             }
-            if let Ok(decoded)
-                = <Invalid1155BatchTransferEncoding as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <Invalid1155BatchTransferEncoding as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::Invalid1155BatchTransferEncoding(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidController as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <InvalidController as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InvalidController(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidERC721TransferAmount as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <InvalidERC721TransferAmount as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InvalidERC721TransferAmount(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidItemType as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <InvalidItemType as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::InvalidItemType(decoded));
             }
-            if let Ok(decoded)
-                = <MissingItemAmount as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <MissingItemAmount as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::MissingItemAmount(decoded));
             }
-            if let Ok(decoded)
-                = <NoContract as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <NoContract as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::NoContract(decoded));
             }
-            if let Ok(decoded)
-                = <TokenTransferGenericFailure as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <TokenTransferGenericFailure as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::TokenTransferGenericFailure(decoded));
             }
-            if let Ok(decoded)
-                = <UnusedItemParameters as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <UnusedItemParameters as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::UnusedItemParameters(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -5996,9 +5979,7 @@ pub mod conduit {
                 Self::BadReturnValueFromERC20OnTransfer(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::ChannelClosed(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::ChannelClosed(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::ChannelStatusAlreadySet(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
@@ -6008,21 +5989,13 @@ pub mod conduit {
                 Self::Invalid1155BatchTransferEncoding(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::InvalidController(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::InvalidController(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::InvalidERC721TransferAmount(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::InvalidItemType(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::MissingItemAmount(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::NoContract(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::InvalidItemType(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::MissingItemAmount(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::NoContract(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::TokenTransferGenericFailure(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
@@ -6094,9 +6067,7 @@ pub mod conduit {
                     ::core::fmt::Display::fmt(element, f)
                 }
                 Self::ChannelClosed(element) => ::core::fmt::Display::fmt(element, f),
-                Self::ChannelStatusAlreadySet(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::ChannelStatusAlreadySet(element) => ::core::fmt::Display::fmt(element, f),
                 Self::ERC1155BatchTransferGenericFailure(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
@@ -6104,18 +6075,12 @@ pub mod conduit {
                     ::core::fmt::Display::fmt(element, f)
                 }
                 Self::InvalidController(element) => ::core::fmt::Display::fmt(element, f),
-                Self::InvalidERC721TransferAmount(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::InvalidERC721TransferAmount(element) => ::core::fmt::Display::fmt(element, f),
                 Self::InvalidItemType(element) => ::core::fmt::Display::fmt(element, f),
                 Self::MissingItemAmount(element) => ::core::fmt::Display::fmt(element, f),
                 Self::NoContract(element) => ::core::fmt::Display::fmt(element, f),
-                Self::TokenTransferGenericFailure(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::UnusedItemParameters(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::TokenTransferGenericFailure(element) => ::core::fmt::Display::fmt(element, f),
+                Self::UnusedItemParameters(element) => ::core::fmt::Display::fmt(element, f),
                 Self::RevertString(s) => ::core::fmt::Display::fmt(s, f),
             }
         }
@@ -6193,7 +6158,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "ChannelUpdated", abi = "ChannelUpdated(address,bool)")]
     pub struct ChannelUpdatedFilter {
@@ -6210,7 +6175,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "execute",
@@ -6228,7 +6193,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "executeBatch1155",
@@ -6246,7 +6211,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "executeWithBatch1155",
@@ -6265,7 +6230,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "updateChannel", abi = "updateChannel(address,bool)")]
     pub struct UpdateChannelCall {
@@ -6285,24 +6250,21 @@ pub mod conduit {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <ExecuteCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <ExecuteCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Execute(decoded));
             }
-            if let Ok(decoded)
-                = <ExecuteBatch1155Call as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <ExecuteBatch1155Call as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ExecuteBatch1155(decoded));
             }
-            if let Ok(decoded)
-                = <ExecuteWithBatch1155Call as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <ExecuteWithBatch1155Call as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ExecuteWithBatch1155(decoded));
             }
-            if let Ok(decoded)
-                = <UpdateChannelCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <UpdateChannelCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::UpdateChannel(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -6312,15 +6274,11 @@ pub mod conduit {
         fn encode(self) -> Vec<u8> {
             match self {
                 Self::Execute(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::ExecuteBatch1155(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::ExecuteBatch1155(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::ExecuteWithBatch1155(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::UpdateChannel(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::UpdateChannel(element) => ::ethers::core::abi::AbiEncode::encode(element),
             }
         }
     }
@@ -6329,9 +6287,7 @@ pub mod conduit {
             match self {
                 Self::Execute(element) => ::core::fmt::Display::fmt(element, f),
                 Self::ExecuteBatch1155(element) => ::core::fmt::Display::fmt(element, f),
-                Self::ExecuteWithBatch1155(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::ExecuteWithBatch1155(element) => ::core::fmt::Display::fmt(element, f),
                 Self::UpdateChannel(element) => ::core::fmt::Display::fmt(element, f),
             }
         }
@@ -6365,7 +6321,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct ExecuteReturn {
         pub magic_value: [u8; 4],
@@ -6379,7 +6335,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct ExecuteBatch1155Return {
         pub magic_value: [u8; 4],
@@ -6393,7 +6349,7 @@ pub mod conduit {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct ExecuteWithBatch1155Return {
         pub magic_value: [u8; 4],

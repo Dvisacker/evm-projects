@@ -7,15 +7,17 @@ pub use counter_manager::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod counter_manager {
     pub use super::super::shared_types::*;
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[],\"type\":\"error\",\"name\":\"BadFraction\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderIndex\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"considerationIndex\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"shortfallAmount\",\"type\":\"uint256\",\"components\":[]}],\"type\":\"error\",\"name\":\"ConsiderationNotMet\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"type\":\"error\",\"name\":\"EtherTransferGenericFailure\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InsufficientEtherSupplied\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidBasicOrderParameterEncoding\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"conduit\",\"type\":\"address\",\"components\":[]}],\"type\":\"error\",\"name\":\"InvalidCallToConduit\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidCanceller\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"conduitKey\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"conduit\",\"type\":\"address\",\"components\":[]}],\"type\":\"error\",\"name\":\"InvalidConduit\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\",\"components\":[]}],\"type\":\"error\",\"name\":\"InvalidMsgValue\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidNativeOfferItem\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidTime\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"MissingOriginalConsiderationItems\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"NoReentrantCalls\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"NoSpecifiedOrdersAvailable\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderHash\",\"type\":\"bytes32\",\"components\":[]}],\"type\":\"error\",\"name\":\"OrderAlreadyFilled\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderHash\",\"type\":\"bytes32\",\"components\":[]}],\"type\":\"error\",\"name\":\"OrderIsCancelled\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderHash\",\"type\":\"bytes32\",\"components\":[]}],\"type\":\"error\",\"name\":\"OrderPartiallyFilled\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"PartialFillsNotEnabledForOrder\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newCounter\",\"type\":\"uint256\",\"components\":[],\"indexed\":false},{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[],\"indexed\":true}],\"type\":\"event\",\"name\":\"CounterIncremented\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderHash\",\"type\":\"bytes32\",\"components\":[],\"indexed\":false},{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\",\"components\":[],\"indexed\":true}],\"type\":\"event\",\"name\":\"OrderCancelled\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderHash\",\"type\":\"bytes32\",\"components\":[],\"indexed\":false},{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[],\"indexed\":false},{\"internalType\":\"struct SpentItem[]\",\"name\":\"offer\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"indexed\":false},{\"internalType\":\"struct ReceivedItem[]\",\"name\":\"consideration\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}],\"indexed\":false}],\"type\":\"event\",\"name\":\"OrderFulfilled\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderHash\",\"type\":\"bytes32\",\"components\":[],\"indexed\":false},{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\",\"components\":[],\"indexed\":true}],\"type\":\"event\",\"name\":\"OrderValidated\",\"outputs\":[],\"anonymous\":false}]";
     ///The parsed JSON ABI of the contract.
-    pub static COUNTERMANAGER_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
-    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
+    pub static COUNTERMANAGER_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         96,
@@ -117,9 +119,8 @@ pub mod counter_manager {
         51,
     ];
     ///The bytecode of the contract.
-    pub static COUNTERMANAGER_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __BYTECODE,
-    );
+    pub static COUNTERMANAGER_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__BYTECODE);
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -187,9 +188,8 @@ pub mod counter_manager {
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static COUNTERMANAGER_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __DEPLOYED_BYTECODE,
-    );
+    pub static COUNTERMANAGER_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
     pub struct CounterManager<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for CounterManager<M> {
         fn clone(&self) -> Self {
@@ -209,7 +209,9 @@ pub mod counter_manager {
     }
     impl<M> ::core::fmt::Debug for CounterManager<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(CounterManager)).field(&self.address()).finish()
+            f.debug_tuple(stringify!(CounterManager))
+                .field(&self.address())
+                .finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> CounterManager<M> {
@@ -219,13 +221,11 @@ pub mod counter_manager {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    COUNTERMANAGER_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                COUNTERMANAGER_ABI.clone(),
+                client,
+            ))
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -269,56 +269,43 @@ pub mod counter_manager {
         ///Gets the contract's `CounterIncremented` event
         pub fn counter_incremented_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            CounterIncrementedFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, CounterIncrementedFilter>
+        {
             self.0.event()
         }
         ///Gets the contract's `OrderCancelled` event
         pub fn order_cancelled_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            OrderCancelledFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, OrderCancelledFilter>
+        {
             self.0.event()
         }
         ///Gets the contract's `OrderFulfilled` event
         pub fn order_fulfilled_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            OrderFulfilledFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, OrderFulfilledFilter>
+        {
             self.0.event()
         }
         ///Gets the contract's `OrderValidated` event
         pub fn order_validated_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            OrderValidatedFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, OrderValidatedFilter>
+        {
             self.0.event()
         }
         /// Returns an `Event` builder for all the events of this contract.
         pub fn events(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            CounterManagerEvents,
-        > {
-            self.0.event_with_filter(::core::default::Default::default())
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, CounterManagerEvents>
+        {
+            self.0
+                .event_with_filter(::core::default::Default::default())
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for CounterManager<M> {
+        for CounterManager<M>
+    {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -332,7 +319,7 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "BadFraction", abi = "BadFraction()")]
     pub struct BadFraction;
@@ -345,7 +332,7 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "ConsiderationNotMet",
@@ -365,7 +352,7 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "EtherTransferGenericFailure",
@@ -384,9 +371,12 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
-    #[etherror(name = "InsufficientEtherSupplied", abi = "InsufficientEtherSupplied()")]
+    #[etherror(
+        name = "InsufficientEtherSupplied",
+        abi = "InsufficientEtherSupplied()"
+    )]
     pub struct InsufficientEtherSupplied;
     ///Custom Error type `InvalidBasicOrderParameterEncoding` with signature `InvalidBasicOrderParameterEncoding()` and selector `0x39f3e3fd`
     #[derive(
@@ -397,7 +387,7 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "InvalidBasicOrderParameterEncoding",
@@ -413,7 +403,7 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidCallToConduit", abi = "InvalidCallToConduit(address)")]
     pub struct InvalidCallToConduit {
@@ -428,7 +418,7 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidCanceller", abi = "InvalidCanceller()")]
     pub struct InvalidCanceller;
@@ -441,7 +431,7 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidConduit", abi = "InvalidConduit(bytes32,address)")]
     pub struct InvalidConduit {
@@ -457,7 +447,7 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidMsgValue", abi = "InvalidMsgValue(uint256)")]
     pub struct InvalidMsgValue {
@@ -472,7 +462,7 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidNativeOfferItem", abi = "InvalidNativeOfferItem()")]
     pub struct InvalidNativeOfferItem;
@@ -485,7 +475,7 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidTime", abi = "InvalidTime()")]
     pub struct InvalidTime;
@@ -498,7 +488,7 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "MissingOriginalConsiderationItems",
@@ -514,7 +504,7 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "NoReentrantCalls", abi = "NoReentrantCalls()")]
     pub struct NoReentrantCalls;
@@ -527,7 +517,7 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "NoSpecifiedOrdersAvailable",
@@ -543,7 +533,7 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "OrderAlreadyFilled", abi = "OrderAlreadyFilled(bytes32)")]
     pub struct OrderAlreadyFilled {
@@ -558,7 +548,7 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "OrderIsCancelled", abi = "OrderIsCancelled(bytes32)")]
     pub struct OrderIsCancelled {
@@ -573,7 +563,7 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "OrderPartiallyFilled", abi = "OrderPartiallyFilled(bytes32)")]
     pub struct OrderPartiallyFilled {
@@ -588,7 +578,7 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "PartialFillsNotEnabledForOrder",
@@ -625,100 +615,88 @@ pub mod counter_manager {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::RevertString(decoded));
             }
-            if let Ok(decoded)
-                = <BadFraction as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <BadFraction as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::BadFraction(decoded));
             }
-            if let Ok(decoded)
-                = <ConsiderationNotMet as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <ConsiderationNotMet as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ConsiderationNotMet(decoded));
             }
-            if let Ok(decoded)
-                = <EtherTransferGenericFailure as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <EtherTransferGenericFailure as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::EtherTransferGenericFailure(decoded));
             }
-            if let Ok(decoded)
-                = <InsufficientEtherSupplied as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <InsufficientEtherSupplied as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InsufficientEtherSupplied(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidBasicOrderParameterEncoding as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <InvalidBasicOrderParameterEncoding as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InvalidBasicOrderParameterEncoding(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidCallToConduit as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <InvalidCallToConduit as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InvalidCallToConduit(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidCanceller as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <InvalidCanceller as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InvalidCanceller(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidConduit as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <InvalidConduit as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::InvalidConduit(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidMsgValue as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <InvalidMsgValue as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::InvalidMsgValue(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidNativeOfferItem as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <InvalidNativeOfferItem as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InvalidNativeOfferItem(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidTime as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <InvalidTime as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::InvalidTime(decoded));
             }
-            if let Ok(decoded)
-                = <MissingOriginalConsiderationItems as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <MissingOriginalConsiderationItems as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::MissingOriginalConsiderationItems(decoded));
             }
-            if let Ok(decoded)
-                = <NoReentrantCalls as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <NoReentrantCalls as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::NoReentrantCalls(decoded));
             }
-            if let Ok(decoded)
-                = <NoSpecifiedOrdersAvailable as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <NoSpecifiedOrdersAvailable as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::NoSpecifiedOrdersAvailable(decoded));
             }
-            if let Ok(decoded)
-                = <OrderAlreadyFilled as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <OrderAlreadyFilled as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::OrderAlreadyFilled(decoded));
             }
-            if let Ok(decoded)
-                = <OrderIsCancelled as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <OrderIsCancelled as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::OrderIsCancelled(decoded));
             }
-            if let Ok(decoded)
-                = <OrderPartiallyFilled as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <OrderPartiallyFilled as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::OrderPartiallyFilled(decoded));
             }
-            if let Ok(decoded)
-                = <PartialFillsNotEnabledForOrder as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <PartialFillsNotEnabledForOrder as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::PartialFillsNotEnabledForOrder(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -727,9 +705,7 @@ pub mod counter_manager {
     impl ::ethers::core::abi::AbiEncode for CounterManagerErrors {
         fn encode(self) -> ::std::vec::Vec<u8> {
             match self {
-                Self::BadFraction(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::BadFraction(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::ConsiderationNotMet(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
@@ -745,36 +721,24 @@ pub mod counter_manager {
                 Self::InvalidCallToConduit(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::InvalidCanceller(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::InvalidConduit(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::InvalidMsgValue(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::InvalidCanceller(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::InvalidConduit(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::InvalidMsgValue(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::InvalidNativeOfferItem(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::InvalidTime(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::InvalidTime(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::MissingOriginalConsiderationItems(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::NoReentrantCalls(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::NoReentrantCalls(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::NoSpecifiedOrdersAvailable(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
                 Self::OrderAlreadyFilled(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::OrderIsCancelled(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::OrderIsCancelled(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::OrderPartiallyFilled(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
@@ -865,42 +829,26 @@ pub mod counter_manager {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             match self {
                 Self::BadFraction(element) => ::core::fmt::Display::fmt(element, f),
-                Self::ConsiderationNotMet(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::EtherTransferGenericFailure(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::InsufficientEtherSupplied(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::ConsiderationNotMet(element) => ::core::fmt::Display::fmt(element, f),
+                Self::EtherTransferGenericFailure(element) => ::core::fmt::Display::fmt(element, f),
+                Self::InsufficientEtherSupplied(element) => ::core::fmt::Display::fmt(element, f),
                 Self::InvalidBasicOrderParameterEncoding(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
-                Self::InvalidCallToConduit(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::InvalidCallToConduit(element) => ::core::fmt::Display::fmt(element, f),
                 Self::InvalidCanceller(element) => ::core::fmt::Display::fmt(element, f),
                 Self::InvalidConduit(element) => ::core::fmt::Display::fmt(element, f),
                 Self::InvalidMsgValue(element) => ::core::fmt::Display::fmt(element, f),
-                Self::InvalidNativeOfferItem(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::InvalidNativeOfferItem(element) => ::core::fmt::Display::fmt(element, f),
                 Self::InvalidTime(element) => ::core::fmt::Display::fmt(element, f),
                 Self::MissingOriginalConsiderationItems(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
                 Self::NoReentrantCalls(element) => ::core::fmt::Display::fmt(element, f),
-                Self::NoSpecifiedOrdersAvailable(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::OrderAlreadyFilled(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::NoSpecifiedOrdersAvailable(element) => ::core::fmt::Display::fmt(element, f),
+                Self::OrderAlreadyFilled(element) => ::core::fmt::Display::fmt(element, f),
                 Self::OrderIsCancelled(element) => ::core::fmt::Display::fmt(element, f),
-                Self::OrderPartiallyFilled(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::OrderPartiallyFilled(element) => ::core::fmt::Display::fmt(element, f),
                 Self::PartialFillsNotEnabledForOrder(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
@@ -933,8 +881,7 @@ pub mod counter_manager {
             Self::InsufficientEtherSupplied(value)
         }
     }
-    impl ::core::convert::From<InvalidBasicOrderParameterEncoding>
-    for CounterManagerErrors {
+    impl ::core::convert::From<InvalidBasicOrderParameterEncoding> for CounterManagerErrors {
         fn from(value: InvalidBasicOrderParameterEncoding) -> Self {
             Self::InvalidBasicOrderParameterEncoding(value)
         }
@@ -969,8 +916,7 @@ pub mod counter_manager {
             Self::InvalidTime(value)
         }
     }
-    impl ::core::convert::From<MissingOriginalConsiderationItems>
-    for CounterManagerErrors {
+    impl ::core::convert::From<MissingOriginalConsiderationItems> for CounterManagerErrors {
         fn from(value: MissingOriginalConsiderationItems) -> Self {
             Self::MissingOriginalConsiderationItems(value)
         }
@@ -1013,9 +959,12 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
-    #[ethevent(name = "CounterIncremented", abi = "CounterIncremented(uint256,address)")]
+    #[ethevent(
+        name = "CounterIncremented",
+        abi = "CounterIncremented(uint256,address)"
+    )]
     pub struct CounterIncrementedFilter {
         pub new_counter: ::ethers::core::types::U256,
         #[ethevent(indexed)]
@@ -1029,9 +978,12 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
-    #[ethevent(name = "OrderCancelled", abi = "OrderCancelled(bytes32,address,address)")]
+    #[ethevent(
+        name = "OrderCancelled",
+        abi = "OrderCancelled(bytes32,address,address)"
+    )]
     pub struct OrderCancelledFilter {
         pub order_hash: [u8; 32],
         #[ethevent(indexed)]
@@ -1047,7 +999,7 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(
         name = "OrderFulfilled",
@@ -1071,9 +1023,12 @@ pub mod counter_manager {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
-    #[ethevent(name = "OrderValidated", abi = "OrderValidated(bytes32,address,address)")]
+    #[ethevent(
+        name = "OrderValidated",
+        abi = "OrderValidated(bytes32,address,address)"
+    )]
     pub struct OrderValidatedFilter {
         pub order_hash: [u8; 32],
         #[ethevent(indexed)]
@@ -1111,18 +1066,10 @@ pub mod counter_manager {
     impl ::core::fmt::Display for CounterManagerEvents {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             match self {
-                Self::CounterIncrementedFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::OrderCancelledFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::OrderFulfilledFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::OrderValidatedFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::CounterIncrementedFilter(element) => ::core::fmt::Display::fmt(element, f),
+                Self::OrderCancelledFilter(element) => ::core::fmt::Display::fmt(element, f),
+                Self::OrderFulfilledFilter(element) => ::core::fmt::Display::fmt(element, f),
+                Self::OrderValidatedFilter(element) => ::core::fmt::Display::fmt(element, f),
             }
         }
     }

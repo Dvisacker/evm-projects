@@ -7,18 +7,16 @@ pub use i_ownership_transfer_callback::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod i_ownership_transfer_callback {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"oldOwner\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"onOwnershipTransfer\",\"outputs\":[]}]";
     ///The parsed JSON ABI of the contract.
-    pub static IOWNERSHIPTRANSFERCALLBACK_ABI: ::ethers::contract::Lazy<
-        ::ethers::core::abi::Abi,
-    > = ::ethers::contract::Lazy::new(|| {
-        ::ethers::core::utils::__serde_json::from_str(__ABI)
-            .expect("ABI is always valid")
-    });
+    pub static IOWNERSHIPTRANSFERCALLBACK_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     pub struct IOwnershipTransferCallback<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for IOwnershipTransferCallback<M> {
         fn clone(&self) -> Self {
@@ -50,13 +48,11 @@ pub mod i_ownership_transfer_callback {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    IOWNERSHIPTRANSFERCALLBACK_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                IOWNERSHIPTRANSFERCALLBACK_ABI.clone(),
+                client,
+            ))
         }
         ///Calls the contract's `onOwnershipTransfer` (0xa741b468) function
         pub fn on_ownership_transfer(
@@ -69,7 +65,8 @@ pub mod i_ownership_transfer_callback {
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for IOwnershipTransferCallback<M> {
+        for IOwnershipTransferCallback<M>
+    {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -83,7 +80,7 @@ pub mod i_ownership_transfer_callback {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "onOwnershipTransfer", abi = "onOwnershipTransfer(address)")]
     pub struct OnOwnershipTransferCall {

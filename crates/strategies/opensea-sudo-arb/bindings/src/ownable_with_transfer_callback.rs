@@ -7,18 +7,16 @@ pub use ownable_with_transfer_callback::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod ownable_with_transfer_callback {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[],\"type\":\"error\",\"name\":\"Ownable_NewOwnerZeroAddress\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"Ownable_NotOwner\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\",\"components\":[],\"indexed\":true}],\"type\":\"event\",\"name\":\"OwnershipTransferred\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"transferOwnership\",\"outputs\":[]}]";
     ///The parsed JSON ABI of the contract.
-    pub static OWNABLEWITHTRANSFERCALLBACK_ABI: ::ethers::contract::Lazy<
-        ::ethers::core::abi::Abi,
-    > = ::ethers::contract::Lazy::new(|| {
-        ::ethers::core::utils::__serde_json::from_str(__ABI)
-            .expect("ABI is always valid")
-    });
+    pub static OWNABLEWITHTRANSFERCALLBACK_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     pub struct OwnableWithTransferCallback<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for OwnableWithTransferCallback<M> {
         fn clone(&self) -> Self {
@@ -50,21 +48,16 @@ pub mod ownable_with_transfer_callback {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    OWNABLEWITHTRANSFERCALLBACK_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                OWNABLEWITHTRANSFERCALLBACK_ABI.clone(),
+                client,
+            ))
         }
         ///Calls the contract's `owner` (0x8da5cb5b) function
         pub fn owner(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Address,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
             self.0
                 .method_hash([141, 165, 203, 91], ())
                 .expect("method not found (this should never happen)")
@@ -81,26 +74,22 @@ pub mod ownable_with_transfer_callback {
         ///Gets the contract's `OwnershipTransferred` event
         pub fn ownership_transferred_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            OwnershipTransferredFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, OwnershipTransferredFilter>
+        {
             self.0.event()
         }
         /// Returns an `Event` builder for all the events of this contract.
         pub fn events(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            OwnershipTransferredFilter,
-        > {
-            self.0.event_with_filter(::core::default::Default::default())
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, OwnershipTransferredFilter>
+        {
+            self.0
+                .event_with_filter(::core::default::Default::default())
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for OwnableWithTransferCallback<M> {
+        for OwnableWithTransferCallback<M>
+    {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -114,7 +103,7 @@ pub mod ownable_with_transfer_callback {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "Ownable_NewOwnerZeroAddress",
@@ -130,7 +119,7 @@ pub mod ownable_with_transfer_callback {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "Ownable_NotOwner", abi = "Ownable_NotOwner()")]
     pub struct Ownable_NotOwner;
@@ -148,20 +137,18 @@ pub mod ownable_with_transfer_callback {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::RevertString(decoded));
             }
-            if let Ok(decoded)
-                = <Ownable_NewOwnerZeroAddress as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <Ownable_NewOwnerZeroAddress as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::Ownable_NewOwnerZeroAddress(decoded));
             }
-            if let Ok(decoded)
-                = <Ownable_NotOwner as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <Ownable_NotOwner as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::Ownable_NotOwner(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -173,9 +160,7 @@ pub mod ownable_with_transfer_callback {
                 Self::Ownable_NewOwnerZeroAddress(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::Ownable_NotOwner(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::Ownable_NotOwner(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::RevertString(s) => ::ethers::core::abi::AbiEncode::encode(s),
             }
         }
@@ -185,11 +170,12 @@ pub mod ownable_with_transfer_callback {
             match selector {
                 [0x08, 0xc3, 0x79, 0xa0] => true,
                 _ if selector
-                    == <Ownable_NewOwnerZeroAddress as ::ethers::contract::EthError>::selector() => {
+                    == <Ownable_NewOwnerZeroAddress as ::ethers::contract::EthError>::selector(
+                    ) =>
+                {
                     true
                 }
-                _ if selector
-                    == <Ownable_NotOwner as ::ethers::contract::EthError>::selector() => {
+                _ if selector == <Ownable_NotOwner as ::ethers::contract::EthError>::selector() => {
                     true
                 }
                 _ => false,
@@ -199,22 +185,18 @@ pub mod ownable_with_transfer_callback {
     impl ::core::fmt::Display for OwnableWithTransferCallbackErrors {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             match self {
-                Self::Ownable_NewOwnerZeroAddress(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::Ownable_NewOwnerZeroAddress(element) => ::core::fmt::Display::fmt(element, f),
                 Self::Ownable_NotOwner(element) => ::core::fmt::Display::fmt(element, f),
                 Self::RevertString(s) => ::core::fmt::Display::fmt(s, f),
             }
         }
     }
-    impl ::core::convert::From<::std::string::String>
-    for OwnableWithTransferCallbackErrors {
+    impl ::core::convert::From<::std::string::String> for OwnableWithTransferCallbackErrors {
         fn from(value: String) -> Self {
             Self::RevertString(value)
         }
     }
-    impl ::core::convert::From<Ownable_NewOwnerZeroAddress>
-    for OwnableWithTransferCallbackErrors {
+    impl ::core::convert::From<Ownable_NewOwnerZeroAddress> for OwnableWithTransferCallbackErrors {
         fn from(value: Ownable_NewOwnerZeroAddress) -> Self {
             Self::Ownable_NewOwnerZeroAddress(value)
         }
@@ -232,7 +214,7 @@ pub mod ownable_with_transfer_callback {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "OwnershipTransferred", abi = "OwnershipTransferred(address)")]
     pub struct OwnershipTransferredFilter {
@@ -248,7 +230,7 @@ pub mod ownable_with_transfer_callback {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "owner", abi = "owner()")]
     pub struct OwnerCall;
@@ -261,7 +243,7 @@ pub mod ownable_with_transfer_callback {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "transferOwnership", abi = "transferOwnership(address)")]
     pub struct TransferOwnershipCall {
@@ -278,14 +260,12 @@ pub mod ownable_with_transfer_callback {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <OwnerCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <OwnerCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Owner(decoded));
             }
-            if let Ok(decoded)
-                = <TransferOwnershipCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <TransferOwnershipCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::TransferOwnership(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -295,9 +275,7 @@ pub mod ownable_with_transfer_callback {
         fn encode(self) -> Vec<u8> {
             match self {
                 Self::Owner(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::TransferOwnership(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::TransferOwnership(element) => ::ethers::core::abi::AbiEncode::encode(element),
             }
         }
     }
@@ -314,8 +292,7 @@ pub mod ownable_with_transfer_callback {
             Self::Owner(value)
         }
     }
-    impl ::core::convert::From<TransferOwnershipCall>
-    for OwnableWithTransferCallbackCalls {
+    impl ::core::convert::From<TransferOwnershipCall> for OwnableWithTransferCallbackCalls {
         fn from(value: TransferOwnershipCall) -> Self {
             Self::TransferOwnership(value)
         }
@@ -329,7 +306,7 @@ pub mod ownable_with_transfer_callback {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct OwnerReturn(pub ::ethers::core::types::Address);
 }

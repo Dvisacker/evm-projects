@@ -112,7 +112,9 @@ where
                             for action in strategy.process_event(event).await {
                                 match action_sender.send(action) {
                                     Ok(_) => {}
-                                    Err(e) => error!("error sending action: {}", e),
+                                    Err(e) => {
+                                        error!("error sending action: {}", e)
+                                    }
                                 }
                             }
                         }

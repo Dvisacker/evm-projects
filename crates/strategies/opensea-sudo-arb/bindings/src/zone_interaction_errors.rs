@@ -7,18 +7,16 @@ pub use zone_interaction_errors::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod zone_interaction_errors {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderHash\",\"type\":\"bytes32\",\"components\":[]}],\"type\":\"error\",\"name\":\"InvalidRestrictedOrder\",\"outputs\":[]}]";
     ///The parsed JSON ABI of the contract.
-    pub static ZONEINTERACTIONERRORS_ABI: ::ethers::contract::Lazy<
-        ::ethers::core::abi::Abi,
-    > = ::ethers::contract::Lazy::new(|| {
-        ::ethers::core::utils::__serde_json::from_str(__ABI)
-            .expect("ABI is always valid")
-    });
+    pub static ZONEINTERACTIONERRORS_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     pub struct ZoneInteractionErrors<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for ZoneInteractionErrors<M> {
         fn clone(&self) -> Self {
@@ -50,17 +48,16 @@ pub mod zone_interaction_errors {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    ZONEINTERACTIONERRORS_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                ZONEINTERACTIONERRORS_ABI.clone(),
+                client,
+            ))
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for ZoneInteractionErrors<M> {
+        for ZoneInteractionErrors<M>
+    {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -74,9 +71,12 @@ pub mod zone_interaction_errors {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
-    #[etherror(name = "InvalidRestrictedOrder", abi = "InvalidRestrictedOrder(bytes32)")]
+    #[etherror(
+        name = "InvalidRestrictedOrder",
+        abi = "InvalidRestrictedOrder(bytes32)"
+    )]
     pub struct InvalidRestrictedOrder {
         pub order_hash: [u8; 32],
     }

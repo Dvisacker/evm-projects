@@ -7,19 +7,17 @@ pub use basic_order_fulfiller::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod basic_order_fulfiller {
     pub use super::super::shared_types::*;
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"conduitController\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"BadContractSignature\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"BadFraction\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"type\":\"error\",\"name\":\"BadReturnValueFromERC20OnTransfer\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\",\"components\":[]}],\"type\":\"error\",\"name\":\"BadSignatureV\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"orderIndex\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"considerationIndex\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"shortfallAmount\",\"type\":\"uint256\",\"components\":[]}],\"type\":\"error\",\"name\":\"ConsiderationNotMet\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"identifiers\",\"type\":\"uint256[]\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\",\"components\":[]}],\"type\":\"error\",\"name\":\"ERC1155BatchTransferGenericFailure\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"type\":\"error\",\"name\":\"EtherTransferGenericFailure\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InsufficientEtherSupplied\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"Invalid1155BatchTransferEncoding\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidBasicOrderParameterEncoding\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"conduit\",\"type\":\"address\",\"components\":[]}],\"type\":\"error\",\"name\":\"InvalidCallToConduit\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidCanceller\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"conduitKey\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"conduit\",\"type\":\"address\",\"components\":[]}],\"type\":\"error\",\"name\":\"InvalidConduit\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidERC721TransferAmount\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"value\",\"type\":\"uint256\",\"components\":[]}],\"type\":\"error\",\"name\":\"InvalidMsgValue\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidNativeOfferItem\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderHash\",\"type\":\"bytes32\",\"components\":[]}],\"type\":\"error\",\"name\":\"InvalidRestrictedOrder\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidSignature\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidSigner\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidTime\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"MissingItemAmount\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"MissingOriginalConsiderationItems\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\",\"components\":[]}],\"type\":\"error\",\"name\":\"NoContract\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"NoReentrantCalls\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"NoSpecifiedOrdersAvailable\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderHash\",\"type\":\"bytes32\",\"components\":[]}],\"type\":\"error\",\"name\":\"OrderAlreadyFilled\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderHash\",\"type\":\"bytes32\",\"components\":[]}],\"type\":\"error\",\"name\":\"OrderIsCancelled\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderHash\",\"type\":\"bytes32\",\"components\":[]}],\"type\":\"error\",\"name\":\"OrderPartiallyFilled\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"PartialFillsNotEnabledForOrder\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"type\":\"error\",\"name\":\"TokenTransferGenericFailure\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"UnusedItemParameters\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newCounter\",\"type\":\"uint256\",\"components\":[],\"indexed\":false},{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[],\"indexed\":true}],\"type\":\"event\",\"name\":\"CounterIncremented\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderHash\",\"type\":\"bytes32\",\"components\":[],\"indexed\":false},{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\",\"components\":[],\"indexed\":true}],\"type\":\"event\",\"name\":\"OrderCancelled\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderHash\",\"type\":\"bytes32\",\"components\":[],\"indexed\":false},{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[],\"indexed\":false},{\"internalType\":\"struct SpentItem[]\",\"name\":\"offer\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"indexed\":false},{\"internalType\":\"struct ReceivedItem[]\",\"name\":\"consideration\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}],\"indexed\":false}],\"type\":\"event\",\"name\":\"OrderFulfilled\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderHash\",\"type\":\"bytes32\",\"components\":[],\"indexed\":false},{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\",\"components\":[],\"indexed\":true}],\"type\":\"event\",\"name\":\"OrderValidated\",\"outputs\":[],\"anonymous\":false}]";
     ///The parsed JSON ABI of the contract.
-    pub static BASICORDERFULFILLER_ABI: ::ethers::contract::Lazy<
-        ::ethers::core::abi::Abi,
-    > = ::ethers::contract::Lazy::new(|| {
-        ::ethers::core::utils::__serde_json::from_str(__ABI)
-            .expect("ABI is always valid")
-    });
+    pub static BASICORDERFULFILLER_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         97,
@@ -1810,9 +1808,8 @@ pub mod basic_order_fulfiller {
         51,
     ];
     ///The bytecode of the contract.
-    pub static BASICORDERFULFILLER_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __BYTECODE,
-    );
+    pub static BASICORDERFULFILLER_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__BYTECODE);
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -1880,9 +1877,8 @@ pub mod basic_order_fulfiller {
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static BASICORDERFULFILLER_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __DEPLOYED_BYTECODE,
-    );
+    pub static BASICORDERFULFILLER_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
     pub struct BasicOrderFulfiller<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for BasicOrderFulfiller<M> {
         fn clone(&self) -> Self {
@@ -1914,13 +1910,11 @@ pub mod basic_order_fulfiller {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    BASICORDERFULFILLER_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                BASICORDERFULFILLER_ABI.clone(),
+                client,
+            ))
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -1964,56 +1958,43 @@ pub mod basic_order_fulfiller {
         ///Gets the contract's `CounterIncremented` event
         pub fn counter_incremented_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            CounterIncrementedFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, CounterIncrementedFilter>
+        {
             self.0.event()
         }
         ///Gets the contract's `OrderCancelled` event
         pub fn order_cancelled_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            OrderCancelledFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, OrderCancelledFilter>
+        {
             self.0.event()
         }
         ///Gets the contract's `OrderFulfilled` event
         pub fn order_fulfilled_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            OrderFulfilledFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, OrderFulfilledFilter>
+        {
             self.0.event()
         }
         ///Gets the contract's `OrderValidated` event
         pub fn order_validated_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            OrderValidatedFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, OrderValidatedFilter>
+        {
             self.0.event()
         }
         /// Returns an `Event` builder for all the events of this contract.
         pub fn events(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            BasicOrderFulfillerEvents,
-        > {
-            self.0.event_with_filter(::core::default::Default::default())
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, BasicOrderFulfillerEvents>
+        {
+            self.0
+                .event_with_filter(::core::default::Default::default())
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for BasicOrderFulfiller<M> {
+        for BasicOrderFulfiller<M>
+    {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -2027,7 +2008,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "BadContractSignature", abi = "BadContractSignature()")]
     pub struct BadContractSignature;
@@ -2040,7 +2021,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "BadFraction", abi = "BadFraction()")]
     pub struct BadFraction;
@@ -2053,7 +2034,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "BadReturnValueFromERC20OnTransfer",
@@ -2074,7 +2055,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "BadSignatureV", abi = "BadSignatureV(uint8)")]
     pub struct BadSignatureV {
@@ -2089,7 +2070,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "ConsiderationNotMet",
@@ -2109,7 +2090,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "ERC1155BatchTransferGenericFailure",
@@ -2131,7 +2112,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "EtherTransferGenericFailure",
@@ -2150,9 +2131,12 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
-    #[etherror(name = "InsufficientEtherSupplied", abi = "InsufficientEtherSupplied()")]
+    #[etherror(
+        name = "InsufficientEtherSupplied",
+        abi = "InsufficientEtherSupplied()"
+    )]
     pub struct InsufficientEtherSupplied;
     ///Custom Error type `Invalid1155BatchTransferEncoding` with signature `Invalid1155BatchTransferEncoding()` and selector `0xeba2084c`
     #[derive(
@@ -2163,7 +2147,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "Invalid1155BatchTransferEncoding",
@@ -2179,7 +2163,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "InvalidBasicOrderParameterEncoding",
@@ -2195,7 +2179,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidCallToConduit", abi = "InvalidCallToConduit(address)")]
     pub struct InvalidCallToConduit {
@@ -2210,7 +2194,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidCanceller", abi = "InvalidCanceller()")]
     pub struct InvalidCanceller;
@@ -2223,7 +2207,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidConduit", abi = "InvalidConduit(bytes32,address)")]
     pub struct InvalidConduit {
@@ -2239,7 +2223,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "InvalidERC721TransferAmount",
@@ -2255,7 +2239,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidMsgValue", abi = "InvalidMsgValue(uint256)")]
     pub struct InvalidMsgValue {
@@ -2270,7 +2254,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidNativeOfferItem", abi = "InvalidNativeOfferItem()")]
     pub struct InvalidNativeOfferItem;
@@ -2283,9 +2267,12 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
-    #[etherror(name = "InvalidRestrictedOrder", abi = "InvalidRestrictedOrder(bytes32)")]
+    #[etherror(
+        name = "InvalidRestrictedOrder",
+        abi = "InvalidRestrictedOrder(bytes32)"
+    )]
     pub struct InvalidRestrictedOrder {
         pub order_hash: [u8; 32],
     }
@@ -2298,7 +2285,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidSignature", abi = "InvalidSignature()")]
     pub struct InvalidSignature;
@@ -2311,7 +2298,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidSigner", abi = "InvalidSigner()")]
     pub struct InvalidSigner;
@@ -2324,7 +2311,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidTime", abi = "InvalidTime()")]
     pub struct InvalidTime;
@@ -2337,7 +2324,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "MissingItemAmount", abi = "MissingItemAmount()")]
     pub struct MissingItemAmount;
@@ -2350,7 +2337,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "MissingOriginalConsiderationItems",
@@ -2366,7 +2353,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "NoContract", abi = "NoContract(address)")]
     pub struct NoContract {
@@ -2381,7 +2368,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "NoReentrantCalls", abi = "NoReentrantCalls()")]
     pub struct NoReentrantCalls;
@@ -2394,7 +2381,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "NoSpecifiedOrdersAvailable",
@@ -2410,7 +2397,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "OrderAlreadyFilled", abi = "OrderAlreadyFilled(bytes32)")]
     pub struct OrderAlreadyFilled {
@@ -2425,7 +2412,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "OrderIsCancelled", abi = "OrderIsCancelled(bytes32)")]
     pub struct OrderIsCancelled {
@@ -2440,7 +2427,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "OrderPartiallyFilled", abi = "OrderPartiallyFilled(bytes32)")]
     pub struct OrderPartiallyFilled {
@@ -2455,7 +2442,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "PartialFillsNotEnabledForOrder",
@@ -2471,7 +2458,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "TokenTransferGenericFailure",
@@ -2493,7 +2480,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "UnusedItemParameters", abi = "UnusedItemParameters()")]
     pub struct UnusedItemParameters;
@@ -2540,168 +2527,145 @@ pub mod basic_order_fulfiller {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::RevertString(decoded));
             }
-            if let Ok(decoded)
-                = <BadContractSignature as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <BadContractSignature as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::BadContractSignature(decoded));
             }
-            if let Ok(decoded)
-                = <BadFraction as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <BadFraction as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::BadFraction(decoded));
             }
-            if let Ok(decoded)
-                = <BadReturnValueFromERC20OnTransfer as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <BadReturnValueFromERC20OnTransfer as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::BadReturnValueFromERC20OnTransfer(decoded));
             }
-            if let Ok(decoded)
-                = <BadSignatureV as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <BadSignatureV as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::BadSignatureV(decoded));
             }
-            if let Ok(decoded)
-                = <ConsiderationNotMet as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <ConsiderationNotMet as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ConsiderationNotMet(decoded));
             }
-            if let Ok(decoded)
-                = <ERC1155BatchTransferGenericFailure as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <ERC1155BatchTransferGenericFailure as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ERC1155BatchTransferGenericFailure(decoded));
             }
-            if let Ok(decoded)
-                = <EtherTransferGenericFailure as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <EtherTransferGenericFailure as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::EtherTransferGenericFailure(decoded));
             }
-            if let Ok(decoded)
-                = <InsufficientEtherSupplied as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <InsufficientEtherSupplied as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InsufficientEtherSupplied(decoded));
             }
-            if let Ok(decoded)
-                = <Invalid1155BatchTransferEncoding as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <Invalid1155BatchTransferEncoding as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::Invalid1155BatchTransferEncoding(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidBasicOrderParameterEncoding as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <InvalidBasicOrderParameterEncoding as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InvalidBasicOrderParameterEncoding(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidCallToConduit as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <InvalidCallToConduit as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InvalidCallToConduit(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidCanceller as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <InvalidCanceller as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InvalidCanceller(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidConduit as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <InvalidConduit as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::InvalidConduit(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidERC721TransferAmount as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <InvalidERC721TransferAmount as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InvalidERC721TransferAmount(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidMsgValue as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <InvalidMsgValue as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::InvalidMsgValue(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidNativeOfferItem as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <InvalidNativeOfferItem as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InvalidNativeOfferItem(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidRestrictedOrder as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <InvalidRestrictedOrder as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InvalidRestrictedOrder(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidSignature as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <InvalidSignature as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InvalidSignature(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidSigner as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <InvalidSigner as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::InvalidSigner(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidTime as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <InvalidTime as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::InvalidTime(decoded));
             }
-            if let Ok(decoded)
-                = <MissingItemAmount as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <MissingItemAmount as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::MissingItemAmount(decoded));
             }
-            if let Ok(decoded)
-                = <MissingOriginalConsiderationItems as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <MissingOriginalConsiderationItems as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::MissingOriginalConsiderationItems(decoded));
             }
-            if let Ok(decoded)
-                = <NoContract as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <NoContract as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::NoContract(decoded));
             }
-            if let Ok(decoded)
-                = <NoReentrantCalls as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <NoReentrantCalls as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::NoReentrantCalls(decoded));
             }
-            if let Ok(decoded)
-                = <NoSpecifiedOrdersAvailable as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <NoSpecifiedOrdersAvailable as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::NoSpecifiedOrdersAvailable(decoded));
             }
-            if let Ok(decoded)
-                = <OrderAlreadyFilled as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <OrderAlreadyFilled as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::OrderAlreadyFilled(decoded));
             }
-            if let Ok(decoded)
-                = <OrderIsCancelled as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <OrderIsCancelled as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::OrderIsCancelled(decoded));
             }
-            if let Ok(decoded)
-                = <OrderPartiallyFilled as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <OrderPartiallyFilled as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::OrderPartiallyFilled(decoded));
             }
-            if let Ok(decoded)
-                = <PartialFillsNotEnabledForOrder as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <PartialFillsNotEnabledForOrder as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::PartialFillsNotEnabledForOrder(decoded));
             }
-            if let Ok(decoded)
-                = <TokenTransferGenericFailure as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <TokenTransferGenericFailure as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::TokenTransferGenericFailure(decoded));
             }
-            if let Ok(decoded)
-                = <UnusedItemParameters as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <UnusedItemParameters as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::UnusedItemParameters(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -2713,15 +2677,11 @@ pub mod basic_order_fulfiller {
                 Self::BadContractSignature(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::BadFraction(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::BadFraction(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::BadReturnValueFromERC20OnTransfer(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::BadSignatureV(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::BadSignatureV(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::ConsiderationNotMet(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
@@ -2743,54 +2703,34 @@ pub mod basic_order_fulfiller {
                 Self::InvalidCallToConduit(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::InvalidCanceller(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::InvalidConduit(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::InvalidCanceller(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::InvalidConduit(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::InvalidERC721TransferAmount(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::InvalidMsgValue(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::InvalidMsgValue(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::InvalidNativeOfferItem(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
                 Self::InvalidRestrictedOrder(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::InvalidSignature(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::InvalidSigner(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::InvalidTime(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::MissingItemAmount(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::InvalidSignature(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::InvalidSigner(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::InvalidTime(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::MissingItemAmount(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::MissingOriginalConsiderationItems(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::NoContract(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::NoReentrantCalls(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::NoContract(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::NoReentrantCalls(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::NoSpecifiedOrdersAvailable(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
                 Self::OrderAlreadyFilled(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::OrderIsCancelled(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::OrderIsCancelled(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::OrderPartiallyFilled(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
@@ -2936,47 +2876,31 @@ pub mod basic_order_fulfiller {
     impl ::core::fmt::Display for BasicOrderFulfillerErrors {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             match self {
-                Self::BadContractSignature(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::BadContractSignature(element) => ::core::fmt::Display::fmt(element, f),
                 Self::BadFraction(element) => ::core::fmt::Display::fmt(element, f),
                 Self::BadReturnValueFromERC20OnTransfer(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
                 Self::BadSignatureV(element) => ::core::fmt::Display::fmt(element, f),
-                Self::ConsiderationNotMet(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::ConsiderationNotMet(element) => ::core::fmt::Display::fmt(element, f),
                 Self::ERC1155BatchTransferGenericFailure(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
-                Self::EtherTransferGenericFailure(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::InsufficientEtherSupplied(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::EtherTransferGenericFailure(element) => ::core::fmt::Display::fmt(element, f),
+                Self::InsufficientEtherSupplied(element) => ::core::fmt::Display::fmt(element, f),
                 Self::Invalid1155BatchTransferEncoding(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
                 Self::InvalidBasicOrderParameterEncoding(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
-                Self::InvalidCallToConduit(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::InvalidCallToConduit(element) => ::core::fmt::Display::fmt(element, f),
                 Self::InvalidCanceller(element) => ::core::fmt::Display::fmt(element, f),
                 Self::InvalidConduit(element) => ::core::fmt::Display::fmt(element, f),
-                Self::InvalidERC721TransferAmount(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::InvalidERC721TransferAmount(element) => ::core::fmt::Display::fmt(element, f),
                 Self::InvalidMsgValue(element) => ::core::fmt::Display::fmt(element, f),
-                Self::InvalidNativeOfferItem(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::InvalidRestrictedOrder(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::InvalidNativeOfferItem(element) => ::core::fmt::Display::fmt(element, f),
+                Self::InvalidRestrictedOrder(element) => ::core::fmt::Display::fmt(element, f),
                 Self::InvalidSignature(element) => ::core::fmt::Display::fmt(element, f),
                 Self::InvalidSigner(element) => ::core::fmt::Display::fmt(element, f),
                 Self::InvalidTime(element) => ::core::fmt::Display::fmt(element, f),
@@ -2986,25 +2910,15 @@ pub mod basic_order_fulfiller {
                 }
                 Self::NoContract(element) => ::core::fmt::Display::fmt(element, f),
                 Self::NoReentrantCalls(element) => ::core::fmt::Display::fmt(element, f),
-                Self::NoSpecifiedOrdersAvailable(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::OrderAlreadyFilled(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::NoSpecifiedOrdersAvailable(element) => ::core::fmt::Display::fmt(element, f),
+                Self::OrderAlreadyFilled(element) => ::core::fmt::Display::fmt(element, f),
                 Self::OrderIsCancelled(element) => ::core::fmt::Display::fmt(element, f),
-                Self::OrderPartiallyFilled(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::OrderPartiallyFilled(element) => ::core::fmt::Display::fmt(element, f),
                 Self::PartialFillsNotEnabledForOrder(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
-                Self::TokenTransferGenericFailure(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::UnusedItemParameters(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::TokenTransferGenericFailure(element) => ::core::fmt::Display::fmt(element, f),
+                Self::UnusedItemParameters(element) => ::core::fmt::Display::fmt(element, f),
                 Self::RevertString(s) => ::core::fmt::Display::fmt(s, f),
             }
         }
@@ -3024,8 +2938,7 @@ pub mod basic_order_fulfiller {
             Self::BadFraction(value)
         }
     }
-    impl ::core::convert::From<BadReturnValueFromERC20OnTransfer>
-    for BasicOrderFulfillerErrors {
+    impl ::core::convert::From<BadReturnValueFromERC20OnTransfer> for BasicOrderFulfillerErrors {
         fn from(value: BadReturnValueFromERC20OnTransfer) -> Self {
             Self::BadReturnValueFromERC20OnTransfer(value)
         }
@@ -3040,14 +2953,12 @@ pub mod basic_order_fulfiller {
             Self::ConsiderationNotMet(value)
         }
     }
-    impl ::core::convert::From<ERC1155BatchTransferGenericFailure>
-    for BasicOrderFulfillerErrors {
+    impl ::core::convert::From<ERC1155BatchTransferGenericFailure> for BasicOrderFulfillerErrors {
         fn from(value: ERC1155BatchTransferGenericFailure) -> Self {
             Self::ERC1155BatchTransferGenericFailure(value)
         }
     }
-    impl ::core::convert::From<EtherTransferGenericFailure>
-    for BasicOrderFulfillerErrors {
+    impl ::core::convert::From<EtherTransferGenericFailure> for BasicOrderFulfillerErrors {
         fn from(value: EtherTransferGenericFailure) -> Self {
             Self::EtherTransferGenericFailure(value)
         }
@@ -3057,14 +2968,12 @@ pub mod basic_order_fulfiller {
             Self::InsufficientEtherSupplied(value)
         }
     }
-    impl ::core::convert::From<Invalid1155BatchTransferEncoding>
-    for BasicOrderFulfillerErrors {
+    impl ::core::convert::From<Invalid1155BatchTransferEncoding> for BasicOrderFulfillerErrors {
         fn from(value: Invalid1155BatchTransferEncoding) -> Self {
             Self::Invalid1155BatchTransferEncoding(value)
         }
     }
-    impl ::core::convert::From<InvalidBasicOrderParameterEncoding>
-    for BasicOrderFulfillerErrors {
+    impl ::core::convert::From<InvalidBasicOrderParameterEncoding> for BasicOrderFulfillerErrors {
         fn from(value: InvalidBasicOrderParameterEncoding) -> Self {
             Self::InvalidBasicOrderParameterEncoding(value)
         }
@@ -3084,8 +2993,7 @@ pub mod basic_order_fulfiller {
             Self::InvalidConduit(value)
         }
     }
-    impl ::core::convert::From<InvalidERC721TransferAmount>
-    for BasicOrderFulfillerErrors {
+    impl ::core::convert::From<InvalidERC721TransferAmount> for BasicOrderFulfillerErrors {
         fn from(value: InvalidERC721TransferAmount) -> Self {
             Self::InvalidERC721TransferAmount(value)
         }
@@ -3125,8 +3033,7 @@ pub mod basic_order_fulfiller {
             Self::MissingItemAmount(value)
         }
     }
-    impl ::core::convert::From<MissingOriginalConsiderationItems>
-    for BasicOrderFulfillerErrors {
+    impl ::core::convert::From<MissingOriginalConsiderationItems> for BasicOrderFulfillerErrors {
         fn from(value: MissingOriginalConsiderationItems) -> Self {
             Self::MissingOriginalConsiderationItems(value)
         }
@@ -3141,8 +3048,7 @@ pub mod basic_order_fulfiller {
             Self::NoReentrantCalls(value)
         }
     }
-    impl ::core::convert::From<NoSpecifiedOrdersAvailable>
-    for BasicOrderFulfillerErrors {
+    impl ::core::convert::From<NoSpecifiedOrdersAvailable> for BasicOrderFulfillerErrors {
         fn from(value: NoSpecifiedOrdersAvailable) -> Self {
             Self::NoSpecifiedOrdersAvailable(value)
         }
@@ -3162,14 +3068,12 @@ pub mod basic_order_fulfiller {
             Self::OrderPartiallyFilled(value)
         }
     }
-    impl ::core::convert::From<PartialFillsNotEnabledForOrder>
-    for BasicOrderFulfillerErrors {
+    impl ::core::convert::From<PartialFillsNotEnabledForOrder> for BasicOrderFulfillerErrors {
         fn from(value: PartialFillsNotEnabledForOrder) -> Self {
             Self::PartialFillsNotEnabledForOrder(value)
         }
     }
-    impl ::core::convert::From<TokenTransferGenericFailure>
-    for BasicOrderFulfillerErrors {
+    impl ::core::convert::From<TokenTransferGenericFailure> for BasicOrderFulfillerErrors {
         fn from(value: TokenTransferGenericFailure) -> Self {
             Self::TokenTransferGenericFailure(value)
         }
@@ -3187,9 +3091,12 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
-    #[ethevent(name = "CounterIncremented", abi = "CounterIncremented(uint256,address)")]
+    #[ethevent(
+        name = "CounterIncremented",
+        abi = "CounterIncremented(uint256,address)"
+    )]
     pub struct CounterIncrementedFilter {
         pub new_counter: ::ethers::core::types::U256,
         #[ethevent(indexed)]
@@ -3203,9 +3110,12 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
-    #[ethevent(name = "OrderCancelled", abi = "OrderCancelled(bytes32,address,address)")]
+    #[ethevent(
+        name = "OrderCancelled",
+        abi = "OrderCancelled(bytes32,address,address)"
+    )]
     pub struct OrderCancelledFilter {
         pub order_hash: [u8; 32],
         #[ethevent(indexed)]
@@ -3221,7 +3131,7 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(
         name = "OrderFulfilled",
@@ -3245,9 +3155,12 @@ pub mod basic_order_fulfiller {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
-    #[ethevent(name = "OrderValidated", abi = "OrderValidated(bytes32,address,address)")]
+    #[ethevent(
+        name = "OrderValidated",
+        abi = "OrderValidated(bytes32,address,address)"
+    )]
     pub struct OrderValidatedFilter {
         pub order_hash: [u8; 32],
         #[ethevent(indexed)]
@@ -3285,18 +3198,10 @@ pub mod basic_order_fulfiller {
     impl ::core::fmt::Display for BasicOrderFulfillerEvents {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             match self {
-                Self::CounterIncrementedFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::OrderCancelledFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::OrderFulfilledFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::OrderValidatedFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::CounterIncrementedFilter(element) => ::core::fmt::Display::fmt(element, f),
+                Self::OrderCancelledFilter(element) => ::core::fmt::Display::fmt(element, f),
+                Self::OrderFulfilledFilter(element) => ::core::fmt::Display::fmt(element, f),
+                Self::OrderValidatedFilter(element) => ::core::fmt::Display::fmt(element, f),
             }
         }
     }

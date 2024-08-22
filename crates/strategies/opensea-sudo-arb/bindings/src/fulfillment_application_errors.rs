@@ -7,7 +7,7 @@ pub use fulfillment_application_errors::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod fulfillment_application_errors {
     #[rustfmt::skip]
@@ -16,8 +16,7 @@ pub mod fulfillment_application_errors {
     pub static FULFILLMENTAPPLICATIONERRORS_ABI: ::ethers::contract::Lazy<
         ::ethers::core::abi::Abi,
     > = ::ethers::contract::Lazy::new(|| {
-        ::ethers::core::utils::__serde_json::from_str(__ABI)
-            .expect("ABI is always valid")
+        ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
     });
     pub struct FulfillmentApplicationErrors<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for FulfillmentApplicationErrors<M> {
@@ -50,17 +49,16 @@ pub mod fulfillment_application_errors {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    FULFILLMENTAPPLICATIONERRORS_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                FULFILLMENTAPPLICATIONERRORS_ABI.clone(),
+                client,
+            ))
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for FulfillmentApplicationErrors<M> {
+        for FulfillmentApplicationErrors<M>
+    {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -74,7 +72,7 @@ pub mod fulfillment_application_errors {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "InvalidFulfillmentComponentData",
@@ -90,7 +88,7 @@ pub mod fulfillment_application_errors {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "MismatchedFulfillmentOfferAndConsiderationComponents",
@@ -106,7 +104,7 @@ pub mod fulfillment_application_errors {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "MissingFulfillmentComponentOnAggregation",
@@ -124,7 +122,7 @@ pub mod fulfillment_application_errors {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "OfferAndConsiderationRequiredOnFulfillment",
@@ -138,12 +136,8 @@ pub mod fulfillment_application_errors {
         MismatchedFulfillmentOfferAndConsiderationComponents(
             MismatchedFulfillmentOfferAndConsiderationComponents,
         ),
-        MissingFulfillmentComponentOnAggregation(
-            MissingFulfillmentComponentOnAggregation,
-        ),
-        OfferAndConsiderationRequiredOnFulfillment(
-            OfferAndConsiderationRequiredOnFulfillment,
-        ),
+        MissingFulfillmentComponentOnAggregation(MissingFulfillmentComponentOnAggregation),
+        OfferAndConsiderationRequiredOnFulfillment(OfferAndConsiderationRequiredOnFulfillment),
         /// The standard solidity revert string, with selector
         /// Error(string) -- 0x08c379a0
         RevertString(::std::string::String),
@@ -153,16 +147,14 @@ pub mod fulfillment_application_errors {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::RevertString(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidFulfillmentComponentData as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <InvalidFulfillmentComponentData as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InvalidFulfillmentComponentData(decoded));
             }
             if let Ok(decoded)
@@ -173,10 +165,11 @@ pub mod fulfillment_application_errors {
                     Self::MismatchedFulfillmentOfferAndConsiderationComponents(decoded),
                 );
             }
-            if let Ok(decoded)
-                = <MissingFulfillmentComponentOnAggregation as ::ethers::core::abi::AbiDecode>::decode(
+            if let Ok(decoded) =
+                <MissingFulfillmentComponentOnAggregation as ::ethers::core::abi::AbiDecode>::decode(
                     data,
-                ) {
+                )
+            {
                 return Ok(Self::MissingFulfillmentComponentOnAggregation(decoded));
             }
             if let Ok(decoded)
@@ -250,32 +243,33 @@ pub mod fulfillment_application_errors {
             }
         }
     }
-    impl ::core::convert::From<::std::string::String>
-    for FulfillmentApplicationErrorsErrors {
+    impl ::core::convert::From<::std::string::String> for FulfillmentApplicationErrorsErrors {
         fn from(value: String) -> Self {
             Self::RevertString(value)
         }
     }
-    impl ::core::convert::From<InvalidFulfillmentComponentData>
-    for FulfillmentApplicationErrorsErrors {
+    impl ::core::convert::From<InvalidFulfillmentComponentData> for FulfillmentApplicationErrorsErrors {
         fn from(value: InvalidFulfillmentComponentData) -> Self {
             Self::InvalidFulfillmentComponentData(value)
         }
     }
     impl ::core::convert::From<MismatchedFulfillmentOfferAndConsiderationComponents>
-    for FulfillmentApplicationErrorsErrors {
+        for FulfillmentApplicationErrorsErrors
+    {
         fn from(value: MismatchedFulfillmentOfferAndConsiderationComponents) -> Self {
             Self::MismatchedFulfillmentOfferAndConsiderationComponents(value)
         }
     }
     impl ::core::convert::From<MissingFulfillmentComponentOnAggregation>
-    for FulfillmentApplicationErrorsErrors {
+        for FulfillmentApplicationErrorsErrors
+    {
         fn from(value: MissingFulfillmentComponentOnAggregation) -> Self {
             Self::MissingFulfillmentComponentOnAggregation(value)
         }
     }
     impl ::core::convert::From<OfferAndConsiderationRequiredOnFulfillment>
-    for FulfillmentApplicationErrorsErrors {
+        for FulfillmentApplicationErrorsErrors
+    {
         fn from(value: OfferAndConsiderationRequiredOnFulfillment) -> Self {
             Self::OfferAndConsiderationRequiredOnFulfillment(value)
         }

@@ -7,18 +7,16 @@ pub use eip1271_interface::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod eip1271_interface {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"digest\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"isValidSignature\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\",\"components\":[]}]}]";
     ///The parsed JSON ABI of the contract.
-    pub static EIP1271INTERFACE_ABI: ::ethers::contract::Lazy<
-        ::ethers::core::abi::Abi,
-    > = ::ethers::contract::Lazy::new(|| {
-        ::ethers::core::utils::__serde_json::from_str(__ABI)
-            .expect("ABI is always valid")
-    });
+    pub static EIP1271INTERFACE_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     pub struct EIP1271Interface<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for EIP1271Interface<M> {
         fn clone(&self) -> Self {
@@ -38,7 +36,9 @@ pub mod eip1271_interface {
     }
     impl<M> ::core::fmt::Debug for EIP1271Interface<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(EIP1271Interface)).field(&self.address()).finish()
+            f.debug_tuple(stringify!(EIP1271Interface))
+                .field(&self.address())
+                .finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> EIP1271Interface<M> {
@@ -48,13 +48,11 @@ pub mod eip1271_interface {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    EIP1271INTERFACE_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                EIP1271INTERFACE_ABI.clone(),
+                client,
+            ))
         }
         ///Calls the contract's `isValidSignature` (0x1626ba7e) function
         pub fn is_valid_signature(
@@ -68,7 +66,8 @@ pub mod eip1271_interface {
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for EIP1271Interface<M> {
+        for EIP1271Interface<M>
+    {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -82,7 +81,7 @@ pub mod eip1271_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "isValidSignature", abi = "isValidSignature(bytes32,bytes)")]
     pub struct IsValidSignatureCall {
@@ -98,7 +97,7 @@ pub mod eip1271_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct IsValidSignatureReturn(pub [u8; 4]);
 }

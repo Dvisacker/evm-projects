@@ -7,18 +7,16 @@ pub use criteria_resolution::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod criteria_resolution {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[],\"type\":\"error\",\"name\":\"ConsiderationCriteriaResolverOutOfRange\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"CriteriaNotEnabledForItem\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidProof\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"OfferCriteriaResolverOutOfRange\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"OrderCriteriaResolverOutOfRange\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"UnresolvedConsiderationCriteria\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"UnresolvedOfferCriteria\",\"outputs\":[]}]";
     ///The parsed JSON ABI of the contract.
-    pub static CRITERIARESOLUTION_ABI: ::ethers::contract::Lazy<
-        ::ethers::core::abi::Abi,
-    > = ::ethers::contract::Lazy::new(|| {
-        ::ethers::core::utils::__serde_json::from_str(__ABI)
-            .expect("ABI is always valid")
-    });
+    pub static CRITERIARESOLUTION_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         96,
@@ -115,9 +113,8 @@ pub mod criteria_resolution {
         51,
     ];
     ///The bytecode of the contract.
-    pub static CRITERIARESOLUTION_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __BYTECODE,
-    );
+    pub static CRITERIARESOLUTION_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__BYTECODE);
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -185,9 +182,8 @@ pub mod criteria_resolution {
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static CRITERIARESOLUTION_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __DEPLOYED_BYTECODE,
-    );
+    pub static CRITERIARESOLUTION_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
     pub struct CriteriaResolution<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for CriteriaResolution<M> {
         fn clone(&self) -> Self {
@@ -207,7 +203,9 @@ pub mod criteria_resolution {
     }
     impl<M> ::core::fmt::Debug for CriteriaResolution<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(CriteriaResolution)).field(&self.address()).finish()
+            f.debug_tuple(stringify!(CriteriaResolution))
+                .field(&self.address())
+                .finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> CriteriaResolution<M> {
@@ -217,13 +215,11 @@ pub mod criteria_resolution {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    CRITERIARESOLUTION_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                CRITERIARESOLUTION_ABI.clone(),
+                client,
+            ))
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -266,7 +262,8 @@ pub mod criteria_resolution {
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for CriteriaResolution<M> {
+        for CriteriaResolution<M>
+    {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -280,7 +277,7 @@ pub mod criteria_resolution {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "ConsiderationCriteriaResolverOutOfRange",
@@ -296,9 +293,12 @@ pub mod criteria_resolution {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
-    #[etherror(name = "CriteriaNotEnabledForItem", abi = "CriteriaNotEnabledForItem()")]
+    #[etherror(
+        name = "CriteriaNotEnabledForItem",
+        abi = "CriteriaNotEnabledForItem()"
+    )]
     pub struct CriteriaNotEnabledForItem;
     ///Custom Error type `InvalidProof` with signature `InvalidProof()` and selector `0x09bde339`
     #[derive(
@@ -309,7 +309,7 @@ pub mod criteria_resolution {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidProof", abi = "InvalidProof()")]
     pub struct InvalidProof;
@@ -322,7 +322,7 @@ pub mod criteria_resolution {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "OfferCriteriaResolverOutOfRange",
@@ -338,7 +338,7 @@ pub mod criteria_resolution {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "OrderCriteriaResolverOutOfRange",
@@ -354,7 +354,7 @@ pub mod criteria_resolution {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "UnresolvedConsiderationCriteria",
@@ -370,7 +370,7 @@ pub mod criteria_resolution {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "UnresolvedOfferCriteria", abi = "UnresolvedOfferCriteria()")]
     pub struct UnresolvedOfferCriteria;
@@ -393,50 +393,44 @@ pub mod criteria_resolution {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::RevertString(decoded));
             }
-            if let Ok(decoded)
-                = <ConsiderationCriteriaResolverOutOfRange as ::ethers::core::abi::AbiDecode>::decode(
+            if let Ok(decoded) =
+                <ConsiderationCriteriaResolverOutOfRange as ::ethers::core::abi::AbiDecode>::decode(
                     data,
-                ) {
+                )
+            {
                 return Ok(Self::ConsiderationCriteriaResolverOutOfRange(decoded));
             }
-            if let Ok(decoded)
-                = <CriteriaNotEnabledForItem as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <CriteriaNotEnabledForItem as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::CriteriaNotEnabledForItem(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidProof as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <InvalidProof as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::InvalidProof(decoded));
             }
-            if let Ok(decoded)
-                = <OfferCriteriaResolverOutOfRange as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <OfferCriteriaResolverOutOfRange as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::OfferCriteriaResolverOutOfRange(decoded));
             }
-            if let Ok(decoded)
-                = <OrderCriteriaResolverOutOfRange as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <OrderCriteriaResolverOutOfRange as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::OrderCriteriaResolverOutOfRange(decoded));
             }
-            if let Ok(decoded)
-                = <UnresolvedConsiderationCriteria as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <UnresolvedConsiderationCriteria as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::UnresolvedConsiderationCriteria(decoded));
             }
-            if let Ok(decoded)
-                = <UnresolvedOfferCriteria as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <UnresolvedOfferCriteria as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::UnresolvedOfferCriteria(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -451,9 +445,7 @@ pub mod criteria_resolution {
                 Self::CriteriaNotEnabledForItem(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::InvalidProof(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::InvalidProof(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::OfferCriteriaResolverOutOfRange(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
@@ -510,9 +502,7 @@ pub mod criteria_resolution {
                 Self::ConsiderationCriteriaResolverOutOfRange(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
-                Self::CriteriaNotEnabledForItem(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::CriteriaNotEnabledForItem(element) => ::core::fmt::Display::fmt(element, f),
                 Self::InvalidProof(element) => ::core::fmt::Display::fmt(element, f),
                 Self::OfferCriteriaResolverOutOfRange(element) => {
                     ::core::fmt::Display::fmt(element, f)
@@ -523,9 +513,7 @@ pub mod criteria_resolution {
                 Self::UnresolvedConsiderationCriteria(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
-                Self::UnresolvedOfferCriteria(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::UnresolvedOfferCriteria(element) => ::core::fmt::Display::fmt(element, f),
                 Self::RevertString(s) => ::core::fmt::Display::fmt(s, f),
             }
         }
@@ -535,8 +523,7 @@ pub mod criteria_resolution {
             Self::RevertString(value)
         }
     }
-    impl ::core::convert::From<ConsiderationCriteriaResolverOutOfRange>
-    for CriteriaResolutionErrors {
+    impl ::core::convert::From<ConsiderationCriteriaResolverOutOfRange> for CriteriaResolutionErrors {
         fn from(value: ConsiderationCriteriaResolverOutOfRange) -> Self {
             Self::ConsiderationCriteriaResolverOutOfRange(value)
         }
@@ -551,20 +538,17 @@ pub mod criteria_resolution {
             Self::InvalidProof(value)
         }
     }
-    impl ::core::convert::From<OfferCriteriaResolverOutOfRange>
-    for CriteriaResolutionErrors {
+    impl ::core::convert::From<OfferCriteriaResolverOutOfRange> for CriteriaResolutionErrors {
         fn from(value: OfferCriteriaResolverOutOfRange) -> Self {
             Self::OfferCriteriaResolverOutOfRange(value)
         }
     }
-    impl ::core::convert::From<OrderCriteriaResolverOutOfRange>
-    for CriteriaResolutionErrors {
+    impl ::core::convert::From<OrderCriteriaResolverOutOfRange> for CriteriaResolutionErrors {
         fn from(value: OrderCriteriaResolverOutOfRange) -> Self {
             Self::OrderCriteriaResolverOutOfRange(value)
         }
     }
-    impl ::core::convert::From<UnresolvedConsiderationCriteria>
-    for CriteriaResolutionErrors {
+    impl ::core::convert::From<UnresolvedConsiderationCriteria> for CriteriaResolutionErrors {
         fn from(value: UnresolvedConsiderationCriteria) -> Self {
             Self::UnresolvedConsiderationCriteria(value)
         }

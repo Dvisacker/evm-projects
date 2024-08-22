@@ -2,3 +2,4 @@
 ignore = [
     "bindings",
 ]
+max_width = 100

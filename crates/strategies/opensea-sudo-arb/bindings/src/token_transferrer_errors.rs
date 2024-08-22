@@ -7,18 +7,16 @@ pub use token_transferrer_errors::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod token_transferrer_errors {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"type\":\"error\",\"name\":\"BadReturnValueFromERC20OnTransfer\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"identifiers\",\"type\":\"uint256[]\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\",\"components\":[]}],\"type\":\"error\",\"name\":\"ERC1155BatchTransferGenericFailure\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"Invalid1155BatchTransferEncoding\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidERC721TransferAmount\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"MissingItemAmount\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\",\"components\":[]}],\"type\":\"error\",\"name\":\"NoContract\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"type\":\"error\",\"name\":\"TokenTransferGenericFailure\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"UnusedItemParameters\",\"outputs\":[]}]";
     ///The parsed JSON ABI of the contract.
-    pub static TOKENTRANSFERRERERRORS_ABI: ::ethers::contract::Lazy<
-        ::ethers::core::abi::Abi,
-    > = ::ethers::contract::Lazy::new(|| {
-        ::ethers::core::utils::__serde_json::from_str(__ABI)
-            .expect("ABI is always valid")
-    });
+    pub static TOKENTRANSFERRERERRORS_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     pub struct TokenTransferrerErrors<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for TokenTransferrerErrors<M> {
         fn clone(&self) -> Self {
@@ -50,17 +48,16 @@ pub mod token_transferrer_errors {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    TOKENTRANSFERRERERRORS_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                TOKENTRANSFERRERERRORS_ABI.clone(),
+                client,
+            ))
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for TokenTransferrerErrors<M> {
+        for TokenTransferrerErrors<M>
+    {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -74,7 +71,7 @@ pub mod token_transferrer_errors {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "BadReturnValueFromERC20OnTransfer",
@@ -95,7 +92,7 @@ pub mod token_transferrer_errors {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "ERC1155BatchTransferGenericFailure",
@@ -117,7 +114,7 @@ pub mod token_transferrer_errors {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "Invalid1155BatchTransferEncoding",
@@ -133,7 +130,7 @@ pub mod token_transferrer_errors {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "InvalidERC721TransferAmount",
@@ -149,7 +146,7 @@ pub mod token_transferrer_errors {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "MissingItemAmount", abi = "MissingItemAmount()")]
     pub struct MissingItemAmount;
@@ -162,7 +159,7 @@ pub mod token_transferrer_errors {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "NoContract", abi = "NoContract(address)")]
     pub struct NoContract {
@@ -177,7 +174,7 @@ pub mod token_transferrer_errors {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "TokenTransferGenericFailure",
@@ -199,7 +196,7 @@ pub mod token_transferrer_errors {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "UnusedItemParameters", abi = "UnusedItemParameters()")]
     pub struct UnusedItemParameters;
@@ -223,54 +220,46 @@ pub mod token_transferrer_errors {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::RevertString(decoded));
             }
-            if let Ok(decoded)
-                = <BadReturnValueFromERC20OnTransfer as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <BadReturnValueFromERC20OnTransfer as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::BadReturnValueFromERC20OnTransfer(decoded));
             }
-            if let Ok(decoded)
-                = <ERC1155BatchTransferGenericFailure as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <ERC1155BatchTransferGenericFailure as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ERC1155BatchTransferGenericFailure(decoded));
             }
-            if let Ok(decoded)
-                = <Invalid1155BatchTransferEncoding as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <Invalid1155BatchTransferEncoding as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::Invalid1155BatchTransferEncoding(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidERC721TransferAmount as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <InvalidERC721TransferAmount as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InvalidERC721TransferAmount(decoded));
             }
-            if let Ok(decoded)
-                = <MissingItemAmount as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <MissingItemAmount as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::MissingItemAmount(decoded));
             }
-            if let Ok(decoded)
-                = <NoContract as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <NoContract as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::NoContract(decoded));
             }
-            if let Ok(decoded)
-                = <TokenTransferGenericFailure as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <TokenTransferGenericFailure as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::TokenTransferGenericFailure(decoded));
             }
-            if let Ok(decoded)
-                = <UnusedItemParameters as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <UnusedItemParameters as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::UnusedItemParameters(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -291,12 +280,8 @@ pub mod token_transferrer_errors {
                 Self::InvalidERC721TransferAmount(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::MissingItemAmount(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::NoContract(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::MissingItemAmount(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::NoContract(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::TokenTransferGenericFailure(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
@@ -357,17 +342,11 @@ pub mod token_transferrer_errors {
                 Self::Invalid1155BatchTransferEncoding(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
-                Self::InvalidERC721TransferAmount(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::InvalidERC721TransferAmount(element) => ::core::fmt::Display::fmt(element, f),
                 Self::MissingItemAmount(element) => ::core::fmt::Display::fmt(element, f),
                 Self::NoContract(element) => ::core::fmt::Display::fmt(element, f),
-                Self::TokenTransferGenericFailure(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::UnusedItemParameters(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::TokenTransferGenericFailure(element) => ::core::fmt::Display::fmt(element, f),
+                Self::UnusedItemParameters(element) => ::core::fmt::Display::fmt(element, f),
                 Self::RevertString(s) => ::core::fmt::Display::fmt(s, f),
             }
         }
@@ -377,26 +356,22 @@ pub mod token_transferrer_errors {
             Self::RevertString(value)
         }
     }
-    impl ::core::convert::From<BadReturnValueFromERC20OnTransfer>
-    for TokenTransferrerErrorsErrors {
+    impl ::core::convert::From<BadReturnValueFromERC20OnTransfer> for TokenTransferrerErrorsErrors {
         fn from(value: BadReturnValueFromERC20OnTransfer) -> Self {
             Self::BadReturnValueFromERC20OnTransfer(value)
         }
     }
-    impl ::core::convert::From<ERC1155BatchTransferGenericFailure>
-    for TokenTransferrerErrorsErrors {
+    impl ::core::convert::From<ERC1155BatchTransferGenericFailure> for TokenTransferrerErrorsErrors {
         fn from(value: ERC1155BatchTransferGenericFailure) -> Self {
             Self::ERC1155BatchTransferGenericFailure(value)
         }
     }
-    impl ::core::convert::From<Invalid1155BatchTransferEncoding>
-    for TokenTransferrerErrorsErrors {
+    impl ::core::convert::From<Invalid1155BatchTransferEncoding> for TokenTransferrerErrorsErrors {
         fn from(value: Invalid1155BatchTransferEncoding) -> Self {
             Self::Invalid1155BatchTransferEncoding(value)
         }
     }
-    impl ::core::convert::From<InvalidERC721TransferAmount>
-    for TokenTransferrerErrorsErrors {
+    impl ::core::convert::From<InvalidERC721TransferAmount> for TokenTransferrerErrorsErrors {
         fn from(value: InvalidERC721TransferAmount) -> Self {
             Self::InvalidERC721TransferAmount(value)
         }
@@ -411,8 +386,7 @@ pub mod token_transferrer_errors {
             Self::NoContract(value)
         }
     }
-    impl ::core::convert::From<TokenTransferGenericFailure>
-    for TokenTransferrerErrorsErrors {
+    impl ::core::convert::From<TokenTransferGenericFailure> for TokenTransferrerErrorsErrors {
         fn from(value: TokenTransferGenericFailure) -> Self {
             Self::TokenTransferGenericFailure(value)
         }

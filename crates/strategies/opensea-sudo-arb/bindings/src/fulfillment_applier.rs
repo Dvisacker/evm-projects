@@ -7,18 +7,16 @@ pub use fulfillment_applier::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod fulfillment_applier {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidFulfillmentComponentData\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"MismatchedFulfillmentOfferAndConsiderationComponents\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"enum Side\",\"name\":\"side\",\"type\":\"uint8\",\"components\":[]}],\"type\":\"error\",\"name\":\"MissingFulfillmentComponentOnAggregation\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"OfferAndConsiderationRequiredOnFulfillment\",\"outputs\":[]}]";
     ///The parsed JSON ABI of the contract.
-    pub static FULFILLMENTAPPLIER_ABI: ::ethers::contract::Lazy<
-        ::ethers::core::abi::Abi,
-    > = ::ethers::contract::Lazy::new(|| {
-        ::ethers::core::utils::__serde_json::from_str(__ABI)
-            .expect("ABI is always valid")
-    });
+    pub static FULFILLMENTAPPLIER_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         96,
@@ -115,9 +113,8 @@ pub mod fulfillment_applier {
         51,
     ];
     ///The bytecode of the contract.
-    pub static FULFILLMENTAPPLIER_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __BYTECODE,
-    );
+    pub static FULFILLMENTAPPLIER_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__BYTECODE);
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -185,9 +182,8 @@ pub mod fulfillment_applier {
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static FULFILLMENTAPPLIER_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __DEPLOYED_BYTECODE,
-    );
+    pub static FULFILLMENTAPPLIER_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
     pub struct FulfillmentApplier<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for FulfillmentApplier<M> {
         fn clone(&self) -> Self {
@@ -207,7 +203,9 @@ pub mod fulfillment_applier {
     }
     impl<M> ::core::fmt::Debug for FulfillmentApplier<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(FulfillmentApplier)).field(&self.address()).finish()
+            f.debug_tuple(stringify!(FulfillmentApplier))
+                .field(&self.address())
+                .finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> FulfillmentApplier<M> {
@@ -217,13 +215,11 @@ pub mod fulfillment_applier {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    FULFILLMENTAPPLIER_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                FULFILLMENTAPPLIER_ABI.clone(),
+                client,
+            ))
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -266,7 +262,8 @@ pub mod fulfillment_applier {
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for FulfillmentApplier<M> {
+        for FulfillmentApplier<M>
+    {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -280,7 +277,7 @@ pub mod fulfillment_applier {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "InvalidFulfillmentComponentData",
@@ -296,7 +293,7 @@ pub mod fulfillment_applier {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "MismatchedFulfillmentOfferAndConsiderationComponents",
@@ -312,7 +309,7 @@ pub mod fulfillment_applier {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "MissingFulfillmentComponentOnAggregation",
@@ -330,7 +327,7 @@ pub mod fulfillment_applier {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(
         name = "OfferAndConsiderationRequiredOnFulfillment",
@@ -344,12 +341,8 @@ pub mod fulfillment_applier {
         MismatchedFulfillmentOfferAndConsiderationComponents(
             MismatchedFulfillmentOfferAndConsiderationComponents,
         ),
-        MissingFulfillmentComponentOnAggregation(
-            MissingFulfillmentComponentOnAggregation,
-        ),
-        OfferAndConsiderationRequiredOnFulfillment(
-            OfferAndConsiderationRequiredOnFulfillment,
-        ),
+        MissingFulfillmentComponentOnAggregation(MissingFulfillmentComponentOnAggregation),
+        OfferAndConsiderationRequiredOnFulfillment(OfferAndConsiderationRequiredOnFulfillment),
         /// The standard solidity revert string, with selector
         /// Error(string) -- 0x08c379a0
         RevertString(::std::string::String),
@@ -359,16 +352,14 @@ pub mod fulfillment_applier {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::RevertString(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidFulfillmentComponentData as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <InvalidFulfillmentComponentData as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InvalidFulfillmentComponentData(decoded));
             }
             if let Ok(decoded)
@@ -379,10 +370,11 @@ pub mod fulfillment_applier {
                     Self::MismatchedFulfillmentOfferAndConsiderationComponents(decoded),
                 );
             }
-            if let Ok(decoded)
-                = <MissingFulfillmentComponentOnAggregation as ::ethers::core::abi::AbiDecode>::decode(
+            if let Ok(decoded) =
+                <MissingFulfillmentComponentOnAggregation as ::ethers::core::abi::AbiDecode>::decode(
                     data,
-                ) {
+                )
+            {
                 return Ok(Self::MissingFulfillmentComponentOnAggregation(decoded));
             }
             if let Ok(decoded)
@@ -461,26 +453,26 @@ pub mod fulfillment_applier {
             Self::RevertString(value)
         }
     }
-    impl ::core::convert::From<InvalidFulfillmentComponentData>
-    for FulfillmentApplierErrors {
+    impl ::core::convert::From<InvalidFulfillmentComponentData> for FulfillmentApplierErrors {
         fn from(value: InvalidFulfillmentComponentData) -> Self {
             Self::InvalidFulfillmentComponentData(value)
         }
     }
     impl ::core::convert::From<MismatchedFulfillmentOfferAndConsiderationComponents>
-    for FulfillmentApplierErrors {
+        for FulfillmentApplierErrors
+    {
         fn from(value: MismatchedFulfillmentOfferAndConsiderationComponents) -> Self {
             Self::MismatchedFulfillmentOfferAndConsiderationComponents(value)
         }
     }
-    impl ::core::convert::From<MissingFulfillmentComponentOnAggregation>
-    for FulfillmentApplierErrors {
+    impl ::core::convert::From<MissingFulfillmentComponentOnAggregation> for FulfillmentApplierErrors {
         fn from(value: MissingFulfillmentComponentOnAggregation) -> Self {
             Self::MissingFulfillmentComponentOnAggregation(value)
         }
     }
     impl ::core::convert::From<OfferAndConsiderationRequiredOnFulfillment>
-    for FulfillmentApplierErrors {
+        for FulfillmentApplierErrors
+    {
         fn from(value: OfferAndConsiderationRequiredOnFulfillment) -> Self {
             Self::OfferAndConsiderationRequiredOnFulfillment(value)
         }

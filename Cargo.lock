@@ -583,17 +583,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cb-test"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "artemis-core",
- "chainbound-artemis",
- "ethers",
- "tokio",
-]
-
-[[package]]
 name = "cc"
 version = "1.0.79"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4799,6 +4788,47 @@ dependencies = [
  "crunchy",
  "hex",
  "static_assertions",
+]
+
+[[package]]
+name = "uni-bindings"
+version = "0.1.0"
+dependencies = [
+ "ethers",
+]
+
+[[package]]
+name = "uni-tri-arb"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "artemis-core",
+ "async-trait",
+ "clap 4.2.7",
+ "dotenv",
+ "ethers",
+ "futures",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "uni-tri-arb-strategy",
+]
+
+[[package]]
+name = "uni-tri-arb-strategy"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "artemis-core",
+ "async-trait",
+ "csv",
+ "ethers",
+ "mev-share",
+ "serde",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "uni-bindings",
 ]
 
 [[package]]

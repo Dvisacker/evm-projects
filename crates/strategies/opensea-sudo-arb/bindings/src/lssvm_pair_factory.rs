@@ -7,18 +7,16 @@ pub use lssvm_pair_factory::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod lssvm_pair_factory {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"contract LSSVMPairEnumerableETH\",\"name\":\"_enumerableETHTemplate\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"contract LSSVMPairMissingEnumerableETH\",\"name\":\"_missingEnumerableETHTemplate\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"contract LSSVMPairEnumerableERC20\",\"name\":\"_enumerableERC20Template\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"contract LSSVMPairMissingEnumerableERC20\",\"name\":\"_missingEnumerableERC20Template\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"_protocolFeeRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"_protocolFeeMultiplier\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"contract ICurve\",\"name\":\"bondingCurve\",\"type\":\"address\",\"components\":[],\"indexed\":false},{\"internalType\":\"bool\",\"name\":\"isAllowed\",\"type\":\"bool\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"BondingCurveStatusUpdate\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"target\",\"type\":\"address\",\"components\":[],\"indexed\":false},{\"internalType\":\"bool\",\"name\":\"isAllowed\",\"type\":\"bool\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"CallTargetStatusUpdate\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"poolAddress\",\"type\":\"address\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"NFTDeposit\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"poolAddress\",\"type\":\"address\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"NewPair\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\",\"components\":[],\"indexed\":true},{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\",\"components\":[],\"indexed\":true}],\"type\":\"event\",\"name\":\"OwnershipTransferred\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newMultiplier\",\"type\":\"uint256\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"ProtocolFeeMultiplierUpdate\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"recipientAddress\",\"type\":\"address\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"ProtocolFeeRecipientUpdate\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"contract LSSVMRouter\",\"name\":\"router\",\"type\":\"address\",\"components\":[],\"indexed\":false},{\"internalType\":\"bool\",\"name\":\"isAllowed\",\"type\":\"bool\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"RouterStatusUpdate\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"poolAddress\",\"type\":\"address\",\"components\":[],\"indexed\":false}],\"type\":\"event\",\"name\":\"TokenDeposit\",\"outputs\":[],\"anonymous\":false},{\"inputs\":[{\"internalType\":\"contract ICurve\",\"name\":\"\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"bondingCurveAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"callAllowed\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_protocolFeeMultiplier\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"changeProtocolFeeMultiplier\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address payable\",\"name\":\"_protocolFeeRecipient\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"changeProtocolFeeRecipient\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"struct LSSVMPairFactory.CreateERC20PairParams\",\"name\":\"params\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"contract ERC20\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"contract IERC721\",\"name\":\"nft\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"contract ICurve\",\"name\":\"bondingCurve\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"assetRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"enum LSSVMPair.PoolType\",\"name\":\"poolType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint128\",\"name\":\"delta\",\"type\":\"uint128\",\"components\":[]},{\"internalType\":\"uint96\",\"name\":\"fee\",\"type\":\"uint96\",\"components\":[]},{\"internalType\":\"uint128\",\"name\":\"spotPrice\",\"type\":\"uint128\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"initialNFTIDs\",\"type\":\"uint256[]\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"initialTokenBalance\",\"type\":\"uint256\",\"components\":[]}]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"createPairERC20\",\"outputs\":[{\"internalType\":\"contract LSSVMPairERC20\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"contract IERC721\",\"name\":\"_nft\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"contract ICurve\",\"name\":\"_bondingCurve\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"_assetRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"enum LSSVMPair.PoolType\",\"name\":\"_poolType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint128\",\"name\":\"_delta\",\"type\":\"uint128\",\"components\":[]},{\"internalType\":\"uint96\",\"name\":\"_fee\",\"type\":\"uint96\",\"components\":[]},{\"internalType\":\"uint128\",\"name\":\"_spotPrice\",\"type\":\"uint128\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"_initialNFTIDs\",\"type\":\"uint256[]\",\"components\":[]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"createPairETH\",\"outputs\":[{\"internalType\":\"contract LSSVMPairETH\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"contract ERC20\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"depositERC20\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"contract IERC721\",\"name\":\"_nft\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"ids\",\"type\":\"uint256[]\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"depositNFTs\",\"outputs\":[]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"enumerableERC20Template\",\"outputs\":[{\"internalType\":\"contract LSSVMPairEnumerableERC20\",\"name\":\"\",\"type\":\"address\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"enumerableETHTemplate\",\"outputs\":[{\"internalType\":\"contract LSSVMPairEnumerableETH\",\"name\":\"\",\"type\":\"address\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"potentialPair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"enum ILSSVMPairFactoryLike.PairVariant\",\"name\":\"variant\",\"type\":\"uint8\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"isPair\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"missingEnumerableERC20Template\",\"outputs\":[{\"internalType\":\"contract LSSVMPairMissingEnumerableERC20\",\"name\":\"\",\"type\":\"address\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"missingEnumerableETHTemplate\",\"outputs\":[{\"internalType\":\"contract LSSVMPairMissingEnumerableETH\",\"name\":\"\",\"type\":\"address\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"protocolFeeMultiplier\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"protocolFeeRecipient\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"\",\"type\":\"address\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"renounceOwnership\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"contract LSSVMRouter\",\"name\":\"\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"routerStatus\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"allowed\",\"type\":\"bool\",\"components\":[]},{\"internalType\":\"bool\",\"name\":\"wasEverAllowed\",\"type\":\"bool\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"contract ICurve\",\"name\":\"bondingCurve\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"bool\",\"name\":\"isAllowed\",\"type\":\"bool\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"setBondingCurveAllowed\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address payable\",\"name\":\"target\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"bool\",\"name\":\"isAllowed\",\"type\":\"bool\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"setCallAllowed\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"contract LSSVMRouter\",\"name\":\"_router\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"bool\",\"name\":\"isAllowed\",\"type\":\"bool\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"setRouterAllowed\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"transferOwnership\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"contract ERC20\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"withdrawERC20ProtocolFees\",\"outputs\":[]},{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"withdrawETHProtocolFees\",\"outputs\":[]},{\"inputs\":[],\"stateMutability\":\"payable\",\"type\":\"receive\",\"outputs\":[]}]";
     ///The parsed JSON ABI of the contract.
-    pub static LSSVMPAIRFACTORY_ABI: ::ethers::contract::Lazy<
-        ::ethers::core::abi::Abi,
-    > = ::ethers::contract::Lazy::new(|| {
-        ::ethers::core::utils::__serde_json::from_str(__ABI)
-            .expect("ABI is always valid")
-    });
+    pub static LSSVMPAIRFACTORY_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         97,
@@ -8091,9 +8089,8 @@ pub mod lssvm_pair_factory {
         51,
     ];
     ///The bytecode of the contract.
-    pub static LSSVMPAIRFACTORY_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __BYTECODE,
-    );
+    pub static LSSVMPAIRFACTORY_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__BYTECODE);
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -15586,9 +15583,8 @@ pub mod lssvm_pair_factory {
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static LSSVMPAIRFACTORY_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __DEPLOYED_BYTECODE,
-    );
+    pub static LSSVMPAIRFACTORY_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
     pub struct LSSVMPairFactory<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for LSSVMPairFactory<M> {
         fn clone(&self) -> Self {
@@ -15608,7 +15604,9 @@ pub mod lssvm_pair_factory {
     }
     impl<M> ::core::fmt::Debug for LSSVMPairFactory<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(LSSVMPairFactory)).field(&self.address()).finish()
+            f.debug_tuple(stringify!(LSSVMPairFactory))
+                .field(&self.address())
+                .finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> LSSVMPairFactory<M> {
@@ -15618,13 +15616,11 @@ pub mod lssvm_pair_factory {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    LSSVMPAIRFACTORY_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                LSSVMPAIRFACTORY_ABI.clone(),
+                client,
+            ))
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -15705,10 +15701,7 @@ pub mod lssvm_pair_factory {
         pub fn create_pair_erc20(
             &self,
             params: CreateERC20PairParams,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Address,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
             self.0
                 .method_hash([89, 114, 44, 170], (params,))
                 .expect("method not found (this should never happen)")
@@ -15724,10 +15717,7 @@ pub mod lssvm_pair_factory {
             fee: u128,
             spot_price: u128,
             initial_nfti_ds: ::std::vec::Vec<::ethers::core::types::U256>,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Address,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
             self.0
                 .method_hash(
                     [206, 156, 9, 93],
@@ -15769,10 +15759,7 @@ pub mod lssvm_pair_factory {
         ///Calls the contract's `enumerableERC20Template` (0xa427f1ad) function
         pub fn enumerable_erc20_template(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Address,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
             self.0
                 .method_hash([164, 39, 241, 173], ())
                 .expect("method not found (this should never happen)")
@@ -15780,10 +15767,7 @@ pub mod lssvm_pair_factory {
         ///Calls the contract's `enumerableETHTemplate` (0xad2e5770) function
         pub fn enumerable_eth_template(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Address,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
             self.0
                 .method_hash([173, 46, 87, 112], ())
                 .expect("method not found (this should never happen)")
@@ -15801,10 +15785,7 @@ pub mod lssvm_pair_factory {
         ///Calls the contract's `missingEnumerableERC20Template` (0x4c6bc433) function
         pub fn missing_enumerable_erc20_template(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Address,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
             self.0
                 .method_hash([76, 107, 196, 51], ())
                 .expect("method not found (this should never happen)")
@@ -15812,10 +15793,7 @@ pub mod lssvm_pair_factory {
         ///Calls the contract's `missingEnumerableETHTemplate` (0x004885ea) function
         pub fn missing_enumerable_eth_template(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Address,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
             self.0
                 .method_hash([0, 72, 133, 234], ())
                 .expect("method not found (this should never happen)")
@@ -15823,10 +15801,7 @@ pub mod lssvm_pair_factory {
         ///Calls the contract's `owner` (0x8da5cb5b) function
         pub fn owner(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Address,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
             self.0
                 .method_hash([141, 165, 203, 91], ())
                 .expect("method not found (this should never happen)")
@@ -15842,18 +15817,13 @@ pub mod lssvm_pair_factory {
         ///Calls the contract's `protocolFeeRecipient` (0x64df049e) function
         pub fn protocol_fee_recipient(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Address,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
             self.0
                 .method_hash([100, 223, 4, 158], ())
                 .expect("method not found (this should never happen)")
         }
         ///Calls the contract's `renounceOwnership` (0x715018a6) function
-        pub fn renounce_ownership(
-            &self,
-        ) -> ::ethers::contract::builders::ContractCall<M, ()> {
+        pub fn renounce_ownership(&self) -> ::ethers::contract::builders::ContractCall<M, ()> {
             self.0
                 .method_hash([113, 80, 24, 166], ())
                 .expect("method not found (this should never happen)")
@@ -15937,21 +15907,14 @@ pub mod lssvm_pair_factory {
         ///Gets the contract's `CallTargetStatusUpdate` event
         pub fn call_target_status_update_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            CallTargetStatusUpdateFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, CallTargetStatusUpdateFilter>
+        {
             self.0.event()
         }
         ///Gets the contract's `NFTDeposit` event
         pub fn nft_deposit_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            NftdepositFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, NftdepositFilter> {
             self.0.event()
         }
         ///Gets the contract's `NewPair` event
@@ -15963,11 +15926,8 @@ pub mod lssvm_pair_factory {
         ///Gets the contract's `OwnershipTransferred` event
         pub fn ownership_transferred_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            OwnershipTransferredFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, OwnershipTransferredFilter>
+        {
             self.0.event()
         }
         ///Gets the contract's `ProtocolFeeMultiplierUpdate` event
@@ -15993,36 +15953,29 @@ pub mod lssvm_pair_factory {
         ///Gets the contract's `RouterStatusUpdate` event
         pub fn router_status_update_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            RouterStatusUpdateFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, RouterStatusUpdateFilter>
+        {
             self.0.event()
         }
         ///Gets the contract's `TokenDeposit` event
         pub fn token_deposit_filter(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            TokenDepositFilter,
-        > {
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, TokenDepositFilter>
+        {
             self.0.event()
         }
         /// Returns an `Event` builder for all the events of this contract.
         pub fn events(
             &self,
-        ) -> ::ethers::contract::builders::Event<
-            ::std::sync::Arc<M>,
-            M,
-            LSSVMPairFactoryEvents,
-        > {
-            self.0.event_with_filter(::core::default::Default::default())
+        ) -> ::ethers::contract::builders::Event<::std::sync::Arc<M>, M, LSSVMPairFactoryEvents>
+        {
+            self.0
+                .event_with_filter(::core::default::Default::default())
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for LSSVMPairFactory<M> {
+        for LSSVMPairFactory<M>
+    {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -16035,7 +15988,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(
         name = "BondingCurveStatusUpdate",
@@ -16053,7 +16006,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(
         name = "CallTargetStatusUpdate",
@@ -16071,7 +16024,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "NFTDeposit", abi = "NFTDeposit(address)")]
     pub struct NftdepositFilter {
@@ -16085,7 +16038,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "NewPair", abi = "NewPair(address)")]
     pub struct NewPairFilter {
@@ -16099,7 +16052,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(
         name = "OwnershipTransferred",
@@ -16119,7 +16072,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(
         name = "ProtocolFeeMultiplierUpdate",
@@ -16136,7 +16089,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(
         name = "ProtocolFeeRecipientUpdate",
@@ -16153,7 +16106,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "RouterStatusUpdate", abi = "RouterStatusUpdate(address,bool)")]
     pub struct RouterStatusUpdateFilter {
@@ -16168,7 +16121,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethevent(name = "TokenDeposit", abi = "TokenDeposit(address)")]
     pub struct TokenDepositFilter {
@@ -16192,12 +16145,14 @@ pub mod lssvm_pair_factory {
             log: &::ethers::core::abi::RawLog,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::Error> {
             if let Ok(decoded) = BondingCurveStatusUpdateFilter::decode_log(log) {
-                return Ok(
-                    LSSVMPairFactoryEvents::BondingCurveStatusUpdateFilter(decoded),
-                );
+                return Ok(LSSVMPairFactoryEvents::BondingCurveStatusUpdateFilter(
+                    decoded,
+                ));
             }
             if let Ok(decoded) = CallTargetStatusUpdateFilter::decode_log(log) {
-                return Ok(LSSVMPairFactoryEvents::CallTargetStatusUpdateFilter(decoded));
+                return Ok(LSSVMPairFactoryEvents::CallTargetStatusUpdateFilter(
+                    decoded,
+                ));
             }
             if let Ok(decoded) = NftdepositFilter::decode_log(log) {
                 return Ok(LSSVMPairFactoryEvents::NftdepositFilter(decoded));
@@ -16209,14 +16164,14 @@ pub mod lssvm_pair_factory {
                 return Ok(LSSVMPairFactoryEvents::OwnershipTransferredFilter(decoded));
             }
             if let Ok(decoded) = ProtocolFeeMultiplierUpdateFilter::decode_log(log) {
-                return Ok(
-                    LSSVMPairFactoryEvents::ProtocolFeeMultiplierUpdateFilter(decoded),
-                );
+                return Ok(LSSVMPairFactoryEvents::ProtocolFeeMultiplierUpdateFilter(
+                    decoded,
+                ));
             }
             if let Ok(decoded) = ProtocolFeeRecipientUpdateFilter::decode_log(log) {
-                return Ok(
-                    LSSVMPairFactoryEvents::ProtocolFeeRecipientUpdateFilter(decoded),
-                );
+                return Ok(LSSVMPairFactoryEvents::ProtocolFeeRecipientUpdateFilter(
+                    decoded,
+                ));
             }
             if let Ok(decoded) = RouterStatusUpdateFilter::decode_log(log) {
                 return Ok(LSSVMPairFactoryEvents::RouterStatusUpdateFilter(decoded));
@@ -16238,26 +16193,19 @@ pub mod lssvm_pair_factory {
                 }
                 Self::NftdepositFilter(element) => ::core::fmt::Display::fmt(element, f),
                 Self::NewPairFilter(element) => ::core::fmt::Display::fmt(element, f),
-                Self::OwnershipTransferredFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::OwnershipTransferredFilter(element) => ::core::fmt::Display::fmt(element, f),
                 Self::ProtocolFeeMultiplierUpdateFilter(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
                 Self::ProtocolFeeRecipientUpdateFilter(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
-                Self::RouterStatusUpdateFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::TokenDepositFilter(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::RouterStatusUpdateFilter(element) => ::core::fmt::Display::fmt(element, f),
+                Self::TokenDepositFilter(element) => ::core::fmt::Display::fmt(element, f),
             }
         }
     }
-    impl ::core::convert::From<BondingCurveStatusUpdateFilter>
-    for LSSVMPairFactoryEvents {
+    impl ::core::convert::From<BondingCurveStatusUpdateFilter> for LSSVMPairFactoryEvents {
         fn from(value: BondingCurveStatusUpdateFilter) -> Self {
             Self::BondingCurveStatusUpdateFilter(value)
         }
@@ -16282,14 +16230,12 @@ pub mod lssvm_pair_factory {
             Self::OwnershipTransferredFilter(value)
         }
     }
-    impl ::core::convert::From<ProtocolFeeMultiplierUpdateFilter>
-    for LSSVMPairFactoryEvents {
+    impl ::core::convert::From<ProtocolFeeMultiplierUpdateFilter> for LSSVMPairFactoryEvents {
         fn from(value: ProtocolFeeMultiplierUpdateFilter) -> Self {
             Self::ProtocolFeeMultiplierUpdateFilter(value)
         }
     }
-    impl ::core::convert::From<ProtocolFeeRecipientUpdateFilter>
-    for LSSVMPairFactoryEvents {
+    impl ::core::convert::From<ProtocolFeeRecipientUpdateFilter> for LSSVMPairFactoryEvents {
         fn from(value: ProtocolFeeRecipientUpdateFilter) -> Self {
             Self::ProtocolFeeRecipientUpdateFilter(value)
         }
@@ -16313,7 +16259,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "bondingCurveAllowed", abi = "bondingCurveAllowed(address)")]
     pub struct BondingCurveAllowedCall(pub ::ethers::core::types::Address);
@@ -16326,7 +16272,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "callAllowed", abi = "callAllowed(address)")]
     pub struct CallAllowedCall(pub ::ethers::core::types::Address);
@@ -16339,7 +16285,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "changeProtocolFeeMultiplier",
@@ -16357,7 +16303,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "changeProtocolFeeRecipient",
@@ -16375,7 +16321,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "createPairERC20",
@@ -16393,7 +16339,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "createPairETH",
@@ -16418,7 +16364,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "depositERC20", abi = "depositERC20(address,address,uint256)")]
     pub struct DepositERC20Call {
@@ -16435,7 +16381,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "depositNFTs", abi = "depositNFTs(address,uint256[],address)")]
     pub struct DepositNFTsCall {
@@ -16452,7 +16398,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "enumerableERC20Template", abi = "enumerableERC20Template()")]
     pub struct EnumerableERC20TemplateCall;
@@ -16465,7 +16411,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "enumerableETHTemplate", abi = "enumerableETHTemplate()")]
     pub struct EnumerableETHTemplateCall;
@@ -16478,7 +16424,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "isPair", abi = "isPair(address,uint8)")]
     pub struct IsPairCall {
@@ -16494,7 +16440,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "missingEnumerableERC20Template",
@@ -16510,7 +16456,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "missingEnumerableETHTemplate",
@@ -16526,7 +16472,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "owner", abi = "owner()")]
     pub struct OwnerCall;
@@ -16539,7 +16485,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "protocolFeeMultiplier", abi = "protocolFeeMultiplier()")]
     pub struct ProtocolFeeMultiplierCall;
@@ -16552,7 +16498,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "protocolFeeRecipient", abi = "protocolFeeRecipient()")]
     pub struct ProtocolFeeRecipientCall;
@@ -16565,7 +16511,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "renounceOwnership", abi = "renounceOwnership()")]
     pub struct RenounceOwnershipCall;
@@ -16578,7 +16524,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "routerStatus", abi = "routerStatus(address)")]
     pub struct RouterStatusCall(pub ::ethers::core::types::Address);
@@ -16591,7 +16537,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "setBondingCurveAllowed",
@@ -16610,7 +16556,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "setCallAllowed", abi = "setCallAllowed(address,bool)")]
     pub struct SetCallAllowedCall {
@@ -16626,7 +16572,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "setRouterAllowed", abi = "setRouterAllowed(address,bool)")]
     pub struct SetRouterAllowedCall {
@@ -16642,7 +16588,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "transferOwnership", abi = "transferOwnership(address)")]
     pub struct TransferOwnershipCall {
@@ -16657,7 +16603,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "withdrawERC20ProtocolFees",
@@ -16676,7 +16622,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "withdrawETHProtocolFees", abi = "withdrawETHProtocolFees()")]
     pub struct WithdrawETHProtocolFeesCall;
@@ -16713,130 +16659,113 @@ pub mod lssvm_pair_factory {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <BondingCurveAllowedCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <BondingCurveAllowedCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::BondingCurveAllowed(decoded));
             }
-            if let Ok(decoded)
-                = <CallAllowedCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <CallAllowedCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::CallAllowed(decoded));
             }
-            if let Ok(decoded)
-                = <ChangeProtocolFeeMultiplierCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <ChangeProtocolFeeMultiplierCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ChangeProtocolFeeMultiplier(decoded));
             }
-            if let Ok(decoded)
-                = <ChangeProtocolFeeRecipientCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <ChangeProtocolFeeRecipientCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ChangeProtocolFeeRecipient(decoded));
             }
-            if let Ok(decoded)
-                = <CreatePairERC20Call as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <CreatePairERC20Call as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::CreatePairERC20(decoded));
             }
-            if let Ok(decoded)
-                = <CreatePairETHCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <CreatePairETHCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::CreatePairETH(decoded));
             }
-            if let Ok(decoded)
-                = <DepositERC20Call as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <DepositERC20Call as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::DepositERC20(decoded));
             }
-            if let Ok(decoded)
-                = <DepositNFTsCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <DepositNFTsCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::DepositNFTs(decoded));
             }
-            if let Ok(decoded)
-                = <EnumerableERC20TemplateCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <EnumerableERC20TemplateCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::EnumerableERC20Template(decoded));
             }
-            if let Ok(decoded)
-                = <EnumerableETHTemplateCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <EnumerableETHTemplateCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::EnumerableETHTemplate(decoded));
             }
-            if let Ok(decoded)
-                = <IsPairCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <IsPairCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::IsPair(decoded));
             }
-            if let Ok(decoded)
-                = <MissingEnumerableERC20TemplateCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <MissingEnumerableERC20TemplateCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::MissingEnumerableERC20Template(decoded));
             }
-            if let Ok(decoded)
-                = <MissingEnumerableETHTemplateCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <MissingEnumerableETHTemplateCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::MissingEnumerableETHTemplate(decoded));
             }
-            if let Ok(decoded)
-                = <OwnerCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <OwnerCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Owner(decoded));
             }
-            if let Ok(decoded)
-                = <ProtocolFeeMultiplierCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <ProtocolFeeMultiplierCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ProtocolFeeMultiplier(decoded));
             }
-            if let Ok(decoded)
-                = <ProtocolFeeRecipientCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <ProtocolFeeRecipientCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ProtocolFeeRecipient(decoded));
             }
-            if let Ok(decoded)
-                = <RenounceOwnershipCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <RenounceOwnershipCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::RenounceOwnership(decoded));
             }
-            if let Ok(decoded)
-                = <RouterStatusCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <RouterStatusCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::RouterStatus(decoded));
             }
-            if let Ok(decoded)
-                = <SetBondingCurveAllowedCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <SetBondingCurveAllowedCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::SetBondingCurveAllowed(decoded));
             }
-            if let Ok(decoded)
-                = <SetCallAllowedCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <SetCallAllowedCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::SetCallAllowed(decoded));
             }
-            if let Ok(decoded)
-                = <SetRouterAllowedCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <SetRouterAllowedCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::SetRouterAllowed(decoded));
             }
-            if let Ok(decoded)
-                = <TransferOwnershipCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <TransferOwnershipCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::TransferOwnership(decoded));
             }
-            if let Ok(decoded)
-                = <WithdrawERC20ProtocolFeesCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <WithdrawERC20ProtocolFeesCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::WithdrawERC20ProtocolFees(decoded));
             }
-            if let Ok(decoded)
-                = <WithdrawETHProtocolFeesCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <WithdrawETHProtocolFeesCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::WithdrawETHProtocolFees(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -16848,27 +16777,17 @@ pub mod lssvm_pair_factory {
                 Self::BondingCurveAllowed(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::CallAllowed(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::CallAllowed(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::ChangeProtocolFeeMultiplier(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
                 Self::ChangeProtocolFeeRecipient(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::CreatePairERC20(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::CreatePairETH(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::DepositERC20(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::DepositNFTs(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::CreatePairERC20(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::CreatePairETH(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::DepositERC20(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::DepositNFTs(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::EnumerableERC20Template(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
@@ -16889,24 +16808,14 @@ pub mod lssvm_pair_factory {
                 Self::ProtocolFeeRecipient(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::RenounceOwnership(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::RouterStatus(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::RenounceOwnership(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::RouterStatus(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::SetBondingCurveAllowed(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::SetCallAllowed(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::SetRouterAllowed(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::TransferOwnership(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::SetCallAllowed(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::SetRouterAllowed(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::TransferOwnership(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::WithdrawERC20ProtocolFees(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
@@ -16919,26 +16828,16 @@ pub mod lssvm_pair_factory {
     impl ::core::fmt::Display for LSSVMPairFactoryCalls {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             match self {
-                Self::BondingCurveAllowed(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::BondingCurveAllowed(element) => ::core::fmt::Display::fmt(element, f),
                 Self::CallAllowed(element) => ::core::fmt::Display::fmt(element, f),
-                Self::ChangeProtocolFeeMultiplier(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::ChangeProtocolFeeRecipient(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::ChangeProtocolFeeMultiplier(element) => ::core::fmt::Display::fmt(element, f),
+                Self::ChangeProtocolFeeRecipient(element) => ::core::fmt::Display::fmt(element, f),
                 Self::CreatePairERC20(element) => ::core::fmt::Display::fmt(element, f),
                 Self::CreatePairETH(element) => ::core::fmt::Display::fmt(element, f),
                 Self::DepositERC20(element) => ::core::fmt::Display::fmt(element, f),
                 Self::DepositNFTs(element) => ::core::fmt::Display::fmt(element, f),
-                Self::EnumerableERC20Template(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::EnumerableETHTemplate(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::EnumerableERC20Template(element) => ::core::fmt::Display::fmt(element, f),
+                Self::EnumerableETHTemplate(element) => ::core::fmt::Display::fmt(element, f),
                 Self::IsPair(element) => ::core::fmt::Display::fmt(element, f),
                 Self::MissingEnumerableERC20Template(element) => {
                     ::core::fmt::Display::fmt(element, f)
@@ -16947,26 +16846,16 @@ pub mod lssvm_pair_factory {
                     ::core::fmt::Display::fmt(element, f)
                 }
                 Self::Owner(element) => ::core::fmt::Display::fmt(element, f),
-                Self::ProtocolFeeMultiplier(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::ProtocolFeeRecipient(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::ProtocolFeeMultiplier(element) => ::core::fmt::Display::fmt(element, f),
+                Self::ProtocolFeeRecipient(element) => ::core::fmt::Display::fmt(element, f),
                 Self::RenounceOwnership(element) => ::core::fmt::Display::fmt(element, f),
                 Self::RouterStatus(element) => ::core::fmt::Display::fmt(element, f),
-                Self::SetBondingCurveAllowed(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::SetBondingCurveAllowed(element) => ::core::fmt::Display::fmt(element, f),
                 Self::SetCallAllowed(element) => ::core::fmt::Display::fmt(element, f),
                 Self::SetRouterAllowed(element) => ::core::fmt::Display::fmt(element, f),
                 Self::TransferOwnership(element) => ::core::fmt::Display::fmt(element, f),
-                Self::WithdrawERC20ProtocolFees(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::WithdrawETHProtocolFees(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::WithdrawERC20ProtocolFees(element) => ::core::fmt::Display::fmt(element, f),
+                Self::WithdrawETHProtocolFees(element) => ::core::fmt::Display::fmt(element, f),
             }
         }
     }
@@ -16980,14 +16869,12 @@ pub mod lssvm_pair_factory {
             Self::CallAllowed(value)
         }
     }
-    impl ::core::convert::From<ChangeProtocolFeeMultiplierCall>
-    for LSSVMPairFactoryCalls {
+    impl ::core::convert::From<ChangeProtocolFeeMultiplierCall> for LSSVMPairFactoryCalls {
         fn from(value: ChangeProtocolFeeMultiplierCall) -> Self {
             Self::ChangeProtocolFeeMultiplier(value)
         }
     }
-    impl ::core::convert::From<ChangeProtocolFeeRecipientCall>
-    for LSSVMPairFactoryCalls {
+    impl ::core::convert::From<ChangeProtocolFeeRecipientCall> for LSSVMPairFactoryCalls {
         fn from(value: ChangeProtocolFeeRecipientCall) -> Self {
             Self::ChangeProtocolFeeRecipient(value)
         }
@@ -17027,14 +16914,12 @@ pub mod lssvm_pair_factory {
             Self::IsPair(value)
         }
     }
-    impl ::core::convert::From<MissingEnumerableERC20TemplateCall>
-    for LSSVMPairFactoryCalls {
+    impl ::core::convert::From<MissingEnumerableERC20TemplateCall> for LSSVMPairFactoryCalls {
         fn from(value: MissingEnumerableERC20TemplateCall) -> Self {
             Self::MissingEnumerableERC20Template(value)
         }
     }
-    impl ::core::convert::From<MissingEnumerableETHTemplateCall>
-    for LSSVMPairFactoryCalls {
+    impl ::core::convert::From<MissingEnumerableETHTemplateCall> for LSSVMPairFactoryCalls {
         fn from(value: MissingEnumerableETHTemplateCall) -> Self {
             Self::MissingEnumerableETHTemplate(value)
         }
@@ -17103,7 +16988,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct BondingCurveAllowedReturn(pub bool);
     ///Container type for all return fields from the `callAllowed` function with signature `callAllowed(address)` and selector `0x1fba95e8`
@@ -17115,7 +17000,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct CallAllowedReturn(pub bool);
     ///Container type for all return fields from the `createPairERC20` function with signature `createPairERC20((address,address,address,address,uint8,uint128,uint96,uint128,uint256[],uint256))` and selector `0x59722caa`
@@ -17127,7 +17012,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct CreatePairERC20Return {
         pub pair: ::ethers::core::types::Address,
@@ -17141,7 +17026,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct CreatePairETHReturn {
         pub pair: ::ethers::core::types::Address,
@@ -17155,7 +17040,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct EnumerableERC20TemplateReturn(pub ::ethers::core::types::Address);
     ///Container type for all return fields from the `enumerableETHTemplate` function with signature `enumerableETHTemplate()` and selector `0xad2e5770`
@@ -17167,7 +17052,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct EnumerableETHTemplateReturn(pub ::ethers::core::types::Address);
     ///Container type for all return fields from the `isPair` function with signature `isPair(address,uint8)` and selector `0x08f25a8f`
@@ -17179,7 +17064,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct IsPairReturn(pub bool);
     ///Container type for all return fields from the `missingEnumerableERC20Template` function with signature `missingEnumerableERC20Template()` and selector `0x4c6bc433`
@@ -17191,7 +17076,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct MissingEnumerableERC20TemplateReturn(pub ::ethers::core::types::Address);
     ///Container type for all return fields from the `missingEnumerableETHTemplate` function with signature `missingEnumerableETHTemplate()` and selector `0x004885ea`
@@ -17203,7 +17088,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct MissingEnumerableETHTemplateReturn(pub ::ethers::core::types::Address);
     ///Container type for all return fields from the `owner` function with signature `owner()` and selector `0x8da5cb5b`
@@ -17215,7 +17100,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct OwnerReturn(pub ::ethers::core::types::Address);
     ///Container type for all return fields from the `protocolFeeMultiplier` function with signature `protocolFeeMultiplier()` and selector `0x1ce4c78b`
@@ -17227,7 +17112,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct ProtocolFeeMultiplierReturn(pub ::ethers::core::types::U256);
     ///Container type for all return fields from the `protocolFeeRecipient` function with signature `protocolFeeRecipient()` and selector `0x64df049e`
@@ -17239,7 +17124,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct ProtocolFeeRecipientReturn(pub ::ethers::core::types::Address);
     ///Container type for all return fields from the `routerStatus` function with signature `routerStatus(address)` and selector `0xa93ec68b`
@@ -17251,7 +17136,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct RouterStatusReturn {
         pub allowed: bool,
@@ -17266,7 +17151,7 @@ pub mod lssvm_pair_factory {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct CreateERC20PairParams {
         pub token: ::ethers::core::types::Address,

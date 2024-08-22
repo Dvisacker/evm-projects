@@ -7,14 +7,16 @@ pub use std_invariant::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod std_invariant {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"excludeArtifacts\",\"outputs\":[{\"internalType\":\"string[]\",\"name\":\"excludedArtifacts_\",\"type\":\"string[]\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"excludeContracts\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"excludedContracts_\",\"type\":\"address[]\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"excludeSenders\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"excludedSenders_\",\"type\":\"address[]\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"targetArtifactSelectors\",\"outputs\":[{\"internalType\":\"struct StdInvariant.FuzzSelector[]\",\"name\":\"targetedArtifactSelectors_\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"bytes4[]\",\"name\":\"selectors\",\"type\":\"bytes4[]\",\"components\":[]}]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"targetArtifacts\",\"outputs\":[{\"internalType\":\"string[]\",\"name\":\"targetedArtifacts_\",\"type\":\"string[]\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"targetContracts\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"targetedContracts_\",\"type\":\"address[]\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"targetSelectors\",\"outputs\":[{\"internalType\":\"struct StdInvariant.FuzzSelector[]\",\"name\":\"targetedSelectors_\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"bytes4[]\",\"name\":\"selectors\",\"type\":\"bytes4[]\",\"components\":[]}]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"targetSenders\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"targetedSenders_\",\"type\":\"address[]\",\"components\":[]}]}]";
     ///The parsed JSON ABI of the contract.
-    pub static STDINVARIANT_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
-    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
+    pub static STDINVARIANT_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         96,
@@ -2089,9 +2091,8 @@ pub mod std_invariant {
         51,
     ];
     ///The bytecode of the contract.
-    pub static STDINVARIANT_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __BYTECODE,
-    );
+    pub static STDINVARIANT_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__BYTECODE);
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -4134,9 +4135,8 @@ pub mod std_invariant {
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static STDINVARIANT_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __DEPLOYED_BYTECODE,
-    );
+    pub static STDINVARIANT_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
     pub struct StdInvariant<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for StdInvariant<M> {
         fn clone(&self) -> Self {
@@ -4156,7 +4156,9 @@ pub mod std_invariant {
     }
     impl<M> ::core::fmt::Debug for StdInvariant<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(StdInvariant)).field(&self.address()).finish()
+            f.debug_tuple(stringify!(StdInvariant))
+                .field(&self.address())
+                .finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> StdInvariant<M> {
@@ -4166,13 +4168,11 @@ pub mod std_invariant {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    STDINVARIANT_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                STDINVARIANT_ABI.clone(),
+                client,
+            ))
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -4216,10 +4216,8 @@ pub mod std_invariant {
         ///Calls the contract's `excludeArtifacts` (0xb5508aa9) function
         pub fn exclude_artifacts(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::std::vec::Vec<::std::string::String>,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::std::vec::Vec<::std::string::String>>
+        {
             self.0
                 .method_hash([181, 80, 138, 169], ())
                 .expect("method not found (this should never happen)")
@@ -4249,10 +4247,7 @@ pub mod std_invariant {
         ///Calls the contract's `targetArtifactSelectors` (0x66d9a9a0) function
         pub fn target_artifact_selectors(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::std::vec::Vec<FuzzSelector>,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::std::vec::Vec<FuzzSelector>> {
             self.0
                 .method_hash([102, 217, 169, 160], ())
                 .expect("method not found (this should never happen)")
@@ -4260,10 +4255,8 @@ pub mod std_invariant {
         ///Calls the contract's `targetArtifacts` (0x85226c81) function
         pub fn target_artifacts(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::std::vec::Vec<::std::string::String>,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::std::vec::Vec<::std::string::String>>
+        {
             self.0
                 .method_hash([133, 34, 108, 129], ())
                 .expect("method not found (this should never happen)")
@@ -4282,10 +4275,7 @@ pub mod std_invariant {
         ///Calls the contract's `targetSelectors` (0x916a17c6) function
         pub fn target_selectors(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::std::vec::Vec<FuzzSelector>,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::std::vec::Vec<FuzzSelector>> {
             self.0
                 .method_hash([145, 106, 23, 198], ())
                 .expect("method not found (this should never happen)")
@@ -4302,8 +4292,7 @@ pub mod std_invariant {
                 .expect("method not found (this should never happen)")
         }
     }
-    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for StdInvariant<M> {
+    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>> for StdInvariant<M> {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -4317,7 +4306,7 @@ pub mod std_invariant {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "excludeArtifacts", abi = "excludeArtifacts()")]
     pub struct ExcludeArtifactsCall;
@@ -4330,7 +4319,7 @@ pub mod std_invariant {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "excludeContracts", abi = "excludeContracts()")]
     pub struct ExcludeContractsCall;
@@ -4343,7 +4332,7 @@ pub mod std_invariant {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "excludeSenders", abi = "excludeSenders()")]
     pub struct ExcludeSendersCall;
@@ -4356,7 +4345,7 @@ pub mod std_invariant {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "targetArtifactSelectors", abi = "targetArtifactSelectors()")]
     pub struct TargetArtifactSelectorsCall;
@@ -4369,7 +4358,7 @@ pub mod std_invariant {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "targetArtifacts", abi = "targetArtifacts()")]
     pub struct TargetArtifactsCall;
@@ -4382,7 +4371,7 @@ pub mod std_invariant {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "targetContracts", abi = "targetContracts()")]
     pub struct TargetContractsCall;
@@ -4395,7 +4384,7 @@ pub mod std_invariant {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "targetSelectors", abi = "targetSelectors()")]
     pub struct TargetSelectorsCall;
@@ -4408,7 +4397,7 @@ pub mod std_invariant {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "targetSenders", abi = "targetSenders()")]
     pub struct TargetSendersCall;
@@ -4429,42 +4418,43 @@ pub mod std_invariant {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <ExcludeArtifactsCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <ExcludeArtifactsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ExcludeArtifacts(decoded));
             }
-            if let Ok(decoded)
-                = <ExcludeContractsCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <ExcludeContractsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ExcludeContracts(decoded));
             }
-            if let Ok(decoded)
-                = <ExcludeSendersCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <ExcludeSendersCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ExcludeSenders(decoded));
             }
-            if let Ok(decoded)
-                = <TargetArtifactSelectorsCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <TargetArtifactSelectorsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::TargetArtifactSelectors(decoded));
             }
-            if let Ok(decoded)
-                = <TargetArtifactsCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <TargetArtifactsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::TargetArtifacts(decoded));
             }
-            if let Ok(decoded)
-                = <TargetContractsCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <TargetContractsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::TargetContracts(decoded));
             }
-            if let Ok(decoded)
-                = <TargetSelectorsCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <TargetSelectorsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::TargetSelectors(decoded));
             }
-            if let Ok(decoded)
-                = <TargetSendersCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <TargetSendersCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::TargetSenders(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -4473,30 +4463,16 @@ pub mod std_invariant {
     impl ::ethers::core::abi::AbiEncode for StdInvariantCalls {
         fn encode(self) -> Vec<u8> {
             match self {
-                Self::ExcludeArtifacts(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::ExcludeContracts(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::ExcludeSenders(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::ExcludeArtifacts(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::ExcludeContracts(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::ExcludeSenders(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::TargetArtifactSelectors(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::TargetArtifacts(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::TargetContracts(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::TargetSelectors(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::TargetSenders(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::TargetArtifacts(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::TargetContracts(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::TargetSelectors(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::TargetSenders(element) => ::ethers::core::abi::AbiEncode::encode(element),
             }
         }
     }
@@ -4506,9 +4482,7 @@ pub mod std_invariant {
                 Self::ExcludeArtifacts(element) => ::core::fmt::Display::fmt(element, f),
                 Self::ExcludeContracts(element) => ::core::fmt::Display::fmt(element, f),
                 Self::ExcludeSenders(element) => ::core::fmt::Display::fmt(element, f),
-                Self::TargetArtifactSelectors(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::TargetArtifactSelectors(element) => ::core::fmt::Display::fmt(element, f),
                 Self::TargetArtifacts(element) => ::core::fmt::Display::fmt(element, f),
                 Self::TargetContracts(element) => ::core::fmt::Display::fmt(element, f),
                 Self::TargetSelectors(element) => ::core::fmt::Display::fmt(element, f),
@@ -4565,7 +4539,7 @@ pub mod std_invariant {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct ExcludeArtifactsReturn {
         pub excluded_artifacts: ::std::vec::Vec<::std::string::String>,
@@ -4579,7 +4553,7 @@ pub mod std_invariant {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct ExcludeContractsReturn {
         pub excluded_contracts: ::std::vec::Vec<::ethers::core::types::Address>,
@@ -4593,7 +4567,7 @@ pub mod std_invariant {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct ExcludeSendersReturn {
         pub excluded_senders: ::std::vec::Vec<::ethers::core::types::Address>,
@@ -4607,7 +4581,7 @@ pub mod std_invariant {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct TargetArtifactSelectorsReturn {
         pub targeted_artifact_selectors: ::std::vec::Vec<FuzzSelector>,
@@ -4621,7 +4595,7 @@ pub mod std_invariant {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct TargetArtifactsReturn {
         pub targeted_artifacts: ::std::vec::Vec<::std::string::String>,
@@ -4635,7 +4609,7 @@ pub mod std_invariant {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct TargetContractsReturn {
         pub targeted_contracts: ::std::vec::Vec<::ethers::core::types::Address>,
@@ -4649,7 +4623,7 @@ pub mod std_invariant {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct TargetSelectorsReturn {
         pub targeted_selectors: ::std::vec::Vec<FuzzSelector>,
@@ -4663,7 +4637,7 @@ pub mod std_invariant {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct TargetSendersReturn {
         pub targeted_senders: ::std::vec::Vec<::ethers::core::types::Address>,
@@ -4677,7 +4651,7 @@ pub mod std_invariant {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct FuzzSelector {
         pub addr: ::ethers::core::types::Address,

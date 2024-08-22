@@ -10,6 +10,7 @@ members = [
 ]
 
 default-members = ["bin/artemis", "bin/cli"]
+resolver = "2"
 
 [workspace.dependencies]
 ## eth

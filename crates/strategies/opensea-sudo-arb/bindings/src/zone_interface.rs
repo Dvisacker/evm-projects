@@ -7,15 +7,17 @@ pub use zone_interface::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod zone_interface {
     pub use super::super::shared_types::*;
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderHash\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"zoneHash\",\"type\":\"bytes32\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"isValidOrder\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"validOrderMagicValue\",\"type\":\"bytes4\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderHash\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"caller\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"struct AdvancedOrder\",\"name\":\"order\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"struct OrderParameters\",\"name\":\"parameters\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"struct OfferItem[]\",\"name\":\"offer\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"struct ConsiderationItem[]\",\"name\":\"consideration\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}]},{\"internalType\":\"enum OrderType\",\"name\":\"orderType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"zoneHash\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"salt\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"conduitKey\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"totalOriginalConsiderationItems\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"uint120\",\"name\":\"numerator\",\"type\":\"uint120\",\"components\":[]},{\"internalType\":\"uint120\",\"name\":\"denominator\",\"type\":\"uint120\",\"components\":[]},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\",\"components\":[]},{\"internalType\":\"bytes\",\"name\":\"extraData\",\"type\":\"bytes\",\"components\":[]}]},{\"internalType\":\"bytes32[]\",\"name\":\"priorOrderHashes\",\"type\":\"bytes32[]\",\"components\":[]},{\"internalType\":\"struct CriteriaResolver[]\",\"name\":\"criteriaResolvers\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"uint256\",\"name\":\"orderIndex\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"enum Side\",\"name\":\"side\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32[]\",\"name\":\"criteriaProof\",\"type\":\"bytes32[]\",\"components\":[]}]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"isValidOrderIncludingExtraData\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"validOrderMagicValue\",\"type\":\"bytes4\",\"components\":[]}]}]";
     ///The parsed JSON ABI of the contract.
-    pub static ZONEINTERFACE_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
-    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
+    pub static ZONEINTERFACE_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     pub struct ZoneInterface<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for ZoneInterface<M> {
         fn clone(&self) -> Self {
@@ -35,7 +37,9 @@ pub mod zone_interface {
     }
     impl<M> ::core::fmt::Debug for ZoneInterface<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(ZoneInterface)).field(&self.address()).finish()
+            f.debug_tuple(stringify!(ZoneInterface))
+                .field(&self.address())
+                .finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> ZoneInterface<M> {
@@ -45,13 +49,11 @@ pub mod zone_interface {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    ZONEINTERFACE_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                ZONEINTERFACE_ABI.clone(),
+                client,
+            ))
         }
         ///Calls the contract's `isValidOrder` (0x0e1d31dc) function
         pub fn is_valid_order(
@@ -77,13 +79,20 @@ pub mod zone_interface {
             self.0
                 .method_hash(
                     [51, 19, 21, 112],
-                    (order_hash, caller, order, prior_order_hashes, criteria_resolvers),
+                    (
+                        order_hash,
+                        caller,
+                        order,
+                        prior_order_hashes,
+                        criteria_resolvers,
+                    ),
                 )
                 .expect("method not found (this should never happen)")
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for ZoneInterface<M> {
+        for ZoneInterface<M>
+    {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -97,7 +106,7 @@ pub mod zone_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "isValidOrder",
@@ -118,7 +127,7 @@ pub mod zone_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "isValidOrderIncludingExtraData",
@@ -142,14 +151,13 @@ pub mod zone_interface {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <IsValidOrderCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <IsValidOrderCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::IsValidOrder(decoded));
             }
-            if let Ok(decoded)
-                = <IsValidOrderIncludingExtraDataCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <IsValidOrderIncludingExtraDataCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::IsValidOrderIncludingExtraData(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -158,9 +166,7 @@ pub mod zone_interface {
     impl ::ethers::core::abi::AbiEncode for ZoneInterfaceCalls {
         fn encode(self) -> Vec<u8> {
             match self {
-                Self::IsValidOrder(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::IsValidOrder(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::IsValidOrderIncludingExtraData(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
@@ -182,8 +188,7 @@ pub mod zone_interface {
             Self::IsValidOrder(value)
         }
     }
-    impl ::core::convert::From<IsValidOrderIncludingExtraDataCall>
-    for ZoneInterfaceCalls {
+    impl ::core::convert::From<IsValidOrderIncludingExtraDataCall> for ZoneInterfaceCalls {
         fn from(value: IsValidOrderIncludingExtraDataCall) -> Self {
             Self::IsValidOrderIncludingExtraData(value)
         }
@@ -197,7 +202,7 @@ pub mod zone_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct IsValidOrderReturn {
         pub valid_order_magic_value: [u8; 4],
@@ -211,7 +216,7 @@ pub mod zone_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct IsValidOrderIncludingExtraDataReturn {
         pub valid_order_magic_value: [u8; 4],

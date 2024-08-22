@@ -7,14 +7,16 @@ pub use i_curve::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod i_curve {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"uint128\",\"name\":\"spotPrice\",\"type\":\"uint128\",\"components\":[]},{\"internalType\":\"uint128\",\"name\":\"delta\",\"type\":\"uint128\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"numItems\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"feeMultiplier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"protocolFeeMultiplier\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"getBuyInfo\",\"outputs\":[{\"internalType\":\"enum CurveErrorCodes.Error\",\"name\":\"error\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint128\",\"name\":\"newSpotPrice\",\"type\":\"uint128\",\"components\":[]},{\"internalType\":\"uint128\",\"name\":\"newDelta\",\"type\":\"uint128\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"inputValue\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"protocolFee\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"uint128\",\"name\":\"spotPrice\",\"type\":\"uint128\",\"components\":[]},{\"internalType\":\"uint128\",\"name\":\"delta\",\"type\":\"uint128\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"numItems\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"feeMultiplier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"protocolFeeMultiplier\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"getSellInfo\",\"outputs\":[{\"internalType\":\"enum CurveErrorCodes.Error\",\"name\":\"error\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint128\",\"name\":\"newSpotPrice\",\"type\":\"uint128\",\"components\":[]},{\"internalType\":\"uint128\",\"name\":\"newDelta\",\"type\":\"uint128\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"outputValue\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"protocolFee\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"uint128\",\"name\":\"delta\",\"type\":\"uint128\",\"components\":[]}],\"stateMutability\":\"pure\",\"type\":\"function\",\"name\":\"validateDelta\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"valid\",\"type\":\"bool\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"uint128\",\"name\":\"newSpotPrice\",\"type\":\"uint128\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"validateSpotPrice\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"valid\",\"type\":\"bool\",\"components\":[]}]}]";
     ///The parsed JSON ABI of the contract.
-    pub static ICURVE_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
-    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
+    pub static ICURVE_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     pub struct ICurve<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for ICurve<M> {
         fn clone(&self) -> Self {
@@ -34,7 +36,9 @@ pub mod i_curve {
     }
     impl<M> ::core::fmt::Debug for ICurve<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(ICurve)).field(&self.address()).finish()
+            f.debug_tuple(stringify!(ICurve))
+                .field(&self.address())
+                .finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> ICurve<M> {
@@ -44,13 +48,11 @@ pub mod i_curve {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    ICURVE_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                ICURVE_ABI.clone(),
+                client,
+            ))
         }
         ///Calls the contract's `getBuyInfo` (0x7ca542ac) function
         pub fn get_buy_info(
@@ -62,7 +64,13 @@ pub mod i_curve {
             protocol_fee_multiplier: ::ethers::core::types::U256,
         ) -> ::ethers::contract::builders::ContractCall<
             M,
-            (u8, u128, u128, ::ethers::core::types::U256, ::ethers::core::types::U256),
+            (
+                u8,
+                u128,
+                u128,
+                ::ethers::core::types::U256,
+                ::ethers::core::types::U256,
+            ),
         > {
             self.0
                 .method_hash(
@@ -87,7 +95,13 @@ pub mod i_curve {
             protocol_fee_multiplier: ::ethers::core::types::U256,
         ) -> ::ethers::contract::builders::ContractCall<
             M,
-            (u8, u128, u128, ::ethers::core::types::U256, ::ethers::core::types::U256),
+            (
+                u8,
+                u128,
+                u128,
+                ::ethers::core::types::U256,
+                ::ethers::core::types::U256,
+            ),
         > {
             self.0
                 .method_hash(
@@ -121,8 +135,7 @@ pub mod i_curve {
                 .expect("method not found (this should never happen)")
         }
     }
-    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for ICurve<M> {
+    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>> for ICurve<M> {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -136,7 +149,7 @@ pub mod i_curve {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "getBuyInfo",
@@ -158,7 +171,7 @@ pub mod i_curve {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "getSellInfo",
@@ -180,7 +193,7 @@ pub mod i_curve {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "validateDelta", abi = "validateDelta(uint128)")]
     pub struct ValidateDeltaCall {
@@ -195,7 +208,7 @@ pub mod i_curve {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "validateSpotPrice", abi = "validateSpotPrice(uint128)")]
     pub struct ValidateSpotPriceCall {
@@ -214,22 +227,19 @@ pub mod i_curve {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <GetBuyInfoCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <GetBuyInfoCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::GetBuyInfo(decoded));
             }
-            if let Ok(decoded)
-                = <GetSellInfoCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <GetSellInfoCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::GetSellInfo(decoded));
             }
-            if let Ok(decoded)
-                = <ValidateDeltaCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <ValidateDeltaCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ValidateDelta(decoded));
             }
-            if let Ok(decoded)
-                = <ValidateSpotPriceCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <ValidateSpotPriceCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::ValidateSpotPrice(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -238,18 +248,10 @@ pub mod i_curve {
     impl ::ethers::core::abi::AbiEncode for ICurveCalls {
         fn encode(self) -> Vec<u8> {
             match self {
-                Self::GetBuyInfo(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::GetSellInfo(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::ValidateDelta(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::ValidateSpotPrice(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::GetBuyInfo(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::GetSellInfo(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::ValidateDelta(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::ValidateSpotPrice(element) => ::ethers::core::abi::AbiEncode::encode(element),
             }
         }
     }
@@ -292,7 +294,7 @@ pub mod i_curve {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct GetBuyInfoReturn {
         pub error: u8,
@@ -310,7 +312,7 @@ pub mod i_curve {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct GetSellInfoReturn {
         pub error: u8,
@@ -328,7 +330,7 @@ pub mod i_curve {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct ValidateDeltaReturn {
         pub valid: bool,
@@ -342,7 +344,7 @@ pub mod i_curve {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct ValidateSpotPriceReturn {
         pub valid: bool,

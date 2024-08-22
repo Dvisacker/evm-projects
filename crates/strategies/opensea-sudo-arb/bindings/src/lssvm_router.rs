@@ -7,15 +7,17 @@ pub use lssvm_router::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod lssvm_router {
     pub use super::super::shared_types::*;
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"contract ILSSVMPairFactoryLike\",\"name\":\"_factory\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\",\"outputs\":[]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"factory\",\"outputs\":[{\"internalType\":\"contract ILSSVMPairFactoryLike\",\"name\":\"\",\"type\":\"address\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"contract ERC20\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"enum ILSSVMPairFactoryLike.PairVariant\",\"name\":\"variant\",\"type\":\"uint8\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"pairTransferERC20From\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"contract IERC721\",\"name\":\"nft\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"from\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"enum ILSSVMPairFactoryLike.PairVariant\",\"name\":\"variant\",\"type\":\"uint8\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"pairTransferNFTFrom\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"struct LSSVMRouter.RobustPairSwapAny[]\",\"name\":\"swapList\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct LSSVMRouter.PairSwapAny\",\"name\":\"swapInfo\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"numItems\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"uint256\",\"name\":\"maxCost\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"uint256\",\"name\":\"inputAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"nftRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"robustSwapERC20ForAnyNFTs\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"remainingValue\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct LSSVMRouter.RobustPairSwapSpecific[]\",\"name\":\"swapList\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct LSSVMRouter.PairSwapSpecific\",\"name\":\"swapInfo\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]}]},{\"internalType\":\"uint256\",\"name\":\"maxCost\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"uint256\",\"name\":\"inputAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"nftRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"robustSwapERC20ForSpecificNFTs\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"remainingValue\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct LSSVMRouter.RobustPairNFTsFoTokenAndTokenforNFTsTrade\",\"name\":\"params\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"struct LSSVMRouter.RobustPairSwapSpecific[]\",\"name\":\"tokenToNFTTrades\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct LSSVMRouter.PairSwapSpecific\",\"name\":\"swapInfo\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]}]},{\"internalType\":\"uint256\",\"name\":\"maxCost\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"struct LSSVMRouter.RobustPairSwapSpecificForToken[]\",\"name\":\"nftToTokenTrades\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct LSSVMRouter.PairSwapSpecific\",\"name\":\"swapInfo\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]}]},{\"internalType\":\"uint256\",\"name\":\"minOutput\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"uint256\",\"name\":\"inputAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"tokenRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"nftRecipient\",\"type\":\"address\",\"components\":[]}]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"robustSwapERC20ForSpecificNFTsAndNFTsToToken\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"remainingValue\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"outputAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct LSSVMRouter.RobustPairSwapAny[]\",\"name\":\"swapList\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct LSSVMRouter.PairSwapAny\",\"name\":\"swapInfo\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"numItems\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"uint256\",\"name\":\"maxCost\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"address payable\",\"name\":\"ethRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"nftRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"robustSwapETHForAnyNFTs\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"remainingValue\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct LSSVMRouter.RobustPairSwapSpecific[]\",\"name\":\"swapList\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct LSSVMRouter.PairSwapSpecific\",\"name\":\"swapInfo\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]}]},{\"internalType\":\"uint256\",\"name\":\"maxCost\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"address payable\",\"name\":\"ethRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"nftRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"robustSwapETHForSpecificNFTs\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"remainingValue\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct LSSVMRouter.RobustPairNFTsFoTokenAndTokenforNFTsTrade\",\"name\":\"params\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"struct LSSVMRouter.RobustPairSwapSpecific[]\",\"name\":\"tokenToNFTTrades\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct LSSVMRouter.PairSwapSpecific\",\"name\":\"swapInfo\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]}]},{\"internalType\":\"uint256\",\"name\":\"maxCost\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"struct LSSVMRouter.RobustPairSwapSpecificForToken[]\",\"name\":\"nftToTokenTrades\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct LSSVMRouter.PairSwapSpecific\",\"name\":\"swapInfo\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]}]},{\"internalType\":\"uint256\",\"name\":\"minOutput\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"uint256\",\"name\":\"inputAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"tokenRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"nftRecipient\",\"type\":\"address\",\"components\":[]}]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"robustSwapETHForSpecificNFTsAndNFTsToToken\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"remainingValue\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"outputAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct LSSVMRouter.RobustPairSwapSpecificForToken[]\",\"name\":\"swapList\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct LSSVMRouter.PairSwapSpecific\",\"name\":\"swapInfo\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]}]},{\"internalType\":\"uint256\",\"name\":\"minOutput\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"address payable\",\"name\":\"tokenRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"robustSwapNFTsForToken\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"outputAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct LSSVMRouter.PairSwapAny[]\",\"name\":\"swapList\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"numItems\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"uint256\",\"name\":\"inputAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"nftRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"swapERC20ForAnyNFTs\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"remainingValue\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct LSSVMRouter.PairSwapSpecific[]\",\"name\":\"swapList\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]}]},{\"internalType\":\"uint256\",\"name\":\"inputAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"nftRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"swapERC20ForSpecificNFTs\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"remainingValue\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct LSSVMRouter.PairSwapAny[]\",\"name\":\"swapList\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"numItems\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"address payable\",\"name\":\"ethRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"nftRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"swapETHForAnyNFTs\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"remainingValue\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct LSSVMRouter.PairSwapSpecific[]\",\"name\":\"swapList\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]}]},{\"internalType\":\"address payable\",\"name\":\"ethRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"nftRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"swapETHForSpecificNFTs\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"remainingValue\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct LSSVMRouter.NFTsForAnyNFTsTrade\",\"name\":\"trade\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"struct LSSVMRouter.PairSwapSpecific[]\",\"name\":\"nftToTokenTrades\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]}]},{\"internalType\":\"struct LSSVMRouter.PairSwapAny[]\",\"name\":\"tokenToNFTTrades\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"numItems\",\"type\":\"uint256\",\"components\":[]}]}]},{\"internalType\":\"uint256\",\"name\":\"inputAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"minOutput\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"nftRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"swapNFTsForAnyNFTsThroughERC20\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"outputAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct LSSVMRouter.NFTsForAnyNFTsTrade\",\"name\":\"trade\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"struct LSSVMRouter.PairSwapSpecific[]\",\"name\":\"nftToTokenTrades\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]}]},{\"internalType\":\"struct LSSVMRouter.PairSwapAny[]\",\"name\":\"tokenToNFTTrades\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"numItems\",\"type\":\"uint256\",\"components\":[]}]}]},{\"internalType\":\"uint256\",\"name\":\"minOutput\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"ethRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"nftRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"swapNFTsForAnyNFTsThroughETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"outputAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct LSSVMRouter.NFTsForSpecificNFTsTrade\",\"name\":\"trade\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"struct LSSVMRouter.PairSwapSpecific[]\",\"name\":\"nftToTokenTrades\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]}]},{\"internalType\":\"struct LSSVMRouter.PairSwapSpecific[]\",\"name\":\"tokenToNFTTrades\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]}]}]},{\"internalType\":\"uint256\",\"name\":\"inputAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"minOutput\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"nftRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"swapNFTsForSpecificNFTsThroughERC20\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"outputAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct LSSVMRouter.NFTsForSpecificNFTsTrade\",\"name\":\"trade\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"struct LSSVMRouter.PairSwapSpecific[]\",\"name\":\"nftToTokenTrades\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]}]},{\"internalType\":\"struct LSSVMRouter.PairSwapSpecific[]\",\"name\":\"tokenToNFTTrades\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]}]}]},{\"internalType\":\"uint256\",\"name\":\"minOutput\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"ethRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"nftRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"swapNFTsForSpecificNFTsThroughETH\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"outputAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct LSSVMRouter.PairSwapSpecific[]\",\"name\":\"swapList\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"contract LSSVMPair\",\"name\":\"pair\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256[]\",\"name\":\"nftIds\",\"type\":\"uint256[]\",\"components\":[]}]},{\"internalType\":\"uint256\",\"name\":\"minOutput\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"tokenRecipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"deadline\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"swapNFTsForToken\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"outputAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"payable\",\"type\":\"receive\",\"outputs\":[]}]";
     ///The parsed JSON ABI of the contract.
-    pub static LSSVMROUTER_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
-    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
+    pub static LSSVMROUTER_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         96,
@@ -12040,9 +12042,8 @@ pub mod lssvm_router {
         51,
     ];
     ///The bytecode of the contract.
-    pub static LSSVMROUTER_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __BYTECODE,
-    );
+    pub static LSSVMROUTER_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__BYTECODE);
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -23905,9 +23906,8 @@ pub mod lssvm_router {
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static LSSVMROUTER_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __DEPLOYED_BYTECODE,
-    );
+    pub static LSSVMROUTER_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
     pub struct LSSVMRouter<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for LSSVMRouter<M> {
         fn clone(&self) -> Self {
@@ -23927,7 +23927,9 @@ pub mod lssvm_router {
     }
     impl<M> ::core::fmt::Debug for LSSVMRouter<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(LSSVMRouter)).field(&self.address()).finish()
+            f.debug_tuple(stringify!(LSSVMRouter))
+                .field(&self.address())
+                .finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> LSSVMRouter<M> {
@@ -23937,13 +23939,11 @@ pub mod lssvm_router {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    LSSVMROUTER_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                LSSVMROUTER_ABI.clone(),
+                client,
+            ))
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -23987,10 +23987,7 @@ pub mod lssvm_router {
         ///Calls the contract's `factory` (0xc45a0155) function
         pub fn factory(
             &self,
-        ) -> ::ethers::contract::builders::ContractCall<
-            M,
-            ::ethers::core::types::Address,
-        > {
+        ) -> ::ethers::contract::builders::ContractCall<M, ::ethers::core::types::Address> {
             self.0
                 .method_hash([196, 90, 1, 85], ())
                 .expect("method not found (this should never happen)")
@@ -24256,8 +24253,7 @@ pub mod lssvm_router {
                 .expect("method not found (this should never happen)")
         }
     }
-    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for LSSVMRouter<M> {
+    impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>> for LSSVMRouter<M> {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -24271,7 +24267,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "factory", abi = "factory()")]
     pub struct FactoryCall;
@@ -24284,7 +24280,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "pairTransferERC20From",
@@ -24306,7 +24302,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "pairTransferNFTFrom",
@@ -24328,7 +24324,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "robustSwapERC20ForAnyNFTs",
@@ -24349,7 +24345,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "robustSwapERC20ForSpecificNFTs",
@@ -24370,7 +24366,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "robustSwapERC20ForSpecificNFTsAndNFTsToToken",
@@ -24388,7 +24384,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "robustSwapETHForAnyNFTs",
@@ -24409,7 +24405,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "robustSwapETHForSpecificNFTs",
@@ -24430,7 +24426,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "robustSwapETHForSpecificNFTsAndNFTsToToken",
@@ -24448,7 +24444,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "robustSwapNFTsForToken",
@@ -24468,7 +24464,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "swapERC20ForAnyNFTs",
@@ -24489,7 +24485,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "swapERC20ForSpecificNFTs",
@@ -24510,7 +24506,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "swapETHForAnyNFTs",
@@ -24531,7 +24527,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "swapETHForSpecificNFTs",
@@ -24552,7 +24548,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "swapNFTsForAnyNFTsThroughERC20",
@@ -24574,7 +24570,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "swapNFTsForAnyNFTsThroughETH",
@@ -24596,7 +24592,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "swapNFTsForSpecificNFTsThroughERC20",
@@ -24618,7 +24614,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "swapNFTsForSpecificNFTsThroughETH",
@@ -24640,7 +24636,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "swapNFTsForToken",
@@ -24665,9 +24661,7 @@ pub mod lssvm_router {
         ),
         RobustSwapETHForAnyNFTs(RobustSwapETHForAnyNFTsCall),
         RobustSwapETHForSpecificNFTs(RobustSwapETHForSpecificNFTsCall),
-        RobustSwapETHForSpecificNFTsAndNFTsToToken(
-            RobustSwapETHForSpecificNFTsAndNFTsToTokenCall,
-        ),
+        RobustSwapETHForSpecificNFTsAndNFTsToToken(RobustSwapETHForSpecificNFTsAndNFTsToTokenCall),
         RobustSwapNFTsForToken(RobustSwapNFTsForTokenCall),
         SwapERC20ForAnyNFTs(SwapERC20ForAnyNFTsCall),
         SwapERC20ForSpecificNFTs(SwapERC20ForSpecificNFTsCall),
@@ -24684,32 +24678,27 @@ pub mod lssvm_router {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <FactoryCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <FactoryCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Factory(decoded));
             }
-            if let Ok(decoded)
-                = <PairTransferERC20FromCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <PairTransferERC20FromCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::PairTransferERC20From(decoded));
             }
-            if let Ok(decoded)
-                = <PairTransferNFTFromCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <PairTransferNFTFromCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::PairTransferNFTFrom(decoded));
             }
-            if let Ok(decoded)
-                = <RobustSwapERC20ForAnyNFTsCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <RobustSwapERC20ForAnyNFTsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::RobustSwapERC20ForAnyNFTs(decoded));
             }
-            if let Ok(decoded)
-                = <RobustSwapERC20ForSpecificNFTsCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <RobustSwapERC20ForSpecificNFTsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::RobustSwapERC20ForSpecificNFTs(decoded));
             }
             if let Ok(decoded)
@@ -24718,16 +24707,14 @@ pub mod lssvm_router {
                 ) {
                 return Ok(Self::RobustSwapERC20ForSpecificNFTsAndNFTsToToken(decoded));
             }
-            if let Ok(decoded)
-                = <RobustSwapETHForAnyNFTsCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <RobustSwapETHForAnyNFTsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::RobustSwapETHForAnyNFTs(decoded));
             }
-            if let Ok(decoded)
-                = <RobustSwapETHForSpecificNFTsCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <RobustSwapETHForSpecificNFTsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::RobustSwapETHForSpecificNFTs(decoded));
             }
             if let Ok(decoded)
@@ -24736,64 +24723,58 @@ pub mod lssvm_router {
                 ) {
                 return Ok(Self::RobustSwapETHForSpecificNFTsAndNFTsToToken(decoded));
             }
-            if let Ok(decoded)
-                = <RobustSwapNFTsForTokenCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <RobustSwapNFTsForTokenCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::RobustSwapNFTsForToken(decoded));
             }
-            if let Ok(decoded)
-                = <SwapERC20ForAnyNFTsCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <SwapERC20ForAnyNFTsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::SwapERC20ForAnyNFTs(decoded));
             }
-            if let Ok(decoded)
-                = <SwapERC20ForSpecificNFTsCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <SwapERC20ForSpecificNFTsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::SwapERC20ForSpecificNFTs(decoded));
             }
-            if let Ok(decoded)
-                = <SwapETHForAnyNFTsCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <SwapETHForAnyNFTsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::SwapETHForAnyNFTs(decoded));
             }
-            if let Ok(decoded)
-                = <SwapETHForSpecificNFTsCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <SwapETHForSpecificNFTsCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::SwapETHForSpecificNFTs(decoded));
             }
-            if let Ok(decoded)
-                = <SwapNFTsForAnyNFTsThroughERC20Call as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <SwapNFTsForAnyNFTsThroughERC20Call as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::SwapNFTsForAnyNFTsThroughERC20(decoded));
             }
-            if let Ok(decoded)
-                = <SwapNFTsForAnyNFTsThroughETHCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <SwapNFTsForAnyNFTsThroughETHCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::SwapNFTsForAnyNFTsThroughETH(decoded));
             }
-            if let Ok(decoded)
-                = <SwapNFTsForSpecificNFTsThroughERC20Call as ::ethers::core::abi::AbiDecode>::decode(
+            if let Ok(decoded) =
+                <SwapNFTsForSpecificNFTsThroughERC20Call as ::ethers::core::abi::AbiDecode>::decode(
                     data,
-                ) {
+                )
+            {
                 return Ok(Self::SwapNFTsForSpecificNFTsThroughERC20(decoded));
             }
-            if let Ok(decoded)
-                = <SwapNFTsForSpecificNFTsThroughETHCall as ::ethers::core::abi::AbiDecode>::decode(
+            if let Ok(decoded) =
+                <SwapNFTsForSpecificNFTsThroughETHCall as ::ethers::core::abi::AbiDecode>::decode(
                     data,
-                ) {
+                )
+            {
                 return Ok(Self::SwapNFTsForSpecificNFTsThroughETH(decoded));
             }
-            if let Ok(decoded)
-                = <SwapNFTsForTokenCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <SwapNFTsForTokenCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::SwapNFTsForToken(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -24836,9 +24817,7 @@ pub mod lssvm_router {
                 Self::SwapERC20ForSpecificNFTs(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::SwapETHForAnyNFTs(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::SwapETHForAnyNFTs(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::SwapETHForSpecificNFTs(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
@@ -24854,9 +24833,7 @@ pub mod lssvm_router {
                 Self::SwapNFTsForSpecificNFTsThroughETH(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::SwapNFTsForToken(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::SwapNFTsForToken(element) => ::ethers::core::abi::AbiEncode::encode(element),
             }
         }
     }
@@ -24864,43 +24841,27 @@ pub mod lssvm_router {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             match self {
                 Self::Factory(element) => ::core::fmt::Display::fmt(element, f),
-                Self::PairTransferERC20From(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::PairTransferNFTFrom(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::RobustSwapERC20ForAnyNFTs(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::PairTransferERC20From(element) => ::core::fmt::Display::fmt(element, f),
+                Self::PairTransferNFTFrom(element) => ::core::fmt::Display::fmt(element, f),
+                Self::RobustSwapERC20ForAnyNFTs(element) => ::core::fmt::Display::fmt(element, f),
                 Self::RobustSwapERC20ForSpecificNFTs(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
                 Self::RobustSwapERC20ForSpecificNFTsAndNFTsToToken(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
-                Self::RobustSwapETHForAnyNFTs(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::RobustSwapETHForAnyNFTs(element) => ::core::fmt::Display::fmt(element, f),
                 Self::RobustSwapETHForSpecificNFTs(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
                 Self::RobustSwapETHForSpecificNFTsAndNFTsToToken(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
-                Self::RobustSwapNFTsForToken(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::SwapERC20ForAnyNFTs(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
-                Self::SwapERC20ForSpecificNFTs(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::RobustSwapNFTsForToken(element) => ::core::fmt::Display::fmt(element, f),
+                Self::SwapERC20ForAnyNFTs(element) => ::core::fmt::Display::fmt(element, f),
+                Self::SwapERC20ForSpecificNFTs(element) => ::core::fmt::Display::fmt(element, f),
                 Self::SwapETHForAnyNFTs(element) => ::core::fmt::Display::fmt(element, f),
-                Self::SwapETHForSpecificNFTs(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::SwapETHForSpecificNFTs(element) => ::core::fmt::Display::fmt(element, f),
                 Self::SwapNFTsForAnyNFTsThroughERC20(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
@@ -24942,8 +24903,7 @@ pub mod lssvm_router {
             Self::RobustSwapERC20ForSpecificNFTs(value)
         }
     }
-    impl ::core::convert::From<RobustSwapERC20ForSpecificNFTsAndNFTsToTokenCall>
-    for LSSVMRouterCalls {
+    impl ::core::convert::From<RobustSwapERC20ForSpecificNFTsAndNFTsToTokenCall> for LSSVMRouterCalls {
         fn from(value: RobustSwapERC20ForSpecificNFTsAndNFTsToTokenCall) -> Self {
             Self::RobustSwapERC20ForSpecificNFTsAndNFTsToToken(value)
         }
@@ -24958,8 +24918,7 @@ pub mod lssvm_router {
             Self::RobustSwapETHForSpecificNFTs(value)
         }
     }
-    impl ::core::convert::From<RobustSwapETHForSpecificNFTsAndNFTsToTokenCall>
-    for LSSVMRouterCalls {
+    impl ::core::convert::From<RobustSwapETHForSpecificNFTsAndNFTsToTokenCall> for LSSVMRouterCalls {
         fn from(value: RobustSwapETHForSpecificNFTsAndNFTsToTokenCall) -> Self {
             Self::RobustSwapETHForSpecificNFTsAndNFTsToToken(value)
         }
@@ -24999,14 +24958,12 @@ pub mod lssvm_router {
             Self::SwapNFTsForAnyNFTsThroughETH(value)
         }
     }
-    impl ::core::convert::From<SwapNFTsForSpecificNFTsThroughERC20Call>
-    for LSSVMRouterCalls {
+    impl ::core::convert::From<SwapNFTsForSpecificNFTsThroughERC20Call> for LSSVMRouterCalls {
         fn from(value: SwapNFTsForSpecificNFTsThroughERC20Call) -> Self {
             Self::SwapNFTsForSpecificNFTsThroughERC20(value)
         }
     }
-    impl ::core::convert::From<SwapNFTsForSpecificNFTsThroughETHCall>
-    for LSSVMRouterCalls {
+    impl ::core::convert::From<SwapNFTsForSpecificNFTsThroughETHCall> for LSSVMRouterCalls {
         fn from(value: SwapNFTsForSpecificNFTsThroughETHCall) -> Self {
             Self::SwapNFTsForSpecificNFTsThroughETH(value)
         }
@@ -25025,7 +24982,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct FactoryReturn(pub ::ethers::core::types::Address);
     ///Container type for all return fields from the `robustSwapERC20ForAnyNFTs` function with signature `robustSwapERC20ForAnyNFTs(((address,uint256),uint256)[],uint256,address,uint256)` and selector `0xc5cf5704`
@@ -25037,7 +24994,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct RobustSwapERC20ForAnyNFTsReturn {
         pub remaining_value: ::ethers::core::types::U256,
@@ -25051,7 +25008,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct RobustSwapERC20ForSpecificNFTsReturn {
         pub remaining_value: ::ethers::core::types::U256,
@@ -25065,7 +25022,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct RobustSwapERC20ForSpecificNFTsAndNFTsToTokenReturn {
         pub remaining_value: ::ethers::core::types::U256,
@@ -25080,7 +25037,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct RobustSwapETHForAnyNFTsReturn {
         pub remaining_value: ::ethers::core::types::U256,
@@ -25094,7 +25051,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct RobustSwapETHForSpecificNFTsReturn {
         pub remaining_value: ::ethers::core::types::U256,
@@ -25108,7 +25065,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct RobustSwapETHForSpecificNFTsAndNFTsToTokenReturn {
         pub remaining_value: ::ethers::core::types::U256,
@@ -25123,7 +25080,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct RobustSwapNFTsForTokenReturn {
         pub output_amount: ::ethers::core::types::U256,
@@ -25137,7 +25094,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct SwapERC20ForAnyNFTsReturn {
         pub remaining_value: ::ethers::core::types::U256,
@@ -25151,7 +25108,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct SwapERC20ForSpecificNFTsReturn {
         pub remaining_value: ::ethers::core::types::U256,
@@ -25165,7 +25122,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct SwapETHForAnyNFTsReturn {
         pub remaining_value: ::ethers::core::types::U256,
@@ -25179,7 +25136,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct SwapETHForSpecificNFTsReturn {
         pub remaining_value: ::ethers::core::types::U256,
@@ -25193,7 +25150,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct SwapNFTsForAnyNFTsThroughERC20Return {
         pub output_amount: ::ethers::core::types::U256,
@@ -25207,7 +25164,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct SwapNFTsForAnyNFTsThroughETHReturn {
         pub output_amount: ::ethers::core::types::U256,
@@ -25221,7 +25178,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct SwapNFTsForSpecificNFTsThroughERC20Return {
         pub output_amount: ::ethers::core::types::U256,
@@ -25235,7 +25192,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct SwapNFTsForSpecificNFTsThroughETHReturn {
         pub output_amount: ::ethers::core::types::U256,
@@ -25249,7 +25206,7 @@ pub mod lssvm_router {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct SwapNFTsForTokenReturn {
         pub output_amount: ::ethers::core::types::U256,

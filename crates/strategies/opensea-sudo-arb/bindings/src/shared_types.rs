@@ -7,7 +7,7 @@
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct AdditionalRecipient {
     pub amount: ::ethers::core::types::U256,
@@ -22,7 +22,7 @@ pub struct AdditionalRecipient {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct AdvancedOrder {
     pub parameters: OrderParameters,
@@ -40,7 +40,7 @@ pub struct AdvancedOrder {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct BasicOrderParameters {
     pub consideration_token: ::ethers::core::types::Address,
@@ -71,7 +71,7 @@ pub struct BasicOrderParameters {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct ConduitBatch1155Transfer {
     pub token: ::ethers::core::types::Address,
@@ -89,7 +89,7 @@ pub struct ConduitBatch1155Transfer {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct ConduitTransfer {
     pub item_type: u8,
@@ -108,7 +108,7 @@ pub struct ConduitTransfer {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct ConsiderationItem {
     pub item_type: u8,
@@ -127,7 +127,7 @@ pub struct ConsiderationItem {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct CriteriaResolver {
     pub order_index: ::ethers::core::types::U256,
@@ -145,7 +145,7 @@ pub struct CriteriaResolver {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct Execution {
     pub item: ReceivedItem,
@@ -161,7 +161,7 @@ pub struct Execution {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct Fulfillment {
     pub offer_components: ::std::vec::Vec<FulfillmentComponent>,
@@ -176,7 +176,7 @@ pub struct Fulfillment {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct FulfillmentComponent {
     pub order_index: ::ethers::core::types::U256,
@@ -191,7 +191,7 @@ pub struct FulfillmentComponent {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct NftsForAnyNFTsTrade {
     pub nft_to_token_trades: ::std::vec::Vec<PairSwapSpecific>,
@@ -206,7 +206,7 @@ pub struct NftsForAnyNFTsTrade {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct NftsForSpecificNFTsTrade {
     pub nft_to_token_trades: ::std::vec::Vec<PairSwapSpecific>,
@@ -221,7 +221,7 @@ pub struct NftsForSpecificNFTsTrade {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct PairSwapAny {
     pub pair: ::ethers::core::types::Address,
@@ -236,7 +236,7 @@ pub struct PairSwapAny {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct PairSwapSpecific {
     pub pair: ::ethers::core::types::Address,
@@ -251,7 +251,7 @@ pub struct PairSwapSpecific {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct RobustPairNFTsFoTokenAndTokenforNFTsTrade {
     pub token_to_nft_trades: ::std::vec::Vec<RobustPairSwapSpecific>,
@@ -269,7 +269,7 @@ pub struct RobustPairNFTsFoTokenAndTokenforNFTsTrade {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct RobustPairSwapAny {
     pub swap_info: PairSwapAny,
@@ -284,7 +284,7 @@ pub struct RobustPairSwapAny {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct RobustPairSwapSpecific {
     pub swap_info: PairSwapSpecific,
@@ -299,7 +299,7 @@ pub struct RobustPairSwapSpecific {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct RobustPairSwapSpecificForToken {
     pub swap_info: PairSwapSpecific,
@@ -314,7 +314,7 @@ pub struct RobustPairSwapSpecificForToken {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct OfferItem {
     pub item_type: u8,
@@ -332,7 +332,7 @@ pub struct OfferItem {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct Order {
     pub parameters: OrderParameters,
@@ -347,7 +347,7 @@ pub struct Order {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct OrderComponents {
     pub offerer: ::ethers::core::types::Address,
@@ -371,7 +371,7 @@ pub struct OrderComponents {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct OrderParameters {
     pub offerer: ::ethers::core::types::Address,
@@ -395,7 +395,7 @@ pub struct OrderParameters {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct ReceivedItem {
     pub item_type: u8,
@@ -413,7 +413,7 @@ pub struct ReceivedItem {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct SpentItem {
     pub item_type: u8,
@@ -430,7 +430,7 @@ pub struct SpentItem {
     Debug,
     PartialEq,
     Eq,
-    Hash
+    Hash,
 )]
 pub struct TransferHelperItem {
     pub item_type: u8,

@@ -7,14 +7,16 @@ pub use sudo_pair_quoter::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod sudo_pair_quoter {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"address payable[]\",\"name\":\"pool_addresses\",\"type\":\"address[]\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"getMultipleSellQuotes\",\"outputs\":[{\"internalType\":\"struct SudoPairQuoter.SellQuote[]\",\"name\":\"sell_quotes\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"bool\",\"name\":\"quoteAvailable\",\"type\":\"bool\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"nftAddress\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\",\"components\":[]}]}]},{\"inputs\":[{\"internalType\":\"address payable\",\"name\":\"pool_address\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"getSellQuote\",\"outputs\":[{\"internalType\":\"struct SudoPairQuoter.SellQuote\",\"name\":\"sell_quote\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"bool\",\"name\":\"quoteAvailable\",\"type\":\"bool\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"nftAddress\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"price\",\"type\":\"uint256\",\"components\":[]}]}]}]";
     ///The parsed JSON ABI of the contract.
-    pub static SUDOPAIRQUOTER_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> = ::ethers::contract::Lazy::new(||
-    ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid"));
+    pub static SUDOPAIRQUOTER_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     #[rustfmt::skip]
     const __BYTECODE: &[u8] = &[
         96,
@@ -2175,9 +2177,8 @@ pub mod sudo_pair_quoter {
         51,
     ];
     ///The bytecode of the contract.
-    pub static SUDOPAIRQUOTER_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __BYTECODE,
-    );
+    pub static SUDOPAIRQUOTER_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__BYTECODE);
     #[rustfmt::skip]
     const __DEPLOYED_BYTECODE: &[u8] = &[
         96,
@@ -4306,9 +4307,8 @@ pub mod sudo_pair_quoter {
         51,
     ];
     ///The deployed bytecode of the contract.
-    pub static SUDOPAIRQUOTER_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes = ::ethers::core::types::Bytes::from_static(
-        __DEPLOYED_BYTECODE,
-    );
+    pub static SUDOPAIRQUOTER_DEPLOYED_BYTECODE: ::ethers::core::types::Bytes =
+        ::ethers::core::types::Bytes::from_static(__DEPLOYED_BYTECODE);
     pub struct SudoPairQuoter<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for SudoPairQuoter<M> {
         fn clone(&self) -> Self {
@@ -4328,7 +4328,9 @@ pub mod sudo_pair_quoter {
     }
     impl<M> ::core::fmt::Debug for SudoPairQuoter<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(SudoPairQuoter)).field(&self.address()).finish()
+            f.debug_tuple(stringify!(SudoPairQuoter))
+                .field(&self.address())
+                .finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> SudoPairQuoter<M> {
@@ -4338,13 +4340,11 @@ pub mod sudo_pair_quoter {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    SUDOPAIRQUOTER_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                SUDOPAIRQUOTER_ABI.clone(),
+                client,
+            ))
         }
         /// Constructs the general purpose `Deployer` instance based on the provided constructor arguments and sends it.
         /// Returns a new instance of a deployer that returns an instance of this contract after sending the transaction
@@ -4405,7 +4405,8 @@ pub mod sudo_pair_quoter {
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for SudoPairQuoter<M> {
+        for SudoPairQuoter<M>
+    {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -4419,9 +4420,12 @@ pub mod sudo_pair_quoter {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
-    #[ethcall(name = "getMultipleSellQuotes", abi = "getMultipleSellQuotes(address[])")]
+    #[ethcall(
+        name = "getMultipleSellQuotes",
+        abi = "getMultipleSellQuotes(address[])"
+    )]
     pub struct GetMultipleSellQuotesCall {
         pub pool_addresses: ::std::vec::Vec<::ethers::core::types::Address>,
     }
@@ -4434,7 +4438,7 @@ pub mod sudo_pair_quoter {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "getSellQuote", abi = "getSellQuote(address)")]
     pub struct GetSellQuoteCall {
@@ -4451,14 +4455,13 @@ pub mod sudo_pair_quoter {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <GetMultipleSellQuotesCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <GetMultipleSellQuotesCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::GetMultipleSellQuotes(decoded));
             }
-            if let Ok(decoded)
-                = <GetSellQuoteCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <GetSellQuoteCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::GetSellQuote(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -4470,18 +4473,14 @@ pub mod sudo_pair_quoter {
                 Self::GetMultipleSellQuotes(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::GetSellQuote(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::GetSellQuote(element) => ::ethers::core::abi::AbiEncode::encode(element),
             }
         }
     }
     impl ::core::fmt::Display for SudoPairQuoterCalls {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             match self {
-                Self::GetMultipleSellQuotes(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::GetMultipleSellQuotes(element) => ::core::fmt::Display::fmt(element, f),
                 Self::GetSellQuote(element) => ::core::fmt::Display::fmt(element, f),
             }
         }
@@ -4505,7 +4504,7 @@ pub mod sudo_pair_quoter {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct GetMultipleSellQuotesReturn {
         pub sell_quotes: ::std::vec::Vec<SellQuote>,
@@ -4519,7 +4518,7 @@ pub mod sudo_pair_quoter {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct GetSellQuoteReturn {
         pub sell_quote: SellQuote,
@@ -4533,7 +4532,7 @@ pub mod sudo_pair_quoter {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct SellQuote {
         pub quote_available: bool,

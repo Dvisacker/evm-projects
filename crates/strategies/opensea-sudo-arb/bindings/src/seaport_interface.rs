@@ -7,19 +7,17 @@ pub use seaport_interface::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod seaport_interface {
     pub use super::super::shared_types::*;
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[{\"internalType\":\"struct OrderComponents[]\",\"name\":\"orders\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"struct OfferItem[]\",\"name\":\"offer\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"struct ConsiderationItem[]\",\"name\":\"consideration\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}]},{\"internalType\":\"enum OrderType\",\"name\":\"orderType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"zoneHash\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"salt\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"conduitKey\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"counter\",\"type\":\"uint256\",\"components\":[]}]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"cancel\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"cancelled\",\"type\":\"bool\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct AdvancedOrder\",\"name\":\"advancedOrder\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"struct OrderParameters\",\"name\":\"parameters\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"struct OfferItem[]\",\"name\":\"offer\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"struct ConsiderationItem[]\",\"name\":\"consideration\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}]},{\"internalType\":\"enum OrderType\",\"name\":\"orderType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"zoneHash\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"salt\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"conduitKey\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"totalOriginalConsiderationItems\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"uint120\",\"name\":\"numerator\",\"type\":\"uint120\",\"components\":[]},{\"internalType\":\"uint120\",\"name\":\"denominator\",\"type\":\"uint120\",\"components\":[]},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\",\"components\":[]},{\"internalType\":\"bytes\",\"name\":\"extraData\",\"type\":\"bytes\",\"components\":[]}]},{\"internalType\":\"struct CriteriaResolver[]\",\"name\":\"criteriaResolvers\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"uint256\",\"name\":\"orderIndex\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"enum Side\",\"name\":\"side\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32[]\",\"name\":\"criteriaProof\",\"type\":\"bytes32[]\",\"components\":[]}]},{\"internalType\":\"bytes32\",\"name\":\"fulfillerConduitKey\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"fulfillAdvancedOrder\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"fulfilled\",\"type\":\"bool\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct AdvancedOrder[]\",\"name\":\"advancedOrders\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct OrderParameters\",\"name\":\"parameters\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"struct OfferItem[]\",\"name\":\"offer\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"struct ConsiderationItem[]\",\"name\":\"consideration\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}]},{\"internalType\":\"enum OrderType\",\"name\":\"orderType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"zoneHash\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"salt\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"conduitKey\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"totalOriginalConsiderationItems\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"uint120\",\"name\":\"numerator\",\"type\":\"uint120\",\"components\":[]},{\"internalType\":\"uint120\",\"name\":\"denominator\",\"type\":\"uint120\",\"components\":[]},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\",\"components\":[]},{\"internalType\":\"bytes\",\"name\":\"extraData\",\"type\":\"bytes\",\"components\":[]}]},{\"internalType\":\"struct CriteriaResolver[]\",\"name\":\"criteriaResolvers\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"uint256\",\"name\":\"orderIndex\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"enum Side\",\"name\":\"side\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32[]\",\"name\":\"criteriaProof\",\"type\":\"bytes32[]\",\"components\":[]}]},{\"internalType\":\"struct FulfillmentComponent[][]\",\"name\":\"offerFulfillments\",\"type\":\"tuple[][]\",\"components\":[{\"internalType\":\"uint256\",\"name\":\"orderIndex\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"itemIndex\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"struct FulfillmentComponent[][]\",\"name\":\"considerationFulfillments\",\"type\":\"tuple[][]\",\"components\":[{\"internalType\":\"uint256\",\"name\":\"orderIndex\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"itemIndex\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"bytes32\",\"name\":\"fulfillerConduitKey\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"maximumFulfilled\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"fulfillAvailableAdvancedOrders\",\"outputs\":[{\"internalType\":\"bool[]\",\"name\":\"availableOrders\",\"type\":\"bool[]\",\"components\":[]},{\"internalType\":\"struct Execution[]\",\"name\":\"executions\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct ReceivedItem\",\"name\":\"item\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}]},{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"conduitKey\",\"type\":\"bytes32\",\"components\":[]}]}]},{\"inputs\":[{\"internalType\":\"struct Order[]\",\"name\":\"orders\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct OrderParameters\",\"name\":\"parameters\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"struct OfferItem[]\",\"name\":\"offer\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"struct ConsiderationItem[]\",\"name\":\"consideration\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}]},{\"internalType\":\"enum OrderType\",\"name\":\"orderType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"zoneHash\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"salt\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"conduitKey\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"totalOriginalConsiderationItems\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\",\"components\":[]}]},{\"internalType\":\"struct FulfillmentComponent[][]\",\"name\":\"offerFulfillments\",\"type\":\"tuple[][]\",\"components\":[{\"internalType\":\"uint256\",\"name\":\"orderIndex\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"itemIndex\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"struct FulfillmentComponent[][]\",\"name\":\"considerationFulfillments\",\"type\":\"tuple[][]\",\"components\":[{\"internalType\":\"uint256\",\"name\":\"orderIndex\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"itemIndex\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"bytes32\",\"name\":\"fulfillerConduitKey\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"maximumFulfilled\",\"type\":\"uint256\",\"components\":[]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"fulfillAvailableOrders\",\"outputs\":[{\"internalType\":\"bool[]\",\"name\":\"availableOrders\",\"type\":\"bool[]\",\"components\":[]},{\"internalType\":\"struct Execution[]\",\"name\":\"executions\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct ReceivedItem\",\"name\":\"item\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}]},{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"conduitKey\",\"type\":\"bytes32\",\"components\":[]}]}]},{\"inputs\":[{\"internalType\":\"struct BasicOrderParameters\",\"name\":\"parameters\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"address\",\"name\":\"considerationToken\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"considerationIdentifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"considerationAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"offerToken\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"offerIdentifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"offerAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"enum BasicOrderType\",\"name\":\"basicOrderType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"zoneHash\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"salt\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"offererConduitKey\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"fulfillerConduitKey\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"totalOriginalAdditionalRecipients\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"struct AdditionalRecipient[]\",\"name\":\"additionalRecipients\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}]},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\",\"components\":[]}]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"fulfillBasicOrder\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"fulfilled\",\"type\":\"bool\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct Order\",\"name\":\"order\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"struct OrderParameters\",\"name\":\"parameters\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"struct OfferItem[]\",\"name\":\"offer\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"struct ConsiderationItem[]\",\"name\":\"consideration\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}]},{\"internalType\":\"enum OrderType\",\"name\":\"orderType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"zoneHash\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"salt\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"conduitKey\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"totalOriginalConsiderationItems\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\",\"components\":[]}]},{\"internalType\":\"bytes32\",\"name\":\"fulfillerConduitKey\",\"type\":\"bytes32\",\"components\":[]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"fulfillOrder\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"fulfilled\",\"type\":\"bool\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"getCounter\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"counter\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct OrderComponents\",\"name\":\"order\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"struct OfferItem[]\",\"name\":\"offer\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"struct ConsiderationItem[]\",\"name\":\"consideration\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}]},{\"internalType\":\"enum OrderType\",\"name\":\"orderType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"zoneHash\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"salt\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"conduitKey\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"counter\",\"type\":\"uint256\",\"components\":[]}]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"getOrderHash\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderHash\",\"type\":\"bytes32\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"orderHash\",\"type\":\"bytes32\",\"components\":[]}],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"getOrderStatus\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"isValidated\",\"type\":\"bool\",\"components\":[]},{\"internalType\":\"bool\",\"name\":\"isCancelled\",\"type\":\"bool\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"totalFilled\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"totalSize\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"incrementCounter\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"newCounter\",\"type\":\"uint256\",\"components\":[]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"information\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"version\",\"type\":\"string\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"domainSeparator\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"conduitController\",\"type\":\"address\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct AdvancedOrder[]\",\"name\":\"orders\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct OrderParameters\",\"name\":\"parameters\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"struct OfferItem[]\",\"name\":\"offer\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"struct ConsiderationItem[]\",\"name\":\"consideration\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}]},{\"internalType\":\"enum OrderType\",\"name\":\"orderType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"zoneHash\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"salt\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"conduitKey\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"totalOriginalConsiderationItems\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"uint120\",\"name\":\"numerator\",\"type\":\"uint120\",\"components\":[]},{\"internalType\":\"uint120\",\"name\":\"denominator\",\"type\":\"uint120\",\"components\":[]},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\",\"components\":[]},{\"internalType\":\"bytes\",\"name\":\"extraData\",\"type\":\"bytes\",\"components\":[]}]},{\"internalType\":\"struct CriteriaResolver[]\",\"name\":\"criteriaResolvers\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"uint256\",\"name\":\"orderIndex\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"enum Side\",\"name\":\"side\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"index\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32[]\",\"name\":\"criteriaProof\",\"type\":\"bytes32[]\",\"components\":[]}]},{\"internalType\":\"struct Fulfillment[]\",\"name\":\"fulfillments\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct FulfillmentComponent[]\",\"name\":\"offerComponents\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"uint256\",\"name\":\"orderIndex\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"itemIndex\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"struct FulfillmentComponent[]\",\"name\":\"considerationComponents\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"uint256\",\"name\":\"orderIndex\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"itemIndex\",\"type\":\"uint256\",\"components\":[]}]}]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"matchAdvancedOrders\",\"outputs\":[{\"internalType\":\"struct Execution[]\",\"name\":\"executions\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct ReceivedItem\",\"name\":\"item\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}]},{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"conduitKey\",\"type\":\"bytes32\",\"components\":[]}]}]},{\"inputs\":[{\"internalType\":\"struct Order[]\",\"name\":\"orders\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct OrderParameters\",\"name\":\"parameters\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"struct OfferItem[]\",\"name\":\"offer\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"struct ConsiderationItem[]\",\"name\":\"consideration\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}]},{\"internalType\":\"enum OrderType\",\"name\":\"orderType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"zoneHash\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"salt\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"conduitKey\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"totalOriginalConsiderationItems\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\",\"components\":[]}]},{\"internalType\":\"struct Fulfillment[]\",\"name\":\"fulfillments\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct FulfillmentComponent[]\",\"name\":\"offerComponents\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"uint256\",\"name\":\"orderIndex\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"itemIndex\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"struct FulfillmentComponent[]\",\"name\":\"considerationComponents\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"uint256\",\"name\":\"orderIndex\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"itemIndex\",\"type\":\"uint256\",\"components\":[]}]}]}],\"stateMutability\":\"payable\",\"type\":\"function\",\"name\":\"matchOrders\",\"outputs\":[{\"internalType\":\"struct Execution[]\",\"name\":\"executions\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct ReceivedItem\",\"name\":\"item\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}]},{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"conduitKey\",\"type\":\"bytes32\",\"components\":[]}]}]},{\"inputs\":[],\"stateMutability\":\"view\",\"type\":\"function\",\"name\":\"name\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"contractName\",\"type\":\"string\",\"components\":[]}]},{\"inputs\":[{\"internalType\":\"struct Order[]\",\"name\":\"orders\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"struct OrderParameters\",\"name\":\"parameters\",\"type\":\"tuple\",\"components\":[{\"internalType\":\"address\",\"name\":\"offerer\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"zone\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"struct OfferItem[]\",\"name\":\"offer\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"struct ConsiderationItem[]\",\"name\":\"consideration\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifierOrCriteria\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endAmount\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"address payable\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]}]},{\"internalType\":\"enum OrderType\",\"name\":\"orderType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"startTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"endTime\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"zoneHash\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"salt\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"conduitKey\",\"type\":\"bytes32\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"totalOriginalConsiderationItems\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\",\"components\":[]}]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"validate\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"validated\",\"type\":\"bool\",\"components\":[]}]}]";
     ///The parsed JSON ABI of the contract.
-    pub static SEAPORTINTERFACE_ABI: ::ethers::contract::Lazy<
-        ::ethers::core::abi::Abi,
-    > = ::ethers::contract::Lazy::new(|| {
-        ::ethers::core::utils::__serde_json::from_str(__ABI)
-            .expect("ABI is always valid")
-    });
+    pub static SEAPORTINTERFACE_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     pub struct SeaportInterface<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for SeaportInterface<M> {
         fn clone(&self) -> Self {
@@ -39,7 +37,9 @@ pub mod seaport_interface {
     }
     impl<M> ::core::fmt::Debug for SeaportInterface<M> {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple(stringify!(SeaportInterface)).field(&self.address()).finish()
+            f.debug_tuple(stringify!(SeaportInterface))
+                .field(&self.address())
+                .finish()
         }
     }
     impl<M: ::ethers::providers::Middleware> SeaportInterface<M> {
@@ -49,13 +49,11 @@ pub mod seaport_interface {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    SEAPORTINTERFACE_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                SEAPORTINTERFACE_ABI.clone(),
+                client,
+            ))
         }
         ///Calls the contract's `cancel` (0xfd9f1e10) function
         pub fn cancel(
@@ -92,9 +90,7 @@ pub mod seaport_interface {
             advanced_orders: ::std::vec::Vec<AdvancedOrder>,
             criteria_resolvers: ::std::vec::Vec<CriteriaResolver>,
             offer_fulfillments: ::std::vec::Vec<::std::vec::Vec<FulfillmentComponent>>,
-            consideration_fulfillments: ::std::vec::Vec<
-                ::std::vec::Vec<FulfillmentComponent>,
-            >,
+            consideration_fulfillments: ::std::vec::Vec<::std::vec::Vec<FulfillmentComponent>>,
             fulfiller_conduit_key: [u8; 32],
             recipient: ::ethers::core::types::Address,
             maximum_fulfilled: ::ethers::core::types::U256,
@@ -122,9 +118,7 @@ pub mod seaport_interface {
             &self,
             orders: ::std::vec::Vec<Order>,
             offer_fulfillments: ::std::vec::Vec<::std::vec::Vec<FulfillmentComponent>>,
-            consideration_fulfillments: ::std::vec::Vec<
-                ::std::vec::Vec<FulfillmentComponent>,
-            >,
+            consideration_fulfillments: ::std::vec::Vec<::std::vec::Vec<FulfillmentComponent>>,
             fulfiller_conduit_key: [u8; 32],
             maximum_fulfilled: ::ethers::core::types::U256,
         ) -> ::ethers::contract::builders::ContractCall<
@@ -187,7 +181,12 @@ pub mod seaport_interface {
             order_hash: [u8; 32],
         ) -> ::ethers::contract::builders::ContractCall<
             M,
-            (bool, bool, ::ethers::core::types::U256, ::ethers::core::types::U256),
+            (
+                bool,
+                bool,
+                ::ethers::core::types::U256,
+                ::ethers::core::types::U256,
+            ),
         > {
             self.0
                 .method_hash([70, 66, 58, 167], order_hash)
@@ -206,7 +205,11 @@ pub mod seaport_interface {
             &self,
         ) -> ::ethers::contract::builders::ContractCall<
             M,
-            (::std::string::String, [u8; 32], ::ethers::core::types::Address),
+            (
+                ::std::string::String,
+                [u8; 32],
+                ::ethers::core::types::Address,
+            ),
         > {
             self.0
                 .method_hash([244, 123, 119, 64], ())
@@ -237,9 +240,7 @@ pub mod seaport_interface {
                 .expect("method not found (this should never happen)")
         }
         ///Calls the contract's `name` (0x06fdde03) function
-        pub fn name(
-            &self,
-        ) -> ::ethers::contract::builders::ContractCall<M, ::std::string::String> {
+        pub fn name(&self) -> ::ethers::contract::builders::ContractCall<M, ::std::string::String> {
             self.0
                 .method_hash([6, 253, 222, 3], ())
                 .expect("method not found (this should never happen)")
@@ -255,7 +256,8 @@ pub mod seaport_interface {
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for SeaportInterface<M> {
+        for SeaportInterface<M>
+    {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -269,7 +271,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "cancel",
@@ -287,7 +289,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "fulfillAdvancedOrder",
@@ -308,7 +310,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "fulfillAvailableAdvancedOrders",
@@ -318,9 +320,7 @@ pub mod seaport_interface {
         pub advanced_orders: ::std::vec::Vec<AdvancedOrder>,
         pub criteria_resolvers: ::std::vec::Vec<CriteriaResolver>,
         pub offer_fulfillments: ::std::vec::Vec<::std::vec::Vec<FulfillmentComponent>>,
-        pub consideration_fulfillments: ::std::vec::Vec<
-            ::std::vec::Vec<FulfillmentComponent>,
-        >,
+        pub consideration_fulfillments: ::std::vec::Vec<::std::vec::Vec<FulfillmentComponent>>,
         pub fulfiller_conduit_key: [u8; 32],
         pub recipient: ::ethers::core::types::Address,
         pub maximum_fulfilled: ::ethers::core::types::U256,
@@ -334,7 +334,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "fulfillAvailableOrders",
@@ -343,9 +343,7 @@ pub mod seaport_interface {
     pub struct FulfillAvailableOrdersCall {
         pub orders: ::std::vec::Vec<Order>,
         pub offer_fulfillments: ::std::vec::Vec<::std::vec::Vec<FulfillmentComponent>>,
-        pub consideration_fulfillments: ::std::vec::Vec<
-            ::std::vec::Vec<FulfillmentComponent>,
-        >,
+        pub consideration_fulfillments: ::std::vec::Vec<::std::vec::Vec<FulfillmentComponent>>,
         pub fulfiller_conduit_key: [u8; 32],
         pub maximum_fulfilled: ::ethers::core::types::U256,
     }
@@ -367,7 +365,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "fulfillOrder",
@@ -386,7 +384,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "getCounter", abi = "getCounter(address)")]
     pub struct GetCounterCall {
@@ -401,7 +399,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "getOrderHash",
@@ -419,7 +417,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "getOrderStatus", abi = "getOrderStatus(bytes32)")]
     pub struct GetOrderStatusCall {
@@ -434,7 +432,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "incrementCounter", abi = "incrementCounter()")]
     pub struct IncrementCounterCall;
@@ -447,7 +445,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "information", abi = "information()")]
     pub struct InformationCall;
@@ -460,7 +458,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "matchAdvancedOrders",
@@ -480,7 +478,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "matchOrders",
@@ -499,7 +497,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(name = "name", abi = "name()")]
     pub struct NameCall;
@@ -512,7 +510,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "validate",
@@ -545,76 +543,65 @@ pub mod seaport_interface {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <CancelCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <CancelCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Cancel(decoded));
             }
-            if let Ok(decoded)
-                = <FulfillAdvancedOrderCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <FulfillAdvancedOrderCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::FulfillAdvancedOrder(decoded));
             }
-            if let Ok(decoded)
-                = <FulfillAvailableAdvancedOrdersCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <FulfillAvailableAdvancedOrdersCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::FulfillAvailableAdvancedOrders(decoded));
             }
-            if let Ok(decoded)
-                = <FulfillAvailableOrdersCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <FulfillAvailableOrdersCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::FulfillAvailableOrders(decoded));
             }
-            if let Ok(decoded)
-                = <FulfillBasicOrderCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <FulfillBasicOrderCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::FulfillBasicOrder(decoded));
             }
-            if let Ok(decoded)
-                = <FulfillOrderCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <FulfillOrderCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::FulfillOrder(decoded));
             }
-            if let Ok(decoded)
-                = <GetCounterCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <GetCounterCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::GetCounter(decoded));
             }
-            if let Ok(decoded)
-                = <GetOrderHashCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <GetOrderHashCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::GetOrderHash(decoded));
             }
-            if let Ok(decoded)
-                = <GetOrderStatusCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) =
+                <GetOrderStatusCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::GetOrderStatus(decoded));
             }
-            if let Ok(decoded)
-                = <IncrementCounterCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <IncrementCounterCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::IncrementCounter(decoded));
             }
-            if let Ok(decoded)
-                = <InformationCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <InformationCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Information(decoded));
             }
-            if let Ok(decoded)
-                = <MatchAdvancedOrdersCall as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <MatchAdvancedOrdersCall as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::MatchAdvancedOrders(decoded));
             }
-            if let Ok(decoded)
-                = <MatchOrdersCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <MatchOrdersCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::MatchOrders(decoded));
             }
-            if let Ok(decoded)
-                = <NameCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <NameCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Name(decoded));
             }
-            if let Ok(decoded)
-                = <ValidateCall as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <ValidateCall as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::Validate(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -633,37 +620,19 @@ pub mod seaport_interface {
                 Self::FulfillAvailableOrders(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::FulfillBasicOrder(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::FulfillOrder(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::GetCounter(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::GetOrderHash(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::GetOrderStatus(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::IncrementCounter(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::Information(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::FulfillBasicOrder(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::FulfillOrder(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::GetCounter(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::GetOrderHash(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::GetOrderStatus(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::IncrementCounter(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::Information(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::MatchAdvancedOrders(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::MatchOrders(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::MatchOrders(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::Name(element) => ::ethers::core::abi::AbiEncode::encode(element),
-                Self::Validate(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::Validate(element) => ::ethers::core::abi::AbiEncode::encode(element),
             }
         }
     }
@@ -671,15 +640,11 @@ pub mod seaport_interface {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             match self {
                 Self::Cancel(element) => ::core::fmt::Display::fmt(element, f),
-                Self::FulfillAdvancedOrder(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::FulfillAdvancedOrder(element) => ::core::fmt::Display::fmt(element, f),
                 Self::FulfillAvailableAdvancedOrders(element) => {
                     ::core::fmt::Display::fmt(element, f)
                 }
-                Self::FulfillAvailableOrders(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::FulfillAvailableOrders(element) => ::core::fmt::Display::fmt(element, f),
                 Self::FulfillBasicOrder(element) => ::core::fmt::Display::fmt(element, f),
                 Self::FulfillOrder(element) => ::core::fmt::Display::fmt(element, f),
                 Self::GetCounter(element) => ::core::fmt::Display::fmt(element, f),
@@ -687,9 +652,7 @@ pub mod seaport_interface {
                 Self::GetOrderStatus(element) => ::core::fmt::Display::fmt(element, f),
                 Self::IncrementCounter(element) => ::core::fmt::Display::fmt(element, f),
                 Self::Information(element) => ::core::fmt::Display::fmt(element, f),
-                Self::MatchAdvancedOrders(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::MatchAdvancedOrders(element) => ::core::fmt::Display::fmt(element, f),
                 Self::MatchOrders(element) => ::core::fmt::Display::fmt(element, f),
                 Self::Name(element) => ::core::fmt::Display::fmt(element, f),
                 Self::Validate(element) => ::core::fmt::Display::fmt(element, f),
@@ -706,8 +669,7 @@ pub mod seaport_interface {
             Self::FulfillAdvancedOrder(value)
         }
     }
-    impl ::core::convert::From<FulfillAvailableAdvancedOrdersCall>
-    for SeaportInterfaceCalls {
+    impl ::core::convert::From<FulfillAvailableAdvancedOrdersCall> for SeaportInterfaceCalls {
         fn from(value: FulfillAvailableAdvancedOrdersCall) -> Self {
             Self::FulfillAvailableAdvancedOrders(value)
         }
@@ -781,7 +743,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct CancelReturn {
         pub cancelled: bool,
@@ -795,7 +757,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct FulfillAdvancedOrderReturn {
         pub fulfilled: bool,
@@ -809,7 +771,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct FulfillAvailableAdvancedOrdersReturn {
         pub available_orders: ::std::vec::Vec<bool>,
@@ -824,7 +786,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct FulfillAvailableOrdersReturn {
         pub available_orders: ::std::vec::Vec<bool>,
@@ -844,7 +806,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct FulfillOrderReturn {
         pub fulfilled: bool,
@@ -858,7 +820,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct GetCounterReturn {
         pub counter: ::ethers::core::types::U256,
@@ -872,7 +834,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct GetOrderHashReturn {
         pub order_hash: [u8; 32],
@@ -886,7 +848,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct GetOrderStatusReturn {
         pub is_validated: bool,
@@ -903,7 +865,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct IncrementCounterReturn {
         pub new_counter: ::ethers::core::types::U256,
@@ -917,7 +879,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct InformationReturn {
         pub version: ::std::string::String,
@@ -933,7 +895,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct MatchAdvancedOrdersReturn {
         pub executions: ::std::vec::Vec<Execution>,
@@ -947,7 +909,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct MatchOrdersReturn {
         pub executions: ::std::vec::Vec<Execution>,
@@ -961,7 +923,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct NameReturn {
         pub contract_name: ::std::string::String,
@@ -975,7 +937,7 @@ pub mod seaport_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct ValidateReturn {
         pub validated: bool,

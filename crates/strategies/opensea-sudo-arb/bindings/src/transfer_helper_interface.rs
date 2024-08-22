@@ -7,19 +7,17 @@ pub use transfer_helper_interface::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod transfer_helper_interface {
     pub use super::super::shared_types::*;
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidItemType\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"struct TransferHelperItem[]\",\"name\":\"items\",\"type\":\"tuple[]\",\"components\":[{\"internalType\":\"enum ConduitItemType\",\"name\":\"itemType\",\"type\":\"uint8\",\"components\":[]},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"identifier\",\"type\":\"uint256\",\"components\":[]},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\",\"components\":[]}]},{\"internalType\":\"address\",\"name\":\"recipient\",\"type\":\"address\",\"components\":[]},{\"internalType\":\"bytes32\",\"name\":\"conduitKey\",\"type\":\"bytes32\",\"components\":[]}],\"stateMutability\":\"nonpayable\",\"type\":\"function\",\"name\":\"bulkTransfer\",\"outputs\":[{\"internalType\":\"bytes4\",\"name\":\"\",\"type\":\"bytes4\",\"components\":[]}]}]";
     ///The parsed JSON ABI of the contract.
-    pub static TRANSFERHELPERINTERFACE_ABI: ::ethers::contract::Lazy<
-        ::ethers::core::abi::Abi,
-    > = ::ethers::contract::Lazy::new(|| {
-        ::ethers::core::utils::__serde_json::from_str(__ABI)
-            .expect("ABI is always valid")
-    });
+    pub static TRANSFERHELPERINTERFACE_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     pub struct TransferHelperInterface<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for TransferHelperInterface<M> {
         fn clone(&self) -> Self {
@@ -51,13 +49,11 @@ pub mod transfer_helper_interface {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    TRANSFERHELPERINTERFACE_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                TRANSFERHELPERINTERFACE_ABI.clone(),
+                client,
+            ))
         }
         ///Calls the contract's `bulkTransfer` (0x73b69d03) function
         pub fn bulk_transfer(
@@ -72,7 +68,8 @@ pub mod transfer_helper_interface {
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for TransferHelperInterface<M> {
+        for TransferHelperInterface<M>
+    {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -86,7 +83,7 @@ pub mod transfer_helper_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidItemType", abi = "InvalidItemType()")]
     pub struct InvalidItemType;
@@ -99,7 +96,7 @@ pub mod transfer_helper_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[ethcall(
         name = "bulkTransfer",
@@ -119,7 +116,7 @@ pub mod transfer_helper_interface {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     pub struct BulkTransferReturn(pub [u8; 4]);
 }

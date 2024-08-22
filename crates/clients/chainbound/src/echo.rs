@@ -146,7 +146,9 @@ where
                     error!("Error in Echo bundle response: {:?}", body);
                 }
             }
-            Err(send_error) => error!("Error while sending bundle to Echo: {:?}", send_error),
+            Err(send_error) => {
+                error!("Error while sending bundle to Echo: {:?}", send_error)
+            }
         }
 
         Ok(())

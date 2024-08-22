@@ -7,18 +7,16 @@ pub use signature_verification_errors::*;
     clippy::upper_case_acronyms,
     clippy::type_complexity,
     dead_code,
-    non_camel_case_types,
+    non_camel_case_types
 )]
 pub mod signature_verification_errors {
     #[rustfmt::skip]
     const __ABI: &str = "[{\"inputs\":[],\"type\":\"error\",\"name\":\"BadContractSignature\",\"outputs\":[]},{\"inputs\":[{\"internalType\":\"uint8\",\"name\":\"v\",\"type\":\"uint8\",\"components\":[]}],\"type\":\"error\",\"name\":\"BadSignatureV\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidSignature\",\"outputs\":[]},{\"inputs\":[],\"type\":\"error\",\"name\":\"InvalidSigner\",\"outputs\":[]}]";
     ///The parsed JSON ABI of the contract.
-    pub static SIGNATUREVERIFICATIONERRORS_ABI: ::ethers::contract::Lazy<
-        ::ethers::core::abi::Abi,
-    > = ::ethers::contract::Lazy::new(|| {
-        ::ethers::core::utils::__serde_json::from_str(__ABI)
-            .expect("ABI is always valid")
-    });
+    pub static SIGNATUREVERIFICATIONERRORS_ABI: ::ethers::contract::Lazy<::ethers::core::abi::Abi> =
+        ::ethers::contract::Lazy::new(|| {
+            ::ethers::core::utils::__serde_json::from_str(__ABI).expect("ABI is always valid")
+        });
     pub struct SignatureVerificationErrors<M>(::ethers::contract::Contract<M>);
     impl<M> ::core::clone::Clone for SignatureVerificationErrors<M> {
         fn clone(&self) -> Self {
@@ -50,17 +48,16 @@ pub mod signature_verification_errors {
             address: T,
             client: ::std::sync::Arc<M>,
         ) -> Self {
-            Self(
-                ::ethers::contract::Contract::new(
-                    address.into(),
-                    SIGNATUREVERIFICATIONERRORS_ABI.clone(),
-                    client,
-                ),
-            )
+            Self(::ethers::contract::Contract::new(
+                address.into(),
+                SIGNATUREVERIFICATIONERRORS_ABI.clone(),
+                client,
+            ))
         }
     }
     impl<M: ::ethers::providers::Middleware> From<::ethers::contract::Contract<M>>
-    for SignatureVerificationErrors<M> {
+        for SignatureVerificationErrors<M>
+    {
         fn from(contract: ::ethers::contract::Contract<M>) -> Self {
             Self::new(contract.address(), contract.client())
         }
@@ -74,7 +71,7 @@ pub mod signature_verification_errors {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "BadContractSignature", abi = "BadContractSignature()")]
     pub struct BadContractSignature;
@@ -87,7 +84,7 @@ pub mod signature_verification_errors {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "BadSignatureV", abi = "BadSignatureV(uint8)")]
     pub struct BadSignatureV {
@@ -102,7 +99,7 @@ pub mod signature_verification_errors {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidSignature", abi = "InvalidSignature()")]
     pub struct InvalidSignature;
@@ -115,7 +112,7 @@ pub mod signature_verification_errors {
         Debug,
         PartialEq,
         Eq,
-        Hash
+        Hash,
     )]
     #[etherror(name = "InvalidSigner", abi = "InvalidSigner()")]
     pub struct InvalidSigner;
@@ -135,28 +132,24 @@ pub mod signature_verification_errors {
             data: impl AsRef<[u8]>,
         ) -> ::core::result::Result<Self, ::ethers::core::abi::AbiError> {
             let data = data.as_ref();
-            if let Ok(decoded)
-                = <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <::std::string::String as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::RevertString(decoded));
             }
-            if let Ok(decoded)
-                = <BadContractSignature as ::ethers::core::abi::AbiDecode>::decode(
-                    data,
-                ) {
+            if let Ok(decoded) =
+                <BadContractSignature as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::BadContractSignature(decoded));
             }
-            if let Ok(decoded)
-                = <BadSignatureV as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <BadSignatureV as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::BadSignatureV(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidSignature as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <InvalidSignature as ::ethers::core::abi::AbiDecode>::decode(data)
+            {
                 return Ok(Self::InvalidSignature(decoded));
             }
-            if let Ok(decoded)
-                = <InvalidSigner as ::ethers::core::abi::AbiDecode>::decode(data) {
+            if let Ok(decoded) = <InvalidSigner as ::ethers::core::abi::AbiDecode>::decode(data) {
                 return Ok(Self::InvalidSigner(decoded));
             }
             Err(::ethers::core::abi::Error::InvalidData.into())
@@ -168,15 +161,9 @@ pub mod signature_verification_errors {
                 Self::BadContractSignature(element) => {
                     ::ethers::core::abi::AbiEncode::encode(element)
                 }
-                Self::BadSignatureV(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::InvalidSignature(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
-                Self::InvalidSigner(element) => {
-                    ::ethers::core::abi::AbiEncode::encode(element)
-                }
+                Self::BadSignatureV(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::InvalidSignature(element) => ::ethers::core::abi::AbiEncode::encode(element),
+                Self::InvalidSigner(element) => ::ethers::core::abi::AbiEncode::encode(element),
                 Self::RevertString(s) => ::ethers::core::abi::AbiEncode::encode(s),
             }
         }
@@ -186,19 +173,17 @@ pub mod signature_verification_errors {
             match selector {
                 [0x08, 0xc3, 0x79, 0xa0] => true,
                 _ if selector
-                    == <BadContractSignature as ::ethers::contract::EthError>::selector() => {
+                    == <BadContractSignature as ::ethers::contract::EthError>::selector() =>
+                {
                     true
                 }
-                _ if selector
-                    == <BadSignatureV as ::ethers::contract::EthError>::selector() => {
+                _ if selector == <BadSignatureV as ::ethers::contract::EthError>::selector() => {
                     true
                 }
-                _ if selector
-                    == <InvalidSignature as ::ethers::contract::EthError>::selector() => {
+                _ if selector == <InvalidSignature as ::ethers::contract::EthError>::selector() => {
                     true
                 }
-                _ if selector
-                    == <InvalidSigner as ::ethers::contract::EthError>::selector() => {
+                _ if selector == <InvalidSigner as ::ethers::contract::EthError>::selector() => {
                     true
                 }
                 _ => false,
@@ -208,9 +193,7 @@ pub mod signature_verification_errors {
     impl ::core::fmt::Display for SignatureVerificationErrorsErrors {
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
             match self {
-                Self::BadContractSignature(element) => {
-                    ::core::fmt::Display::fmt(element, f)
-                }
+                Self::BadContractSignature(element) => ::core::fmt::Display::fmt(element, f),
                 Self::BadSignatureV(element) => ::core::fmt::Display::fmt(element, f),
                 Self::InvalidSignature(element) => ::core::fmt::Display::fmt(element, f),
                 Self::InvalidSigner(element) => ::core::fmt::Display::fmt(element, f),
@@ -218,14 +201,12 @@ pub mod signature_verification_errors {
             }
         }
     }
-    impl ::core::convert::From<::std::string::String>
-    for SignatureVerificationErrorsErrors {
+    impl ::core::convert::From<::std::string::String> for SignatureVerificationErrorsErrors {
         fn from(value: String) -> Self {
             Self::RevertString(value)
         }
     }
-    impl ::core::convert::From<BadContractSignature>
-    for SignatureVerificationErrorsErrors {
+    impl ::core::convert::From<BadContractSignature> for SignatureVerificationErrorsErrors {
         fn from(value: BadContractSignature) -> Self {
             Self::BadContractSignature(value)
         }
