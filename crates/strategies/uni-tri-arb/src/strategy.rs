@@ -63,6 +63,10 @@ impl<M: Middleware + 'static, S: Signer + 'static> Strategy<Event, Action> for U
                 println!("Uniswap order: {:?}", tx);
                 return vec![];
             }
+            Event::UniswapV2Swap(log) => {
+                println!("Uniswap V2 swap log: {:?}", log);
+                return vec![];
+            }
         }
     }
 }

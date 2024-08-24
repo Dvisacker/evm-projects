@@ -9,6 +9,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone)]
 pub enum Event {
     NewBlock(NewBlock),
+    UniswapV2Swap(Log),
     UniswapOrder(Transaction),
 }
 

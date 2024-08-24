@@ -30,6 +30,7 @@ where
 {
     async fn get_event_stream(&self) -> Result<CollectorStream<'_, Transaction>> {
         let stream = self.provider.subscribe_pending_txs().await?;
+        // let stream = self.provider.subscribe_full_pending_txs().await?;
         let stream = stream.transactions_unordered(256);
         let stream = stream.filter_map(|res| async move { res.ok() });
         Ok(Box::pin(stream))
