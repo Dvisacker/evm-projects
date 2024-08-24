@@ -73,17 +73,12 @@ async fn main() -> Result<()> {
     // let log_collector = CollectorMap::new(log_collector, |log| Event::UniswapV2Swap(log));
     // engine.add_collector(Box::new(log_collector));
 
-    // let uniswap_v2_swap_collector = Box::new(UniswapV2SwapCollector::new(provider.clone(), filter));
-    // let uniswap_v2_swap_collector =
-    //     CollectorMap::new(uniswap_v2_swap_collector, |swap| Event::UniswapV2Swap(swap));
-    // engine.add_collector(Box::new(uniswap_v2_swap_collector));
-
     let event_collector = Box::new(EventCollector::<_, UniswapV2SwapEvent>::new(
         provider.clone(),
         filter,
     ));
     let event_collector = CollectorMap::new(event_collector, |event: UniswapV2SwapEvent| {
-        Event::UniswapV2SwapEvent(event)
+        Event::UniswapV2Swap(event)
     });
     engine.add_collector(Box::new(event_collector));
 
