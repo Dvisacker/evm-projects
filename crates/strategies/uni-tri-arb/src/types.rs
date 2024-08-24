@@ -1,3 +1,4 @@
+use artemis_core::collectors::event_collector::UniswapV2SwapEvent;
 use artemis_core::{
     collectors::block_collector::NewBlock, executors::mempool_executor::SubmitTxToMempool,
 };
@@ -9,7 +10,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone)]
 pub enum Event {
     NewBlock(NewBlock),
-    UniswapV2Swap(Log),
+    UniswapV2Swap(UniswapV2SwapEvent),
     UniswapOrder(Transaction),
 }
 

@@ -3,7 +3,9 @@ use std::sync::Arc;
 use anyhow::Result;
 use artemis_core::{
     collectors::{
-        block_collector::BlockCollector, log_collector::LogCollector,
+        block_collector::BlockCollector,
+        event_collector::{EventCollector, UniswapV2SwapEvent},
+        log_collector::LogCollector,
         mempool_collector::MempoolCollector,
     },
     engine::Engine,
@@ -13,11 +15,10 @@ use artemis_core::{
 use clap::Parser;
 use dotenv::dotenv;
 use ethers::{
-    abi::Abi,
     prelude::MiddlewareBuilder,
     providers::{Provider, Ws},
     signers::Signer,
-    types::{Address, Chain, Filter, H256},
+    types::{Address, Chain, Filter, H256, U256},
 };
 use ethers::{providers::Middleware, types::U64};
 use shared::config::get_chain_config;
@@ -68,9 +69,23 @@ async fn main() -> Result<()> {
         .from_block(block_number.saturating_sub(U64::from(100)))
         .event("Swap(address,uint256,uint256,uint256,uint256,address)");
 
-    let log_collector = Box::new(LogCollector::new(provider.clone(), filter));
-    let log_collector = CollectorMap::new(log_collector, |log| Event::UniswapV2Swap(log));
-    engine.add_collector(Box::new(log_collector));
+    // let log_collector = Box::new(LogCollector::new(provider.clone(), filter));
+    // let log_collector = CollectorMap::new(log_collector, |log| Event::UniswapV2Swap(log));
+    // engine.add_collector(Box::new(log_collector));
+
+    // let uniswap_v2_swap_collector = Box::new(UniswapV2SwapCollector::new(provider.clone(), filter));
+    // let uniswap_v2_swap_collector =
+    //     CollectorMap::new(uniswap_v2_swap_collector, |swap| Event::UniswapV2Swap(swap));
+    // engine.add_collector(Box::new(uniswap_v2_swap_collector));
+
+    let event_collector = Box::new(EventCollector::<_, UniswapV2SwapEvent>::new(
+        provider.clone(),
+        filter,
+    ));
+    let event_collector = CollectorMap::new(event_collector, |event: UniswapV2SwapEvent| {
+        Event::UniswapV2SwapEvent(event)
+    });
+    engine.add_collector(Box::new(event_collector));
 
     let strategy = UniTriArb::new(Arc::new(provider.clone()), wallet);
     engine.add_strategy(Box::new(strategy));

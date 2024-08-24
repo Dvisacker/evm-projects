@@ -15,3 +15,5 @@ pub mod mempool_collector;
 pub mod opensea_order_collector;
 
 pub mod mevshare_collector;
+
+pub mod event_collector;
