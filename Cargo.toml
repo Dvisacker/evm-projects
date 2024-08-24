@@ -2,6 +2,7 @@
 members = [
     "bin/artemis",
     "bin/cli",
+    # "bin/playground",
     "crates/artemis-core",
     "crates/generator",
     "crates/strategies/*",

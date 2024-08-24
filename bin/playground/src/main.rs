@@ -20,6 +20,8 @@ use uni_tri_arb_strategy::{
     types::{Action, Event},
 };
 
+use graph::GraphClient;
+
 /// CLI Options.
 #[derive(Parser, Debug)]
 pub struct Args {
@@ -33,50 +35,57 @@ pub struct Args {
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let filter = filter::Targets::new()
-        .with_target("uni-tri-arb", Level::INFO)
-        .with_target("artemis_core", Level::INFO);
-    tracing_subscriber::registry()
-        .with(tracing_subscriber::fmt::layer())
-        .with(filter)
-        .init();
+    // let filter = filter::Targets::new()
+    //     .with_target("uni-tri-arb", Level::INFO)
+    //     .with_target("artemis_core", Level::INFO);
+    // tracing_subscriber::registry()
+    //     .with(tracing_subscriber::fmt::layer())
+    //     .with(filter)
+    //     .init();
 
-    let args = Args::parse();
+    // let args = Args::parse();
 
-    //  Set up providers and signers.
-    let ws = Ws::connect(args.wss).await?;
-    let provider = Provider::new(ws);
+    // //  Set up providers and signers.
+    // let ws = Ws::connect(args.wss).await?;
+    // let provider = Provider::new(ws);
 
-    let wallet: LocalWallet = args.private_key.parse().unwrap();
-    let address = wallet.address();
+    // let wallet: LocalWallet = args.private_key.parse().unwrap();
+    // let address = wallet.address();
 
-    let provider = Arc::new(provider.nonce_manager(address).with_signer(wallet.clone()));
-    let mut engine: Engine<Event, Action> = Engine::default();
+    // let provider = Arc::new(provider.nonce_manager(address).with_signer(wallet.clone()));
+    // let mut engine: Engine<Event, Action> = Engine::default();
 
-    let block_collector = Box::new(BlockCollector::new(provider.clone()));
-    let block_collector = CollectorMap::new(block_collector, Event::NewBlock);
-    engine.add_collector(Box::new(block_collector));
+    // let block_collector = Box::new(BlockCollector::new(provider.clone()));
+    // let block_collector = CollectorMap::new(block_collector, Event::NewBlock);
+    // engine.add_collector(Box::new(block_collector));
 
-    let mempool_collector = Box::new(MempoolCollector::new(provider.clone()));
-    let mempool_collector = CollectorMap::new(mempool_collector, |tx| Event::UniswapOrder(tx));
-    engine.add_collector(Box::new(mempool_collector));
+    // let mempool_collector = Box::new(MempoolCollector::new(provider.clone()));
+    // let mempool_collector = CollectorMap::new(mempool_collector, |tx| Event::UniswapOrder(tx));
+    // engine.add_collector(Box::new(mempool_collector));
 
-    let strategy = UniTriArb::new(Arc::new(provider.clone()), wallet);
-    engine.add_strategy(Box::new(strategy));
+    // let strategy = UniTriArb::new(Arc::new(provider.clone()), wallet);
+    // engine.add_strategy(Box::new(strategy));
 
-    let mempool_executor = Box::new(MempoolExecutor::new(provider.clone()));
-    let mempool_executor = ExecutorMap::new(mempool_executor, |action: Action| match action {
-        Action::SubmitTx(tx) => Some(tx),
-        _ => None,
-    });
-    engine.add_executor(Box::new(mempool_executor));
+    // let mempool_executor = Box::new(MempoolExecutor::new(provider.clone()));
+    // let mempool_executor = ExecutorMap::new(mempool_executor, |action: Action| match action {
+    //     Action::SubmitTx(tx) => Some(tx),
+    //     _ => None,
+    // });
+    // engine.add_executor(Box::new(mempool_executor));
 
-    // Start engine.
-    if let Ok(mut set) = engine.run().await {
-        while let Some(res) = set.join_next().await {
-            info!("res: {:?}", res);
-        }
-    }
+    // // Start engine.
+    // if let Ok(mut set) = engine.run().await {
+    //     while let Some(res) = set.join_next().await {
+    //         info!("res: {:?}", res);
+    //     }
+    // }
+
+    let graph_client =
+        GraphClient::new("https://gateway.thegraph.com/api/99ed182954e8c8fd874bf7e809a1373c/subgraphs/id/FQ6JYszEKApsBpAmiHesRsd9Ygc6mzmpNRANeVQFYoVX".to_string());
+    let tokens = graph_client.get_most_traded_tokens(10).await;
+    println!("I am here");
+    println!("tokens: {:?}", tokens);
+    // info!("tokens: {:?}", tokens);
 
     Ok(())
 }

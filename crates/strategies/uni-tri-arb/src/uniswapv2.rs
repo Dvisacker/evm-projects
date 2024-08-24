@@ -9,17 +9,44 @@ use std::sync::Arc;
 use uni_tri_arb_bindings::uniswap_v2_factory::UniswapV2Factory;
 use uni_tri_arb_bindings::uniswap_v2_pair::UniswapV2Pair;
 
+pub enum ExchangeName {
+    UniswapV2,
+    Sushiswap,
+}
+
 pub struct UniswapV2Client<M: Middleware + 'static> {
     factory: UniswapV2Factory<M>,
     chain_id: u64,
+    exchange_name: ExchangeName,
     client: Arc<M>,
 }
 
 impl<M: Middleware + 'static> UniswapV2Client<M> {
-    pub fn new(client: Arc<M>, addressbook: &Addressbook, chain_id: u64) -> Self {
+    pub fn new(
+        client: Arc<M>,
+        addressbook: &Addressbook,
+        chain_id: u64,
+        exchange_name: ExchangeName,
+    ) -> Self {
         let factory_address = match chain_id {
-            42161 => H160::from_str(&addressbook.arbitrum.uniswapv2.factory).unwrap(),
-            10 => H160::from_str(&addressbook.optimism.uniswapv2.factory).unwrap(),
+            42161 => match exchange_name {
+                ExchangeName::UniswapV2 => {
+                    H160::from_str(&addressbook.arbitrum.uniswapv2.factory).unwrap()
+                }
+                ExchangeName::Sushiswap => {
+                    H160::from_str(&addressbook.arbitrum.sushiswap.factory).unwrap()
+                }
+                _ => panic!("Unsupported exchange name"),
+            },
+            10 => match exchange_name {
+                ExchangeName::UniswapV2 => {
+                    H160::from_str(&addressbook.optimism.uniswapv2.factory).unwrap()
+                }
+                ExchangeName::Sushiswap => {
+                    H160::from_str(&addressbook.optimism.sushiswap.factory).unwrap()
+                }
+                _ => panic!("Unsupported exchange name"),
+            },
             _ => panic!("Unsupported chain ID"),
         };
 
@@ -29,6 +56,7 @@ impl<M: Middleware + 'static> UniswapV2Client<M> {
             factory,
             chain_id,
             client,
+            exchange_name,
         }
     }
 
@@ -58,33 +86,70 @@ impl<M: Middleware + 'static> UniswapV2Client<M> {
 
         Ok(reserves)
     }
-}
 
-pub async fn initialize(
-    addressbook: &Addressbook,
-    chain_id: u64,
-) -> Result<(), Box<dyn std::error::Error>> {
-    let rpc_url = match chain_id {
-        42161 => "https://arb1.arbitrum.io/rpc",
-        10 => "https://mainnet.optimism.io",
-        _ => return Err("Unsupported chain ID".into()),
-    };
+    pub async fn get_pool_address(
+        &self,
+        token0: Address,
+        token1: Address,
+    ) -> Result<Address, ContractError<M>> {
+        let (token0, token1) = if token0 < token1 {
+            (token0, token1)
+        } else {
+            (token1, token0)
+        };
 
-    let provider = Provider::<Http>::try_from(rpc_url)?;
-    let client = Arc::new(provider);
-
-    let uniswap_client = UniswapV2Client::new(client, addressbook, chain_id);
-    let all_pairs = uniswap_client.get_all_pairs().await?;
-    println!("Total pairs: {}", all_pairs.len());
-
-    let sample_pairs = &all_pairs[..5]; // Get first 5 pairs for example
-    let reserves = uniswap_client.update_reserves(sample_pairs).await?;
-    for (pair, (reserve0, reserve1)) in reserves {
-        println!(
-            "Pair {}: Reserve0 = {}, Reserve1 = {}",
-            pair, reserve0, reserve1
-        );
+        let pool_address = self.factory.get_pair(token0, token1).call().await?;
+        Ok(pool_address)
     }
 
-    Ok(())
+    // fn get_pool_address_2(token0: Address, token1: Address) -> Result<Address, Error> {
+    //     // Ensure token0 < token1
+    //     let (token0, token1) = if token0 < token1 {
+    //         (token0, token1)
+    //     } else {
+    //         (token1, token0)
+    //     };
+
+    //     // Compute the pool address using CREATE2
+    //     let salt = ethers::utils::keccak256(ethers::abi::encode(&[
+    //         ethers::abi::Token::Address(token0),
+    //         ethers::abi::Token::Address(token1),
+    //     ]));
+
+    //     let init_code_hash = "0x96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f";
+
+    //     let pool_address =
+    //         ethers::utils::get_create2_address(self.factory.address(), salt, init_code_hash);
+
+    //     Ok(pool_address)
+    // }
 }
+
+// pub async fn initialize(
+//     addressbook: &Addressbook,
+//     chain_id: u64,
+// ) -> Result<(), Box<dyn std::error::Error>> {
+//     let rpc_url = match chain_id {
+//         42161 => "https://arb1.arbitrum.io/rpc",
+//         10 => "https://mainnet.optimism.io",
+//         _ => return Err("Unsupported chain ID".into()),
+//     };
+
+//     let provider = Provider::<Http>::try_from(rpc_url)?;
+//     let client = Arc::new(provider);
+
+//     let uniswap_client = UniswapV2Client::new(client, addressbook, chain_id);
+//     let all_pairs = uniswap_client.get_all_pairs().await?;
+//     println!("Total pairs: {}", all_pairs.len());
+
+//     let sample_pairs = &all_pairs[..5]; // Get first 5 pairs for example
+//     let reserves = uniswap_client.update_reserves(sample_pairs).await?;
+//     for (pair, (reserve0, reserve1)) in reserves {
+//         println!(
+//             "Pair {}: Reserve0 = {}, Reserve1 = {}",
+//             pair, reserve0, reserve1
+//         );
+//     }
+
+//     Ok(())
+// }

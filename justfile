@@ -39,7 +39,15 @@ generate-bindings:
     rm -rf $bindings_path
     forge bind --bindings-path $bindings_path --root $contract_root_path --crate-name uni-tri-arb-bindings --force --skip-cargo-toml
 
-build-bindings: download-contracts generate-bindings
+
+generate-graphql-bindings:
+    #!/usr/bin/env bash
+    query_path="./crates/clients/graph/query.graphql"
+    schema_path="./crates/clients/graph/schema.graphql"
+    bindings_path="./crates/clients/graph/src"
+    graphql-client generate $query_path --schema-path $schema_path --output-directory $bindings_path
+
+build-bindings: download-contracts generate-bindings generate-graphql-bindings
 
 fmt: 
     cargo +nightly fmt --all
