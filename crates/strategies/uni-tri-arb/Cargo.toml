@@ -17,7 +17,8 @@ tracing-subscriber = "0.3.16"
 csv = "1.1"
 serde = { version = "1", features = ["derive"] }
 indicatif = "0.17.8"
-uni-bindings = { path = "./bindings" }
+uni-tri-arb-bindings = { path = "./contracts/bindings" }
+serde_json = "1.0"
 
 
 

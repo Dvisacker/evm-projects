@@ -149,12 +149,10 @@ dependencies = [
  "dotenv",
  "ethers",
  "futures",
- "opensea-stream",
- "opensea-sudo-arb",
- "opensea-v2",
  "tokio",
  "tracing",
  "tracing-subscriber",
+ "uni-tri-arb-strategy",
 ]
 
 [[package]]
@@ -2673,23 +2671,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "mev-share-arb"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "artemis-core",
- "async-trait",
- "clap 4.2.7",
- "dotenv",
- "ethers",
- "futures",
- "mev-share-uni-arb",
- "tokio",
- "tracing",
- "tracing-subscriber",
-]
-
-[[package]]
 name = "mev-share-bindings"
 version = "0.1.0"
 dependencies = [
@@ -4811,27 +4792,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "uni-bindings"
+name = "uni-tri-arb-bindings"
 version = "0.1.0"
 dependencies = [
  "ethers",
-]
-
-[[package]]
-name = "uni-tri-arb"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "artemis-core",
- "async-trait",
- "clap 4.2.7",
- "dotenv",
- "ethers",
- "futures",
- "tokio",
- "tracing",
- "tracing-subscriber",
- "uni-tri-arb-strategy",
+ "serde",
 ]
 
 [[package]]
@@ -4846,10 +4811,11 @@ dependencies = [
  "indicatif 0.17.8",
  "mev-share",
  "serde",
+ "serde_json",
  "tokio",
  "tracing",
  "tracing-subscriber",
- "uni-bindings",
+ "uni-tri-arb-bindings",
 ]
 
 [[package]]

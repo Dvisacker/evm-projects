@@ -9,4 +9,6 @@ pub mod strategy;
 /// This module contains the core type definitions for the strategy.
 pub mod types;
 
+pub mod addressbook;
+
 pub mod uniswapv2;

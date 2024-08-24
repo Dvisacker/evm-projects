@@ -6,7 +6,6 @@ members = [
     "crates/generator",
     "crates/strategies/*",
     "crates/clients/*", 
-    "examples/*",
 ]
 
 default-members = ["bin/artemis", "bin/cli"]
@@ -23,4 +22,3 @@ panic = 'abort'
 
 [profile.dev]
 panic = 'abort'
-
