@@ -7,9 +7,12 @@ use artemis_core::{
     executors::mempool_executor::MempoolExecutor,
     types::{CollectorMap, ExecutorMap},
 };
-use dotenv::dotenv;
-use ethers::{prelude::MiddlewareBuilder, signers::Signer, types::Chain};
-use shared::config::get_chain_config;
+use clap::Parser;
+use ethers::{
+    prelude::MiddlewareBuilder,
+    providers::{Provider, Ws},
+    signers::{LocalWallet, Signer},
+};
 use tracing::{info, Level};
 use tracing_subscriber::{filter, prelude::*};
 use uni_tri_arb_strategy::{
@@ -17,9 +20,19 @@ use uni_tri_arb_strategy::{
     types::{Action, Event},
 };
 
+/// CLI Options.
+#[derive(Parser, Debug)]
+pub struct Args {
+    /// Ethereum node WS endpoint.
+    #[arg(long)]
+    pub wss: String,
+    /// Private key for sending txs.
+    #[arg(long)]
+    pub private_key: String,
+}
+
 #[tokio::main]
 async fn main() -> Result<()> {
-    dotenv().ok();
     let filter = filter::Targets::new()
         .with_target("uni-tri-arb", Level::INFO)
         .with_target("artemis_core", Level::INFO);
@@ -28,12 +41,16 @@ async fn main() -> Result<()> {
         .with(filter)
         .init();
 
-    let chain_config = get_chain_config(Chain::Arbitrum).await;
-    let ws = chain_config.ws;
-    let wallet = chain_config.wallet;
-    let address = wallet.address();
-    let provider = Arc::new(ws.nonce_manager(address).with_signer(wallet.clone()));
+    let args = Args::parse();
 
+    //  Set up providers and signers.
+    let ws = Ws::connect(args.wss).await?;
+    let provider = Provider::new(ws);
+
+    let wallet: LocalWallet = args.private_key.parse().unwrap();
+    let address = wallet.address();
+
+    let provider = Arc::new(provider.nonce_manager(address).with_signer(wallet.clone()));
     let mut engine: Engine<Event, Action> = Engine::default();
 
     let block_collector = Box::new(BlockCollector::new(provider.clone()));

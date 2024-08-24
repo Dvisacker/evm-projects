@@ -149,6 +149,7 @@ dependencies = [
  "dotenv",
  "ethers",
  "futures",
+ "shared",
  "tokio",
  "tracing",
  "tracing-subscriber",
@@ -2879,9 +2880,9 @@ dependencies = [
 
 [[package]]
 name = "once_cell"
-version = "1.17.1"
+version = "1.19.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b7e5500299e16ebb147ae15a00a942af264cf3688f47923b8fc2cd5858f23ad3"
+checksum = "3fdb12b2476b595f9358c5161aa467c2438859caa136dec86c26fdd2efe17b92"
 
 [[package]]
 name = "opaque-debug"
@@ -4066,6 +4067,23 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "900fba806f70c630b0a382d0d825e17a0f19fcd059a2ade1ff237bcddf446b31"
 dependencies = [
  "lazy_static",
+]
+
+[[package]]
+name = "shared"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "artemis-core",
+ "async-trait",
+ "clap 4.2.7",
+ "dotenv",
+ "ethers",
+ "futures",
+ "once_cell",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]
