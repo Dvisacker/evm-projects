@@ -56,9 +56,11 @@ impl<M: Middleware + 'static, S: Signer + 'static> Strategy<Event, Action> for U
     async fn process_event(&mut self, event: Event) -> Vec<Action> {
         match event {
             Event::NewBlock(event) => {
+                println!("New block: {:?}", event);
                 return vec![];
             }
-            Event::UniswapOrder => {
+            Event::UniswapOrder(tx) => {
+                println!("Uniswap order: {:?}", tx);
                 return vec![];
             }
         }

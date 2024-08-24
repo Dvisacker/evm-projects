@@ -10,21 +10,30 @@ build-contracts:
 test-contracts: 
     forge test --root ./contracts
 
-#download source code from etherscan for members of the protocols.json file
-download-protocol-sources: 
+
+download-contracts:
     #!/usr/bin/env bash
-    for name in $(jq -r 'keys[]' protocols.json); do
-        address=$(jq -r ".$name" protocols.json)
-        echo "Downloading $name from $address"
-        cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d ./contracts/src/protocols $address
-    done
+    addressbook_path="./addressbook.json"
+    multicall_address=$(jq -r ".mainnet.multicall" $addressbook_path)
+    uniswap_v2_factory_address=$(jq -r ".mainnet.uniswapv2.factory" $addressbook_path)
+    uniswap_v2_router_address=$(jq -r ".mainnet.uniswapv2.router" $addressbook_path)
+    echo "Downloading multicall from $multicall_address"
+    cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $multicall_address
 
-#generate bindings for elements of the contracts directory
-generate-bindings: 
-    forge bind --bindings-path ./bindings --root ./contracts --crate-name bindings --force
+    echo "Downloading uniswap V2 factory from $uniswap_v2_factory_address"
+    cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $uniswap_v2_factory_address
 
-#download sources and generate bindings
-build-bindings-crate: download-protocol-sources generate-bindings
+    echo "Downloading uniswap V2 router from $uniswap_v2_router_address"
+    cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $uniswap_v2_router_address
+
+generate-bindings:
+    #!/usr/bin/env bash
+    bindings_path="./crates/strategies/uni-tri-arb/contracts/bindings"
+    contract_root_path="./crates/strategies/uni-tri-arb/contracts/"
+    rm -rf $bindings_path
+    forge bind --bindings-path $bindings_path --root $contract_root_path --crate-name uni-tri-arb-bindings --force --skip-cargo-toml
+
+build-bindings: download-contracts generate-bindings
 
 fmt: 
     cargo +nightly fmt --all

@@ -1,0 +1,9 @@
+[submodule "crates/strategies/uni-tri-arb/lib/forge-std"]
+	path = crates/strategies/uni-tri-arb/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "crates/strategies/uni-tri-arb/contracts/lib/forge-std"]
+	path = crates/strategies/uni-tri-arb/contracts/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "crates/strategies/uni-tri-arb/contracts/lib/v2-core"]
+	path = crates/strategies/uni-tri-arb/contracts/lib/v2-core
+	url = https://github.com/Uniswap/v2-core.git
