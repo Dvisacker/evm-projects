@@ -17,7 +17,6 @@ pub enum ExchangeName {
 pub struct UniswapV2Client<M: Middleware + 'static> {
     factory: UniswapV2Factory<M>,
     chain_id: u64,
-    exchange_name: ExchangeName,
     client: Arc<M>,
 }
 
@@ -56,7 +55,6 @@ impl<M: Middleware + 'static> UniswapV2Client<M> {
             factory,
             chain_id,
             client,
-            exchange_name,
         }
     }
 
@@ -74,11 +72,11 @@ impl<M: Middleware + 'static> UniswapV2Client<M> {
 
     pub async fn update_reserves(
         &self,
-        pairs: &[Address],
+        pools: &[Address],
     ) -> Result<HashMap<Address, (U256, U256)>, Box<dyn std::error::Error>> {
         let mut reserves = HashMap::new();
 
-        for &pair_address in pairs {
+        for &pair_address in pools {
             let pair = UniswapV2Pair::new(pair_address, self.client.clone());
             let (reserve0, reserve1, _) = pair.get_reserves().call().await?;
             reserves.insert(pair_address, (reserve0.into(), reserve1.into()));
@@ -100,6 +98,21 @@ impl<M: Middleware + 'static> UniswapV2Client<M> {
 
         let pool_address = self.factory.get_pair(token0, token1).call().await?;
         Ok(pool_address)
+    }
+
+    pub async fn get_cycle_profit(
+        &self,
+        pools: &[Address],
+    ) -> Result<U256, Box<dyn std::error::Error>> {
+        let reserves = self.update_reserves(pools).await?;
+        let mut profit = U256::from(0);
+
+        for (pool_address, (reserve0, reserve1)) in reserves {
+            let pair = UniswapV2Pair::new(pool_address, self.client.clone());
+            let (reserve0, reserve1, _) = pair.get_reserves().call().await?;
+        }
+
+        Ok(profit)
     }
 
     // fn get_pool_address_2(token0: Address, token1: Address) -> Result<Address, Error> {

@@ -3,17 +3,15 @@ use std::fs::File;
 use std::io::Read;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct UniswapV2Config {
+pub struct UniV2Config {
     pub factory: String,
     pub router: String,
-    #[serde(rename = "weth-usdc", default)]
-    pub weth_usdc: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct ChainConfig {
-    pub uniswapv2: UniswapV2Config,
-    pub sushiswap: UniswapV2Config,
+    pub uniswapv2: UniV2Config,
+    pub sushiswap: UniV2Config,
     pub multicall: String,
 }
 

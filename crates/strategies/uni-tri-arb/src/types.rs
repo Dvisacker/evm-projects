@@ -42,7 +42,4 @@ pub struct UniV2Pool {
     pub token1: Address,
     pub reserve0: U256,
     pub reserve1: U256,
-    pub router_fee: U256,
-    pub fees0: U256, // fee for token0
-    pub fees1: U256, // fee for token1
 }

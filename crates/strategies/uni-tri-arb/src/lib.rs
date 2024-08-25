@@ -12,3 +12,5 @@ pub mod types;
 pub mod addressbook;
 
 pub mod uniswapv2;
+
+pub mod state;
