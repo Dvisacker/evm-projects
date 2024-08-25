@@ -1,17 +1,15 @@
-use artemis_core::collectors::event_collector::UniswapV2SwapEvent;
+use alloy::primitives::{Address, B256, U256};
 use artemis_core::{
     collectors::block_collector::NewBlock, executors::mempool_executor::SubmitTxToMempool,
 };
-use ethers::prelude::*;
-use ethers::types::{Address, Transaction, H160, H256};
+use bindings::iuniswapv2pair::IUniswapV2Pair;
 use serde::{Deserialize, Serialize};
 
 /// Core Event enum for the current strategy.
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub enum Event {
     NewBlock(NewBlock),
-    UniswapV2Swap(UniswapV2SwapEvent),
-    UniswapOrder(Transaction),
+    UniswapV2Swap(IUniswapV2Pair::Swap),
 }
 
 /// Core Action enum for the current strategy.
@@ -22,9 +20,9 @@ pub enum Action {
 
 #[derive(Debug, serde::Deserialize)]
 pub struct PoolRecord {
-    pub token_address: H160,
-    pub uni_pool_address: H160,
-    pub sushi_pool_address: H160,
+    pub token_address: Address,
+    pub uni_pool_address: Address,
+    pub sushi_pool_address: Address,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -32,7 +30,7 @@ pub struct UniV2Dex {
     pub factory: Address,
     pub router: Address,
     pub fee: U256,
-    pub init_code_hash: H256,
+    pub init_code_hash: B256,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

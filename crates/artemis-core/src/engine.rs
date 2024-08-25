@@ -54,7 +54,7 @@ impl<E, A> Default for Engine<E, A> {
 
 impl<E, A> Engine<E, A>
 where
-    E: Send + Clone + 'static + std::fmt::Debug,
+    E: Send + Clone + 'static,
     A: Send + Clone + 'static + std::fmt::Debug,
 {
     /// Adds a collector to be used by the engine.

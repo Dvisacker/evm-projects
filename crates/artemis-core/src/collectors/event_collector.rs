@@ -1,10 +1,5 @@
 use crate::types::{Collector, CollectorStream};
-use alloy::{
-    primitives::{Address, Log, U256},
-    providers::Provider,
-    rpc::types::{Filter, RawLog},
-    sol_types::SolEvent,
-};
+use alloy::{primitives::Log, providers::Provider, rpc::types::Filter, sol_types::SolEvent};
 use alloy_sol_types::sol;
 use anyhow::Result;
 use async_trait::async_trait;
@@ -12,20 +7,6 @@ use bindings::iuniswapv2pair::IUniswapV2Pair;
 // use bindings::iuniswapv2router02::UniswapV2Router02;
 use std::sync::Arc;
 use tokio_stream::StreamExt;
-
-// // abi = "Swap(address,uint256,uint256,uint256,uint256,address)"
-// #[derive(Debug, Clone, SolEvent)]
-// #[sol(event, name = "Swap")]
-// pub struct UniswapV2SwapEvent {
-//     #[sol(indexed)]
-//     pub sender: Address,
-//     pub amount0_in: U256,
-//     pub amount1_in: U256,
-//     pub amount0_out: U256,
-//     pub amount1_out: U256,
-//     #[sol(indexed)]
-//     pub to: Address,
-// }
 
 pub struct EventCollector<M, E> {
     provider: Arc<M>,

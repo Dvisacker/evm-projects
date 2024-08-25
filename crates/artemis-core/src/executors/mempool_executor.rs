@@ -68,7 +68,14 @@ where
         }
 
         action.tx.gas_price = Some(bid_gas_price);
-        self.client.send_transaction(action.tx).await?;
+        let receipt = self
+            .client
+            .send_transaction(action.tx)
+            .await?
+            .get_receipt()
+            .await?;
+
+        println!("Transaction receipt: {:?}", receipt);
         Ok(())
     }
 }

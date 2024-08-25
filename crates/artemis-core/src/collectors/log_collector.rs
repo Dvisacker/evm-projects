@@ -2,11 +2,6 @@ use crate::types::{Collector, CollectorStream};
 use alloy::{primitives::Log, providers::Provider, rpc::types::Filter};
 use anyhow::Result;
 use async_trait::async_trait;
-// use ethers::{
-//     prelude::Middleware,
-//     providers::PubsubClient,
-//     types::{Filter, Log},
-// };
 use std::sync::Arc;
 use tokio_stream::StreamExt;
 

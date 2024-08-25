@@ -11,7 +11,7 @@ members = [
     "integration",
 ]
 
-default-members = ["bin/artemis", "bin/cli", "crates/shared", "crates/artemis-core", "crates/bindings"]
+default-members = ["bin/artemis", "crates/shared", "crates/artemis-core", "crates/bindings"]
 resolver = "2"
 
 [workspace.dependencies]
