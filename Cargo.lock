@@ -482,13 +482,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "bindings"
-version = "0.0.1"
-dependencies = [
- "ethers",
-]
-
-[[package]]
 name = "bit-set"
 version = "0.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2404,6 +2397,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "integration"
+version = "0.1.0"
+
+[[package]]
 name = "io-lifetimes"
 version = "1.0.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2759,13 +2756,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "mev-share-bindings"
-version = "0.1.0"
-dependencies = [
- "ethers",
-]
-
-[[package]]
 name = "mev-share-rpc-api"
 version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2805,23 +2795,6 @@ dependencies = [
  "tokio-util",
  "tower",
  "tracing",
-]
-
-[[package]]
-name = "mev-share-uni-arb"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "artemis-core",
- "async-trait",
- "csv",
- "ethers",
- "mev-share",
- "mev-share-bindings",
- "serde",
- "tokio",
- "tracing",
- "tracing-subscriber",
 ]
 
 [[package]]
@@ -3029,20 +3002,6 @@ dependencies = [
  "serde_json",
  "tokio",
  "url",
-]
-
-[[package]]
-name = "opensea-sudo-arb"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "artemis-core",
- "async-trait",
- "bindings",
- "ethers",
- "opensea-stream",
- "opensea-v2",
- "tracing",
 ]
 
 [[package]]

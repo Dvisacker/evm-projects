@@ -7,7 +7,8 @@ members = [
     "crates/generator",
     "crates/strategies/*",
     "crates/clients/*", 
-    "crates/shared",
+    "crates/shared", 
+    "integration",
 ]
 
 default-members = ["bin/artemis", "bin/cli"]

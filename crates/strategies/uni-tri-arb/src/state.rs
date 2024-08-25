@@ -10,7 +10,7 @@ use std::sync::Arc;
 
 pub struct PoolState<M: Middleware> {
     provider: Arc<M>,
-    pools: DashMap<Address, Pool>,
+    pub pools: DashMap<Address, Pool>,
 }
 
 impl<M: Middleware + 'static> PoolState<M> {
@@ -21,14 +21,13 @@ impl<M: Middleware + 'static> PoolState<M> {
         }
     }
 
-    pub async fn add_pools(
+    pub async fn add_pool(
         &self,
-        pools: Vec<(Address, DexVariant)>,
+        address: Address,
+        dex_variant: DexVariant,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        for (address, dex_variant) in pools {
-            let pool = Pool::new_from_address(address, dex_variant, self.provider.clone()).await?;
-            self.pools.insert(address, pool);
-        }
+        let pool = Pool::new_from_address(address, dex_variant, self.provider.clone()).await?;
+        self.pools.insert(address.clone(), pool);
         Ok(())
     }
 
