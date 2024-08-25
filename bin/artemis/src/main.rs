@@ -1,13 +1,7 @@
 use std::sync::Arc;
 
-use alloy::{
-    network::EthereumWallet,
-    providers::{Provider, ProviderBuilder, RootProvider, WsConnect},
-    pubsub::PubSubFrontend,
-    signers::local::PrivateKeySigner,
-    signers::Signer,
-};
-use alloy_chains::{Chain, NamedChain};
+use alloy::{eips::BlockNumberOrTag, rpc::types::Filter, sol_types::SolEvent};
+use alloy_chains::Chain;
 use anyhow::Result;
 use artemis_core::{
     collectors::{
@@ -56,43 +50,28 @@ async fn main() -> Result<()> {
     let ws = chain_config.ws;
     let signer = chain_config.signer;
     let provider = ws;
-    // let signer = chain_config.signer;
-    // let address = signer.address();
-    // let signer: PrivateKeySigner = wallet.
-    // let address = wallet.default_signer().address();
-    // let provider = ProviderBuilder::new().on_ws(ws_connect).await.unwrap();
-    // let provider = Arc::new(
-    //     ProviderBuilder::new()
-    //         .on_builtin("wss://eth-mainnet.g.alchemy.com/v2/your-api-key")
-    //         .await?,
-    // );
-
     let mut engine: Engine<Event, Action> = Engine::default();
 
     let block_collector = Box::new(BlockCollector::new(provider.clone()));
     let block_collector = CollectorMap::new(block_collector, |block| Event::NewBlock(block));
     engine.add_collector(Box::new(block_collector));
 
-    let block_number = provider.get_block_number().await?;
+    let filter = Filter::new()
+        .from_block(BlockNumberOrTag::Latest)
+        .event(IUniswapV2Pair::Swap::SIGNATURE);
 
-    // // let filter = Filter::new()
-    // //     .from_block(block_number.saturating_sub(U64::from(100)))
-    // //     .event("Swap(address,uint256,uint256,uint256,uint256,address)");
+    // let log_collector = Box::new(LogCollector::new(provider.clone(), filter));
+    // let log_collector = CollectorMap::new(log_collector, |log| Event::UniswapV2Swap(log));
+    // engine.add_collector(Box::new(log_collector));
 
-    // // let swap = IUniswapV2Pair::Swap();
-
-    // // let log_collector = Box::new(LogCollector::new(provider.clone(), filter));
-    // // let log_collector = CollectorMap::new(log_collector, |log| Event::UniswapV2Swap(log));
-    // // engine.add_collector(Box::new(log_collector));
-
-    // let event_collector = Box::new(EventCollector::<_, UniswapV2SwapEvent>::new(
-    //     provider.clone(),
-    //     filter,
-    // ));
-    // let event_collector = CollectorMap::new(event_collector, |event: UniswapV2SwapEvent| {
-    //     Event::UniswapV2Swap(event)
-    // });
-    // engine.add_collector(Box::new(event_collector));
+    let event_collector = Box::new(EventCollector::<_, IUniswapV2Pair::Swap>::new(
+        provider.clone(),
+        filter,
+    ));
+    let event_collector = CollectorMap::new(event_collector, |event: IUniswapV2Pair::Swap| {
+        Event::UniswapV2Swap(event)
+    });
+    engine.add_collector(Box::new(event_collector));
 
     let strategy = UniTriArb::new(Arc::new(provider.clone()), signer);
     engine.add_strategy(Box::new(strategy));
@@ -104,7 +83,6 @@ async fn main() -> Result<()> {
     });
     engine.add_executor(Box::new(mempool_executor));
 
-    // Start engine.
     if let Ok(mut set) = engine.run().await {
         while let Some(res) = set.join_next().await {
             info!("res: {:?}", res);
