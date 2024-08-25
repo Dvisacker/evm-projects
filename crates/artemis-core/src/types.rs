@@ -1,13 +1,14 @@
+use alloy::rpc::types::TransactionRequest;
 use anyhow::Result;
 use async_trait::async_trait;
-use ethers::types::Transaction;
+// use ethers::types::Transaction;
 use std::pin::Pin;
 use tokio_stream::Stream;
 use tokio_stream::StreamExt;
 
 use crate::collectors::block_collector::NewBlock;
-use crate::collectors::opensea_order_collector::OpenseaOrder;
-use crate::executors::flashbots_executor::FlashbotsBundle;
+// use crate::collectors::opensea_order_collector::OpenseaOrder;
+// use crate::executors::flashbots_executor::FlashbotsBundle;
 use crate::executors::mempool_executor::SubmitTxToMempool;
 
 /// A stream of events emitted by a [Collector](Collector).
@@ -97,12 +98,10 @@ where
 /// Convenience enum containing all the events that can be emitted by collectors.
 pub enum Events {
     NewBlock(NewBlock),
-    Transaction(Transaction),
-    OpenseaOrder(Box<OpenseaOrder>),
+    Transaction(TransactionRequest),
 }
 
 /// Convenience enum containing all the actions that can be executed by executors.
 pub enum Actions {
-    FlashbotsBundle(FlashbotsBundle),
     SubmitTxToMempool(SubmitTxToMempool),
 }

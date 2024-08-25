@@ -11,7 +11,6 @@ anyhow = "1.0.70"
 generator = { path = "../../crates/generator" }
 clap = { version = "4.2.5", features = ["derive"] }
 tokio = { version = "1.18", features = ["full"] }
-ethers = { version = "2", features = ["ws", "rustls"]}
 uni-tri-arb-strategy = { path = "../../crates/strategies/uni-tri-arb" }
 shared = { path = "../../crates/shared" }
 

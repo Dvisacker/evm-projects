@@ -137,32 +137,3 @@ impl<M: Middleware + 'static> UniswapV2Client<M> {
     //     Ok(pool_address)
     // }
 }
-
-// pub async fn initialize(
-//     addressbook: &Addressbook,
-//     chain_id: u64,
-// ) -> Result<(), Box<dyn std::error::Error>> {
-//     let rpc_url = match chain_id {
-//         42161 => "https://arb1.arbitrum.io/rpc",
-//         10 => "https://mainnet.optimism.io",
-//         _ => return Err("Unsupported chain ID".into()),
-//     };
-
-//     let provider = Provider::<Http>::try_from(rpc_url)?;
-//     let client = Arc::new(provider);
-
-//     let uniswap_client = UniswapV2Client::new(client, addressbook, chain_id);
-//     let all_pairs = uniswap_client.get_all_pairs().await?;
-//     println!("Total pairs: {}", all_pairs.len());
-
-//     let sample_pairs = &all_pairs[..5]; // Get first 5 pairs for example
-//     let reserves = uniswap_client.update_reserves(sample_pairs).await?;
-//     for (pair, (reserve0, reserve1)) in reserves {
-//         println!(
-//             "Pair {}: Reserve0 = {}, Reserve1 = {}",
-//             pair, reserve0, reserve1
-//         );
-//     }
-
-//     Ok(())
-// }

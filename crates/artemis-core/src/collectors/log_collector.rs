@@ -1,11 +1,12 @@
 use crate::types::{Collector, CollectorStream};
+use alloy::{primitives::Log, providers::Provider, rpc::types::Filter};
 use anyhow::Result;
 use async_trait::async_trait;
-use ethers::{
-    prelude::Middleware,
-    providers::PubsubClient,
-    types::{Filter, Log},
-};
+// use ethers::{
+//     prelude::Middleware,
+//     providers::PubsubClient,
+//     types::{Filter, Log},
+// };
 use std::sync::Arc;
 use tokio_stream::StreamExt;
 
@@ -27,13 +28,12 @@ impl<M> LogCollector<M> {
 #[async_trait]
 impl<M> Collector<Log> for LogCollector<M>
 where
-    M: Middleware,
-    M::Provider: PubsubClient,
-    M::Error: 'static,
+    M: Provider,
 {
     async fn get_event_stream(&self) -> Result<CollectorStream<'_, Log>> {
         let stream = self.provider.subscribe_logs(&self.filter).await?;
-        let stream = stream.filter_map(Some);
+        let stream = stream.into_stream();
+        let stream = stream.filter_map(|log| Some(log.inner));
         Ok(Box::pin(stream))
     }
 }

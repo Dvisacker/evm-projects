@@ -6,18 +6,16 @@ members = [
     "crates/artemis-core",
     "crates/generator",
     "crates/strategies/*",
-    "crates/clients/*", 
+    "crates/bindings",
     "crates/shared", 
     "integration",
 ]
 
-default-members = ["bin/artemis", "bin/cli"]
+default-members = ["bin/artemis", "bin/cli", "crates/shared", "crates/artemis-core", "crates/bindings"]
 resolver = "2"
 
 [workspace.dependencies]
 ## eth
-ethers = { version = "2", features = ["ws", "rustls"]}
-ethers-signers = "2.0"
 
 
 [profile.release]
@@ -25,3 +23,6 @@ panic = 'abort'
 
 [profile.dev]
 panic = 'abort'
+
+[net]
+git-fetch-with-cli = true

@@ -6,7 +6,6 @@ license = "MIT OR Apache-2.0"
 
 
 [dependencies]
-ethers = { version = "2", features = ["ws", "rustls"]}
 tokio = { version = "1.18", features = ["full"] }
 dotenv = "0.15.0"
 async-trait = "0.1.64"

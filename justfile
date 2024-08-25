@@ -34,10 +34,10 @@ download-contracts:
 
 generate-bindings:
     #!/usr/bin/env bash
-    bindings_path="./crates/strategies/uni-tri-arb/contracts/bindings"
+    bindings_path="./crates/bindings"
     contract_root_path="./crates/strategies/uni-tri-arb/contracts/"
     rm -rf $bindings_path
-    forge bind --bindings-path $bindings_path --root $contract_root_path --crate-name uni-tri-arb-bindings --force --skip-cargo-toml
+    forge bind --bindings-path $bindings_path --root $contract_root_path --crate-name bindings --force --skip-cargo-toml --alloy
 
 
 generate-graphql-bindings:

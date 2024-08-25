@@ -1,6 +1,6 @@
+use alloy::{network::TransactionResponse, primitives::B256, providers::Provider};
 use async_trait::async_trait;
 
-use ethers::{prelude::Middleware, providers::PubsubClient, types::Transaction};
 use futures::StreamExt;
 use std::sync::Arc;
 
@@ -22,17 +22,14 @@ impl<M> MempoolCollector<M> {
 /// Implementation of the [Collector](Collector) trait for the [MempoolCollector](MempoolCollector).
 /// This implementation uses the [PubsubClient](PubsubClient) to subscribe to new transactions.
 #[async_trait]
-impl<M> Collector<Transaction> for MempoolCollector<M>
+impl<M> Collector<TransactionResponse> for MempoolCollector<M>
 where
-    M: Middleware,
-    M::Provider: PubsubClient,
-    M::Error: 'static,
+    M: Provider,
 {
-    async fn get_event_stream(&self) -> Result<CollectorStream<'_, Transaction>> {
-        let stream = self.provider.subscribe_pending_txs().await?;
-        // let stream = self.provider.subscribe_full_pending_txs().await?;
-        let stream = stream.transactions_unordered(256);
-        let stream = stream.filter_map(|res| async move { res.ok() });
+    async fn get_event_stream(&self) -> Result<CollectorStream<'_, TransactionResponse>> {
+        let sub = self.provider.subscribe_full_pending_transactions().await?;
+        let stream = sub.into_stream();
+        let stream = stream.filter_map(|res| Some(res));
         Ok(Box::pin(stream))
     }
 }

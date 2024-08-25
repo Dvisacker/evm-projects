@@ -1,11 +1,15 @@
 use crate::types::{Collector, CollectorStream};
+use alloy::{
+    primitives::{U256, U64},
+    providers::Provider,
+};
 use anyhow::Result;
 use async_trait::async_trait;
-use ethers::{
-    prelude::Middleware,
-    providers::PubsubClient,
-    types::{H256, U64},
-};
+// use ethers::{
+//     prelude::Middleware,
+//     providers::PubsubClient,
+//     types::{H256, U64},
+// };
 use std::sync::Arc;
 use tokio_stream::StreamExt;
 
@@ -18,7 +22,7 @@ pub struct BlockCollector<M> {
 /// A new block event, containing the block number and hash.
 #[derive(Debug, Clone)]
 pub struct NewBlock {
-    pub hash: H256,
+    pub hash: U256,
     pub number: U64,
 }
 
@@ -33,14 +37,16 @@ impl<M> BlockCollector<M> {
 #[async_trait]
 impl<M> Collector<NewBlock> for BlockCollector<M>
 where
-    M: Middleware,
-    M::Provider: PubsubClient,
-    M::Error: 'static,
+    M: Provider,
 {
     async fn get_event_stream(&self) -> Result<CollectorStream<'_, NewBlock>> {
-        let stream = self.provider.subscribe_blocks().await?;
-        let stream = stream.filter_map(|block| match block.hash {
-            Some(hash) => block.number.map(|number| NewBlock { hash, number }),
+        let sub = self.provider.subscribe_blocks().await?;
+        let stream = sub.into_stream().take(256);
+        let stream = stream.filter_map(|block| match block.header.hash {
+            Some(hash) => block.header.number.map(|number| NewBlock {
+                hash: hash.into(),
+                number: U64::from(number),
+            }),
             None => None,
         });
         Ok(Box::pin(stream))
