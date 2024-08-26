@@ -45,7 +45,6 @@ async fn main() -> Result<()> {
 
     let args = Args::parse();
     let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
-
     let chain_config = get_chain_config(chain).await;
     let ws = chain_config.ws;
     let signer = chain_config.signer;
@@ -56,22 +55,31 @@ async fn main() -> Result<()> {
     let block_collector = CollectorMap::new(block_collector, |block| Event::NewBlock(block));
     engine.add_collector(Box::new(block_collector));
 
-    let filter = Filter::new()
+    let swap_filter = Filter::new()
         .from_block(BlockNumberOrTag::Latest)
         .event(IUniswapV2Pair::Swap::SIGNATURE);
 
-    // let log_collector = Box::new(LogCollector::new(provider.clone(), filter));
-    // let log_collector = CollectorMap::new(log_collector, |log| Event::UniswapV2Swap(log));
-    // engine.add_collector(Box::new(log_collector));
+    let sync_filter = Filter::new()
+        .from_block(BlockNumberOrTag::Latest)
+        .event(IUniswapV2Pair::Sync::SIGNATURE);
 
-    let event_collector = Box::new(EventCollector::<_, IUniswapV2Pair::Swap>::new(
+    let swap_collector = Box::new(EventCollector::<_, IUniswapV2Pair::Swap>::new(
         provider.clone(),
-        filter,
+        swap_filter,
     ));
-    let event_collector = CollectorMap::new(event_collector, |event: IUniswapV2Pair::Swap| {
+    let swap_collector = CollectorMap::new(swap_collector, |event: IUniswapV2Pair::Swap| {
         Event::UniswapV2Swap(event)
     });
-    engine.add_collector(Box::new(event_collector));
+    engine.add_collector(Box::new(swap_collector));
+
+    let sync_collector = Box::new(EventCollector::<_, IUniswapV2Pair::Sync>::new(
+        provider.clone(),
+        sync_filter,
+    ));
+    let sync_collector = CollectorMap::new(sync_collector, |event: IUniswapV2Pair::Sync| {
+        Event::UniswapV2Sync(event)
+    });
+    engine.add_collector(Box::new(sync_collector));
 
     let strategy = UniTriArb::new(Arc::new(provider.clone()), signer);
     engine.add_strategy(Box::new(strategy));

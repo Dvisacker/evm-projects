@@ -1,10 +1,7 @@
 use crate::types::{Collector, CollectorStream};
 use alloy::{primitives::Log, providers::Provider, rpc::types::Filter, sol_types::SolEvent};
-use alloy_sol_types::sol;
 use anyhow::Result;
 use async_trait::async_trait;
-use bindings::iuniswapv2pair::IUniswapV2Pair;
-// use bindings::iuniswapv2router02::UniswapV2Router02;
 use std::sync::Arc;
 use tokio_stream::StreamExt;
 

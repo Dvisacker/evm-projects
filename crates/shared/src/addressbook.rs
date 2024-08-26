@@ -1,11 +1,11 @@
 use alloy::primitives::Address;
+use alloy_chains::NamedChain;
 use serde::{Deserialize, Deserializer, Serialize};
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
 use std::str::FromStr;
 
-// Add this custom deserializer function
 fn deserialize_address<'de, D>(deserializer: D) -> Result<Address, D::Error>
 where
     D: Deserializer<'de>,
@@ -14,11 +14,9 @@ where
     Address::from_str(&s).map_err(serde::de::Error::custom)
 }
 
-// Add this custom type for the HashMap
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct AddressMap(#[serde(with = "address_map")] pub HashMap<String, Address>);
 
-// Add this module for custom serialization/deserialization of the HashMap
 mod address_map {
     use super::*;
     use serde::ser::SerializeMap;
@@ -51,7 +49,7 @@ mod address_map {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct UniV2Config {
+pub struct ExchangeAddressBook {
     #[serde(deserialize_with = "deserialize_address")]
     pub factory: Address,
     #[serde(deserialize_with = "deserialize_address")]
@@ -60,19 +58,19 @@ pub struct UniV2Config {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct ChainConfig {
-    pub uniswapv2: UniV2Config,
-    pub sushiswap: UniV2Config,
+pub struct ChainAddressBook {
+    pub exchanges: HashMap<String, ExchangeAddressBook>,
     #[serde(deserialize_with = "deserialize_address")]
     pub multicall: Address,
+    #[serde(deserialize_with = "deserialize_address")]
     pub weth: Address,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Addressbook {
-    pub arbitrum: ChainConfig,
-    pub optimism: ChainConfig,
-    pub mainnet: ChainConfig,
+    pub arbitrum: ChainAddressBook,
+    pub optimism: ChainAddressBook,
+    pub mainnet: ChainAddressBook,
 }
 
 impl Addressbook {
@@ -86,72 +84,52 @@ impl Addressbook {
 
     pub fn get_pool_by_name(
         &self,
-        chain: &str,
+        chain: &NamedChain,
         exchange_name: &str,
         pool_name: &str,
     ) -> Option<Address> {
-        let chain_config = match chain {
-            "arbitrum" => &self.arbitrum,
-            "optimism" => &self.optimism,
-            "mainnet" => &self.mainnet,
-            _ => return None,
-        };
+        let book = self.get_chain_address_book(chain)?;
+        book.exchanges
+            .get(exchange_name)?
+            .pools
+            .0
+            .get(pool_name)
+            .cloned()
+    }
 
-        let pool_address = match exchange_name {
-            "uniswapv2" => chain_config.uniswapv2.pools.0.get(pool_name).cloned(),
-            "sushiswap" => chain_config.sushiswap.pools.0.get(pool_name).cloned(),
+    pub fn get_weth(&self, chain: &NamedChain) -> Option<Address> {
+        self.get_chain_address_book(chain).map(|config| config.weth)
+    }
+
+    pub fn get_multicall(&self, chain: &NamedChain) -> Option<Address> {
+        self.get_chain_address_book(chain)
+            .map(|config| config.multicall)
+    }
+
+    pub fn get_pools_by_chain(&self, chain: &NamedChain) -> Vec<Address> {
+        let chain_config = self.get_chain_address_book(chain).unwrap();
+        chain_config
+            .exchanges
+            .values()
+            .flat_map(|exchange| exchange.pools.0.values().cloned())
+            .collect()
+    }
+
+    pub fn get_factories_by_chain(&self, chain: &NamedChain) -> Vec<Address> {
+        let chain_config = self.get_chain_address_book(chain).unwrap();
+        chain_config
+            .exchanges
+            .values()
+            .map(|exchange| exchange.factory)
+            .collect()
+    }
+
+    fn get_chain_address_book(&self, chain: &NamedChain) -> Option<&ChainAddressBook> {
+        match chain {
+            NamedChain::Arbitrum => Some(&self.arbitrum),
+            NamedChain::Optimism => Some(&self.optimism),
+            NamedChain::Mainnet => Some(&self.mainnet),
             _ => None,
-        };
-
-        pool_address
+        }
     }
-
-    pub fn get_weth(&self, chain: &str) -> Option<Address> {
-        let chain_config = match chain {
-            "arbitrum" => &self.arbitrum,
-            "optimism" => &self.optimism,
-            "mainnet" => &self.mainnet,
-            _ => return None,
-        };
-
-        Some(chain_config.weth)
-    }
-
-    pub fn get_multicall(&self, chain: &str) -> Option<Address> {
-        let chain_config = match chain {
-            "arbitrum" => &self.arbitrum,
-            "optimism" => &self.optimism,
-            "mainnet" => &self.mainnet,
-            _ => return None,
-        };
-
-        Some(chain_config.multicall)
-    }
-
-    // get all pools from uniswapv2 and sushiswap
-    pub fn get_pools_by_chain(&self, chain: &str) -> Vec<Address> {
-        let chain_config = match chain {
-            "arbitrum" => &self.arbitrum,
-            "optimism" => &self.optimism,
-            "mainnet" => &self.mainnet,
-            _ => return vec![],
-        };
-
-        let mut pools: Vec<Address> = chain_config.uniswapv2.pools.0.values().cloned().collect();
-        pools.extend(chain_config.sushiswap.pools.0.values().cloned());
-        pools
-    }
-
-    // pub fn load_pools(
-    //     &self,
-    //     chain: &str,
-    //     exchanges: Vec<&str>,
-    // ) -> Option<HashMap<String, Address>> {
-    //     let chain_config = match chain {
-    //         "arbitrum" => &self.arbitrum,
-    //         "optimism" => &self.optimism,
-    //         "mainnet" => &self.mainnet,
-    //         _ => return None,
-    //     };
-    // }
 }

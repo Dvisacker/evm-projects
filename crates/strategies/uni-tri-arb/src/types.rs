@@ -10,6 +10,7 @@ use serde::{Deserialize, Serialize};
 pub enum Event {
     NewBlock(NewBlock),
     UniswapV2Swap(IUniswapV2Pair::Swap),
+    UniswapV2Sync(IUniswapV2Pair::Sync),
 }
 
 /// Core Action enum for the current strategy.

@@ -1,9 +1,11 @@
 use super::types::{Action, Event};
-use crate::{addressbook::Addressbook, state::PoolState};
+use crate::state::PoolState;
 use alloy::{providers::Provider, signers::Signer};
+use alloy_chains::NamedChain;
 use anyhow::Result;
 use artemis_core::types::Strategy;
 use async_trait::async_trait;
+use shared::addressbook::Addressbook;
 use std::{collections::HashSet, sync::Arc};
 
 #[derive(Debug, Clone)]
@@ -15,7 +17,6 @@ pub struct UniTriArb<P: Provider + 'static, S: Signer> {
 }
 
 impl<P: Provider + 'static, S: Signer> UniTriArb<P, S> {
-    /// Create a new instance of the strategy.
     pub fn new(client: Arc<P>, signer: S) -> Self {
         let addressbook = Addressbook::load().unwrap();
         Self {
@@ -32,8 +33,8 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
     for UniTriArb<P, S>
 {
     async fn init_state(&mut self) -> Result<()> {
-        let weth = self.addressbook.get_weth("arbitrum").unwrap();
-        let pools = self.addressbook.get_pools_by_chain("arbitrum");
+        let weth = self.addressbook.get_weth(&NamedChain::Arbitrum).unwrap();
+        let pools = self.addressbook.get_pools_by_chain(&NamedChain::Arbitrum);
         self.pool_state.add_pools(pools).await?;
 
         let pools = self.pool_state.get_all_pools().await;
@@ -62,19 +63,20 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
         Ok(())
     }
 
-    // Process incoming events, seeing if we can arb new orders.
     async fn process_event(&mut self, event: Event) -> Vec<Action> {
         match event {
             Event::NewBlock(event) => {
                 println!("New block: {:?}", event);
 
                 println!("Syncing state...");
-                // self.sync_state().await;
 
                 return vec![];
             }
             Event::UniswapV2Swap(swap) => {
                 println!("New swap from {:?} on pool {:?}", swap.sender, swap.to);
+                return vec![];
+            }
+            Event::UniswapV2Sync(sync) => {
                 return vec![];
             }
         }

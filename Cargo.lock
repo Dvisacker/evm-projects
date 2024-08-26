@@ -1811,6 +1811,8 @@ checksum = "1462739cb27611015575c0c11df5df7601141071f07518d56fcc1be504cbec97"
 name = "cli"
 version = "0.1.0"
 dependencies = [
+ "alloy 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "alloy-chains",
  "anyhow",
  "clap",
  "generator",
@@ -4658,6 +4660,7 @@ version = "0.1.0"
 dependencies = [
  "alloy 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "alloy-chains",
+ "amms",
  "anyhow",
  "artemis-core",
  "async-trait",
@@ -4665,6 +4668,8 @@ dependencies = [
  "dotenv",
  "futures",
  "once_cell",
+ "serde",
+ "serde_json",
  "tokio",
  "tracing",
  "tracing-subscriber",
@@ -5282,6 +5287,7 @@ name = "uni-tri-arb-strategy"
 version = "0.1.0"
 dependencies = [
  "alloy 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "alloy-chains",
  "amms",
  "anyhow",
  "artemis-core",
@@ -5293,6 +5299,7 @@ dependencies = [
  "mev-share",
  "serde",
  "serde_json",
+ "shared",
  "tokio",
  "tracing",
  "tracing-subscriber",
