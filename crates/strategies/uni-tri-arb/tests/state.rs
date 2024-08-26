@@ -1,4 +1,3 @@
-use cfmms::dex::DexVariant;
 use std::sync::Arc;
 use uni_tri_arb_strategy::state::PoolState;
 

@@ -2,7 +2,6 @@ use crate::types::{Collector, CollectorStream};
 use alloy::{
     primitives::{U256, U64},
     providers::Provider,
-    pubsub::PubSubFrontend,
 };
 use anyhow::Result;
 use async_trait::async_trait;

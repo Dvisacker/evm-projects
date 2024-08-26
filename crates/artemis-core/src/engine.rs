@@ -5,8 +5,6 @@ use tracing::{error, info};
 
 use crate::types::{Collector, Executor, Strategy};
 
-/// The main engine of Artemis. This struct is responsible for orchestrating the
-/// data flow between collectors, strategies, and executors.
 pub struct Engine<E, A> {
     /// The set of collectors that the engine will use to collect events.
     collectors: Vec<Box<dyn Collector<E>>>,
@@ -57,17 +55,14 @@ where
     E: Send + Clone + 'static,
     A: Send + Clone + 'static + std::fmt::Debug,
 {
-    /// Adds a collector to be used by the engine.
     pub fn add_collector(&mut self, collector: Box<dyn Collector<E>>) {
         self.collectors.push(collector);
     }
 
-    /// Adds a strategy to be used by the engine.
     pub fn add_strategy(&mut self, strategy: Box<dyn Strategy<E, A>>) {
         self.strategies.push(strategy);
     }
 
-    /// Adds an executor to be used by the engine.
     pub fn add_executor(&mut self, executor: Box<dyn Executor<A>>) {
         self.executors.push(executor);
     }
@@ -81,7 +76,6 @@ where
 
         let mut set = JoinSet::new();
 
-        // Spawn executors in separate threads.
         for executor in self.executors {
             let mut receiver = action_sender.subscribe();
             set.spawn(async move {
@@ -98,11 +92,10 @@ where
             });
         }
 
-        // Spawn strategies in separate threads.
         for mut strategy in self.strategies {
             let mut event_receiver = event_sender.subscribe();
             let action_sender = action_sender.clone();
-            strategy.sync_state().await?;
+            strategy.init_state().await?;
 
             set.spawn(async move {
                 info!("starting strategy... ");
@@ -124,7 +117,6 @@ where
             });
         }
 
-        // Spawn collectors in separate threads.
         for collector in self.collectors {
             let event_sender = event_sender.clone();
             set.spawn(async move {

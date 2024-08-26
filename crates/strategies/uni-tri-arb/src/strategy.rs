@@ -1,52 +1,64 @@
-use std::collections::HashMap;
-use std::sync::Arc;
-
-use alloy::{primitives::Address, providers::Provider, signers::Signer};
-use async_trait::async_trait;
-
+use super::types::{Action, Event};
+use crate::{addressbook::Addressbook, state::PoolState};
+use alloy::{providers::Provider, signers::Signer};
 use anyhow::Result;
 use artemis_core::types::Strategy;
-use bindings::iuniswapv2pair::IUniswapV2Pair;
-
-// use ethers::signers::Signer;
-
-// use ethers::providers::Middleware;
-// use ethers::types::H160;
-
-use super::types::{Action, Event};
-
-/// Information about a uniswap v2 pool.
-#[derive(Debug, Clone)]
-pub struct V2PoolInfo {
-    /// Address of the v2 pool.
-    pub v2_pool: Address,
-    /// Whether the pool has weth as token0.
-    pub is_weth_token0: bool,
-}
+use async_trait::async_trait;
+use std::{collections::HashSet, sync::Arc};
 
 #[derive(Debug, Clone)]
-pub struct UniTriArb<M, S> {
-    client: Arc<M>,
-    pool_map: HashMap<Address, V2PoolInfo>,
+pub struct UniTriArb<P: Provider + 'static, S: Signer> {
+    addressbook: Addressbook,
+    client: Arc<P>,
+    pub pool_state: PoolState<P>,
     tx_signer: S,
 }
 
-impl<M: Provider + 'static, S: Signer> UniTriArb<M, S> {
+impl<P: Provider + 'static, S: Signer> UniTriArb<P, S> {
     /// Create a new instance of the strategy.
-    pub fn new(client: Arc<M>, signer: S) -> Self {
+    pub fn new(client: Arc<P>, signer: S) -> Self {
+        let addressbook = Addressbook::load().unwrap();
         Self {
+            addressbook,
             client: client.clone(),
-            pool_map: HashMap::new(),
+            pool_state: PoolState::new(client.clone()),
             tx_signer: signer,
         }
     }
 }
 
 #[async_trait]
-impl<M: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, Action>
-    for UniTriArb<M, S>
+impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, Action>
+    for UniTriArb<P, S>
 {
+    async fn init_state(&mut self) -> Result<()> {
+        let weth = self.addressbook.get_weth("arbitrum").unwrap();
+        let pools = self.addressbook.get_pools_by_chain("arbitrum");
+        self.pool_state.add_pools(pools).await?;
+
+        let pools = self.pool_state.get_all_pools().await;
+
+        let arb_cycles = PoolState::<P>::get_cycles(
+            pools.as_ref(),
+            weth,
+            weth,
+            3,
+            &vec![],
+            &mut vec![],
+            &mut HashSet::new(),
+        );
+
+        println!("Arb cycles: {:?}", arb_cycles);
+
+        Ok(())
+    }
+
     async fn sync_state(&mut self) -> Result<()> {
+        self.pool_state
+            .sync_pools()
+            .await
+            .map_err(|e| anyhow::anyhow!("Failed to sync pools: {}", e))?;
+
         Ok(())
     }
 
@@ -55,6 +67,10 @@ impl<M: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
         match event {
             Event::NewBlock(event) => {
                 println!("New block: {:?}", event);
+
+                println!("Syncing state...");
+                // self.sync_state().await;
+
                 return vec![];
             }
             Event::UniswapV2Swap(swap) => {

@@ -24,8 +24,10 @@ pub trait Collector<E>: Send + Sync {
 /// Strategy trait, which defines the core logic for each opportunity.
 #[async_trait]
 pub trait Strategy<E, A>: Send + Sync {
-    /// Sync the initial state of the strategy if needed, usually by fetching
+    /// Init the initial state of the strategy if needed, usually by fetching
     /// onchain data.
+    async fn init_state(&mut self) -> Result<()>;
+
     async fn sync_state(&mut self) -> Result<()>;
 
     /// Process an event, and return an action if needed.
