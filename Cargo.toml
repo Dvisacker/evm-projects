@@ -1,8 +1,7 @@
 [workspace]
 members = [
-    "bin/artemis",
+    "bin/bot",
     "bin/cli",
-    # "bin/playground",
     "crates/artemis-core",
     "crates/generator",
     "crates/strategies/*",
@@ -11,7 +10,7 @@ members = [
     "integration",
 ]
 
-default-members = ["bin/artemis", "bin/cli", "crates/shared", "crates/artemis-core", "crates/bindings"]
+default-members = ["bin/bot", "bin/cli", "crates/shared", "crates/artemis-core", "crates/bindings"]
 resolver = "2"
 
 [workspace.dependencies]

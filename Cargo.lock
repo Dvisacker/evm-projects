@@ -1398,26 +1398,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7c02d123df017efcdfbd739ef81735b36c5ba83ec3c59c80a9d7ecc718f92e50"
 
 [[package]]
-name = "artemis"
-version = "0.1.0"
-dependencies = [
- "alloy 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "alloy-chains",
- "anyhow",
- "artemis-core",
- "async-trait",
- "bindings",
- "clap",
- "dotenv",
- "futures",
- "shared",
- "tokio",
- "tracing",
- "tracing-subscriber",
- "uni-tri-arb-strategy",
-]
-
-[[package]]
 name = "artemis-core"
 version = "0.1.0"
 dependencies = [
@@ -1670,6 +1650,26 @@ dependencies = [
  "glob",
  "threadpool",
  "zeroize",
+]
+
+[[package]]
+name = "bot"
+version = "0.1.0"
+dependencies = [
+ "alloy 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "alloy-chains",
+ "anyhow",
+ "artemis-core",
+ "async-trait",
+ "bindings",
+ "clap",
+ "dotenv",
+ "futures",
+ "shared",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "uni-tri-arb-strategy",
 ]
 
 [[package]]

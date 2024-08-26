@@ -18,27 +18,3 @@ pub enum Event {
 pub enum Action {
     SubmitTx(SubmitTxToMempool),
 }
-
-#[derive(Debug, serde::Deserialize)]
-pub struct PoolRecord {
-    pub token_address: Address,
-    pub uni_pool_address: Address,
-    pub sushi_pool_address: Address,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct UniV2Dex {
-    pub factory: Address,
-    pub router: Address,
-    pub fee: U256,
-    pub init_code_hash: B256,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct UniV2Pool {
-    pub address: Address,
-    pub token0: Address,
-    pub token1: Address,
-    pub reserve0: U256,
-    pub reserve1: U256,
-}
