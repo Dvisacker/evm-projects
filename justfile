@@ -55,4 +55,14 @@ fmt:
 clippy: 
     cargo clippy --all --all-features
 
+run-bot-arbitrum:
+    cargo run --bin bot -- --chain-id 42161
 
+run-bot-mainnet:
+    cargo run --bin bot -- --chain-id 1
+
+get-filtered-pools:
+    cargo run --bin cli -- filter --chain-id 42161 --checkpoint-path ./checkpoints/filtered-pools-arbitrum.json
+
+get-filtered-pools-mainnet:
+    cargo run --bin cli -- filter --chain-id 1 --checkpoint-path ./checkpoints/filtered-pools-mainnet.json
