@@ -8,7 +8,7 @@ cargo test --all
 
 ## Run the strategy:
 ```sh
-cargo run --bin artemis -- --chain-id <CHAIN_ID>
+cargo run --bin bot -- --chain-id <CHAIN_ID>
 ```
 
 ## Filter AMMs:

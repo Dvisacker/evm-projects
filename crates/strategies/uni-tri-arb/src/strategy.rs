@@ -6,24 +6,27 @@ use anyhow::Result;
 use artemis_core::types::Strategy;
 use async_trait::async_trait;
 use shared::addressbook::Addressbook;
-use std::{collections::HashSet, sync::Arc};
+use std::{collections::HashSet, path::Path, sync::Arc};
+use tracing::info;
 
 #[derive(Debug, Clone)]
 pub struct UniTriArb<P: Provider + 'static, S: Signer> {
     addressbook: Addressbook,
-    client: Arc<P>,
+    pub client: Arc<P>,
     pub pool_state: PoolState<P>,
-    tx_signer: S,
+    pub tx_signer: S,
+    pub checkpoint_path: Option<&'static str>,
 }
 
 impl<P: Provider + 'static, S: Signer> UniTriArb<P, S> {
-    pub fn new(client: Arc<P>, signer: S) -> Self {
+    pub fn new(client: Arc<P>, signer: S, checkpoint_path: Option<&'static str>) -> Self {
         let addressbook = Addressbook::load().unwrap();
         Self {
             addressbook,
             client: client.clone(),
             pool_state: PoolState::new(client.clone()),
             tx_signer: signer,
+            checkpoint_path,
         }
     }
 }
@@ -33,12 +36,29 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
     for UniTriArb<P, S>
 {
     async fn init_state(&mut self) -> Result<()> {
+        println!("Initializing state...");
+        // update block number
+        let block_number = self.client.get_block_number().await.unwrap();
+        self.pool_state
+            .update_block_number(block_number)
+            .await
+            .unwrap();
+
+        // update pool state
+        if let Some(checkpoint_path) = self.checkpoint_path {
+            println!("Loading pools from checkpoint...");
+            self.pool_state
+                .load_pools_from_checkpoint(checkpoint_path)
+                .await?;
+            println!("Loaded pools from checkpoint",);
+        } else {
+            println!("Loading pools from addressbook...");
+            let pools = self.addressbook.get_pools_by_chain(&NamedChain::Arbitrum);
+            self.pool_state.add_pools(pools).await?;
+        }
+
         let weth = self.addressbook.get_weth(&NamedChain::Arbitrum).unwrap();
-        let pools = self.addressbook.get_pools_by_chain(&NamedChain::Arbitrum);
-        self.pool_state.add_pools(pools).await?;
-
         let pools = self.pool_state.get_all_pools().await;
-
         let arb_cycles = PoolState::<P>::get_cycles(
             pools.as_ref(),
             weth,
@@ -49,14 +69,15 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
             &mut HashSet::new(),
         );
 
-        println!("Arb cycles: {:?}", arb_cycles);
+        println!("Found {} arb cycles", arb_cycles.len());
 
         Ok(())
     }
 
     async fn sync_state(&mut self) -> Result<()> {
+        info!("Syncing state...");
         self.pool_state
-            .sync_pools()
+            .update_pools()
             .await
             .map_err(|e| anyhow::anyhow!("Failed to sync pools: {}", e))?;
 
@@ -66,10 +87,12 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
     async fn process_event(&mut self, event: Event) -> Vec<Action> {
         match event {
             Event::NewBlock(event) => {
+                let block_number = event.number.to::<u64>();
+                self.pool_state
+                    .update_block_number(block_number)
+                    .await
+                    .unwrap();
                 println!("New block: {:?}", event);
-
-                println!("Syncing state...");
-
                 return vec![];
             }
             Event::UniswapV2Swap(swap) => {

@@ -95,7 +95,8 @@ where
         for mut strategy in self.strategies {
             let mut event_receiver = event_sender.subscribe();
             let action_sender = action_sender.clone();
-            strategy.init_state().await?;
+            info!("initializing state...");
+            strategy.init_state().await.unwrap();
 
             set.spawn(async move {
                 info!("starting strategy... ");

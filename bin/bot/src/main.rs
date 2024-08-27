@@ -15,6 +15,7 @@ use artemis_core::{
 use bindings::iuniswapv2pair::IUniswapV2Pair;
 use clap::Parser;
 use dotenv::dotenv;
+use env_logger;
 use shared::config::get_chain_config;
 use std::str::FromStr;
 use tracing::{info, Level};
@@ -30,11 +31,14 @@ use uni_tri_arb_strategy::{
 struct Args {
     #[arg(short, long)]
     chain_id: u64,
+    #[arg(long)]
+    checkpoint_path: Option<String>,
 }
 
 #[tokio::main]
 async fn main() -> Result<()> {
     dotenv().ok();
+    // env_logger::init();
     let filter = filter::Targets::new()
         .with_target("uni-tri-arb", Level::INFO)
         .with_target("artemis_core", Level::INFO);
@@ -50,6 +54,7 @@ async fn main() -> Result<()> {
     let signer = chain_config.signer;
     let provider = ws;
     let mut engine: Engine<Event, Action> = Engine::default();
+    let checkpoint_path: &str = "./checkpoints/filtered-pools.json";
 
     let block_collector = Box::new(BlockCollector::new(provider.clone()));
     let block_collector = CollectorMap::new(block_collector, |block| Event::NewBlock(block));
@@ -58,10 +63,6 @@ async fn main() -> Result<()> {
     let swap_filter = Filter::new()
         .from_block(BlockNumberOrTag::Latest)
         .event(IUniswapV2Pair::Swap::SIGNATURE);
-
-    let sync_filter = Filter::new()
-        .from_block(BlockNumberOrTag::Latest)
-        .event(IUniswapV2Pair::Sync::SIGNATURE);
 
     let swap_collector = Box::new(EventCollector::<_, IUniswapV2Pair::Swap>::new(
         provider.clone(),
@@ -72,18 +73,11 @@ async fn main() -> Result<()> {
     });
     engine.add_collector(Box::new(swap_collector));
 
-    let sync_collector = Box::new(EventCollector::<_, IUniswapV2Pair::Sync>::new(
-        provider.clone(),
-        sync_filter,
-    ));
-    let sync_collector = CollectorMap::new(sync_collector, |event: IUniswapV2Pair::Sync| {
-        Event::UniswapV2Sync(event)
-    });
-    engine.add_collector(Box::new(sync_collector));
-
-    let strategy = UniTriArb::new(Arc::new(provider.clone()), signer);
+    info!("Adding strategy...");
+    let strategy = UniTriArb::new(Arc::new(provider.clone()), signer, Some(checkpoint_path));
     engine.add_strategy(Box::new(strategy));
 
+    info!("Adding executor...");
     let mempool_executor = Box::new(MempoolExecutor::new(provider.clone()));
     let mempool_executor = ExecutorMap::new(mempool_executor, |action: Action| match action {
         Action::SubmitTx(tx) => Some(tx),
