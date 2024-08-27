@@ -1,6 +1,3 @@
-use std::sync::Arc;
-use uni_tri_arb_strategy::state::PoolState;
-
 // #[cfg(feature = "integration-tests")]
 #[tokio::test]
 async fn test_pool_state() {

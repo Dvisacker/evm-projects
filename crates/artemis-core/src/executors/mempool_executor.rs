@@ -4,10 +4,7 @@ use std::{
 };
 
 use crate::types::Executor;
-use alloy::{
-    consensus::TypedTransaction, primitives::U256, providers::Provider,
-    rpc::types::TransactionRequest,
-};
+use alloy::{primitives::U256, providers::Provider, rpc::types::TransactionRequest};
 use anyhow::{Context, Result};
 use async_trait::async_trait;
 

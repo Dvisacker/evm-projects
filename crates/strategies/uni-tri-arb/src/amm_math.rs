@@ -1,15 +1,8 @@
 use std::cell::RefCell;
 
-use crate::state::PoolState;
-use alloy::{
-    primitives::{Address, I256, U256},
-    providers::Provider,
-};
+use alloy::primitives::{Address, I256, U256};
 use amms::amm::uniswap_v2::UniswapV2Pool;
 use serde::Deserialize;
-use std::cmp::Ordering;
-use std::str::FromStr;
-use std::sync::Arc;
 
 #[derive(Debug, Deserialize)]
 pub struct NetPositiveCycle {
@@ -19,7 +12,7 @@ pub struct NetPositiveCycle {
     pub cycle_addresses: Vec<Address>,
 }
 
-fn maximize_profit(
+pub fn maximize_profit(
     mut domain_min: U256,
     mut domain_max: U256,
     lowest_delta: U256,

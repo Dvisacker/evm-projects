@@ -4,10 +4,7 @@ use alloy::{eips::BlockNumberOrTag, rpc::types::Filter, sol_types::SolEvent};
 use alloy_chains::Chain;
 use anyhow::Result;
 use artemis_core::{
-    collectors::{
-        block_collector::BlockCollector, event_collector::EventCollector,
-        log_collector::LogCollector, mempool_collector::MempoolCollector,
-    },
+    collectors::{block_collector::BlockCollector, event_collector::EventCollector},
     engine::Engine,
     executors::mempool_executor::MempoolExecutor,
     types::{CollectorMap, ExecutorMap},
@@ -15,9 +12,7 @@ use artemis_core::{
 use bindings::iuniswapv2pair::IUniswapV2Pair;
 use clap::Parser;
 use dotenv::dotenv;
-use env_logger;
 use shared::config::get_chain_config;
-use std::str::FromStr;
 use tracing::{info, Level};
 use tracing_subscriber::{filter, prelude::*};
 use uni_tri_arb_strategy::{
@@ -81,7 +76,6 @@ async fn main() -> Result<()> {
     let mempool_executor = Box::new(MempoolExecutor::new(provider.clone()));
     let mempool_executor = ExecutorMap::new(mempool_executor, |action: Action| match action {
         Action::SubmitTx(tx) => Some(tx),
-        _ => None,
     });
     engine.add_executor(Box::new(mempool_executor));
 

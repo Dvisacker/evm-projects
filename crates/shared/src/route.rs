@@ -1,7 +1,4 @@
-use alloy::{
-    primitives::{Address, U256},
-    providers::Provider,
-};
+use alloy::primitives::{Address, U256};
 use amms::{
     amm::{AutomatedMarketMaker, AMM},
     errors::AMMError,

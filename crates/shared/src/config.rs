@@ -1,16 +1,9 @@
 use alloy::{
-    network::EthereumWallet,
-    providers::{Provider, ProviderBuilder, RootProvider, WsConnect},
-    pubsub::PubSubFrontend,
+    providers::{ProviderBuilder, RootProvider},
     signers::local::PrivateKeySigner,
     transports::BoxTransport,
 };
 use alloy_chains::{Chain, NamedChain};
-// use ethers::{
-//     providers::{Provider, Ws},
-//     signers::LocalWallet,
-//     types::Chain,
-// };
 use once_cell::sync::Lazy;
 use std::{collections::HashMap, env, path::PathBuf, sync::Arc};
 
@@ -78,7 +71,6 @@ pub async fn get_chain_config(chain: Chain) -> ChainConfig {
 
     match chain {
         Ok(NamedChain::Mainnet) => {
-            let url = env::var("MAINNET_RPC_URL").expect("MAINNET_RPC_URL is not set");
             let ws_url = env::var("MAINNET_WS_URL").expect("MAINNET_WS_URL is not set");
             // let provider = ProviderBuilder::new().on_ws(ws_connect).await.unwrap();
             let provider = ProviderBuilder::new()
@@ -96,7 +88,6 @@ pub async fn get_chain_config(chain: Chain) -> ChainConfig {
             };
         }
         Ok(NamedChain::Arbitrum) => {
-            let url = env::var("ARBITRUM_RPC_URL").expect("ARBITRUM_RPC_URL is not set");
             let ws_url = env::var("ARBITRUM_WS_URL").expect("ARBITRUM_WS_URL is not set");
             let provider = ProviderBuilder::new()
                 .on_builtin(ws_url.as_str())
@@ -113,7 +104,6 @@ pub async fn get_chain_config(chain: Chain) -> ChainConfig {
             };
         }
         Ok(NamedChain::Optimism) => {
-            let url = env::var("OPTIMISM_RPC_URL").expect("OPTIMISM_RPC_URL is not set");
             let ws_url = env::var("OPTIMISM_WS_URL").expect("OPTIMISM_WS_URL is not set");
             let provider = ProviderBuilder::new()
                 .on_builtin(ws_url.as_str())
