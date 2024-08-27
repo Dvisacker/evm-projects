@@ -16,22 +16,22 @@ pub mod UQ112x112 {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x60556023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea265627a7a72315820e90435909a4a8c44b4e756f4d768e0d9bde14480949a68ae66fefae0feee2a1864736f6c63430005100032
+    ///0x60556023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea265627a7a7231582098560c53d21a72f4c1598f8daccec10e03196ad2769d96d60379a9c2017b6b8b64736f6c63430005100032
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`U`#`\x0B\x82\x82\x829\x80Q`\0\x1A`s\x14`\x16W\xFE[0`\0R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R`\0\x80\xFD\xFE\xA2ebzzr1X \xE9\x045\x90\x9AJ\x8CD\xB4\xE7V\xF4\xD7h\xE0\xD9\xBD\xE1D\x80\x94\x9Ah\xAEf\xFE\xFA\xE0\xFE\xEE*\x18dsolcC\0\x05\x10\x002",
+        b"`U`#`\x0B\x82\x82\x829\x80Q`\0\x1A`s\x14`\x16W\xFE[0`\0R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R`\0\x80\xFD\xFE\xA2ebzzr1X \x98V\x0CS\xD2\x1Ar\xF4\xC1Y\x8F\x8D\xAC\xCE\xC1\x0E\x03\x19j\xD2v\x9D\x96\xD6\x03y\xA9\xC2\x01{k\x8BdsolcC\0\x05\x10\x002",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x73000000000000000000000000000000000000000030146080604052600080fdfea265627a7a72315820e90435909a4a8c44b4e756f4d768e0d9bde14480949a68ae66fefae0feee2a1864736f6c63430005100032
+    ///0x73000000000000000000000000000000000000000030146080604052600080fdfea265627a7a7231582098560c53d21a72f4c1598f8daccec10e03196ad2769d96d60379a9c2017b6b8b64736f6c63430005100032
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R`\0\x80\xFD\xFE\xA2ebzzr1X \xE9\x045\x90\x9AJ\x8CD\xB4\xE7V\xF4\xD7h\xE0\xD9\xBD\xE1D\x80\x94\x9Ah\xAEf\xFE\xFA\xE0\xFE\xEE*\x18dsolcC\0\x05\x10\x002",
+        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R`\0\x80\xFD\xFE\xA2ebzzr1X \x98V\x0CS\xD2\x1Ar\xF4\xC1Y\x8F\x8D\xAC\xCE\xC1\x0E\x03\x19j\xD2v\x9D\x96\xD6\x03y\xA9\xC2\x01{k\x8BdsolcC\0\x05\x10\x002",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`UQ112x112`](self) contract instance.

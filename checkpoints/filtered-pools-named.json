@@ -1,247 +1,327 @@
 {
-  "timestamp": 1724762980,
-  "block_number": 247253708,
-  "factories": [],
   "amms": [
     {
       "UniswapV2Pool": {
         "address": "0xf64dfe17c8b87f012fcf50fbda1d62bfa148366a",
+        "fee": 300,
+        "reserve_0": 2.734358296680484e19,
+        "reserve_1": 73618624202,
         "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_a_decimals": 18,
+        "token_a_symbol": "WETH",
+        "token_a_total_supply": "238893560338881277080935",
         "token_b": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
         "token_b_decimals": 6,
-        "reserve_0": 27732339239957907614,
-        "reserve_1": 72594030909,
-        "fee": 300
+        "token_b_symbol": "USDC",
+        "token_b_total_supply": "1415034035837696"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0xb73cc38de8328bfbb4b39e826e3efc4d9617a935",
+        "fee": 300,
+        "reserve_0": 3245683265919746771,
+        "reserve_1": 5.3476494036127364e23,
         "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_a_decimals": 18,
+        "token_a_symbol": "WETH",
+        "token_a_total_supply": "238893560338881277080935",
         "token_b": "0x8a58d732e055817056632f9edbcf26ea3c9b88f0",
         "token_b_decimals": 18,
-        "reserve_0": 3245683265919746771,
-        "reserve_1": 534764940361273635905084,
-        "fee": 300
+        "token_b_symbol": "NEOS",
+        "token_b_total_supply": "19982440035957139423988047"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0x6fa774876fe6badeb1a4d0c6dcf9430a72d3873b",
+        "fee": 300,
+        "reserve_0": 9122580110916679035,
+        "reserve_1": 1.2471129851090052e27,
         "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_a_decimals": 18,
+        "token_a_symbol": "WETH",
+        "token_a_total_supply": "238893560338881277080935",
         "token_b": "0xe086022290444bcd279d22c56925cc5eda389999",
         "token_b_decimals": 18,
-        "reserve_0": 9242178415386569923,
-        "reserve_1": 1231022799057425319415252885,
-        "fee": 300
+        "token_b_symbol": "YSARB",
+        "token_b_total_supply": "1000000000000000000000000000000000"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0x0ac7e584d45eef85652c57a994deecc3a4dd7982",
+        "fee": 300,
+        "reserve_0": 5.217047951163869e24,
+        "reserve_1": 4980508909717559695,
         "token_a": "0x35ca1e5a9b1c09fa542fa18d1ba4d61c8edff852",
         "token_a_decimals": 18,
+        "token_a_symbol": "SCHRODI",
+        "token_a_total_supply": "43783145996068273321954065",
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 5217047951163869659408164,
-        "reserve_1": 4980508909717559695,
-        "fee": 300
+        "token_b_symbol": "WETH",
+        "token_b_total_supply": "238893560338881277080935"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0xfebeb593140388ec4b30f08f893c54d5e282efdd",
+        "fee": 300,
+        "reserve_0": 1.0423633375781197e25,
+        "reserve_1": 1.994588784823927e19,
         "token_a": "0x4425742f1ec8d98779690b5a3a6276db85ddc01a",
         "token_a_decimals": 18,
+        "token_a_symbol": "DOG",
+        "token_a_total_supply": "44821624954329786564821739",
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 10524346882772298550844127,
-        "reserve_1": 19756149807486261026,
-        "fee": 300
+        "token_b_symbol": "WETH",
+        "token_b_total_supply": "238893560338881277080935"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0x4c27b5e88c6d6ad95ebfaced535576608ca6fe0a",
+        "fee": 300,
+        "reserve_0": 2.853289532866725e24,
+        "reserve_1": 9001237512789737877,
         "token_a": "0x412f4b922bb9afdc65c7e9b669f4bec6e554452a",
         "token_a_decimals": 18,
+        "token_a_symbol": "RPK",
+        "token_a_total_supply": "50000000000000000000000000",
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 2781016768264457337048614,
-        "reserve_1": 9288094708055871574,
-        "fee": 300
+        "token_b_symbol": "WETH",
+        "token_b_total_supply": "238893560338881277080935"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0x716fbda28320849daa418996ca9403fe9d1fa564",
+        "fee": 300,
+        "reserve_0": 18032732515957584517,
+        "reserve_1": 3.137010533263411e24,
         "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_a_decimals": 18,
+        "token_a_symbol": "WETH",
+        "token_a_total_supply": "238893560338881277080935",
         "token_b": "0xb50a8e92cb9782c9b8f3c88e4ee8a1d0aa2221d7",
         "token_b_decimals": 18,
-        "reserve_0": 18032732515957584517,
-        "reserve_1": 3137010533263410679608021,
-        "fee": 300
+        "token_b_symbol": "YAKS",
+        "token_b_total_supply": "100000000000000000000000000"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0xe7a23eec4f8e94363d73995ce857cd067a49b0e2",
+        "fee": 300,
+        "reserve_0": 9145789197824220544,
+        "reserve_1": 3.734202187233586e28,
         "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_a_decimals": 18,
+        "token_a_symbol": "WETH",
+        "token_a_total_supply": "238893560338881277080935",
         "token_b": "0x9e30239205320b4b23c71e1b087ed2550d9971be",
         "token_b_decimals": 18,
-        "reserve_0": 9145789197824220544,
-        "reserve_1": 37342021872335860725925613841,
-        "fee": 300
+        "token_b_symbol": "kitty",
+        "token_b_total_supply": "53637755439506445223398833345"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0x400bf6fa87705b45edb04b39e66812f807456d06",
+        "fee": 300,
+        "reserve_0": 6420896381539833635,
+        "reserve_1": 7.035686109037488e28,
         "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_a_decimals": 18,
+        "token_a_symbol": "WETH",
+        "token_a_total_supply": "238893560338881277080935",
         "token_b": "0xbfd5206962267c7b4b4a8b3d76ac2e1b2a5c4d5e",
         "token_b_decimals": 18,
-        "reserve_0": 6625482017056432374,
-        "reserve_1": 68199387757010269921710624041,
-        "fee": 300
+        "token_b_symbol": "OSAK",
+        "token_b_total_supply": "5544242241090857700000000000000"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0x8280b26b71e10b7c455c15b3ac23ca46e2b91387",
+        "fee": 300,
+        "reserve_0": 7.927523806063521e25,
+        "reserve_1": 2338508635949582992,
         "token_a": "0x6a05743697c97a1b58f2c1902d07b99532e21a7d",
         "token_a_decimals": 18,
+        "token_a_symbol": "XWS",
+        "token_a_total_supply": "1000000000000000000000000000",
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 79275238060635203214056360,
-        "reserve_1": 2338508635949582992,
-        "fee": 300
+        "token_b_symbol": "WETH",
+        "token_b_total_supply": "238893560338881277080935"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0x6aba61388a6596a8511f56c9651ba7575d0fd0aa",
+        "fee": 300,
+        "reserve_0": 6.56157872273019e19,
+        "reserve_1": 7.976297773236813e22,
         "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_a_decimals": 18,
+        "token_a_symbol": "WETH",
+        "token_a_total_supply": "238893560338881277080935",
         "token_b": "0x83d6c8c06ac276465e4c92e7ac8c23740f435140",
         "token_b_decimals": 18,
-        "reserve_0": 65503264493189524883,
-        "reserve_1": 79917406766492967226562,
-        "fee": 300
+        "token_b_symbol": "HMX",
+        "token_b_total_supply": "2590773564285714000000000"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0x348821a9326fb05949e7b0f56eca46436153a3ba",
+        "fee": 300,
+        "reserve_0": 1.333663783428136e27,
+        "reserve_1": 2.465620026011107e19,
         "token_a": "0x60460971a3d79ef265dfafa393ffbce97d91e8b8",
         "token_a_decimals": 18,
+        "token_a_symbol": "BO",
+        "token_a_total_supply": "88888888888000000000000000000",
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 1333663783428136118900482754,
-        "reserve_1": 24656200260111066947,
-        "fee": 300
+        "token_b_symbol": "WETH",
+        "token_b_total_supply": "238893560338881277080935"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0x53d101ca2844c79632ca9aef1fa8d749fd0924ee",
+        "fee": 300,
+        "reserve_0": 5832632161794664765,
+        "reserve_1": 6.797628079579231e23,
         "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_a_decimals": 18,
+        "token_a_symbol": "WETH",
+        "token_a_total_supply": "238893560338881277080935",
         "token_b": "0x888aaa48ebea87c74f690189e947d2c679705972",
         "token_b_decimals": 18,
-        "reserve_0": 5832632161794664765,
-        "reserve_1": 679762807957923113934614,
-        "fee": 300
+        "token_b_symbol": "ZONE",
+        "token_b_total_supply": "8880000000000000000000000"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0xdb1aea330871c6d4af1488d5bd808c85c48000a3",
+        "fee": 300,
+        "reserve_0": 7750463784714570547,
+        "reserve_1": 2.6062391603210543e23,
         "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_a_decimals": 18,
+        "token_a_symbol": "WETH",
+        "token_a_total_supply": "238893560338881277080935",
         "token_b": "0xf9a76af0bf7a8d4718fb7956a6873eaa64bbd0d9",
         "token_b_decimals": 18,
-        "reserve_0": 7750463784714570547,
-        "reserve_1": 260623916032105396037490,
-        "fee": 300
+        "token_b_symbol": "$HACHI",
+        "token_b_total_supply": "10171631757387575626274084"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0x396eedd12a43e68ecaca80021db4f2e398dc88a0",
+        "fee": 300,
+        "reserve_0": 4.672967378338517e20,
+        "reserve_1": 14631192729745607502,
         "token_a": "0x250f93c92aebf7304c9e7e347d1aca8c0212edea",
         "token_a_decimals": 18,
+        "token_a_symbol": "H20",
+        "token_a_total_supply": "578015439012000000112",
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 467606737833851661664,
-        "reserve_1": 14621533339153096152,
-        "fee": 300
+        "token_b_symbol": "WETH",
+        "token_b_total_supply": "238893560338881277080935"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0x10cab08d1490a56bda21a191c20771fcb5453f54",
+        "fee": 300,
+        "reserve_0": 6567671514442305129,
+        "reserve_1": 8.004483100914364e22,
         "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_a_decimals": 18,
+        "token_a_symbol": "WETH",
+        "token_a_total_supply": "238893560338881277080935",
         "token_b": "0xcb8b5cd20bdcaea9a010ac1f8d835824f5c87a04",
         "token_b_decimals": 18,
-        "reserve_0": 6554158247503419683,
-        "reserve_1": 80210362916468797875261,
-        "fee": 300
+        "token_b_symbol": "COW",
+        "token_b_total_supply": "488794590871479693735660"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0x72cc017a624cc3defb9092b6dd90af9fac7d12b8",
+        "fee": 300,
+        "reserve_0": 2.2349875372952366e25,
+        "reserve_1": 58926120969,
         "token_a": "0x763a716dd74a79d037e57f993fe3047271879bc1",
         "token_a_decimals": 18,
+        "token_a_symbol": "QODA",
+        "token_a_total_supply": "1000000000000000000000000000",
         "token_b": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
         "token_b_decimals": 6,
-        "reserve_0": 22366247560296882593457580,
-        "reserve_1": 58883116144,
-        "fee": 300
+        "token_b_symbol": "USDC",
+        "token_b_total_supply": "1415034035837696"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0x8e8f8940873dcb858a6aa020397f68e5af8418c3",
+        "fee": 300,
+        "reserve_0": 8464807582126506258,
+        "reserve_1": 1.98563129058763e26,
         "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_a_decimals": 18,
+        "token_a_symbol": "WETH",
+        "token_a_total_supply": "238893560338881277080935",
         "token_b": "0xc1f99239b2460964129d06d393d62de5452cee06",
         "token_b_decimals": 18,
-        "reserve_0": 8464807582126506258,
-        "reserve_1": 198563129058763009909580973,
-        "fee": 300
+        "token_b_symbol": "ODS",
+        "token_b_total_supply": "1000000000000000000000000000"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0x5347000c8b6c1965372a55d226870ab8277448c8",
+        "fee": 300,
+        "reserve_0": 4.671396292760624e26,
+        "reserve_1": 4.932453061297923e19,
         "token_a": "0x292ae05365e480b6e7fdd85135cdb0a1739a0593",
         "token_a_decimals": 18,
+        "token_a_symbol": "CDS",
+        "token_a_total_supply": "1698953956961216298442906072",
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 467139629276062363376291726,
-        "reserve_1": 49324530612979234240,
-        "fee": 300
+        "token_b_symbol": "WETH",
+        "token_b_total_supply": "238893560338881277080935"
       }
     },
     {
       "UniswapV2Pool": {
         "address": "0x50730502ad62485736c3ed95c6f19c50ce72afa0",
+        "fee": 300,
+        "reserve_0": 3.3388333545336815e24,
+        "reserve_1": 3238195770726477442,
         "token_a": "0x763a716dd74a79d037e57f993fe3047271879bc1",
         "token_a_decimals": 18,
+        "token_a_symbol": "QODA",
+        "token_a_total_supply": "1000000000000000000000000000",
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 3322127040916827453809939,
-        "reserve_1": 3254529097891561113,
-        "fee": 300
+        "token_b_symbol": "WETH",
+        "token_b_total_supply": "238893560338881277080935"
       }
     }
-  ]
+  ],
+  "block_number": 247154458,
+  "factories": [],
+  "timestamp": 1724738095
 }

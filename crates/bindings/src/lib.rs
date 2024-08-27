@@ -21,3 +21,7 @@ pub mod uniswapv2factory;
 pub mod uniswapv2library;
 pub mod uniswapv2pair;
 pub mod uniswapv2router02;
+pub mod geterc20tokendatabatchrequest;
+pub mod getuniswapv2pairsbatchrequest;
+pub mod ifactory;
+pub mod getuniswapv2pooldatabatchrequest;

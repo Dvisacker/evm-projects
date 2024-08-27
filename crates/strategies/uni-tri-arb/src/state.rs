@@ -1,12 +1,11 @@
 use alloy::primitives::Address;
 use alloy::providers::Provider;
-use amms::amm::{
-    factory::Factory, uniswap_v2::factory::UniswapV2Factory, uniswap_v2::UniswapV2Pool,
-};
-use amms::amm::{AutomatedMarketMaker, AMM};
+use amms::amm::uniswap_v2::UniswapV2Pool;
+use amms::amm::AMM;
 use amms::errors::AMMError;
 use amms::sync;
 use dashmap::DashMap;
+use shared::types::Cycle;
 use std::collections::HashSet;
 use std::sync::Arc;
 
@@ -16,8 +15,6 @@ pub struct PoolState<P: Provider> {
     pub block_number: u64,
     pub pools: DashMap<Address, UniswapV2Pool>,
 }
-
-pub type Cycle = Vec<UniswapV2Pool>;
 
 impl<P: Provider + 'static> PoolState<P> {
     pub fn new(provider: Arc<P>) -> Self {
@@ -57,9 +54,9 @@ impl<P: Provider + 'static> PoolState<P> {
             new_seen.insert(pair.address);
 
             if temp_out == token_out {
-                let mut new_cycle = current_pairs.clone();
-                new_cycle.push(pair.clone());
-                circles_copy.push(new_cycle);
+                let mut pools = current_pairs.clone();
+                pools.push(pair.clone());
+                circles_copy.push(Cycle(pools));
             } else if max_hops > 1 {
                 let mut new_pairs: Vec<UniswapV2Pool> = current_pairs.clone();
                 new_pairs.push(pair.clone());
@@ -83,7 +80,6 @@ impl<P: Provider + 'static> PoolState<P> {
             sync::checkpoint::sync_amms_from_checkpoint(path, 200, self.provider.clone()).await?;
         println!("Loaded {} pools from checkpoint", pools.len());
         for pool in pools {
-            println!("Loaded pool");
             if let AMM::UniswapV2Pool(pool) = pool {
                 self.pools.insert(pool.address, pool);
             }

@@ -16,22 +16,22 @@ pub mod UniswapV2Library {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x60566023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122034ba07ef5aa68c176176760ada26f0fc95504079495f128d35c4063d26782e0664736f6c63430006060033
+    ///0x60566023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212204e45db0d86d2f065ba4e8804746a37678db38f95d4903b8c2986438e583adcee64736f6c63430006060033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`V`#`\x0B\x82\x82\x829\x80Q`\0\x1A`s\x14`\x16W\xFE[0`\0R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R`\0\x80\xFD\xFE\xA2dipfsX\"\x12 4\xBA\x07\xEFZ\xA6\x8C\x17avv\n\xDA&\xF0\xFC\x95P@yI_\x12\x8D5\xC4\x06=&x.\x06dsolcC\0\x06\x06\x003",
+        b"`V`#`\x0B\x82\x82\x829\x80Q`\0\x1A`s\x14`\x16W\xFE[0`\0R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R`\0\x80\xFD\xFE\xA2dipfsX\"\x12 NE\xDB\r\x86\xD2\xF0e\xBAN\x88\x04tj7g\x8D\xB3\x8F\x95\xD4\x90;\x8C)\x86C\x8EX:\xDC\xEEdsolcC\0\x06\x06\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122034ba07ef5aa68c176176760ada26f0fc95504079495f128d35c4063d26782e0664736f6c63430006060033
+    ///0x73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212204e45db0d86d2f065ba4e8804746a37678db38f95d4903b8c2986438e583adcee64736f6c63430006060033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R`\0\x80\xFD\xFE\xA2dipfsX\"\x12 4\xBA\x07\xEFZ\xA6\x8C\x17avv\n\xDA&\xF0\xFC\x95P@yI_\x12\x8D5\xC4\x06=&x.\x06dsolcC\0\x06\x06\x003",
+        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R`\0\x80\xFD\xFE\xA2dipfsX\"\x12 NE\xDB\r\x86\xD2\xF0e\xBAN\x88\x04tj7g\x8D\xB3\x8F\x95\xD4\x90;\x8C)\x86C\x8EX:\xDC\xEEdsolcC\0\x06\x06\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`UniswapV2Library`](self) contract instance.
