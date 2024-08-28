@@ -33,7 +33,7 @@ pub fn create_pool(conn: &mut SqliteConnection, new_pool: &NewPool) -> Result<Po
 
 pub fn batch_insert_pools(
     conn: &mut SqliteConnection,
-    new_pools: &[NewPool],
+    new_pools: &Vec<NewPool>,
 ) -> Result<Vec<Pool>, Error> {
     conn.transaction(|conn| {
         let inserted_pools: Vec<Pool> = new_pools
@@ -68,17 +68,17 @@ pub fn update_pool(
 ) -> Result<Pool, Error> {
     diesel::update(pools::table.filter(pools::address.eq(pool_address)))
         .set((
-            pools::chain.eq(updated_pool.chain),
-            pools::factory_address.eq(updated_pool.factory_address),
-            pools::exchange_name.eq(updated_pool.exchange_name),
-            pools::token_a.eq(updated_pool.token_a),
-            pools::token_a_symbol.eq(updated_pool.token_a_symbol),
+            pools::chain.eq(updated_pool.chain.clone()),
+            pools::factory_address.eq(updated_pool.factory_address.clone()),
+            pools::exchange_name.eq(updated_pool.exchange_name.clone()),
+            pools::token_a.eq(updated_pool.token_a.clone()),
+            pools::token_a_symbol.eq(updated_pool.token_a_symbol.clone()),
             pools::token_a_decimals.eq(updated_pool.token_a_decimals),
-            pools::token_b.eq(updated_pool.token_b),
-            pools::token_b_symbol.eq(updated_pool.token_b_symbol),
+            pools::token_b.eq(updated_pool.token_b.clone()),
+            pools::token_b_symbol.eq(updated_pool.token_b_symbol.clone()),
             pools::token_b_decimals.eq(updated_pool.token_b_decimals),
-            pools::reserve_0.eq(updated_pool.reserve_0),
-            pools::reserve_1.eq(updated_pool.reserve_1),
+            pools::reserve_0.eq(updated_pool.reserve_0.clone()),
+            pools::reserve_1.eq(updated_pool.reserve_1.clone()),
             pools::fee.eq(updated_pool.fee),
         ))
         .execute(conn)?;

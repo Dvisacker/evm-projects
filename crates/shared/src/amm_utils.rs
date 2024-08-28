@@ -12,6 +12,7 @@ use alloy::network::Network;
 use alloy::primitives::{Address, U256};
 use alloy::providers::Provider;
 use alloy::transports::Transport;
+use amms::types::DetailedPool;
 use amms::{
     amm::{
         factory::Factory,
@@ -21,54 +22,60 @@ use amms::{
     filters::value::filter_amms_below_usd_threshold,
     sync::{self, checkpoint},
 };
+use db::models::NewPool;
 use db::{batch_insert_pools, establish_connection};
 
 use crate::addressbook::{Addressbook, ExchangeName};
 use crate::config::get_chain_config;
 
-// pub async fn store_uniswap_v3_pools<P, T, N>(
-//     provider: Arc<P>,
-//     factory_address: Address,
-//     from_block: u64,
-//     to_block: u64,
-//     step: u64,
-//     db_url: &str,
-// ) -> Result<(), AMMError>
-// where
-//     P: Provider<T, N>,
-//     T: Transport + Clone,
-//     N: Network,
-// {
-//     // let chain_config = get_chain_config(chain).await;
-//     // let provider = chain_config.ws;
-//     // let addressbook = Addressbook::load().unwrap();
-//     let mut conn = establish_connection(db_url);
-//     let factory = UniswapV3Factory::new(factory_address, from_block);
+// let chain_config = get_chain_config(chain).await;
+// let provider = chain_config.ws;
+// let addressbook = Addressbook::load().unwrap();
+// let named_chain = chain.named().unwrap();
+// let v3_factories = addressbook.get_v3_factories(&named_chain);
+// let v3_factories: Vec<UniswapV3Factory> = v3_factories
+//     .into_iter()
+//     .map(|addr| UniswapV3Factory::new(addr, from_block))
+//     .collect();
 
-//     // let named_chain = chain.named().unwrap();
-//     // let v3_factories = addressbook.get_v3_factories(&named_chain);
-//     // let v3_factories: Vec<UniswapV3Factory> = v3_factories
-//     //     .into_iter()
-//     //     .map(|addr| UniswapV3Factory::new(addr, from_block))
-//     //     .collect();
+pub async fn store_uniswap_v3_pools<P, T, N>(
+    provider: Arc<P>,
+    factory_address: Address,
+    from_block: u64,
+    to_block: u64,
+    step: u64,
+    db_url: &str,
+) -> Result<(), AMMError>
+where
+    P: Provider<T, N>,
+    T: Transport + Clone,
+    N: Network,
+{
+    let mut conn = establish_connection(db_url);
+    let factory = UniswapV3Factory::new(factory_address, from_block);
 
-//     let pools = factory
-//         .get_pools_from_logs(from_block, to_block, step, provider.clone())
-//         .await?;
+    let pools = factory
+        .get_pools_from_logs(from_block, to_block, step, provider.clone())
+        .await?;
 
-//     println!("Got {:?} pools", pools.len());
+    println!("Got {:?} pools", pools.len());
 
-//     let pool_addresses = pools
-//         .iter()
-//         .map(|pool| pool.address())
-//         .collect::<Vec<Address>>();
+    let mut pools = pools
+        .iter()
+        .map(|pool| DetailedPool::empty(pool.address()))
+        .collect::<Vec<DetailedPool>>();
 
-//     get_detailed_pool_data_batch_request(&mut pools, provider.clone()).await?;
+    get_detailed_pool_data_batch_request(&mut pools, provider.clone()).await?;
 
-//     batch_insert_pools(&mut conn, &pools);
+    let new_pools = pools
+        .iter()
+        .map(|pool| pool.to_new_pool())
+        .collect::<Vec<NewPool>>();
 
-//     Ok(())
-// }
+    batch_insert_pools(&mut conn, &new_pools).unwrap();
+
+    Ok(())
+}
 
 pub async fn get_filtered_amms(chain: Chain, usd_threshold: f64) -> Result<Vec<AMM>, AMMError> {
     let chain_config = get_chain_config(chain).await;

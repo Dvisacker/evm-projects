@@ -1088,6 +1088,7 @@ dependencies = [
  "arraydeque",
  "async-trait",
  "criterion",
+ "db",
  "eyre",
  "futures",
  "lazy_static",
