@@ -55,6 +55,19 @@ fmt:
 clippy: 
     cargo clippy --all --all-features
 
+setup-db:
+    diesel setup --migration-dir ./crates/db/migrations --config-file ./crates/db/diesel.toml
+
+revert-db:
+    diesel migration revert --migration-dir ./crates/db/migrations --config-file ./crates/db/diesel.toml
+
+migrate-db:
+    diesel migration run --migration-dir ./crates/db/migrations --config-file ./crates/db/diesel.toml
+
+print-db:
+    diesel print-schema -- --migration-dir ./crates/db/migrations --config-file ./crates/db/diesel.toml
+
+
 run-bot-arbitrum:
     cargo run --bin bot -- --chain-id 42161
 

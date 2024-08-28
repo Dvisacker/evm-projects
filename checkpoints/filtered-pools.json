@@ -1,6 +1,6 @@
 {
-  "timestamp": 1724800968,
-  "block_number": 247404518,
+  "timestamp": 1724815077,
+  "block_number": 247460611,
   "factories": [],
   "amms": [
     {
@@ -10,8 +10,8 @@
         "token_a_decimals": 18,
         "token_b": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
         "token_b_decimals": 6,
-        "reserve_0": 28641042781677462148,
-        "reserve_1": 70312407234,
+        "reserve_0": 28582228554438790326,
+        "reserve_1": 70461804276,
         "fee": 300
       }
     },
@@ -34,8 +34,8 @@
         "token_a_decimals": 18,
         "token_b": "0xe086022290444bcd279d22c56925cc5eda389999",
         "token_b_decimals": 18,
-        "reserve_0": 9479009299848195077,
-        "reserve_1": 1200397855964713100490516499,
+        "reserve_0": 9516241312813231199,
+        "reserve_1": 1195715389920185054177891941,
         "fee": 300
       }
     },
@@ -58,8 +58,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 11412266920376821613465144,
-        "reserve_1": 18225010102145341803,
+        "reserve_0": 11705824361410962314098570,
+        "reserve_1": 17769566245703191799,
         "fee": 300
       }
     },
@@ -70,8 +70,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 2551363522211773132447690,
-        "reserve_1": 10208596141734276935,
+        "reserve_0": 2598317851284699320419058,
+        "reserve_1": 10024775445893403767,
         "fee": 300
       }
     },
@@ -82,8 +82,8 @@
         "token_a_decimals": 18,
         "token_b": "0xb50a8e92cb9782c9b8f3c88e4ee8a1d0aa2221d7",
         "token_b_decimals": 18,
-        "reserve_0": 20458945132347778092,
-        "reserve_1": 2766116403215388701315561,
+        "reserve_0": 20282014888225652478,
+        "reserve_1": 2790327598007074692897472,
         "fee": 300
       }
     },
@@ -94,8 +94,8 @@
         "token_a_decimals": 18,
         "token_b": "0x9e30239205320b4b23c71e1b087ed2550d9971be",
         "token_b_decimals": 18,
-        "reserve_0": 9145986209833838435,
-        "reserve_1": 37341219907780299632620522253,
+        "reserve_0": 9146198285947309060,
+        "reserve_1": 37340356661265157277979821596,
         "fee": 300
       }
     },
@@ -106,8 +106,8 @@
         "token_a_decimals": 18,
         "token_b": "0xbfd5206962267c7b4b4a8b3d76ac2e1b2a5c4d5e",
         "token_b_decimals": 18,
-        "reserve_0": 6619292228890514057,
-        "reserve_1": 68273142039697703618866359283,
+        "reserve_0": 6623375055330005479,
+        "reserve_1": 68231182818171879741456733053,
         "fee": 300
       }
     },
@@ -118,8 +118,8 @@
         "token_a_decimals": 18,
         "token_b": "0x83d6c8c06ac276465e4c92e7ac8c23740f435140",
         "token_b_decimals": 18,
-        "reserve_0": 62937084137057424857,
-        "reserve_1": 82461169768115095417292,
+        "reserve_0": 62927731487265484532,
+        "reserve_1": 82473489628310960767214,
         "fee": 300
       }
     },
@@ -166,8 +166,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 467606737833851661664,
-        "reserve_1": 14621533339153096152,
+        "reserve_0": 467406737833851661664,
+        "reserve_1": 14627842436267176307,
         "fee": 300
       }
     },
@@ -190,8 +190,8 @@
         "token_a_decimals": 18,
         "token_b": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
         "token_b_decimals": 6,
-        "reserve_0": 22466697169749958177822214,
-        "reserve_1": 58620634850,
+        "reserve_0": 22471502406534965476861619,
+        "reserve_1": 58608137192,
         "fee": 300
       }
     },
@@ -226,8 +226,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 3219627439434097265682768,
-        "reserve_1": 3358455687623628825,
+        "reserve_0": 3214724136592253082989498,
+        "reserve_1": 3363593632854749787,
         "fee": 300
       }
     },
@@ -238,8 +238,8 @@
         "token_a_decimals": 9,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 4347299616986019,
-        "reserve_1": 4238598078710538057,
+        "reserve_0": 4355280574615545,
+        "reserve_1": 4232072200432697521,
         "fee": 300
       }
     },
@@ -250,8 +250,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 82204797870173910786906162,
-        "reserve_1": 20194573325486171976,
+        "reserve_0": 82338759233770790786906162,
+        "reserve_1": 20161816104026333584,
         "fee": 300
       }
     },
@@ -274,8 +274,8 @@
         "token_a_decimals": 18,
         "token_b": "0xcbfeb3ca42f6022266bb362055603eb96ed36c3e",
         "token_b_decimals": 9,
-        "reserve_0": 12636148946101441662,
-        "reserve_1": 1541508387420938218,
+        "reserve_0": 19641,
+        "reserve_1": 1000000000000000963964778518212692,
         "fee": 300
       }
     },
@@ -286,8 +286,8 @@
         "token_a_decimals": 18,
         "token_b": "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
         "token_b_decimals": 6,
-        "reserve_0": 157014809975886557416,
-        "reserve_1": 386323007591,
+        "reserve_0": 156830347600152667462,
+        "reserve_1": 386789345474,
         "fee": 300
       }
     },
@@ -310,8 +310,8 @@
         "token_a_decimals": 18,
         "token_b": "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
         "token_b_decimals": 6,
-        "reserve_0": 75620271341303614406,
-        "reserve_1": 185826877630,
+        "reserve_0": 75512138038345653463,
+        "reserve_1": 186107368157,
         "fee": 300
       }
     },
@@ -322,8 +322,8 @@
         "token_a_decimals": 8,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 220143513,
-        "reserve_1": 53114818428197167976,
+        "reserve_0": 111384868,
+        "reserve_1": 26860379749624789728,
         "fee": 300
       }
     },
@@ -334,8 +334,8 @@
         "token_a_decimals": 18,
         "token_b": "0xf97f4df75117a78c1a5a0dbb814af92458539fb4",
         "token_b_decimals": 18,
-        "reserve_0": 11031591968090070315,
-        "reserve_1": 2454924782785652111436,
+        "reserve_0": 11033877243756565200,
+        "reserve_1": 2454442482786874667533,
         "fee": 300
       }
     },
@@ -346,8 +346,8 @@
         "token_a_decimals": 18,
         "token_b": "0xd4d42f0b6def4ce0383636770ef773390d85c61a",
         "token_b_decimals": 18,
-        "reserve_0": 15085775975804237943,
-        "reserve_1": 63522328779705107312742,
+        "reserve_0": 14888191219821228499,
+        "reserve_1": 63263371594630401848242,
         "fee": 300
       }
     },
@@ -442,8 +442,8 @@
         "token_a_decimals": 18,
         "token_b": "0xed3fb761414da74b74f33e5c5a1f78104b188dfc",
         "token_b_decimals": 18,
-        "reserve_0": 8805154178633204521,
-        "reserve_1": 10311408440702934150746917,
+        "reserve_0": 8801785516261104997,
+        "reserve_1": 10315366748261735583290498,
         "fee": 300
       }
     },
@@ -490,8 +490,8 @@
         "token_a_decimals": 18,
         "token_b": "0xfea7a6a0b346362bf88a9e4a88416b77a57d6c2a",
         "token_b_decimals": 18,
-        "reserve_0": 29364556698569928704,
-        "reserve_1": 72158711431260026179346,
+        "reserve_0": 29314178270580396941,
+        "reserve_1": 72286297210286564461230,
         "fee": 300
       }
     },
@@ -502,8 +502,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 487069969250478828724120,
-        "reserve_1": 2943578437053821852,
+        "reserve_0": 486897808459928195505797,
+        "reserve_1": 2944634089222467593,
         "fee": 300
       }
     },
@@ -538,8 +538,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 255699168349946112543356440,
-        "reserve_1": 55439395519347871501,
+        "reserve_0": 254668823491152972733709484,
+        "reserve_1": 55665473808229736335,
         "fee": 300
       }
     },
@@ -598,8 +598,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 18608058582466210614575,
-        "reserve_1": 82980319716562329153,
+        "reserve_0": 18608437166511392707494,
+        "reserve_1": 82978636567049833814,
         "fee": 300
       }
     },
@@ -610,8 +610,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 5075381967857426269865401,
-        "reserve_1": 708868988194723446459,
+        "reserve_0": 5083196707283227811311205,
+        "reserve_1": 707798118438362054156,
         "fee": 300
       }
     },
@@ -682,8 +682,8 @@
         "token_a_decimals": 18,
         "token_b": "0x8d9ba570d6cb60c7e3e0f31343efe75ab8e65fb1",
         "token_b_decimals": 18,
-        "reserve_0": 12969440986580851582,
-        "reserve_1": 8907982212216427092,
+        "reserve_0": 13331423850796827759,
+        "reserve_1": 8666951310075167520,
         "fee": 300
       }
     },
@@ -706,8 +706,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 38787214452090977271307,
-        "reserve_1": 5883481182028737867,
+        "reserve_0": 38858485138798915785039,
+        "reserve_1": 5872722575074170221,
         "fee": 300
       }
     },
@@ -718,8 +718,8 @@
         "token_a_decimals": 18,
         "token_b": "0x9e758b8a98a42d612b3d38b66a22074dc03d7370",
         "token_b_decimals": 18,
-        "reserve_0": 8055405661561977472,
-        "reserve_1": 107116541914983469232268,
+        "reserve_0": 8014741911375054494,
+        "reserve_1": 107661661772603028450516,
         "fee": 300
       }
     },
@@ -742,8 +742,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 130738072481817829406985892921226,
-        "reserve_1": 13804402387425334808,
+        "reserve_0": 130738061820123083585402433556614,
+        "reserve_1": 13804403516562373494,
         "fee": 300
       }
     },
@@ -778,8 +778,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 21024619175991625232651,
-        "reserve_1": 2564402419278651105,
+        "reserve_0": 21077478774846356081173,
+        "reserve_1": 2558027362087043910,
         "fee": 300
       }
     },
@@ -790,8 +790,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 349552993638141180452619,
-        "reserve_1": 9204713946247578195,
+        "reserve_0": 349807398690227290845036,
+        "reserve_1": 9198040133474764820,
         "fee": 300
       }
     },
@@ -898,8 +898,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 5331586124517888405240600189,
-        "reserve_1": 9230138398747415073,
+        "reserve_0": 5325833387497113936936584863,
+        "reserve_1": 9240138398747415073,
         "fee": 300
       }
     },
@@ -1150,8 +1150,8 @@
         "token_a_decimals": 18,
         "token_b": "0x912ce59144191c1204e64559fe8253a0e49e6548",
         "token_b_decimals": 18,
-        "reserve_0": 10865212422407409792,
-        "reserve_1": 50803524107896788520114,
+        "reserve_0": 10850655017379131390,
+        "reserve_1": 50872480582421775092283,
         "fee": 300
       }
     },
@@ -1162,8 +1162,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 315857731409045183945771,
-        "reserve_1": 8194082142516191229,
+        "reserve_0": 316375624240251234896797,
+        "reserve_1": 8180873307056467825,
         "fee": 300
       }
     },
@@ -1270,8 +1270,8 @@
         "token_a_decimals": 18,
         "token_b": "0xdee46be9d0b207e5d88d2efd84a045e725a242f7",
         "token_b_decimals": 18,
-        "reserve_0": 11842108990677588509,
-        "reserve_1": 164259639376594384529171913394597,
+        "reserve_0": 11842169685677588509,
+        "reserve_1": 164258800017765975040071235462334,
         "fee": 300
       }
     },
@@ -1414,8 +1414,8 @@
         "token_a_decimals": 18,
         "token_b": "0xdc8184ba488e949815d4aafb35b3c56ad03b4179",
         "token_b_decimals": 18,
-        "reserve_0": 9841254990059497708,
-        "reserve_1": 4150949271609180481321540,
+        "reserve_0": 9836209666985012254,
+        "reserve_1": 4153276771652425450721540,
         "fee": 300
       }
     },
@@ -1438,8 +1438,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 675168453874925340711678,
-        "reserve_1": 5987303619453151803,
+        "reserve_0": 674264913874925340711678,
+        "reserve_1": 5995350970486876580,
         "fee": 300
       }
     },
@@ -1486,8 +1486,8 @@
         "token_a_decimals": 18,
         "token_b": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
         "token_b_decimals": 6,
-        "reserve_0": 32729127827924462759,
-        "reserve_1": 80311876020,
+        "reserve_0": 32654316047411069950,
+        "reserve_1": 80500455658,
         "fee": 300
       }
     },
@@ -1534,8 +1534,8 @@
         "token_a_decimals": 18,
         "token_b": "0xf7693c6fd9a7172d537fa75d133d309501cbd657",
         "token_b_decimals": 18,
-        "reserve_0": 19752124841243360984,
-        "reserve_1": 34598908764888337788726451161147,
+        "reserve_0": 19730960698481786323,
+        "reserve_1": 34636356880562217555186393788697,
         "fee": 300
       }
     },
@@ -1546,8 +1546,8 @@
         "token_a_decimals": 18,
         "token_b": "0xccd05a0fcfc1380e9da27862adb2198e58e0d66f",
         "token_b_decimals": 18,
-        "reserve_0": 13989759665613599353,
-        "reserve_1": 3408064804208450409744090,
+        "reserve_0": 13918170337062727696,
+        "reserve_1": 3425661340963778055942545,
         "fee": 300
       }
     },
@@ -1558,8 +1558,8 @@
         "token_a_decimals": 18,
         "token_b": "0x98c435070c24e5152fc14d130937a38810c104b9",
         "token_b_decimals": 18,
-        "reserve_0": 7195830074431583677,
-        "reserve_1": 34028653453353766076725071123,
+        "reserve_0": 7209971083747844088,
+        "reserve_1": 33962112544494502167705914092,
         "fee": 300
       }
     },
@@ -1570,8 +1570,8 @@
         "token_a_decimals": 18,
         "token_b": "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
         "token_b_decimals": 6,
-        "reserve_0": 76877129265912394386291992209,
-        "reserve_1": 41106731351,
+        "reserve_0": 76941673947505880378040574530,
+        "reserve_1": 41072351203,
         "fee": 300
       }
     },
@@ -1606,8 +1606,8 @@
         "token_a_decimals": 18,
         "token_b": "0x9e20461bc2c4c980f62f1b279d71734207a6a356",
         "token_b_decimals": 18,
-        "reserve_0": 17989771441498540030,
-        "reserve_1": 1174072202185016356520217185,
+        "reserve_0": 17997281626740239249,
+        "reserve_1": 1173583736292550190466669179,
         "fee": 300
       }
     },
@@ -1618,8 +1618,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 476735057478420490885215596,
-        "reserve_1": 6642079600668536734,
+        "reserve_0": 460738763530149404275713358,
+        "reserve_1": 6873378486813941406,
         "fee": 300
       }
     },
@@ -1642,8 +1642,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 1500081152815608216523383891,
-        "reserve_1": 4080644920888809791,
+        "reserve_0": 1481218251735053916629534383,
+        "reserve_1": 4133007208522963334,
         "fee": 300
       }
     },
@@ -1690,8 +1690,8 @@
         "token_a_decimals": 18,
         "token_b": "0xebd72d1ad20530d18f6b63dbc763dad8922952ba",
         "token_b_decimals": 18,
-        "reserve_0": 3426854215289889537,
-        "reserve_1": 23513211318933593912719683521,
+        "reserve_0": 3419175523799015354,
+        "reserve_1": 23566175542720924368547456948,
         "fee": 300
       }
     },
@@ -1798,8 +1798,8 @@
         "token_a_decimals": 9,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 94624599229944885826,
-        "reserve_1": 36690997832209221514,
+        "reserve_0": 82806412648303667669,
+        "reserve_1": 42130331731137839535,
         "fee": 300
       }
     }
