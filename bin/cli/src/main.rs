@@ -1,7 +1,7 @@
 use alloy_chains::Chain;
+use amms::utils::get_filtered_amms;
 use anyhow::{Error, Result};
 use clap::{Args, Parser, Subcommand};
-use shared::amm_utils::get_filtered_amms;
 use shared::config::get_chain_config;
 use shared::token_utils::load_pools_and_fetch_token_data;
 use std::sync::Arc;

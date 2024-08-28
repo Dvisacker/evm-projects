@@ -15,10 +15,10 @@ download-contracts:
     #!/usr/bin/env bash
     addressbook_path="./addressbook.json"
     multicall_address=$(jq -r ".mainnet.multicall" $addressbook_path)
-    uniswap_v2_factory_address=$(jq -r ".mainnet.uniswapv2.factory" $addressbook_path)
-    uniswap_v2_router_address=$(jq -r ".mainnet.uniswapv2.router" $addressbook_path)
-    weth_usdc_address=$(jq -r ".mainnet.uniswapv2.weth-usdc" $addressbook_path)
-
+    uniswap_v2_factory_address=$(jq -r ".mainnet.exchanges.univ2.uniswapv2.factory" $addressbook_path)
+    uniswap_v2_router_address=$(jq -r ".mainnet.exchanges.univ2.uniswapv2.router" $addressbook_path)
+    # weth_usdc_address=$(jq -r ".mainnet.univ2.uniswapv2.weth-usdc" $addressbook_path)
+    uniswap_v3_factory_address=$(jq -r ".mainnet.exchanges.univ3.uniswapv3.factory" $addressbook_path)
 
     echo "Downloading multicall from $multicall_address"
     cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $multicall_address
@@ -28,6 +28,9 @@ download-contracts:
 
     echo "Downloading uniswap V2 router from $uniswap_v2_router_address"
     cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $uniswap_v2_router_address
+
+    echo "Downloading uniswap V3 factory from $uniswap_v3_factory_address"
+    cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $uniswap_v3_factory_address
 
     # echo "Downloading uniswap V2 pool from $weth_usdc_address"
     # cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $weth_usdc_address

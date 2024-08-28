@@ -8,7 +8,8 @@ use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 pub mod models;
 pub mod schema;
 
-pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations");
+pub const MIGRATIONS: EmbeddedMigrations =
+    embed_migrations!("migrations/2024-08-28-045356_create_pools");
 
 pub fn establish_connection(database_url: &str) -> SqliteConnection {
     SqliteConnection::establish(database_url)
@@ -28,6 +29,26 @@ pub fn create_pool(conn: &mut SqliteConnection, new_pool: &NewPool) -> Result<Po
         .execute(conn)?;
 
     pools::table.order(pools::id.desc()).first(conn)
+}
+
+pub fn batch_insert_pools(
+    conn: &mut SqliteConnection,
+    new_pools: &[NewPool],
+) -> Result<Vec<Pool>, Error> {
+    conn.transaction(|conn| {
+        let inserted_pools: Vec<Pool> = new_pools
+            .iter()
+            .map(|new_pool| {
+                diesel::insert_into(pools::table)
+                    .values(new_pool)
+                    .execute(conn)?;
+
+                pools::table.order(pools::id.desc()).first(conn)
+            })
+            .collect::<Result<Vec<Pool>, Error>>()?;
+
+        Ok(inserted_pools)
+    })
 }
 
 pub fn get_all_pools(conn: &mut SqliteConnection) -> Result<Vec<Pool>, Error> {

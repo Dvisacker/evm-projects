@@ -6,3 +6,6 @@ optimizer = false
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
 
+[dependencies]
+# uniswap-v3-core = { git = "https://github.com/Uniswap/v3-core.git" }
+# uniswap-v3-periphery = { git = "https://github.com/Uniswap/v3-periphery.git", tag = "v1.3.0" }

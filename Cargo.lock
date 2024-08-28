@@ -4959,6 +4959,7 @@ dependencies = [
  "async-trait",
  "bindings",
  "clap",
+ "db",
  "dotenv",
  "futures",
  "once_cell",
