@@ -1749,6 +1749,7 @@ dependencies = [
  "alloy-chains",
  "anyhow",
  "clap",
+ "dotenv",
  "generator",
  "shared",
  "tokio",

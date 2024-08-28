@@ -21,3 +21,5 @@ archives/
 .env
 
 checkpoints/*
+
+crates/db/dev.db

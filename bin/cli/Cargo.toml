@@ -15,5 +15,6 @@ uni-tri-arb-strategy = { path = "../../crates/strategies/uni-tri-arb" }
 shared = { path = "../../crates/shared" }
 alloy-chains = "0.1.0"
 alloy = "0.2.1"
+dotenv = "0.15.0"
 
 
