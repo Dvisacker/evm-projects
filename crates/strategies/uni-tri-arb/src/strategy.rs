@@ -2,6 +2,7 @@ use super::types::{Action, Event};
 use crate::state::PoolState;
 use alloy::{providers::Provider, signers::Signer};
 use alloy_chains::NamedChain;
+use amms::amm::AMM;
 use anyhow::Result;
 use artemis_core::types::Strategy;
 use async_trait::async_trait;
@@ -60,10 +61,14 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
 
         let weth = self.addressbook.get_weth(&NamedChain::Arbitrum).unwrap();
         let pools = self.pool_state.get_all_pools().await;
+        let amms: Vec<AMM> = pools
+            .iter()
+            .map(|p| AMM::UniswapV2Pool(p.clone()))
+            .collect();
 
         println!("Computing arbitrage cycles...");
         let arb_cycles = PoolState::<P>::get_cycles(
-            pools.as_ref(),
+            &amms,
             weth,
             weth,
             3,

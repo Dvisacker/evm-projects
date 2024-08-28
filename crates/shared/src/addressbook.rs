@@ -158,6 +158,16 @@ pub struct Addressbook {
     pub mainnet: ChainAddressBook,
 }
 
+pub fn get_exchange_type(exchange_name: ExchangeName) -> ExchangeType {
+    match exchange_name {
+        ExchangeName::UniswapV2 => ExchangeType::UniV2,
+        ExchangeName::UniswapV3 => ExchangeType::UniV3,
+        ExchangeName::SushiSwapV2 => ExchangeType::UniV2,
+        ExchangeName::SushiSwapV3 => ExchangeType::UniV3,
+        _ => panic!("Invalid exchange name"),
+    }
+}
+
 impl Addressbook {
     pub fn load() -> Result<Self, Box<dyn std::error::Error>> {
         let mut file = File::open("addressbook.json")?;
@@ -174,7 +184,7 @@ impl Addressbook {
         pool_name: &str,
     ) -> Option<Address> {
         let book = self.get_chain_address_book(chain)?;
-        let exchange_type = ExchangeType::from_str(exchange_name.as_str()).unwrap();
+        let exchange_type = get_exchange_type(exchange_name.clone());
         match exchange_type {
             ExchangeType::UniV2 => match exchange_name {
                 ExchangeName::UniswapV2 => book
@@ -226,6 +236,22 @@ impl Addressbook {
         vec![
             chain_config.exchanges.univ2.uniswapv2.factory,
             chain_config.exchanges.univ2.sushiswapv2.factory,
+            chain_config.exchanges.univ3.uniswapv3.factory,
+            chain_config.exchanges.univ3.sushiswapv3.factory,
+        ]
+    }
+
+    pub fn get_v2_factories(&self, chain: &NamedChain) -> Vec<Address> {
+        let chain_config = self.get_chain_address_book(chain).unwrap();
+        vec![
+            chain_config.exchanges.univ2.uniswapv2.factory,
+            chain_config.exchanges.univ2.sushiswapv2.factory,
+        ]
+    }
+
+    pub fn get_v3_factories(&self, chain: &NamedChain) -> Vec<Address> {
+        let chain_config = self.get_chain_address_book(chain).unwrap();
+        vec![
             chain_config.exchanges.univ3.uniswapv3.factory,
             chain_config.exchanges.univ3.sushiswapv3.factory,
         ]

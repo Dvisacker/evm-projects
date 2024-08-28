@@ -40,7 +40,7 @@
                     "router": "0x4A7b5Da61326A6379179b40d00F57E5bbDC962c2",
                     "pools": {}
                 },
-                "sushiswap": {
+                "sushiswapv2": {
                     "factory": "0xFbc12984689e5f15626Bad03Ad60160Fe98B303C",
                     "router": "0x2ABf469074dc0b54d793850807E6eb5Faf2625b1",
                     "pools": {}
@@ -71,7 +71,7 @@
                     "router": "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
                     "pools": {}
                 },
-                "sushiswap": {
+                "sushiswapv2": {
                     "factory": "0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac",
                     "router": "0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F",
                     "pools": {}

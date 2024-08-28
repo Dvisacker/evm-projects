@@ -1,7 +1,7 @@
 use alloy::primitives::Address;
 use alloy::providers::Provider;
 use amms::amm::uniswap_v2::UniswapV2Pool;
-use amms::amm::AMM;
+use amms::amm::{AutomatedMarketMaker, AMM};
 use amms::errors::AMMError;
 use amms::sync;
 use dashmap::DashMap;
@@ -26,39 +26,44 @@ impl<P: Provider + 'static> PoolState<P> {
     }
 
     pub fn get_cycles(
-        pairs: &[UniswapV2Pool],
+        pairs: &[AMM],
         token_in: Address,
         token_out: Address,
         max_hops: i32,
-        current_pairs: &Vec<UniswapV2Pool>,
+        current_pairs: &Vec<AMM>,
         circles: &mut Vec<Cycle>,
         seen: &mut HashSet<Address>,
     ) -> Vec<Cycle> {
         let mut circles_copy: Vec<Cycle> = circles.clone();
 
         for pair in pairs {
-            if seen.contains(&pair.address) {
+            let address = pair.address();
+            let tokens = pair.tokens();
+            let [token_a, token_b] = tokens.as_slice() else {
+                todo!();
+            };
+            if seen.contains(&address) {
                 continue;
             }
 
             let temp_out: Address;
-            if token_in == pair.token_a {
-                temp_out = pair.token_b;
-            } else if token_in == pair.token_b {
-                temp_out = pair.token_a;
+            if token_in == *token_a {
+                temp_out = *token_b;
+            } else if token_in == *token_b {
+                temp_out = *token_a;
             } else {
                 continue;
             }
 
             let mut new_seen = seen.clone();
-            new_seen.insert(pair.address);
+            new_seen.insert(address);
 
             if temp_out == token_out {
                 let mut pools = current_pairs.clone();
                 pools.push(pair.clone());
                 circles_copy.push(Cycle(pools));
             } else if max_hops > 1 {
-                let mut new_pairs: Vec<UniswapV2Pool> = current_pairs.clone();
+                let mut new_pairs: Vec<AMM> = current_pairs.clone();
                 new_pairs.push(pair.clone());
                 circles_copy = Self::get_cycles(
                     pairs,
