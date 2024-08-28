@@ -1,4 +1,4 @@
-use crate::addressbook::Addressbook;
+use crate::addressbook::{Addressbook, ExchangeName};
 use crate::config::get_chain_config;
 use alloy::primitives::U256;
 use alloy_chains::Chain;
@@ -21,8 +21,9 @@ pub async fn get_filtered_amms(chain: Chain, usd_threshold: f64) -> Result<Vec<A
     let named_chain = chain.named().unwrap();
     let factories = addressbook.get_factories_by_chain(&named_chain);
     let weth_address = addressbook.get_weth(&named_chain).unwrap();
+    let exchange_name = ExchangeName::UniswapV2;
     let weth_usdc_address = addressbook
-        .get_pool_by_name(&named_chain, "uniswapv2", "WETH-USDC")
+        .get_pool_by_name(&named_chain, exchange_name, "WETH-USDC")
         .unwrap();
 
     let weth_usdc_pool = AMM::UniswapV2Pool(

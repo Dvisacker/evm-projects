@@ -6,6 +6,58 @@ use std::fs::File;
 use std::io::Read;
 use std::str::FromStr;
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub enum ExchangeName {
+    UniswapV2,
+    SushiSwapV2,
+    UniswapV3,
+    SushiSwapV3,
+}
+
+impl ExchangeName {
+    pub fn from_str(s: &str) -> Result<Self, String> {
+        match s {
+            "uniswapv2" => Ok(ExchangeName::UniswapV2),
+            "sushiswapv2" => Ok(ExchangeName::SushiSwapV2),
+            "uniswapv3" => Ok(ExchangeName::UniswapV3),
+            "sushiswapv3" => Ok(ExchangeName::SushiSwapV3),
+            _ => Err(format!("Invalid exchange name: {}", s)),
+        }
+    }
+
+    pub fn as_str(&self) -> &str {
+        match self {
+            ExchangeName::UniswapV2 => "uniswapv2",
+            ExchangeName::SushiSwapV2 => "sushiswapv2",
+            ExchangeName::UniswapV3 => "uniswapv3",
+            ExchangeName::SushiSwapV3 => "sushiswapv3",
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub enum ExchangeType {
+    UniV2,
+    UniV3,
+}
+
+impl ExchangeType {
+    pub fn from_str(s: &str) -> Result<Self, String> {
+        match s {
+            "univ2" => Ok(ExchangeType::UniV2),
+            "univ3" => Ok(ExchangeType::UniV3),
+            _ => Err(format!("Invalid exchange type: {}", s)),
+        }
+    }
+
+    pub fn as_str(&self) -> &str {
+        match self {
+            ExchangeType::UniV2 => "univ2",
+            ExchangeType::UniV3 => "univ3",
+        }
+    }
+}
+
 fn deserialize_address<'de, D>(deserializer: D) -> Result<Address, D::Error>
 where
     D: Deserializer<'de>,
@@ -58,8 +110,41 @@ pub struct ExchangeAddressBook {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct UniV2Addresses {
+    #[serde(deserialize_with = "deserialize_address")]
+    pub factory: Address,
+    #[serde(deserialize_with = "deserialize_address")]
+    pub router: Address,
+    pub pools: AddressMap,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct UniV3Addresses {
+    #[serde(deserialize_with = "deserialize_address")]
+    pub factory: Address,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct UniV3Exchanges {
+    pub uniswapv3: UniV3Addresses,
+    pub sushiswapv3: UniV3Addresses,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct UniV2Exchanges {
+    pub uniswapv2: UniV2Addresses,
+    pub sushiswapv2: UniV2Addresses,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Exchanges {
+    pub univ2: UniV2Exchanges,
+    pub univ3: UniV3Exchanges,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ChainAddressBook {
-    pub exchanges: HashMap<String, ExchangeAddressBook>,
+    pub exchanges: Exchanges,
     #[serde(deserialize_with = "deserialize_address")]
     pub multicall: Address,
     #[serde(deserialize_with = "deserialize_address")]
@@ -85,16 +170,33 @@ impl Addressbook {
     pub fn get_pool_by_name(
         &self,
         chain: &NamedChain,
-        exchange_name: &str,
+        exchange_name: ExchangeName,
         pool_name: &str,
     ) -> Option<Address> {
         let book = self.get_chain_address_book(chain)?;
-        book.exchanges
-            .get(exchange_name)?
-            .pools
-            .0
-            .get(pool_name)
-            .cloned()
+        let exchange_type = ExchangeType::from_str(exchange_name.as_str()).unwrap();
+        match exchange_type {
+            ExchangeType::UniV2 => match exchange_name {
+                ExchangeName::UniswapV2 => book
+                    .exchanges
+                    .univ2
+                    .uniswapv2
+                    .pools
+                    .0
+                    .get(pool_name)
+                    .cloned(),
+                ExchangeName::SushiSwapV2 => book
+                    .exchanges
+                    .univ2
+                    .sushiswapv2
+                    .pools
+                    .0
+                    .get(pool_name)
+                    .cloned(),
+                _ => return None,
+            },
+            ExchangeType::UniV3 => return None,
+        }
     }
 
     pub fn get_weth(&self, chain: &NamedChain) -> Option<Address> {
@@ -110,18 +212,23 @@ impl Addressbook {
         let chain_config = self.get_chain_address_book(chain).unwrap();
         chain_config
             .exchanges
+            .univ2
+            .uniswapv2
+            .pools
+            .0
             .values()
-            .flat_map(|exchange| exchange.pools.0.values().cloned())
+            .cloned()
             .collect()
     }
 
     pub fn get_factories_by_chain(&self, chain: &NamedChain) -> Vec<Address> {
         let chain_config = self.get_chain_address_book(chain).unwrap();
-        chain_config
-            .exchanges
-            .values()
-            .map(|exchange| exchange.factory)
-            .collect()
+        vec![
+            chain_config.exchanges.univ2.uniswapv2.factory,
+            chain_config.exchanges.univ2.sushiswapv2.factory,
+            chain_config.exchanges.univ3.uniswapv3.factory,
+            chain_config.exchanges.univ3.sushiswapv3.factory,
+        ]
     }
 
     fn get_chain_address_book(&self, chain: &NamedChain) -> Option<&ChainAddressBook> {

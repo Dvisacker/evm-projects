@@ -32,40 +32,46 @@ where
     N: Network,
     P: Provider<T, N>,
 {
-    let deployer = IGetERC20TokenDataBatchRequest::deploy_builder(provider, token_addresses);
-    let res = deployer.call().await?;
+    const BATCH_SIZE: usize = 50;
+    let mut all_token_data = Vec::new();
 
-    let constructor_return = DynSolType::Array(Box::new(DynSolType::Tuple(vec![
-        DynSolType::Address,
-        DynSolType::String,
-        DynSolType::Uint(8),
-        DynSolType::Uint(256),
-    ])));
+    for chunk in token_addresses.chunks(BATCH_SIZE) {
+        let deployer =
+            IGetERC20TokenDataBatchRequest::deploy_builder(provider.clone(), chunk.to_vec());
+        let res = deployer.call().await?;
 
-    let return_data_tokens = constructor_return.abi_decode_sequence(&res)?;
-    let mut token_data_vec = Vec::new();
+        let constructor_return = DynSolType::Array(Box::new(DynSolType::Tuple(vec![
+            DynSolType::Address,
+            DynSolType::String,
+            DynSolType::Uint(8),
+            DynSolType::Uint(256),
+        ])));
 
-    if let Some(tokens_arr) = return_data_tokens.as_array() {
-        for token in tokens_arr {
-            if let Some(token_data) = token.as_tuple() {
-                if token_data.len() == 4 {
-                    let address = token_data[0].as_address().unwrap_or_default();
-                    let symbol = token_data[1].as_str().unwrap_or_default().to_string();
-                    let decimals = token_data[2].as_uint().unwrap_or_default().0.to::<u8>();
-                    let total_supply = token_data[3].as_uint().unwrap_or_default().0.to::<u128>();
+        let return_data_tokens = constructor_return.abi_decode_sequence(&res)?;
 
-                    token_data_vec.push(ERC20TokenData {
-                        address,
-                        symbol,
-                        decimals,
-                        total_supply,
-                    });
+        if let Some(tokens_arr) = return_data_tokens.as_array() {
+            for token in tokens_arr {
+                if let Some(token_data) = token.as_tuple() {
+                    if token_data.len() == 4 {
+                        let address = token_data[0].as_address().unwrap_or_default();
+                        let symbol = token_data[1].as_str().unwrap_or_default().to_string();
+                        let decimals = token_data[2].as_uint().unwrap_or_default().0.to::<u8>();
+                        let total_supply =
+                            token_data[3].as_uint().unwrap_or_default().0.to::<u128>();
+
+                        all_token_data.push(ERC20TokenData {
+                            address,
+                            symbol,
+                            decimals,
+                            total_supply,
+                        });
+                    }
                 }
             }
         }
     }
 
-    Ok(token_data_vec)
+    Ok(all_token_data)
 }
 
 pub async fn load_pools_and_fetch_token_data<T, N, P>(provider: Arc<P>) -> Result<()>

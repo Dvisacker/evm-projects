@@ -1,7 +1,7 @@
 use std::fmt;
 
 use crate::route::simulate_route;
-use alloy::primitives::{Address, U256};
+use alloy::primitives::{Address, I256, U256};
 use amms::amm::uniswap_v2::UniswapV2Pool;
 use amms::amm::AMM;
 
@@ -34,7 +34,7 @@ impl Cycle {
         }
     }
 
-    pub fn get_profit(&self) -> U256 {
+    pub fn get_profit(&self) -> i128 {
         let amms: Vec<AMM> = self
             .0
             .iter()
@@ -44,9 +44,7 @@ impl Cycle {
         let token_in = self.get_entry_token();
         let input_amount = U256::from(10u64.pow(18));
         let output_amount = simulate_route(token_in, input_amount, &amms).unwrap();
-
-        // Calculate profit
-        let profit = output_amount - input_amount;
+        let profit = output_amount.to::<i128>() - input_amount.to::<i128>();
 
         profit
     }

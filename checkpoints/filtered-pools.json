@@ -1,6 +1,6 @@
 {
-  "timestamp": 1724762980,
-  "block_number": 247253708,
+  "timestamp": 1724800968,
+  "block_number": 247404518,
   "factories": [],
   "amms": [
     {
@@ -10,8 +10,8 @@
         "token_a_decimals": 18,
         "token_b": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
         "token_b_decimals": 6,
-        "reserve_0": 27732339239957907614,
-        "reserve_1": 72594030909,
+        "reserve_0": 28641042781677462148,
+        "reserve_1": 70312407234,
         "fee": 300
       }
     },
@@ -34,8 +34,8 @@
         "token_a_decimals": 18,
         "token_b": "0xe086022290444bcd279d22c56925cc5eda389999",
         "token_b_decimals": 18,
-        "reserve_0": 9242178415386569923,
-        "reserve_1": 1231022799057425319415252885,
+        "reserve_0": 9479009299848195077,
+        "reserve_1": 1200397855964713100490516499,
         "fee": 300
       }
     },
@@ -58,8 +58,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 10524346882772298550844127,
-        "reserve_1": 19756149807486261026,
+        "reserve_0": 11412266920376821613465144,
+        "reserve_1": 18225010102145341803,
         "fee": 300
       }
     },
@@ -70,8 +70,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 2781016768264457337048614,
-        "reserve_1": 9288094708055871574,
+        "reserve_0": 2551363522211773132447690,
+        "reserve_1": 10208596141734276935,
         "fee": 300
       }
     },
@@ -82,8 +82,8 @@
         "token_a_decimals": 18,
         "token_b": "0xb50a8e92cb9782c9b8f3c88e4ee8a1d0aa2221d7",
         "token_b_decimals": 18,
-        "reserve_0": 18032732515957584517,
-        "reserve_1": 3137010533263410679608021,
+        "reserve_0": 20458945132347778092,
+        "reserve_1": 2766116403215388701315561,
         "fee": 300
       }
     },
@@ -94,8 +94,8 @@
         "token_a_decimals": 18,
         "token_b": "0x9e30239205320b4b23c71e1b087ed2550d9971be",
         "token_b_decimals": 18,
-        "reserve_0": 9145789197824220544,
-        "reserve_1": 37342021872335860725925613841,
+        "reserve_0": 9145986209833838435,
+        "reserve_1": 37341219907780299632620522253,
         "fee": 300
       }
     },
@@ -106,20 +106,8 @@
         "token_a_decimals": 18,
         "token_b": "0xbfd5206962267c7b4b4a8b3d76ac2e1b2a5c4d5e",
         "token_b_decimals": 18,
-        "reserve_0": 6625482017056432374,
-        "reserve_1": 68199387757010269921710624041,
-        "fee": 300
-      }
-    },
-    {
-      "UniswapV2Pool": {
-        "address": "0x8280b26b71e10b7c455c15b3ac23ca46e2b91387",
-        "token_a": "0x6a05743697c97a1b58f2c1902d07b99532e21a7d",
-        "token_a_decimals": 18,
-        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
-        "token_b_decimals": 18,
-        "reserve_0": 79275238060635203214056360,
-        "reserve_1": 2338508635949582992,
+        "reserve_0": 6619292228890514057,
+        "reserve_1": 68273142039697703618866359283,
         "fee": 300
       }
     },
@@ -130,8 +118,8 @@
         "token_a_decimals": 18,
         "token_b": "0x83d6c8c06ac276465e4c92e7ac8c23740f435140",
         "token_b_decimals": 18,
-        "reserve_0": 65503264493189524883,
-        "reserve_1": 79917406766492967226562,
+        "reserve_0": 62937084137057424857,
+        "reserve_1": 82461169768115095417292,
         "fee": 300
       }
     },
@@ -142,8 +130,8 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 1333663783428136118900482754,
-        "reserve_1": 24656200260111066947,
+        "reserve_0": 1333624584282792311198276866,
+        "reserve_1": 24657480241147441923,
         "fee": 300
       }
     },
@@ -154,8 +142,8 @@
         "token_a_decimals": 18,
         "token_b": "0x888aaa48ebea87c74f690189e947d2c679705972",
         "token_b_decimals": 18,
-        "reserve_0": 5832632161794664765,
-        "reserve_1": 679762807957923113934614,
+        "reserve_0": 5819921184280276049,
+        "reserve_1": 681251908727504391312529,
         "fee": 300
       }
     },
@@ -166,8 +154,8 @@
         "token_a_decimals": 18,
         "token_b": "0xf9a76af0bf7a8d4718fb7956a6873eaa64bbd0d9",
         "token_b_decimals": 18,
-        "reserve_0": 7750463784714570547,
-        "reserve_1": 260623916032105396037490,
+        "reserve_0": 7735667635630973001,
+        "reserve_1": 261123916032105396037490,
         "fee": 300
       }
     },
@@ -190,8 +178,8 @@
         "token_a_decimals": 18,
         "token_b": "0xcb8b5cd20bdcaea9a010ac1f8d835824f5c87a04",
         "token_b_decimals": 18,
-        "reserve_0": 6554158247503419683,
-        "reserve_1": 80210362916468797875261,
+        "reserve_0": 6553950760611066011,
+        "reserve_1": 80212916392496407365189,
         "fee": 300
       }
     },
@@ -202,8 +190,8 @@
         "token_a_decimals": 18,
         "token_b": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
         "token_b_decimals": 6,
-        "reserve_0": 22366247560296882593457580,
-        "reserve_1": 58883116144,
+        "reserve_0": 22466697169749958177822214,
+        "reserve_1": 58620634850,
         "fee": 300
       }
     },
@@ -214,8 +202,8 @@
         "token_a_decimals": 18,
         "token_b": "0xc1f99239b2460964129d06d393d62de5452cee06",
         "token_b_decimals": 18,
-        "reserve_0": 8464807582126506258,
-        "reserve_1": 198563129058763009909580973,
+        "reserve_0": 10047152880425498337,
+        "reserve_1": 167372164435523112421490376,
         "fee": 300
       }
     },
@@ -238,8 +226,1580 @@
         "token_a_decimals": 18,
         "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
         "token_b_decimals": 18,
-        "reserve_0": 3322127040916827453809939,
-        "reserve_1": 3254529097891561113,
+        "reserve_0": 3219627439434097265682768,
+        "reserve_1": 3358455687623628825,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x5f14f0362c7317ef5a15668637c9fbfec53194c6",
+        "token_a": "0x223e2de9ee2d1ebcb87b506cc70f174995d2944d",
+        "token_a_decimals": 9,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 4347299616986019,
+        "reserve_1": 4238598078710538057,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x3ccf01a3e947ca221e81c9ea65eab00eefd87348",
+        "token_a": "0x0caadd427a6feb5b5fc1137eb05aa7ddd9c08ce9",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 82204797870173910786906162,
+        "reserve_1": 20194573325486171976,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x56dd308fe685dc7be191be18afd11ce1610bedf6",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xc11158c5da9db1d553ed28f0c2ba1cbedd42cfcb",
+        "token_b_decimals": 18,
+        "reserve_0": 23224975141330575877,
+        "reserve_1": 4692559971763506575960932031785,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xbe8dd9f0c1576c13fb3ef2c3ed740992aa6c554f",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xcbfeb3ca42f6022266bb362055603eb96ed36c3e",
+        "token_b_decimals": 9,
+        "reserve_0": 12636148946101441662,
+        "reserve_1": 1541508387420938218,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x905dfcd5649217c42684f23958568e533c711aa3",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
+        "token_b_decimals": 6,
+        "reserve_0": 157014809975886557416,
+        "reserve_1": 386323007591,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x11eecdbd8f2d670016d061e4c064072e6158ede2",
+        "token_a": "0x155f0dd04424939368972f4e1838687d6a831151",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 870546428799384404055539683585,
+        "reserve_1": 34854190881034104771,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xcb0e5bfa72bbb4d16ab5aa0c60601c438f04b4ad",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
+        "token_b_decimals": 6,
+        "reserve_0": 75620271341303614406,
+        "reserve_1": 185826877630,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x515e252b2b5c22b4b2b6df66c2ebeea871aa4d69",
+        "token_a": "0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f",
+        "token_a_decimals": 8,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 220143513,
+        "reserve_1": 53114818428197167976,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x7050a8908e2a60899d8788015148241f0993a3fd",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xf97f4df75117a78c1a5a0dbb814af92458539fb4",
+        "token_b_decimals": 18,
+        "reserve_0": 11031591968090070315,
+        "reserve_1": 2454924782785652111436,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x3221022e37029923ace4235d812273c5a42c322d",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xd4d42f0b6def4ce0383636770ef773390d85c61a",
+        "token_b_decimals": 18,
+        "reserve_0": 15085775975804237943,
+        "reserve_1": 63522328779705107312742,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x7a1dec2aba015cff05bb654da2550b88f843a50d",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xbb50199ac5d69c3cec1e028453f4a6f6f4e44c75",
+        "token_b_decimals": 9,
+        "reserve_0": 3268909176844680692,
+        "reserve_1": 460911229991525741302406,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xf4a738d9cae344cea4165f335d478493a7946f24",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x86a1012d437bbff84fbdf62569d12d4fd3396f8c",
+        "token_b_decimals": 18,
+        "reserve_0": 4564406308474723514,
+        "reserve_1": 38828774445387907440822,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x26274e0db149c847df7a3cf1fde9e93522a42d72",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xd786ca0a3f6caa22938cd751b905c39f84555bcb",
+        "token_b_decimals": 9,
+        "reserve_0": 3984096021706918539,
+        "reserve_1": 417273238287274789,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x5bedf047ee87d489890ae0016e7725f8f538dbf0",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xb61f5a8d65abd06bb59914b7024b691445fe69c5",
+        "token_b_decimals": 18,
+        "reserve_0": 3571839125806239890,
+        "reserve_1": 879111552185317213813360244,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xa9ef69cac80488ef05926023421214c98f22105d",
+        "token_a": "0x1a7bd9edc36fb2b3c0852bcd7438c2a957fd7ad5",
+        "token_a_decimals": 9,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 331592303998245889804317,
+        "reserve_1": 6085408935346620334,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x3cf3147bedf97a1181c980a4811889c0059e4ae9",
+        "token_a": "0x48482bf68b4c963ee415b477f66a437b63958045",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 9159732529806205969262469004789,
+        "reserve_1": 3866287521098068441,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xa9e1aeff84b76b22ca388d729c3c349f18e78594",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xe4e02d69dfacc482dbfbcb4f5f173bc378422717",
+        "token_b_decimals": 9,
+        "reserve_0": 4416055881531852861,
+        "reserve_1": 231787023095643521512755,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x70df9dd83be2a9f9fcc58dd7c00d032d007b7859",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xed3fb761414da74b74f33e5c5a1f78104b188dfc",
+        "token_b_decimals": 18,
+        "reserve_0": 8805154178633204521,
+        "reserve_1": 10311408440702934150746917,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xe3579ed3823846518dc6b51e31360cef6cff189f",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xafd871f684f21ab9d7137608c71808f83d75e6fc",
+        "token_b_decimals": 18,
+        "reserve_0": 3079517199165989787,
+        "reserve_1": 39696865325572797006845631,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x37be6dbeb4c932276b5fe314cd2fbdb3398edfe4",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x8df81c2b8f6de4c84abe9ba92618d28560b9f87a",
+        "token_b_decimals": 18,
+        "reserve_0": 2593645657512515879,
+        "reserve_1": 8665095367032317823103271822535,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x2c52e1582f66e5098f2d248814a65396ca5e4bbf",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x999e18d98008e96cb5830039a29acf47ad552505",
+        "token_b_decimals": 2,
+        "reserve_0": 2588835243894772521,
+        "reserve_1": 127642321275997,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xb6dd51d5425861c808fd60827ab6cfbffe604959",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xfea7a6a0b346362bf88a9e4a88416b77a57d6c2a",
+        "token_b_decimals": 18,
+        "reserve_0": 29364556698569928704,
+        "reserve_1": 72158711431260026179346,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x39fb5888789d6953d45ba801dfa32789e8eb8f43",
+        "token_a": "0x2f800db57b67e7c5216e76590d45b9b0b0bd7dcb",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 487069969250478828724120,
+        "reserve_1": 2943578437053821852,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x5b772b00cb6b95c4501e4be75ce7ddd6cb625320",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xa6219b4bf4b861a2b1c02da43b2af266186edc04",
+        "token_b_decimals": 9,
+        "reserve_0": 61289485628253646526,
+        "reserve_1": 9154336497008,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x3f7ae85208a79854197dc5fd9b5c562b83903837",
+        "token_a": "0x6c3b06aa6e0565b9f24778fd8a044cc4bbc4cd93",
+        "token_a_decimals": 9,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 465658044901200933345146,
+        "reserve_1": 4615471607415454032,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x8f93eaae544e8f5eb077a1e09c1554067d9e2ca8",
+        "token_a": "0x3e6648c5a70a150a88bce65f4ad4d506fe15d2af",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 255699168349946112543356440,
+        "reserve_1": 55439395519347871501,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x473f0af5259195bf4fb5669d6c30c42f2e80bca0",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xfd60b1d9d1cb1fc124551382098dcc58613b311a",
+        "token_b_decimals": 18,
+        "reserve_0": 5149355062362364054,
+        "reserve_1": 772601478846947366739504631,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xfd9090af7fb44b6d6f8b9efd730939804bc27349",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x8ed4191f81f1e1d24a8a1195267d024d9358c9d7",
+        "token_b_decimals": 18,
+        "reserve_0": 4849503874450107247,
+        "reserve_1": 2817490096923565577393125122,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xc5ffd083b983aaf823a9b485b207f898ed2f32dc",
+        "token_a": "0x09ad12552ec45f82be90b38dfe7b06332a680864",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 43014566095556716862425,
+        "reserve_1": 23469604670646333288,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x835a1bca3e5da0752dd73bd3f89ac0357fd34943",
+        "token_a": "0x2c110867ca90e43d372c1c2e92990b00ea32818b",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 93661610909863072655662,
+        "reserve_1": 5919656110346416553,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x0c1cf6883efa1b496b01f654e247b9b419873054",
+        "token_a": "0x6c2c06790b3e3e3c38e12ee22f8183b37a13ee55",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 18608058582466210614575,
+        "reserve_1": 82980319716562329153,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xb7e50106a5bd3cf21af210a755f9c8740890a8c9",
+        "token_a": "0x539bde0d7dbd336b79148aa742883198bbf60342",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 5075381967857426269865401,
+        "reserve_1": 708868988194723446459,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x68ac58e8e6209ddb5e263356f3e7ca6ad487b75a",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xfe6dbff2589414836f2c16c8da15e38b472cd513",
+        "token_b_decimals": 18,
+        "reserve_0": 4421852570817775930,
+        "reserve_1": 917408708127292231064127660,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x3b1afeed07b49652df107145feb493c251545619",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x876ec6be52486eeec06bc06434f3e629d695c6ba",
+        "token_b_decimals": 18,
+        "reserve_0": 16386398814639797675,
+        "reserve_1": 4364771035890044631210412,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x10052e51797cc9a018d50d112547347e7951c198",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x9e724698051da34994f281bd81c3e7372d1960ae",
+        "token_b_decimals": 18,
+        "reserve_0": 52396606158531035854,
+        "reserve_1": 4713421230301103037583691,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x088f6dcde862781db7b01feb67afd265abbc6d90",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xf80d589b3dbe130c270a69f1a69d050f268786df",
+        "token_b_decimals": 18,
+        "reserve_0": 12847006897830894070,
+        "reserve_1": 638904958432058304021378,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xbf719d56c5f19ae0833adc4080befc48a9b415b5",
+        "token_a": "0x64081252c497fcfec247a664e9d10ca8ed71b276",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 83772550868428395738671,
+        "reserve_1": 4202432903697743576,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xaa5bd49f2162ffdc15634c87a77ac67bd51c6a6d",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x8d9ba570d6cb60c7e3e0f31343efe75ab8e65fb1",
+        "token_b_decimals": 18,
+        "reserve_0": 12969440986580851582,
+        "reserve_1": 8907982212216427092,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x52f462f92a9ab7ecc1ab03d3ec0a6bcedb7b4894",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xdad3abce6fb87fa0355203b692723a7ee8aa9d63",
+        "token_b_decimals": 18,
+        "reserve_0": 2670176286949638826,
+        "reserve_1": 37652853128987775112984678,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xe8ee01ae5959d3231506fcdef2d5f3e85987a39c",
+        "token_a": "0x10393c20975cf177a3513071bc110f7962cd67da",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 38787214452090977271307,
+        "reserve_1": 5883481182028737867,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xe235e8dfa8ea3b7ffff1c922fa4928bfb7ad964a",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x9e758b8a98a42d612b3d38b66a22074dc03d7370",
+        "token_b_decimals": 18,
+        "reserve_0": 8055405661561977472,
+        "reserve_1": 107116541914983469232268,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xdf1a6dd4e5b77d7f2143ed73074be26c806754c5",
+        "token_a": "0x662d0f9ff837a51cf89a1fe7e0882a906dac08a3",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 10668909316959885522,
+        "reserve_1": 11124723010559576615,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x9c5397dbcd8b039c5fc8b1bc2602fa2767567149",
+        "token_a": "0x123389c2f0e9194d9ba98c21e63c375b67614108",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 130738072481817829406985892921226,
+        "reserve_1": 13804402387425334808,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xc73d2191a1dd0a99b377272899a5569ed83f8cd8",
+        "token_a": "0x07e49d5de43dda6162fa28d24d5935c151875283",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 1731397657395014448694438,
+        "reserve_1": 53422832368333858669,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x38a912fbd313833637602c4862da0998fefd2af3",
+        "token_a": "0x409b2ad9fea58215228b372d90ab4e75358d29d7",
+        "token_a_decimals": 9,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 97126043563932980,
+        "reserve_1": 2695640960377075088,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x47888c34e9aa879363e94e5302681e763b18d39e",
+        "token_a": "0x6694340fc020c5e6b96567843da2df01b2ce1eb6",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 21024619175991625232651,
+        "reserve_1": 2564402419278651105,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x24704aff49645d32655a76df6d407e02d146dafc",
+        "token_a": "0x0c4681e6c0235179ec3d4f4fc4df3d14fdd96017",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 349552993638141180452619,
+        "reserve_1": 9204713946247578195,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x5dcf474814515b58ca0ca5e80bbb00d18c5b5cf8",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x93c15cd7de26f07265f0272e0b831c5d7fab174f",
+        "token_b_decimals": 18,
+        "reserve_0": 16674808508569192369,
+        "reserve_1": 16482865632331451335,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x79dc8abe4f1157edfacf9875ecd3e17ae7056268",
+        "token_a": "0x30dcba0405004cf124045793e1933c798af9e66a",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 77911617123292597472805126,
+        "reserve_1": 19567314076421014200,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xd00694e26b2b623bad4ea94d746afe36907d432e",
+        "token_a": "0x58ea7917f74834dbe6b57d0a2a74fb68c1e94c55",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 89507779208477433316818,
+        "reserve_1": 4364568726519230372,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x590cf2967edbaabec4f968529cc0bc4e6b2dd6f4",
+        "token_a": "0x76bb611d52ae46e53ec828460eb54c6ee0f008cf",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 815003463052778979749691909,
+        "reserve_1": 3791085214408547131,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xd7ff33aa0aa24e6507af984e7e34cb43aa906e84",
+        "token_a": "0x66e221d16592007556291fd5c55ec250266888bb",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 749854564218493660141486734,
+        "reserve_1": 3796147660575232930,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x87e2cd6a790ff19b91334c1fc7a900a585a9fce3",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xd56bdc0459b2155a2f43429016645374019cf4f7",
+        "token_b_decimals": 18,
+        "reserve_0": 3167103666286229058,
+        "reserve_1": 75773778613455624056155507,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xbd80923830b1b122dce0c446b704621458329f1d",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xe20b9e246db5a0d21bf9209e4858bc9a3ff7a034",
+        "token_b_decimals": 18,
+        "reserve_0": 12903899562599255763,
+        "reserve_1": 9530682789417010071718737,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x3ecc5a0d8b3456c5e1ab2b110f0a4da923dc49ec",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xbcc9c1763d54427bdf5efb6e9eb9494e5a1fbabf",
+        "token_b_decimals": 18,
+        "reserve_0": 7743036478704694489,
+        "reserve_1": 18872948328875637389616105,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x8e89f6d18086bcb660826b6de0e2a178f6155153",
+        "token_a": "0x02150e97271fdc0d6e3a16d9094a0948266f07dd",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 5331586124517888405240600189,
+        "reserve_1": 9230138398747415073,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xc0b4d8affe04ad24ce6c52672a885df669ef3f9a",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xaa54e84a3e6e5a80288d2c2f8e36ea5ca3a3ca30",
+        "token_b_decimals": 9,
+        "reserve_0": 7077819713062499398,
+        "reserve_1": 838939189167674067392,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x846b3ec3e919e07beba448c866203cc7cfe71f92",
+        "token_a": "0x648dd8570290d58c5fe43470b152be87fe88d43d",
+        "token_a_decimals": 9,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 44901588622592572,
+        "reserve_1": 2532768706842199934,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x2ac7e48ba0d7fd2ab9c5c00747b106141074013f",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xdd389517320720f09db75d20a27d8a2cfa5f8568",
+        "token_b_decimals": 18,
+        "reserve_0": 11098219292098471445,
+        "reserve_1": 782837231257705539206473149,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x1778da37a6e1ced51d804ab9992c64f40e263688",
+        "token_a": "0x030ccd5212ad6f13834f33d60b22e9234d198ebc",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 835704385010382782649478591335,
+        "reserve_1": 4621588372595418826,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x25faa972bc761044e8cb0e88a8110a6984dcd6e1",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xee9857de0e55d4a54d36a5a5a73a15e57435fdca",
+        "token_b_decimals": 18,
+        "reserve_0": 76590684408178729235,
+        "reserve_1": 7535545729800735473135922,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x5ee69be4eb99902883c216f505a74ac879e9597d",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xb1cd1d319f5363ed57fce58a85055ada0e15a957",
+        "token_b_decimals": 9,
+        "reserve_0": 3914018171574839444,
+        "reserve_1": 708068254234574265,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xd440d56479a647fa4dd98a00efffc94d0c0c0576",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xf3b9bdcc2994543c9d3ca04d062d7c0bafe561f4",
+        "token_b_decimals": 18,
+        "reserve_0": 2900015351546937839,
+        "reserve_1": 5024907658909203327991171,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xc858ee896af182ecee5c8b95d3e8cbbec058383e",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x986a3db4317177b4f84b05127e9e39a7abd7187a",
+        "token_b_decimals": 18,
+        "reserve_0": 9054458947664943247,
+        "reserve_1": 801593747748457656851342329939712,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x719581902349b9e178bb9076cdd90c83b26f5173",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x8fbd795443245af13db38b5a6b281bbe7c0f251a",
+        "token_b_decimals": 9,
+        "reserve_0": 4802911986999036116,
+        "reserve_1": 210804822606181957,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x0e2d98c30485bc2b7d2db75a6815a686b2cb5026",
+        "token_a": "0x1d36ceae3c88f1c39ee96f577c7b0274cfc61193",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 460509796031510959684055146,
+        "reserve_1": 3395644816045711536,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x3fec70f319a4145eba17765ae0c64b2232fe5bae",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x9f6abbf0ba6b5bfa27f4deb6597cc6ec20573fda",
+        "token_b_decimals": 18,
+        "reserve_0": 20450257137071801783,
+        "reserve_1": 2862292285657612180690475,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xbe2c25e5f21d8329a032500542cb0d09fc9438a0",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xdee8b38eebe7368cef6000d68958672f6210296c",
+        "token_b_decimals": 18,
+        "reserve_0": 2706958624973795481,
+        "reserve_1": 98983168630490864840580331,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x4b50f53fe89bf2035272c9afd68e55dd7400cbea",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xadb63c12bcbd1d83aa2cda782abdcb1fcfe57d64",
+        "token_b_decimals": 18,
+        "reserve_0": 4258257227630157821,
+        "reserve_1": 960205921231943481488397241732,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x3ac7244fd88172a1951cb61cd02355ab7038ebbe",
+        "token_a": "0x17afc249db786fc300f2d26381fec5cf0c3913fb",
+        "token_a_decimals": 9,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 495069396399852394237,
+        "reserve_1": 3256883484797973260,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xb3d24afcc26e0403590189c0e4ce9c796390b09e",
+        "token_a": "0x1772d876f9df830693b8004322cb8885b77e47e5",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 6562803848507549740993146,
+        "reserve_1": 3445716151864225838,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x4f865b71e8476d6d84b86e3bd0dbbe74c80f9419",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xa4e65dc029cbf60cd9930be6082fa886b17b4b98",
+        "token_b_decimals": 18,
+        "reserve_0": 5666785542244644229,
+        "reserve_1": 88690866567639183320741,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x0d91199ab8b6051b3b7e048dc4e44284a23f20c9",
+        "token_a": "0x01dc7c21d0bfcfecd310b3c9dde8819b1b2ec38b",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 277136110102950383537268055400,
+        "reserve_1": 3930621104212961242,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x047e339b0220445a9884ed70030e5b317f8e5bc6",
+        "token_a": "0x67c31056358b8977ea95a3a899dd380d4bced706",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 15273245946338310272930507857,
+        "reserve_1": 5083389287949078158,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x47d6716cce5741f3a44abba29ff59afd29ddea99",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x8abfa6a4f4b9865b0e7acfdce1839a2584636d06",
+        "token_b_decimals": 18,
+        "reserve_0": 16720701471374871573,
+        "reserve_1": 29786590166974672203949679128,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x28a17e0a686878676c76e0d4a10895e8bf42a410",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xe78987ba38658607358d054224fd1580d1a5ad13",
+        "token_b_decimals": 9,
+        "reserve_0": 3527056843974229630,
+        "reserve_1": 8867586139953235,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xbf6cbb1f40a542af50839cad01b0dc1747f11e18",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x912ce59144191c1204e64559fe8253a0e49e6548",
+        "token_b_decimals": 18,
+        "reserve_0": 10865212422407409792,
+        "reserve_1": 50803524107896788520114,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x3bfb1ac033ff0ae278be0583fccc900fbd9382c6",
+        "token_a": "0x3082cc23568ea640225c2467653db90e9250aaa0",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 315857731409045183945771,
+        "reserve_1": 8194082142516191229,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x8dc6efd57a13b7ba3ff7824c9708db24d3190703",
+        "token_a": "0x2e80259c9071b6176205ff5f5eb6f7ec8361b93f",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 11057208213462645335525669,
+        "reserve_1": 146294389255258512582,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x6521ab3e7aa42b988f0c8e9205daeb7a80882c20",
+        "token_a": "0x776854f68b958a305e26757c989b33a500c2b6d4",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 6909629062546044151032797729,
+        "reserve_1": 3224511518054393661,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xaa02f15647cf644f446b6f02763b8c8976a19f62",
+        "token_a": "0x05814372e9820c0ebdcba26d0a7c20655f4ff23f",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 6663635024495508642901043,
+        "reserve_1": 3190933437288437110,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x2f320ae219acde7671427a881ba4aa0449595314",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xe06e99ca3aaeead5431e921e8e521e3d4e86b5c4",
+        "token_b_decimals": 18,
+        "reserve_0": 11493514504618279149,
+        "reserve_1": 302433514307821162847459109,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xa9c7580793a46441581867cf6f5f26d5228c5cd7",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x860a43f58771730596ac0aa382e31f157752ba06",
+        "token_b_decimals": 18,
+        "reserve_0": 2667462987383781984,
+        "reserve_1": 3660613006594427823575909204,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xbe80f8e671890d11c6a716672e01817245b7d574",
+        "token_a": "0x32d82c387b1f9acf6de9707beb7801503a840ddd",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 188779203328036244268645306493013,
+        "reserve_1": 6110089112949580255,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xd2e5b81a5755279f0ba25b9d1d8eb2e2efa80aa5",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xcf72f2d2ae3191fbfd84bcce2cd101bd80b5f5b9",
+        "token_b_decimals": 9,
+        "reserve_0": 2534363645070669383,
+        "reserve_1": 41837970828552305400,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x0ce6c0c84f9dbef72a298cf4b80a69f02a219a7c",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xd8c77726cf483e5acb7d632610be0c2237fb3fb1",
+        "token_b_decimals": 18,
+        "reserve_0": 4583798412914800201,
+        "reserve_1": 118504867596370167453530454404,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x6dc147be79e625e5c9033651238ccce973a0950c",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xdee46be9d0b207e5d88d2efd84a045e725a242f7",
+        "token_b_decimals": 18,
+        "reserve_0": 11842108990677588509,
+        "reserve_1": 164259639376594384529171913394597,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x45c2e34d26acd02c487a47f991172c357701466f",
+        "token_a": "0x1908308d17c7fe5cf6147ca830cab4f41e94b025",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 380392141055411928600706371363913,
+        "reserve_1": 2956941477278279353,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x128d90ffe1c5cb2eeb030547fd4ca421cce55ae3",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x85c3e9546e1bd65cae10b69c49b8c331b29d17a3",
+        "token_b_decimals": 18,
+        "reserve_0": 9337264902525410267,
+        "reserve_1": 467324445686757470878167,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x6379f45c40c75e7a3aa697ef07e4ba51bcb1ff66",
+        "token_a": "0x8148a76df1c63655e35929d782b2bc544de4a85d",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 4197507824143850468065185183752611,
+        "reserve_1": 3291066415135602512,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x661e9dac23357759deb5810d11877176b4799b3a",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xc713c7543bcad0f2bb51b49a6bc4433892267730",
+        "token_b_decimals": 9,
+        "reserve_0": 2624587818397659848,
+        "reserve_1": 131370951068054620290647134,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xef6f79cb2f59486179ef6d94d835a0ac01b1739c",
+        "token_a": "0x3dd149f50efa93c302d49ced2a07ee3072ac044f",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 31652466530653126618913626,
+        "reserve_1": 2881718032891999770,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xdfa71cbd067fae08165049e10388146a8b05ccbc",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x86b162765811e4d16dd7de17e7a5110953a5a5df",
+        "token_b_decimals": 6,
+        "reserve_0": 8707768685945935325,
+        "reserve_1": 5542754220607119019743236,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xea80d98658935e97703d4f52b3a24de2ebc4f5bb",
+        "token_a": "0x6bb45804e7d5375e8fbeee505392f5ecc4e76c95",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 438455515148308974371956403670,
+        "reserve_1": 13582347666889473724,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x8f1939aadaea4fe5203d79051b8afde0951aeebe",
+        "token_a": "0x4e05d153305bc472e220ec3f7a7894b38f74741f",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 675523680549085086415098814,
+        "reserve_1": 9554717901057607182,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x0a59f71431bb9cfbec0af9b8d1c043017b38e761",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xf2b945860457c2c2aed2396f942bb34eb55e753f",
+        "token_b_decimals": 9,
+        "reserve_0": 4175245748080244783,
+        "reserve_1": 159785796965190785937518,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x91e13d076acb6baad2df435dd0e10adf1b19c8d6",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xc385267adfb56fa7608c3d509d368fd84c033613",
+        "token_b_decimals": 18,
+        "reserve_0": 16341683117340540467,
+        "reserve_1": 642248808286398632577611664054,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x2e3daddd536db659ad5518728289410b517062cb",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xe77e0c559494585ac396a91bf35fb164e272b896",
+        "token_b_decimals": 18,
+        "reserve_0": 2546550438636346789,
+        "reserve_1": 10340651937678404540047433,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x3d2d453b56f4c09950804fd5e42f12a4a237c5e6",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xdc8184ba488e949815d4aafb35b3c56ad03b4179",
+        "token_b_decimals": 18,
+        "reserve_0": 9841254990059497708,
+        "reserve_1": 4150949271609180481321540,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x9547f9da8142d24207e7054a57e569db8d682f76",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x88f3c911190a2b6459345872c363371f3dfa72b6",
+        "token_b_decimals": 18,
+        "reserve_0": 5754803941142397959,
+        "reserve_1": 72394696889033139190531,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x713adaf6ce3e885f987569e0a145dbee106121a7",
+        "token_a": "0x352f4bf396a7353a0877f99e99757e5d294df374",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 675168453874925340711678,
+        "reserve_1": 5987303619453151803,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xbc103bba961501b1b8f85623bb027878c174622f",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xd26b0c6ef8581e921ae41c66e508c62a581b709d",
+        "token_b_decimals": 18,
+        "reserve_0": 6280066833976253615,
+        "reserve_1": 9129309200754152,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x0b07d8a47ac0317aa84e3592b8fcd99a49bbd2a2",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xa5dd76c46de4d800ca9f985105a36b1f3abf7969",
+        "token_b_decimals": 18,
+        "reserve_0": 3528386367640489773,
+        "reserve_1": 20775183528272474,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xd737d65564ba5ab0d0700f78f961f2f0ded15b9c",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xc7ca0abfefbac7128d0533312532f6ad8e07ded3",
+        "token_b_decimals": 18,
+        "reserve_0": 4132357394111599690,
+        "reserve_1": 5601327673943600701015691011,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x57b85fef094e10b5eecdf350af688299e9553378",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+        "token_b_decimals": 6,
+        "reserve_0": 32729127827924462759,
+        "reserve_1": 80311876020,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xbcd23fc5ea00237dd6473410490430a568fc8362",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xf5cc9c66f42762fac800972a04b28183cc65bd6c",
+        "token_b_decimals": 18,
+        "reserve_0": 4080832150212695932,
+        "reserve_1": 183416942362662415253451,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x8eb013855089ab8d3b8c8250bc0ac52f66ff6177",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x855c71ab6b76ea3d43a8de06fcf9166f0f3e091b",
+        "token_b_decimals": 18,
+        "reserve_0": 3651601917051898740,
+        "reserve_1": 1183687560503097953618142,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x1ae52977716e5bfd09a2b1c9ac2406af913c094b",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x9e92b9ef3c3cc4053591002f4f04d2aef87bf2d2",
+        "token_b_decimals": 18,
+        "reserve_0": 8973894976135286051,
+        "reserve_1": 536390431907298475756516055,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xbfc41d69e3e828718b39ddc448b1050a82f84105",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xf7693c6fd9a7172d537fa75d133d309501cbd657",
+        "token_b_decimals": 18,
+        "reserve_0": 19752124841243360984,
+        "reserve_1": 34598908764888337788726451161147,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xb45a382e6c50c71376fc54f902eb6c4c57436b68",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xccd05a0fcfc1380e9da27862adb2198e58e0d66f",
+        "token_b_decimals": 18,
+        "reserve_0": 13989759665613599353,
+        "reserve_1": 3408064804208450409744090,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xa568b3e32452e873513ead050b05076809786916",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x98c435070c24e5152fc14d130937a38810c104b9",
+        "token_b_decimals": 18,
+        "reserve_0": 7195830074431583677,
+        "reserve_1": 34028653453353766076725071123,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x82441f1c9ba9412661115fedeaf1acc6f5d450ff",
+        "token_a": "0x98c435070c24e5152fc14d130937a38810c104b9",
+        "token_a_decimals": 18,
+        "token_b": "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
+        "token_b_decimals": 6,
+        "reserve_0": 76877129265912394386291992209,
+        "reserve_1": 41106731351,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x627446929e02198c0adad59442149a2a8079d933",
+        "token_a": "0x54feb100d536130a64c60f485aaef64f1894be83",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 42127426141014250721025647,
+        "reserve_1": 4041325122167450029,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x74f9a230f592c16ab10d912e0e649da72db12ead",
+        "token_a": "0x70466ddfba1e3bfcb4a2528585c8b474903f5a07",
+        "token_a_decimals": 10,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 4241119204125965,
+        "reserve_1": 7896802836690254118,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x75fa3be54d5b3571ed19f3eeace61fa1566ef948",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x9e20461bc2c4c980f62f1b279d71734207a6a356",
+        "token_b_decimals": 18,
+        "reserve_0": 17989771441498540030,
+        "reserve_1": 1174072202185016356520217185,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xceb9d5900c74ae36a3f20ad51ca42b19f8f2366b",
+        "token_a": "0x06e90a57d1ece8752d6ce92d1ad348ead5eae4f4",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 476735057478420490885215596,
+        "reserve_1": 6642079600668536734,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x60eb787df8cfc566e872c7b36590b44e49cf124e",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x9dd587d9ba46371191cb2635286e7dfb578d31d7",
+        "token_b_decimals": 18,
+        "reserve_0": 2888366415858748129,
+        "reserve_1": 145589355070900073873514418,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xc524cdd23facb0eec7ef26421a3227287a94648d",
+        "token_a": "0x2598c30330d5771ae9f983979209486ae26de875",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 1500081152815608216523383891,
+        "reserve_1": 4080644920888809791,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x80c08ddb2b7c24fc00478c6137bdec66189330ce",
+        "token_a": "0x6a46d56f9dd963ceac7f60ad148d49219cc3b79f",
+        "token_a_decimals": 9,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 276722719382463800,
+        "reserve_1": 2911213843381610785,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xa3d3c170a79b2c8eb773edffa3976716a42800a9",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xcbd34be8b8deb2fb6f5cc5bc14a37c2398db5320",
+        "token_b_decimals": 18,
+        "reserve_0": 10660367813346444780,
+        "reserve_1": 154772222072405895349184,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xa8d57531f66e05b5806d3c7e3b988c8e041176fa",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x86d80fbb0701dd500767b7bc3af72d002eb5de77",
+        "token_b_decimals": 18,
+        "reserve_0": 2854923611938120975,
+        "reserve_1": 78822424048363714134944,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xd8fde8f4d4abbd9dde39f4a06a9d0b6f2c7df946",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xebd72d1ad20530d18f6b63dbc763dad8922952ba",
+        "token_b_decimals": 18,
+        "reserve_0": 3426854215289889537,
+        "reserve_1": 23513211318933593912719683521,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x8b2c7f6a5812a17bd402d58cf25398ecc6380fcb",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xf87d06a1a9d8a69be38739b182ef7d131ceb7a77",
+        "token_b_decimals": 18,
+        "reserve_0": 3145457521134572006,
+        "reserve_1": 49725930640436118474684281,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xbee32bffb0cd21278acd8b00786b6e840e7a7108",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xd44257dde89ca53f1471582f718632e690e46dc2",
+        "token_b_decimals": 18,
+        "reserve_0": 73047889127301374204,
+        "reserve_1": 75715907248151749939293769673784,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x0696a78743f1ff6bf179e2383bb753ebc3184682",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0xf5c72f44e99ccd03f7638cec1a1801cc4fa399a4",
+        "token_b_decimals": 18,
+        "reserve_0": 2560466618264445847,
+        "reserve_1": 12084112644936484519731,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xe6623e3f56edcfaad38e4522d750be84b3bb5a98",
+        "token_a": "0x73dd40589a6c7f6da84ab30b3bae03028a44d64e",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 4851427352683789555119270,
+        "reserve_1": 3906157957780120807,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x72632b80b9993399d3729180cdf56bc729d95300",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x89073b7aaae498771bdb789360b0d3de9d15ad56",
+        "token_b_decimals": 18,
+        "reserve_0": 16720611412138921387,
+        "reserve_1": 831866236038539499865778244,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xebcb619a2b136961a1432cb10100beae2bc5b6f8",
+        "token_a": "0x2879e4cff83108042a3bd575b5ca46f5b230d073",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 326689588549297585917095742885,
+        "reserve_1": 2726259077541459513,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x87c8ea65b07c1d8d319ba885724dda5de7aec87f",
+        "token_a": "0x09de1513f9406ed44f713f59e9f712ae12448d58",
+        "token_a_decimals": 18,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 566881385286970686561789,
+        "reserve_1": 7547875415294159558,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0x20f097e399ecd3344427691354ba54b9563d0e0c",
+        "token_a": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_a_decimals": 18,
+        "token_b": "0x8bb989e11f7979035f9f4812346e2b3fdc2101cf",
+        "token_b_decimals": 4,
+        "reserve_0": 9512042942749969481,
+        "reserve_1": 3166707082095,
+        "fee": 300
+      }
+    },
+    {
+      "UniswapV2Pool": {
+        "address": "0xdfe5d8ed62a96aa10784b767a712de14a45a4b72",
+        "token_a": "0x210db297053c2896707676d54e36aab5fcb617cd",
+        "token_a_decimals": 9,
+        "token_b": "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+        "token_b_decimals": 18,
+        "reserve_0": 94624599229944885826,
+        "reserve_1": 36690997832209221514,
         "fee": 300
       }
     }

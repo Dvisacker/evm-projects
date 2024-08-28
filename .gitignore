@@ -19,3 +19,5 @@ archives/
 
 # Dotenv file
 .env
+
+checkpoints/*

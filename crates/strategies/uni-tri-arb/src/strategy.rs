@@ -94,12 +94,12 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
     async fn process_event(&mut self, event: Event) -> Vec<Action> {
         match event {
             Event::NewBlock(event) => {
+                println!("New block: {:?}", event);
                 let block_number = event.number.to::<u64>();
                 self.pool_state
                     .update_block_number(block_number)
                     .await
                     .unwrap();
-                println!("New block: {:?}", event);
                 return vec![];
             }
             Event::UniswapV2Swap(swap) => {
