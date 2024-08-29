@@ -1,5 +1,6 @@
 use crate::types::{Collector, CollectorStream};
-use alloy::{primitives::Log, providers::Provider, rpc::types::Filter};
+use alloy::rpc::types::Log;
+use alloy::{providers::Provider, rpc::types::Filter};
 use anyhow::Result;
 use async_trait::async_trait;
 use std::sync::Arc;
@@ -28,7 +29,7 @@ where
     async fn get_event_stream(&self) -> Result<CollectorStream<'_, Log>> {
         let stream = self.provider.subscribe_logs(&self.filter).await?;
         let stream = stream.into_stream();
-        let stream = stream.filter_map(|log| Some(log.inner));
+        let stream = stream.filter_map(|log| Some(log));
         Ok(Box::pin(stream))
     }
 }

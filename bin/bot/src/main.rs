@@ -1,10 +1,17 @@
 use std::sync::Arc;
 
-use alloy::{eips::BlockNumberOrTag, rpc::types::Filter, sol_types::SolEvent};
+use alloy::{
+    eips::BlockNumberOrTag,
+    rpc::types::{Filter, Log},
+    sol_types::SolEvent,
+};
 use alloy_chains::Chain;
 use anyhow::Result;
 use artemis_core::{
-    collectors::{block_collector::BlockCollector, event_collector::EventCollector},
+    collectors::{
+        block_collector::BlockCollector, event_collector::EventCollector,
+        log_collector::LogCollector,
+    },
     engine::Engine,
     executors::mempool_executor::MempoolExecutor,
     types::{CollectorMap, ExecutorMap},
@@ -63,25 +70,29 @@ async fn main() -> Result<()> {
         .from_block(BlockNumberOrTag::Latest)
         .event(IUniswapV3Pool::Swap::SIGNATURE);
 
-    let uniswap_v2_collector = Box::new(EventCollector::<_, IUniswapV2Pair::Swap>::new(
-        provider.clone(),
-        uniswap_v2_filter,
-    ));
-    let uniswap_v2_collector =
-        CollectorMap::new(uniswap_v2_collector, |event: IUniswapV2Pair::Swap| {
-            Event::UniswapV2Swap(event)
-        });
-    engine.add_collector(Box::new(uniswap_v2_collector));
+    // let uniswap_v2_collector = Box::new(EventCollector::<_, IUniswapV2Pair::Swap>::new(
+    //     provider.clone(),
+    //     uniswap_v2_filter,
+    // ));
+    // let uniswap_v2_collector =
+    //     CollectorMap::new(uniswap_v2_collector, |event: IUniswapV2Pair::Swap| {
+    //         Event::UniswapV2Swap(event)
+    //     });
+    // engine.add_collector(Box::new(uniswap_v2_collector));
 
-    let uniswap_v3_collector = Box::new(EventCollector::<_, IUniswapV3Pool::Swap>::new(
-        provider.clone(),
-        uniswap_v3_filter,
-    ));
-    let uniswap_v3_collector =
-        CollectorMap::new(uniswap_v3_collector, |event: IUniswapV3Pool::Swap| {
-            Event::UniswapV3Swap(event)
-        });
-    engine.add_collector(Box::new(uniswap_v3_collector));
+    // let uniswap_v3_collector = Box::new(EventCollector::<_, IUniswapV3Pool::Swap>::new(
+    //     provider.clone(),
+    //     uniswap_v3_filter,
+    // ));
+    // let uniswap_v3_collector =
+    //     CollectorMap::new(uniswap_v3_collector, |event: IUniswapV3Pool::Swap| {
+    //         Event::UniswapV3Swap(event)
+    //     });
+    // engine.add_collector(Box::new(uniswap_v3_collector));
+
+    let log_collector = Box::new(LogCollector::new(provider.clone(), uniswap_v2_filter));
+    let log_collector = CollectorMap::new(log_collector, |event: Log| Event::Log(event));
+    engine.add_collector(Box::new(log_collector));
 
     info!("Adding strategy...");
     let strategy = UniTriArb::new(Arc::new(provider.clone()), signer, db_url);

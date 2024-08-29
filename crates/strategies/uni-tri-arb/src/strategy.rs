@@ -122,6 +122,10 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
             Event::UniswapV2Sync(_) => {
                 return vec![];
             }
+            Event::Log(log) => {
+                println!("New log: {:?}", log);
+                return vec![];
+            }
         }
     }
 }

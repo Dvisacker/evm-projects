@@ -1,3 +1,4 @@
+use alloy::rpc::types::Log;
 use artemis_core::{
     collectors::block_collector::NewBlock, executors::mempool_executor::SubmitTxToMempool,
 };
@@ -10,6 +11,7 @@ pub enum Event {
     UniswapV2Swap(IUniswapV2Pair::Swap),
     UniswapV2Sync(IUniswapV2Pair::Sync),
     UniswapV3Swap(IUniswapV3Pool::Swap),
+    Log(Log),
 }
 
 /// Core Action enum for the current strategy.
