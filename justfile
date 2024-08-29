@@ -88,3 +88,5 @@ get-filtered-pools-mainnet:
 get-uniswap-v3-pools:
     cargo run --bin cli -- get-uniswap-v3-pools --chain-id 42161 --exchange uniswap-v3 --from-block 1 --to-block 100000000 --step 100000
 
+get-uniswap-v2-pools:
+    cargo run --bin cli -- get-uniswap-v2-pools --chain-id 42161 --exchange uniswap-v2 

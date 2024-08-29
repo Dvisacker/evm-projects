@@ -1,4 +1,4 @@
-use std::error::Error;
+use std::collections::HashSet;
 use std::sync::Arc;
 
 use alloy_chains::Chain;
@@ -21,21 +21,12 @@ use amms::{
     sync::{self, checkpoint},
 };
 use db::models::NewPool;
-use db::{batch_insert_pools, establish_connection};
+use db::{batch_insert_pools, batch_upsert_pools, establish_connection};
 use types::{DetailedPool, ExchangeName, ExchangeType};
 
 use crate::addressbook::Addressbook;
 use crate::config::get_chain_config;
-
-// let chain_config = get_chain_config(chain).await;
-// let provider = chain_config.ws;
-// let addressbook = Addressbook::load().unwrap();
-// let named_chain = chain.named().unwrap();
-// let v3_factories = addressbook.get_v3_factories(&named_chain);
-// let v3_factories: Vec<UniswapV3Factory> = v3_factories
-//     .into_iter()
-//     .map(|addr| UniswapV3Factory::new(addr, from_block))
-//     .collect();
+use crate::token_utils::{get_erc20_data_batch_request, load_pools_and_fetch_token_data};
 
 pub async fn store_uniswap_v3_pools<P, T, N>(
     provider: Arc<P>,
@@ -87,6 +78,56 @@ where
         from_block,
         to_block
     );
+
+    // fetch chunks of 50 pools at a time
+
+    // get_detailed_pool_data_batch_request(&mut pools, provider.clone()).await?;
+
+    Ok(())
+}
+
+pub async fn store_uniswap_v2_pools<P, T, N>(
+    provider: Arc<P>,
+    chain: Chain,
+    factory_address: Address,
+    db_url: &str,
+) -> Result<(), AMMError>
+where
+    P: Provider<T, N> + 'static,
+    T: Transport + Clone,
+    N: Network,
+{
+    let mut conn = establish_connection(db_url);
+    let factory = Factory::UniswapV2Factory(UniswapV2Factory::new(factory_address, 0, 3000));
+
+    let (amms, _) = sync::sync_amms(vec![factory], provider.clone(), None, 100000)
+        .await
+        .unwrap();
+
+    let pools = amms
+        .iter()
+        .map(|pool| {
+            DetailedPool::empty(
+                pool.address(),
+                chain.named().unwrap(),
+                Some(ExchangeType::UniV2),
+                Some(ExchangeName::UniswapV2),
+            )
+        })
+        .collect::<Vec<DetailedPool>>();
+
+    for chunk in pools.chunks(50) {
+        let mut chunk = chunk.to_vec();
+        get_detailed_pool_data_batch_request(&mut chunk, provider.clone()).await?;
+
+        let new_pools = chunk
+            .iter()
+            .map(|pool| pool.to_new_pool())
+            .collect::<Vec<NewPool>>();
+
+        batch_upsert_pools(&mut conn, &new_pools).unwrap();
+        println!("Inserted {:?} pools", new_pools.len());
+    }
 
     Ok(())
 }

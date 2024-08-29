@@ -2,7 +2,7 @@ use alloy_chains::Chain;
 use anyhow::{Error, Result};
 use clap::{Args, Parser, Subcommand, ValueEnum};
 use shared::addressbook::Addressbook;
-use shared::amm_utils::{get_filtered_amms, store_uniswap_v3_pools};
+use shared::amm_utils::{get_filtered_amms, store_uniswap_v2_pools, store_uniswap_v3_pools};
 use shared::config::get_chain_config;
 use shared::token_utils::load_pools_and_fetch_token_data;
 use std::sync::Arc;
@@ -20,6 +20,7 @@ enum Commands {
     Filter(FilterArgs),
     GetNamedPools(GetNamedPoolsArgs),
     GetUniswapV3Pools(GetUniswapV3PoolsArgs),
+    GetUniswapV2Pools(GetUniswapV2PoolsArgs),
 }
 
 #[derive(Args)]
@@ -40,6 +41,8 @@ struct GetNamedPoolsArgs {
 enum ExchangeName {
     UniswapV3,
     SushiswapV3,
+    UniswapV2,
+    SushiswapV2,
 }
 
 #[derive(Args)]
@@ -52,6 +55,14 @@ struct GetUniswapV3PoolsArgs {
     to_block: u64,
     #[arg(long, default_value = "10000")]
     step: u64,
+    #[arg(long, value_enum)]
+    exchange: ExchangeName,
+}
+
+#[derive(Args)]
+struct GetUniswapV2PoolsArgs {
+    #[arg(short, long)]
+    chain_id: u64,
     #[arg(long, value_enum)]
     exchange: ExchangeName,
 }
@@ -91,6 +102,7 @@ async fn main() -> Result<(), Error> {
                 ExchangeName::SushiswapV3 => {
                     addressbook.arbitrum.exchanges.univ3.sushiswapv3.factory
                 }
+                _ => panic!("Choose a uniswap v3 exchange"),
             };
 
             let from_block = args.from_block;
@@ -120,6 +132,24 @@ async fn main() -> Result<(), Error> {
             //     "{:?} pools have been fetched and stored in the database.",
             //     args.exchange
             // );
+        }
+        Commands::GetUniswapV2Pools(args) => {
+            let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
+            let chain_config = get_chain_config(chain).await;
+            let provider = Arc::new(chain_config.ws);
+            let addressbook = Addressbook::load().unwrap();
+
+            let factory_address = match args.exchange {
+                ExchangeName::UniswapV2 => addressbook.arbitrum.exchanges.univ2.uniswapv2.factory,
+                ExchangeName::SushiswapV2 => {
+                    addressbook.arbitrum.exchanges.univ2.sushiswapv2.factory
+                }
+                _ => panic!("Choose a uniswap v2 exchange"),
+            };
+
+            let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
+
+            store_uniswap_v2_pools(provider.clone(), chain, factory_address, &db_url).await?;
         }
     }
 

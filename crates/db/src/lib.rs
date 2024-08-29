@@ -56,6 +56,45 @@ pub fn batch_insert_pools(
     })
 }
 
+pub fn batch_upsert_pools(
+    conn: &mut SqliteConnection,
+    new_pools: &Vec<NewPool>,
+) -> Result<Vec<Pool>, Error> {
+    conn.transaction(|conn| {
+        let inserted_pools: Vec<Pool> = new_pools
+            .iter()
+            .map(|new_pool| {
+                diesel::insert_into(pools::table)
+                    .values(new_pool)
+                    .on_conflict((pools::chain, pools::address))
+                    .do_update()
+                    .set((
+                        pools::factory_address.eq(&new_pool.factory_address),
+                        pools::exchange_name.eq(&new_pool.exchange_name),
+                        pools::exchange_type.eq(&new_pool.exchange_type),
+                        pools::token_a.eq(&new_pool.token_a),
+                        pools::token_a_symbol.eq(&new_pool.token_a_symbol),
+                        pools::token_a_decimals.eq(new_pool.token_a_decimals),
+                        pools::token_b.eq(&new_pool.token_b),
+                        pools::token_b_symbol.eq(&new_pool.token_b_symbol),
+                        pools::token_b_decimals.eq(new_pool.token_b_decimals),
+                        pools::reserve_0.eq(&new_pool.reserve_0),
+                        pools::reserve_1.eq(&new_pool.reserve_1),
+                        pools::fee.eq(new_pool.fee),
+                    ))
+                    .execute(conn)?;
+
+                pools::table
+                    .filter(pools::chain.eq(&new_pool.chain))
+                    .filter(pools::address.eq(&new_pool.address))
+                    .first(conn)
+            })
+            .collect::<Result<Vec<Pool>, Error>>()?;
+
+        Ok(inserted_pools)
+    })
+}
+
 pub fn get_all_pools(conn: &mut SqliteConnection) -> Result<Vec<Pool>, Error> {
     pools::table.load::<Pool>(conn)
 }
