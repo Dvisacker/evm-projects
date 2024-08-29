@@ -160,10 +160,23 @@ pub fn get_pools(
     chain_name: &str,
     exchange_name: &str,
     exchange_type: &str,
+    limit: i64,
 ) -> Result<Vec<Pool>, Error> {
     pools::table
         .filter(pools::chain.eq(chain_name))
         .filter(pools::exchange_name.eq(exchange_name))
         .filter(pools::exchange_type.eq(exchange_type))
+        .limit(limit)
         .load::<Pool>(conn)
+}
+
+pub fn batch_update_filtered(
+    conn: &mut SqliteConnection,
+    pool_addresses: &[String],
+    filtered: bool,
+) -> QueryResult<usize> {
+    diesel::update(pools::table)
+        .filter(pools::address.eq_any(pool_addresses))
+        .set(pools::filtered.eq(filtered))
+        .execute(conn)
 }

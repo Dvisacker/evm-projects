@@ -1,7 +1,7 @@
 use crate::schema::pools;
 use diesel::prelude::*;
 
-#[derive(Queryable, Selectable)]
+#[derive(Queryable, Selectable, Debug)]
 #[diesel(table_name = pools)]
 pub struct Pool {
     pub id: i32,
@@ -19,6 +19,7 @@ pub struct Pool {
     pub reserve_0: String,
     pub reserve_1: String,
     pub fee: i32,
+    pub filtered: bool,
 }
 
 #[derive(Insertable)]
@@ -38,4 +39,5 @@ pub struct NewPool {
     pub reserve_0: String,
     pub reserve_1: String,
     pub fee: i32,
+    pub filtered: bool,
 }

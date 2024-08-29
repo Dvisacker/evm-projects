@@ -5,4 +5,5 @@ pub enum AMMError {
     InvalidExchangeType,
     InvalidExchangeName,
     UnsupportedExchangeType,
+    DatabaseError,
 }

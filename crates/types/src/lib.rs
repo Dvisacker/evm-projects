@@ -71,6 +71,7 @@ pub struct DetailedPool {
     pub reserve_0: u128,
     pub reserve_1: u128,
     pub fee: u32,
+    pub filtered: bool,
 }
 
 impl From<NewPool> for DetailedPool {
@@ -90,6 +91,7 @@ impl From<NewPool> for DetailedPool {
             reserve_0: pool.reserve_0.parse().unwrap_or(0),
             reserve_1: pool.reserve_1.parse().unwrap_or(0),
             fee: pool.fee as u32,
+            filtered: pool.filtered,
         }
     }
 }
@@ -123,6 +125,7 @@ impl DetailedPool {
             reserve_0: 0,
             reserve_1: 0,
             fee: 0,
+            filtered: false,
         }
     }
 
@@ -142,6 +145,7 @@ impl DetailedPool {
             reserve_0: self.reserve_0.to_string(),
             reserve_1: self.reserve_1.to_string(),
             fee: self.fee as i32,
+            filtered: self.filtered,
         }
     }
 }
