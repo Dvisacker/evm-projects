@@ -2,10 +2,7 @@ use super::types::{Action, Event};
 use crate::state::PoolState;
 use alloy::{providers::Provider, signers::Signer};
 use alloy_chains::NamedChain;
-use amms::{
-    amm::AMM,
-    sync::{self, checkpoint::sort_amms},
-};
+use amms::sync::{self, checkpoint::sort_amms};
 use anyhow::Result;
 use artemis_core::types::Strategy;
 use async_trait::async_trait;

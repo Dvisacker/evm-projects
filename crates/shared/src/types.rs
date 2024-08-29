@@ -2,7 +2,6 @@ use std::fmt;
 
 use crate::route::simulate_route;
 use alloy::primitives::{Address, U256};
-use amms::amm::uniswap_v2::UniswapV2Pool;
 use amms::amm::{AutomatedMarketMaker, AMM};
 
 #[derive(Debug, Clone)]
@@ -15,8 +14,15 @@ impl fmt::Display for Cycle {
             if i > 0 {
                 write!(f, " -> ")?;
             }
-            let address = pool.address();
-            write!(f, "{}", address)?;
+            // let address = pool.address();
+            // write!(f, "{}", address)?;
+
+            let token_symbols = pool.token_symbols();
+            let [token_a, token_b] = token_symbols.as_slice() else {
+                todo!()
+            };
+
+            write!(f, "{}:{}-{}", pool.exchange_name(), token_a, token_b)?;
         }
         write!(f, "]")
     }

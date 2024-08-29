@@ -5,7 +5,7 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
 use std::str::FromStr;
-use types::{ExchangeName, ExchangeType};
+use types::exchange::{ExchangeName, ExchangeType};
 
 fn deserialize_address<'de, D>(deserializer: D) -> Result<Address, D::Error>
 where
@@ -155,6 +155,7 @@ impl Addressbook {
                 _ => return None,
             },
             ExchangeType::UniV3 => return None,
+            ExchangeType::Unknown => return None,
         }
     }
 

@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use alloy_chains::Chain;
+use alloy_chains::{Chain, NamedChain};
 use amms::amm::common::get_detailed_pool_data_batch_request;
 use amms::amm::AutomatedMarketMaker;
 use amms::errors::AMMError;
@@ -26,7 +26,8 @@ use db::{
     batch_insert_pools, batch_update_filtered, batch_upsert_pools, establish_connection,
     get_all_pools, get_pools, get_pools_by_chain,
 };
-use types::{DetailedPool, ExchangeName, ExchangeType};
+use types::exchange::{ExchangeName, ExchangeType};
+use types::pool::DetailedPool;
 
 use crate::addressbook::Addressbook;
 use crate::config::get_chain_config;
@@ -243,23 +244,33 @@ pub fn db_pool_to_amm(pool: &Pool) -> Result<AMM, AMMError> {
     let token0: Address = pool.token_a.parse().unwrap();
     let token1: Address = pool.token_b.parse().unwrap();
     let exchange_type: ExchangeType = ExchangeType::from_str(&pool.exchange_type).unwrap();
+    let exchange_name: ExchangeName = ExchangeName::from_str(&pool.exchange_name).unwrap();
+    let chain: Chain = Chain::try_from(pool.chain.parse::<NamedChain>().unwrap()).unwrap();
+
     match exchange_type {
         ExchangeType::UniV2 => Ok(AMM::UniswapV2Pool(UniswapV2Pool {
             address,
             token_a: token0,
             token_a_decimals: pool.token_a_decimals as u8,
+            token_a_symbol: pool.token_a_symbol.clone(),
             token_b: token1,
             token_b_decimals: pool.token_b_decimals as u8,
+            token_b_symbol: pool.token_b_symbol.clone(),
             reserve_0: pool.reserve_0.parse().unwrap(),
             reserve_1: pool.reserve_1.parse().unwrap(),
             fee: pool.fee as u32,
+            exchange_name,
+            exchange_type,
+            chain: chain.named().unwrap(),
         })),
         ExchangeType::UniV3 => Ok(AMM::UniswapV3Pool(UniswapV3Pool {
             address,
             token_a: token0,
             token_a_decimals: pool.token_a_decimals as u8,
+            token_a_symbol: pool.token_a_symbol.clone(),
             token_b: token1,
             token_b_decimals: pool.token_b_decimals as u8,
+            token_b_symbol: pool.token_b_symbol.clone(),
             liquidity: 0,
             sqrt_price: U256::from(0),
             tick: 0,
@@ -267,6 +278,9 @@ pub fn db_pool_to_amm(pool: &Pool) -> Result<AMM, AMMError> {
             tick_bitmap: HashMap::new(),
             ticks: HashMap::new(),
             fee: pool.fee as u32,
+            exchange_name,
+            exchange_type,
+            chain: chain.named().unwrap(),
         })),
         _ => panic!("Unsupported exchange type"),
     }

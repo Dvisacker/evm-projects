@@ -1,5 +1,6 @@
 use alloy::primitives::Address;
 use alloy::providers::Provider;
+use alloy_chains::NamedChain;
 use amms::amm::uniswap_v2::UniswapV2Pool;
 use amms::amm::{AutomatedMarketMaker, AMM};
 use amms::errors::AMMError;
@@ -9,6 +10,7 @@ use db::establish_connection;
 use shared::types::Cycle;
 use std::collections::HashSet;
 use std::sync::Arc;
+use types::exchange::{ExchangeName, ExchangeType};
 
 #[derive(Debug, Clone)]
 pub struct PoolState<P: Provider> {
@@ -112,11 +114,16 @@ impl<P: Provider + 'static> PoolState<P> {
                     address,
                     Address::ZERO,
                     0,
+                    "".to_string(),
                     Address::ZERO,
                     0,
+                    "".to_string(),
                     0,
                     0,
                     3000,
+                    ExchangeName::UniswapV2,
+                    ExchangeType::UniV2,
+                    NamedChain::Arbitrum,
                 ))
             })
             .collect();
