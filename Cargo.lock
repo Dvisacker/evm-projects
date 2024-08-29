@@ -5632,6 +5632,7 @@ dependencies = [
  "bindings",
  "csv",
  "dashmap 6.0.1",
+ "db",
  "indicatif",
  "mev-share",
  "serde",

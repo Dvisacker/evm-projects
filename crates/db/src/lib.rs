@@ -180,3 +180,13 @@ pub fn batch_update_filtered(
         .set(pools::filtered.eq(filtered))
         .execute(conn)
 }
+
+pub fn get_filtered_pools(
+    conn: &mut SqliteConnection,
+    chain_name: &str,
+) -> Result<Vec<Pool>, Error> {
+    pools::table
+        .filter(pools::chain.eq(chain_name))
+        .filter(pools::filtered.eq(true))
+        .load::<Pool>(conn)
+}

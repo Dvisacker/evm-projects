@@ -42,12 +42,18 @@ impl Cycle {
         }
     }
 
-    pub fn get_profit(&self) -> i128 {
+    pub fn get_profit(&self, amount_in: U256) -> i128 {
         let token_in = self.get_entry_token();
-        let input_amount = U256::from(10u64.pow(18));
-        let output_amount = simulate_route(token_in, input_amount, &self.0).unwrap();
-        let profit = output_amount.to::<i128>() - input_amount.to::<i128>();
+        let amount_out = simulate_route(token_in, amount_in, &self.0).unwrap();
+        let profit = amount_out.to::<i128>() - amount_in.to::<i128>();
 
         profit
+    }
+
+    pub fn get_profit_perc(&self) -> f64 {
+        let amount_in = U256::from(10u64.pow(18));
+        let profit = self.get_profit(amount_in);
+        let profit_perc = profit as f64 / (amount_in.to::<i128>() as f64);
+        profit_perc
     }
 }

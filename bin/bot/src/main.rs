@@ -43,13 +43,13 @@ async fn main() -> Result<()> {
         .init();
 
     let args = Args::parse();
+    let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
     let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
     let chain_config = get_chain_config(chain).await;
     let ws = chain_config.ws;
     let signer = chain_config.signer;
     let provider = ws;
     let mut engine: Engine<Event, Action> = Engine::default();
-    let checkpoint_path: &str = "./checkpoints/filtered-pools.json";
 
     let block_collector = Box::new(BlockCollector::new(provider.clone()));
     let block_collector = CollectorMap::new(block_collector, |block| Event::NewBlock(block));
@@ -69,7 +69,7 @@ async fn main() -> Result<()> {
     engine.add_collector(Box::new(swap_collector));
 
     info!("Adding strategy...");
-    let strategy = UniTriArb::new(Arc::new(provider.clone()), signer, Some(checkpoint_path));
+    let strategy = UniTriArb::new(Arc::new(provider.clone()), signer, db_url);
     engine.add_strategy(Box::new(strategy));
 
     info!("Adding executor...");

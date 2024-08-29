@@ -2,11 +2,14 @@ use super::types::{Action, Event};
 use crate::state::PoolState;
 use alloy::{providers::Provider, signers::Signer};
 use alloy_chains::NamedChain;
-use amms::amm::AMM;
+use amms::{
+    amm::AMM,
+    sync::{self, checkpoint::sort_amms},
+};
 use anyhow::Result;
 use artemis_core::types::Strategy;
 use async_trait::async_trait;
-use shared::addressbook::Addressbook;
+use shared::{addressbook::Addressbook, types::Cycle};
 use std::{collections::HashSet, sync::Arc};
 use tracing::info;
 
@@ -16,18 +19,18 @@ pub struct UniTriArb<P: Provider + 'static, S: Signer> {
     pub client: Arc<P>,
     pub pool_state: PoolState<P>,
     pub tx_signer: S,
-    pub checkpoint_path: Option<&'static str>,
+    pub db_url: String,
 }
 
 impl<P: Provider + 'static, S: Signer> UniTriArb<P, S> {
-    pub fn new(client: Arc<P>, signer: S, checkpoint_path: Option<&'static str>) -> Self {
+    pub fn new(client: Arc<P>, signer: S, db_url: String) -> Self {
         let addressbook = Addressbook::load().unwrap();
         Self {
             addressbook,
             client: client.clone(),
             pool_state: PoolState::new(client.clone()),
             tx_signer: signer,
-            checkpoint_path,
+            db_url,
         }
     }
 }
@@ -46,29 +49,22 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
             .await
             .unwrap();
 
-        // update pool state
-        if let Some(checkpoint_path) = self.checkpoint_path {
-            println!("Loading pools from checkpoint...");
-            self.pool_state
-                .load_pools_from_checkpoint(checkpoint_path)
-                .await
-                .unwrap();
-        } else {
-            println!("Loading pools from addressbook...");
-            let pools = self.addressbook.get_pools_by_chain(&NamedChain::Arbitrum);
-            self.pool_state.add_pools(pools).await.unwrap();
-        }
+        self.pool_state
+            .load_pools_from_db(&self.db_url)
+            .await
+            .unwrap();
 
         let weth = self.addressbook.get_weth(&NamedChain::Arbitrum).unwrap();
-        let pools = self.pool_state.get_all_pools().await;
-        let amms: Vec<AMM> = pools
-            .iter()
-            .map(|p| AMM::UniswapV2Pool(p.clone()))
-            .collect();
+        let amms = self.pool_state.get_all_pools().await;
+        let (mut uniswap_v2_pools, mut uniswap_v3_pools, _) = sort_amms(amms);
+
+        sync::populate_amms(&mut uniswap_v2_pools, block_number, self.client.clone()).await?;
+        sync::populate_amms(&mut uniswap_v3_pools, block_number, self.client.clone()).await?;
+        let synced_amms = vec![uniswap_v2_pools, uniswap_v3_pools].concat();
 
         println!("Computing arbitrage cycles...");
         let arb_cycles = PoolState::<P>::get_cycles(
-            &amms,
+            &synced_amms,
             weth,
             weth,
             3,
@@ -77,10 +73,15 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
             &mut HashSet::new(),
         );
 
+        let profit_threshold = -0.01;
+        let arb_cycles: Vec<Cycle> = arb_cycles
+            .into_iter()
+            .filter(|cycle| cycle.get_profit_perc() > profit_threshold)
+            .collect();
+
         println!("Found {} arbitrage cycles", arb_cycles.len());
         for cycle in arb_cycles {
-            let profit = cycle.get_profit();
-            println!("Cycle: {}: Profit: {}", cycle, profit);
+            println!("{}: Profit: {}", cycle, cycle.get_profit_perc());
         }
 
         Ok(())

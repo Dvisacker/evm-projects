@@ -5,6 +5,7 @@ use amms::amm::{AutomatedMarketMaker, AMM};
 use amms::errors::AMMError;
 use amms::sync;
 use dashmap::DashMap;
+use db::establish_connection;
 use shared::types::Cycle;
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -13,7 +14,7 @@ use std::sync::Arc;
 pub struct PoolState<P: Provider> {
     provider: Arc<P>,
     pub block_number: u64,
-    pub pools: DashMap<Address, UniswapV2Pool>,
+    pub pools: DashMap<Address, AMM>,
 }
 
 impl<P: Provider + 'static> PoolState<P> {
@@ -85,12 +86,24 @@ impl<P: Provider + 'static> PoolState<P> {
             sync::checkpoint::sync_amms_from_checkpoint(path, 200, self.provider.clone()).await?;
         println!("Loaded {} pools from checkpoint", pools.len());
         for pool in pools {
-            if let AMM::UniswapV2Pool(pool) = pool {
-                self.pools.insert(pool.address, pool);
-            }
+            self.pools.insert(pool.address(), pool);
         }
         Ok(())
     }
+
+    pub async fn load_pools_from_db(&self, db_url: &str) -> Result<(), AMMError> {
+        let mut conn = establish_connection(db_url);
+        let db_pools = db::get_filtered_pools(&mut conn, "arbitrum").unwrap();
+
+        println!("Loaded {} pools from db", db_pools.len());
+        for pool in db_pools {
+            let amm = shared::amm_utils::db_pool_to_amm(&pool).unwrap();
+            self.pools.insert(amm.address(), amm);
+        }
+
+        Ok(())
+    }
+
     pub async fn add_pools(&self, addresses: Vec<Address>) -> Result<(), AMMError> {
         let mut amms: Vec<AMM> = addresses
             .into_iter()
@@ -111,9 +124,7 @@ impl<P: Provider + 'static> PoolState<P> {
         sync::populate_amms(&mut amms, self.block_number, self.provider.clone()).await?;
 
         for amm in amms {
-            if let AMM::UniswapV2Pool(pool) = amm {
-                self.pools.insert(pool.address, pool);
-            }
+            self.pools.insert(amm.address(), amm);
         }
         Ok(())
     }
@@ -122,15 +133,13 @@ impl<P: Provider + 'static> PoolState<P> {
         let mut amms: Vec<AMM> = self
             .pools
             .iter()
-            .map(|entry| AMM::UniswapV2Pool(entry.value().clone()))
+            .map(|entry| entry.value().clone())
             .collect();
 
         sync::populate_amms(&mut amms, self.block_number, self.provider.clone()).await?;
 
         for amm in amms {
-            if let AMM::UniswapV2Pool(pool) = amm {
-                self.pools.insert(pool.address, pool);
-            }
+            self.pools.insert(amm.address(), amm);
         }
 
         // for mut pool in self.pools.iter_mut() {
@@ -144,7 +153,7 @@ impl<P: Provider + 'static> PoolState<P> {
         Ok(())
     }
 
-    pub async fn get_all_pools(&self) -> Vec<UniswapV2Pool> {
+    pub async fn get_all_pools(&self) -> Vec<AMM> {
         self.pools
             .iter()
             .map(|entry| entry.value().clone())
