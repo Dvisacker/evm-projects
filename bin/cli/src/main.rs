@@ -2,7 +2,7 @@ use alloy_chains::Chain;
 use anyhow::{Error, Result};
 use clap::{Args, Parser, Subcommand, ValueEnum};
 use shared::addressbook::Addressbook;
-use shared::amm_utils::{get_filtered_amms, store_uniswap_v2_pools, store_uniswap_v3_pools};
+use shared::amm_utils::{filter_amms, store_uniswap_v2_pools, store_uniswap_v3_pools};
 use shared::config::get_chain_config;
 use shared::token_utils::load_pools_and_fetch_token_data;
 use std::sync::Arc;
@@ -27,7 +27,7 @@ enum Commands {
 struct FilterArgs {
     #[arg(short, long)]
     chain_id: u64,
-    #[arg(short, long)]
+    #[arg(short, long, default_value = "10000")]
     min_usd: f64,
 }
 
@@ -78,10 +78,12 @@ async fn main() -> Result<(), Error> {
             strategy_parser.generate()?;
         }
         Commands::Filter(args) => {
+            let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
             let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
-            let filtered_amms = get_filtered_amms(chain, args.min_usd).await?;
+            let filtered_amms = filter_amms(chain, args.min_usd, &db_url).await?;
             println!("Filtered AMMs: {:?}", filtered_amms.len());
         }
+
         Commands::GetNamedPools(args) => {
             let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
             let chain_config = get_chain_config(chain).await;

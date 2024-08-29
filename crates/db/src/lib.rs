@@ -154,3 +154,16 @@ pub fn get_pools_by_exchange(
         .filter(pools::exchange_name.eq(exchange_name))
         .load::<Pool>(conn)
 }
+
+pub fn get_pools(
+    conn: &mut SqliteConnection,
+    chain_name: &str,
+    exchange_name: &str,
+    exchange_type: &str,
+) -> Result<Vec<Pool>, Error> {
+    pools::table
+        .filter(pools::chain.eq(chain_name))
+        .filter(pools::exchange_name.eq(exchange_name))
+        .filter(pools::exchange_type.eq(exchange_type))
+        .load::<Pool>(conn)
+}

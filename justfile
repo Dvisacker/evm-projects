@@ -79,11 +79,8 @@ run-bot-arbitrum:
 run-bot-mainnet:
     cargo run --bin bot -- --chain-id 1
 
-get-filtered-pools:
-    cargo run --bin cli -- filter --chain-id 42161 --checkpoint-path ./checkpoints/filtered-pools-arbitrum.json
-
-get-filtered-pools-mainnet:
-    cargo run --bin cli -- filter --chain-id 1 --checkpoint-path ./checkpoints/filtered-pools-mainnet.json
+get-filtered-pools CHAIN_ID:
+    cargo run --bin cli -- filter --chain-id {{CHAIN_ID}}
 
 get-uniswap-v3-pools:
     cargo run --bin cli -- get-uniswap-v3-pools --chain-id 42161 --exchange uniswap-v3 --from-block 1 --to-block 100000000 --step 100000
