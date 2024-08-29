@@ -61,15 +61,17 @@ clippy:
 setup-db:
     diesel setup --migration-dir ./crates/db/migrations --config-file ./crates/db/diesel.toml
 
-revert-db:
+db-new-migration NAME:
+    diesel migration generate {{NAME}} --migration-dir ./crates/db/migrations --config-file ./crates/db/diesel.toml
+
+db-revert:
     diesel migration revert --migration-dir ./crates/db/migrations --config-file ./crates/db/diesel.toml
 
-migrate-db:
+db-migrate:
     diesel migration run --migration-dir ./crates/db/migrations --config-file ./crates/db/diesel.toml
 
-print-db:
+db-print:
     diesel print-schema -- --migration-dir ./crates/db/migrations --config-file ./crates/db/diesel.toml
-
 
 run-bot-arbitrum:
     cargo run --bin bot -- --chain-id 42161
@@ -82,3 +84,7 @@ get-filtered-pools:
 
 get-filtered-pools-mainnet:
     cargo run --bin cli -- filter --chain-id 1 --checkpoint-path ./checkpoints/filtered-pools-mainnet.json
+
+get-uniswap-v3-pools:
+    cargo run --bin cli -- get-uniswap-v3-pools --chain-id 42161 --exchange uniswap-v3 --from-block 1 --to-block 100000000 --step 100000
+

@@ -5,58 +5,7 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
 use std::str::FromStr;
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub enum ExchangeName {
-    UniswapV2,
-    SushiSwapV2,
-    UniswapV3,
-    SushiSwapV3,
-}
-
-impl ExchangeName {
-    pub fn from_str(s: &str) -> Result<Self, String> {
-        match s {
-            "uniswapv2" => Ok(ExchangeName::UniswapV2),
-            "sushiswapv2" => Ok(ExchangeName::SushiSwapV2),
-            "uniswapv3" => Ok(ExchangeName::UniswapV3),
-            "sushiswapv3" => Ok(ExchangeName::SushiSwapV3),
-            _ => Err(format!("Invalid exchange name: {}", s)),
-        }
-    }
-
-    pub fn as_str(&self) -> &str {
-        match self {
-            ExchangeName::UniswapV2 => "uniswapv2",
-            ExchangeName::SushiSwapV2 => "sushiswapv2",
-            ExchangeName::UniswapV3 => "uniswapv3",
-            ExchangeName::SushiSwapV3 => "sushiswapv3",
-        }
-    }
-}
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub enum ExchangeType {
-    UniV2,
-    UniV3,
-}
-
-impl ExchangeType {
-    pub fn from_str(s: &str) -> Result<Self, String> {
-        match s {
-            "univ2" => Ok(ExchangeType::UniV2),
-            "univ3" => Ok(ExchangeType::UniV3),
-            _ => Err(format!("Invalid exchange type: {}", s)),
-        }
-    }
-
-    pub fn as_str(&self) -> &str {
-        match self {
-            ExchangeType::UniV2 => "univ2",
-            ExchangeType::UniV3 => "univ3",
-        }
-    }
-}
+use types::{ExchangeName, ExchangeType};
 
 fn deserialize_address<'de, D>(deserializer: D) -> Result<Address, D::Error>
 where

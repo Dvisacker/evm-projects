@@ -1,3 +1,5 @@
+// @generated automatically by Diesel CLI.
+
 diesel::table! {
     pools (id) {
         id -> Integer,
@@ -5,6 +7,7 @@ diesel::table! {
         chain -> Text,
         factory_address -> Text,
         exchange_name -> Text,
+        exchange_type -> Text,
         token_a -> Text,
         token_a_symbol -> Text,
         token_a_decimals -> Integer,

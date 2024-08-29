@@ -3,7 +3,6 @@ use std::sync::Arc;
 
 use alloy_chains::Chain;
 use amms::amm::common::get_detailed_pool_data_batch_request;
-// use amms::addressbook::{Addressbook, ExchangeName};
 use amms::amm::uniswap_v3::factory::UniswapV3Factory;
 use amms::amm::AutomatedMarketMaker;
 use amms::errors::AMMError;
@@ -12,7 +11,6 @@ use alloy::network::Network;
 use alloy::primitives::{Address, U256};
 use alloy::providers::Provider;
 use alloy::transports::Transport;
-use amms::types::DetailedPool;
 use amms::{
     amm::{
         factory::Factory,
@@ -24,8 +22,9 @@ use amms::{
 };
 use db::models::NewPool;
 use db::{batch_insert_pools, establish_connection};
+use types::{DetailedPool, ExchangeName, ExchangeType};
 
-use crate::addressbook::{Addressbook, ExchangeName};
+use crate::addressbook::Addressbook;
 use crate::config::get_chain_config;
 
 // let chain_config = get_chain_config(chain).await;
@@ -40,6 +39,7 @@ use crate::config::get_chain_config;
 
 pub async fn store_uniswap_v3_pools<P, T, N>(
     provider: Arc<P>,
+    chain: Chain,
     factory_address: Address,
     from_block: u64,
     to_block: u64,
@@ -62,7 +62,14 @@ where
 
     let mut pools = pools
         .iter()
-        .map(|pool| DetailedPool::empty(pool.address()))
+        .map(|pool| {
+            DetailedPool::empty(
+                pool.address(),
+                chain.named().unwrap(),
+                Some(ExchangeType::UniV3),
+                Some(ExchangeName::UniswapV3),
+            )
+        })
         .collect::<Vec<DetailedPool>>();
 
     get_detailed_pool_data_batch_request(&mut pools, provider.clone()).await?;
@@ -73,6 +80,13 @@ where
         .collect::<Vec<NewPool>>();
 
     batch_insert_pools(&mut conn, &new_pools).unwrap();
+
+    println!(
+        "Inserted {:?} pools created from block {:?} to {:?}",
+        new_pools.len(),
+        from_block,
+        to_block
+    );
 
     Ok(())
 }

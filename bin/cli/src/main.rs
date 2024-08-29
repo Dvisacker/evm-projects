@@ -1,6 +1,6 @@
 use alloy_chains::Chain;
 use anyhow::{Error, Result};
-use clap::{Args, Parser, Subcommand};
+use clap::{Args, Parser, Subcommand, ValueEnum};
 use shared::addressbook::Addressbook;
 use shared::amm_utils::{get_filtered_amms, store_uniswap_v3_pools};
 use shared::config::get_chain_config;
@@ -36,10 +36,24 @@ struct GetNamedPoolsArgs {
     chain_id: u64,
 }
 
+#[derive(Clone, ValueEnum)]
+enum ExchangeName {
+    UniswapV3,
+    SushiswapV3,
+}
+
 #[derive(Args)]
 struct GetUniswapV3PoolsArgs {
     #[arg(short, long)]
     chain_id: u64,
+    #[arg(long, default_value = "0")]
+    from_block: u64,
+    #[arg(long, default_value = "1000000")]
+    to_block: u64,
+    #[arg(long, default_value = "10000")]
+    step: u64,
+    #[arg(long, value_enum)]
+    exchange: ExchangeName,
 }
 
 #[tokio::main]
@@ -71,26 +85,41 @@ async fn main() -> Result<(), Error> {
             let chain_config = get_chain_config(chain).await;
             let provider = Arc::new(chain_config.ws);
             let addressbook = Addressbook::load().unwrap();
-            let uniswap_v3_factory = addressbook.arbitrum.exchanges.univ3.uniswapv3.factory;
 
-            let from_block = 1090000;
-            let to_block = 1100000;
-            let step = 10_000;
+            let factory_address = match args.exchange {
+                ExchangeName::UniswapV3 => addressbook.arbitrum.exchanges.univ3.uniswapv3.factory,
+                ExchangeName::SushiswapV3 => {
+                    addressbook.arbitrum.exchanges.univ3.sushiswapv3.factory
+                }
+            };
 
-            // get db_url from env
+            let from_block = args.from_block;
+            let to_block = args.to_block;
+            let step = args.step;
             let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
 
-            store_uniswap_v3_pools(
-                provider,
-                uniswap_v3_factory,
-                from_block,
-                to_block,
-                step,
-                &db_url,
-            )
-            .await?;
+            for block in (from_block..=to_block).step_by(step as usize) {
+                println!(
+                    "Fetching pools from block {:?} to {:?}",
+                    block,
+                    block + step - 1
+                );
+                store_uniswap_v3_pools(
+                    provider.clone(),
+                    chain,
+                    factory_address,
+                    block,
+                    block + step - 1,
+                    step,
+                    &db_url,
+                )
+                .await?;
+            }
 
-            println!("Token data has been fetched and saved to tokens.json");
+            // println!(
+            //     "{:?} pools have been fetched and stored in the database.",
+            //     args.exchange
+            // );
         }
     }
 

@@ -8,27 +8,32 @@ use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 pub mod models;
 pub mod schema;
 
-pub const MIGRATIONS: EmbeddedMigrations =
-    embed_migrations!("migrations/2024-08-28-045356_create_pools");
+// pub const MIGRATIONS: EmbeddedMigrations =
+//     embed_migrations!("migrations/2024-08-29-000000_create_pools_with_constraints");
 
 pub fn establish_connection(database_url: &str) -> SqliteConnection {
     SqliteConnection::establish(database_url)
         .unwrap_or_else(|_| panic!("Error connecting to {}", database_url))
 }
 
-pub fn run_migrations(
-    conn: &mut SqliteConnection,
-) -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>> {
-    conn.run_pending_migrations(MIGRATIONS)?;
-    Ok(())
-}
+// pub fn run_migrations(
+//     conn: &mut SqliteConnection,
+// ) -> Result<(), Box<dyn std::error::Error + Send + Sync + 'static>> {
+//     conn.run_pending_migrations(MIGRATIONS)?;
+//     Ok(())
+// }
 
 pub fn create_pool(conn: &mut SqliteConnection, new_pool: &NewPool) -> Result<Pool, Error> {
     diesel::insert_into(pools::table)
         .values(new_pool)
         .execute(conn)?;
 
-    pools::table.order(pools::id.desc()).first(conn)
+    pools::table.first(conn).map_err(|e| Error::NotFound)
+
+    // pools::table
+    //     .order(pools::id.desc())
+    //     .first(conn)
+    //     .map_err(|e| Error::NotFound)
 }
 
 pub fn batch_insert_pools(
@@ -71,6 +76,7 @@ pub fn update_pool(
             pools::chain.eq(updated_pool.chain.clone()),
             pools::factory_address.eq(updated_pool.factory_address.clone()),
             pools::exchange_name.eq(updated_pool.exchange_name.clone()),
+            pools::exchange_type.eq(updated_pool.exchange_type.clone()), // Add this line
             pools::token_a.eq(updated_pool.token_a.clone()),
             pools::token_a_symbol.eq(updated_pool.token_a_symbol.clone()),
             pools::token_a_decimals.eq(updated_pool.token_a_decimals),
