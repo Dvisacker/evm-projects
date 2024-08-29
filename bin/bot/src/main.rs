@@ -9,7 +9,7 @@ use artemis_core::{
     executors::mempool_executor::MempoolExecutor,
     types::{CollectorMap, ExecutorMap},
 };
-use bindings::iuniswapv2pair::IUniswapV2Pair;
+use bindings::{iuniswapv2pair::IUniswapV2Pair, iuniswapv3pool::IUniswapV3Pool};
 use clap::Parser;
 use dotenv::dotenv;
 use shared::config::get_chain_config;
@@ -55,18 +55,33 @@ async fn main() -> Result<()> {
     let block_collector = CollectorMap::new(block_collector, |block| Event::NewBlock(block));
     engine.add_collector(Box::new(block_collector));
 
-    let swap_filter = Filter::new()
+    let uniswap_v2_filter = Filter::new()
         .from_block(BlockNumberOrTag::Latest)
         .event(IUniswapV2Pair::Swap::SIGNATURE);
 
-    let swap_collector = Box::new(EventCollector::<_, IUniswapV2Pair::Swap>::new(
+    let uniswap_v3_filter = Filter::new()
+        .from_block(BlockNumberOrTag::Latest)
+        .event(IUniswapV3Pool::Swap::SIGNATURE);
+
+    let uniswap_v2_collector = Box::new(EventCollector::<_, IUniswapV2Pair::Swap>::new(
         provider.clone(),
-        swap_filter,
+        uniswap_v2_filter,
     ));
-    let swap_collector = CollectorMap::new(swap_collector, |event: IUniswapV2Pair::Swap| {
-        Event::UniswapV2Swap(event)
-    });
-    engine.add_collector(Box::new(swap_collector));
+    let uniswap_v2_collector =
+        CollectorMap::new(uniswap_v2_collector, |event: IUniswapV2Pair::Swap| {
+            Event::UniswapV2Swap(event)
+        });
+    engine.add_collector(Box::new(uniswap_v2_collector));
+
+    let uniswap_v3_collector = Box::new(EventCollector::<_, IUniswapV3Pool::Swap>::new(
+        provider.clone(),
+        uniswap_v3_filter,
+    ));
+    let uniswap_v3_collector =
+        CollectorMap::new(uniswap_v3_collector, |event: IUniswapV3Pool::Swap| {
+            Event::UniswapV3Swap(event)
+        });
+    engine.add_collector(Box::new(uniswap_v3_collector));
 
     info!("Adding strategy...");
     let strategy = UniTriArb::new(Arc::new(provider.clone()), signer, db_url);

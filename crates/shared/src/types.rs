@@ -9,7 +9,6 @@ pub struct Cycle(pub Vec<AMM>);
 
 impl fmt::Display for Cycle {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Cycle[")?;
         for (i, pool) in self.0.iter().enumerate() {
             if i > 0 {
                 write!(f, " -> ")?;

@@ -106,7 +106,17 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
                 return vec![];
             }
             Event::UniswapV2Swap(swap) => {
-                println!("New swap from {:?} on pool {:?}", swap.sender, swap.to);
+                println!(
+                    "New UniswapV2 swap from {:?} on pool {:?}",
+                    swap.sender, swap.to
+                );
+                return vec![];
+            }
+            Event::UniswapV3Swap(swap) => {
+                println!(
+                    "New UniswapV3 swap from {:?} on pool {:?}",
+                    swap.sender, swap.recipient
+                );
                 return vec![];
             }
             Event::UniswapV2Sync(_) => {
