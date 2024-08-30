@@ -12,3 +12,5 @@ pub mod log_collector;
 pub mod mempool_collector;
 
 pub mod event_collector;
+
+pub mod multi_log_collector;
