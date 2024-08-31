@@ -8,6 +8,9 @@ pub enum ExchangeName {
     SushiSwapV2,
     UniswapV3,
     SushiSwapV3,
+    CamelotV3,
+    RamsesV2,
+    PancakeswapV3,
     Unknown,
 }
 
@@ -25,6 +28,9 @@ impl ExchangeName {
             "uniswapv3" => Ok(ExchangeName::UniswapV3),
             "sushiswapv3" => Ok(ExchangeName::SushiSwapV3),
             "unknown" => Ok(ExchangeName::Unknown),
+            "camelotv3" => Ok(ExchangeName::CamelotV3),
+            "ramsesv2" => Ok(ExchangeName::RamsesV2),
+            "pancakeswapv3" => Ok(ExchangeName::PancakeswapV3),
             _ => Err(format!("Invalid exchange name: {}", s)),
         }
     }
@@ -35,6 +41,9 @@ impl ExchangeName {
             ExchangeName::SushiSwapV2 => "sushiswapv2",
             ExchangeName::UniswapV3 => "uniswapv3",
             ExchangeName::SushiSwapV3 => "sushiswapv3",
+            ExchangeName::CamelotV3 => "camelotv3",
+            ExchangeName::RamsesV2 => "ramsesv2",
+            ExchangeName::PancakeswapV3 => "pancakeswapv3",
             ExchangeName::Unknown => "unknown",
         }
     }

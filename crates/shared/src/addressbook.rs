@@ -77,6 +77,9 @@ pub struct UniV3Addresses {
 pub struct UniV3Exchanges {
     pub uniswapv3: UniV3Addresses,
     pub sushiswapv3: UniV3Addresses,
+    pub camelotv3: UniV3Addresses,
+    pub ramsesv2: UniV3Addresses,
+    pub pancakeswapv3: UniV3Addresses,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -113,6 +116,9 @@ pub fn get_exchange_type(exchange_name: ExchangeName) -> ExchangeType {
         ExchangeName::UniswapV3 => ExchangeType::UniV3,
         ExchangeName::SushiSwapV2 => ExchangeType::UniV2,
         ExchangeName::SushiSwapV3 => ExchangeType::UniV3,
+        ExchangeName::CamelotV3 => ExchangeType::UniV3,
+        ExchangeName::RamsesV2 => ExchangeType::UniV3,
+        ExchangeName::PancakeswapV3 => ExchangeType::UniV3,
         _ => panic!("Invalid exchange name"),
     }
 }
@@ -188,6 +194,9 @@ impl Addressbook {
             chain_config.exchanges.univ2.sushiswapv2.factory,
             chain_config.exchanges.univ3.uniswapv3.factory,
             chain_config.exchanges.univ3.sushiswapv3.factory,
+            chain_config.exchanges.univ3.camelotv3.factory,
+            chain_config.exchanges.univ3.ramsesv2.factory,
+            chain_config.exchanges.univ3.pancakeswapv3.factory,
         ]
     }
 
@@ -204,6 +213,9 @@ impl Addressbook {
         vec![
             chain_config.exchanges.univ3.uniswapv3.factory,
             chain_config.exchanges.univ3.sushiswapv3.factory,
+            chain_config.exchanges.univ3.camelotv3.factory,
+            chain_config.exchanges.univ3.ramsesv2.factory,
+            chain_config.exchanges.univ3.pancakeswapv3.factory,
         ]
     }
 

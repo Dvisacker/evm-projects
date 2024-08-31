@@ -40,10 +40,13 @@ struct GetNamedPoolsArgs {
 
 #[derive(Clone, ValueEnum)]
 enum ExchangeName {
-    UniswapV3,
-    SushiswapV3,
     UniswapV2,
     SushiswapV2,
+    UniswapV3,
+    SushiswapV3,
+    CamelotV3,
+    RamsesV2,
+    PancakeswapV3,
 }
 
 #[derive(Args)]
@@ -104,6 +107,11 @@ async fn main() -> Result<(), Error> {
                 ExchangeName::UniswapV3 => addressbook.arbitrum.exchanges.univ3.uniswapv3.factory,
                 ExchangeName::SushiswapV3 => {
                     addressbook.arbitrum.exchanges.univ3.sushiswapv3.factory
+                }
+                ExchangeName::CamelotV3 => addressbook.arbitrum.exchanges.univ3.camelotv3.factory,
+                ExchangeName::RamsesV2 => addressbook.arbitrum.exchanges.univ3.ramsesv2.factory,
+                ExchangeName::PancakeswapV3 => {
+                    addressbook.arbitrum.exchanges.univ3.pancakeswapv3.factory
                 }
                 _ => panic!("Choose a uniswap v3 exchange"),
             };

@@ -25,6 +25,15 @@
                 },
                 "sushiswapv3": {
                     "factory": "0x1af415a1EbA07a4986a52B6f2e7dE7003D82231e"
+                },
+                "camelotv3": {
+                    "factory": "0x1a3c9B1d2F0529D97f2afC5136Cc23e58f1FD35B"
+                },
+                "ramsesv2": {
+                    "factory": "0xAA2cd7477c451E703f3B9Ba5663334914763edF8"
+                },
+                "pancakeswapv3": {
+                    "factory": "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865"
                 }
             }
         },
