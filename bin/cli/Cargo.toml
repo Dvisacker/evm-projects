@@ -16,5 +16,7 @@ shared = { path = "../../crates/shared" }
 alloy-chains = "0.1.0"
 alloy = "0.2.1"
 dotenv = "0.15.0"
+tracing = "0.1.37"
+tracing-subscriber = "0.3.16"
 
 

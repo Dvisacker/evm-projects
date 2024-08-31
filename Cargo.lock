@@ -1859,6 +1859,8 @@ dependencies = [
  "generator",
  "shared",
  "tokio",
+ "tracing",
+ "tracing-subscriber",
  "uni-tri-arb-strategy",
 ]
 

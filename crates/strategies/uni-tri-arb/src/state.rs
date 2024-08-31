@@ -10,6 +10,7 @@ use db::establish_connection;
 use shared::types::Cycle;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
+use tracing::{info, Level};
 use types::exchange::{ExchangeName, ExchangeType};
 
 #[derive(Debug, Clone)]
@@ -36,7 +37,7 @@ impl<P: Provider + 'static> PoolState<P> {
 
     pub fn print_pools(&self) {
         for pool in self.pools.iter() {
-            println!("Pool: {}", pool.key().to_string().to_lowercase());
+            info!("Pool: {}", pool.key().to_string().to_lowercase());
         }
     }
 
@@ -98,7 +99,6 @@ impl<P: Provider + 'static> PoolState<P> {
 
     pub fn set_pools(&self, amms: Vec<AMM>) {
         for amm in amms {
-            println!("Setting pool: {:?}", amm.address());
             self.pools.insert(amm.address(), amm);
         }
     }
@@ -143,26 +143,17 @@ impl<P: Provider + 'static> PoolState<P> {
                 &mut HashSet::new(),
             );
 
-            println!("Found {} cycles", cycles.len());
+            info!("Found {} cycles", cycles.len());
 
             for cycle in cycles {
                 nb_cycles += 1;
                 let id = cycle.id.clone();
-                // println!("Inserting cycle id: {} for cycle: {}", id, cycle);
-                // insert each cycle into an <cycle_id, cycle> map
                 self.cycles.insert(id.clone(), cycle.clone());
 
-                // insert each cycle into a <pool_address, [cycle_id] map
                 for pool in &cycle.amms {
                     let pool_address = pool.address();
                     let pool_cycles = self.pools_cycles_map.get_mut(&pool_address);
                     if let Some(mut c) = pool_cycles {
-                        // let cyc = self.cycles.get(&id).unwrap().clone();
-                        // if let Some(c) = cyc {
-                        // println!(
-                        //     "Inserting cycle id: {} for cycle: {} into pool: {}",
-                        //     id, cycle, pool_address
-                        // );
                         c.insert(id.clone());
                     } else {
                         self.pools_cycles_map
@@ -172,14 +163,14 @@ impl<P: Provider + 'static> PoolState<P> {
             }
         }
 
-        println!("Found {} cycles", self.cycles.len());
-        println!("Nb cycles: {}", nb_cycles);
+        info!("Found {} cycles", self.cycles.len());
+        info!("Nb cycles: {}", nb_cycles);
     }
 
     pub async fn load_pools_from_checkpoint(&self, path: &str) -> Result<(), AMMError> {
         let (_, pools) =
             sync::checkpoint::sync_amms_from_checkpoint(path, 200, self.provider.clone()).await?;
-        println!("Loaded {} pools from checkpoint", pools.len());
+        info!("Loaded {} pools from checkpoint", pools.len());
         for pool in pools {
             self.pools.insert(pool.address(), pool);
         }
@@ -190,7 +181,7 @@ impl<P: Provider + 'static> PoolState<P> {
         let mut conn = establish_connection(db_url);
         let db_pools = db::get_filtered_pools(&mut conn, "arbitrum").unwrap();
 
-        println!("Loaded {} pools from db", db_pools.len());
+        info!("Loaded {} pools from db", db_pools.len());
         for pool in db_pools {
             let amm = shared::amm_utils::db_pool_to_amm(&pool).unwrap();
             self.pools.insert(amm.address(), amm);

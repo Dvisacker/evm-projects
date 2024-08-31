@@ -10,8 +10,8 @@ use anyhow::Result;
 use artemis_core::types::Strategy;
 use async_trait::async_trait;
 use bindings::{iuniswapv2pair::IUniswapV2Pair, iuniswapv3pool::IUniswapV3Pool};
-use shared::{addressbook::Addressbook, types::Cycle};
-use std::{collections::HashSet, sync::Arc};
+use shared::addressbook::Addressbook;
+use std::sync::Arc;
 use tracing::info;
 
 #[derive(Debug, Clone)]
@@ -42,7 +42,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
     for UniTriArb<P, S>
 {
     async fn init_state(&mut self) -> Result<()> {
-        println!("Initializing state...");
+        info!("Initializing state...");
 
         // update block number
         let block_number = self.client.get_block_number().await.unwrap();
@@ -74,28 +74,10 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
             .map(|entry| entry.1.clone())
             .collect::<Vec<_>>();
 
-        println!("Printing pools...");
-        self.pool_state.print_pools();
-
-        println!("Found {} arbitrage cycles", arb_cycles.len());
+        info!("Found {} arbitrage cycles", arb_cycles.len());
         for cycle in arb_cycles {
-            println!("{}: Profit: {}", cycle, cycle.get_profit_perc());
+            info!("{}: Profit: {}", cycle, cycle.get_profit_perc());
         }
-
-        // println!("Computing arbitrage cycles...");
-        // let arb_cycles = PoolState::<P>::get_cycles(
-        //     &synced_amms,
-        //     weth,
-        //     weth,
-        //     3,
-        //     &vec![],
-        //     &mut vec![],
-        //     &mut HashSet::new(),
-        // );
-
-        // let arb_cycles: Vec<Cycle> = arb_cycles
-        //     .into_iter()
-        //     .collect();
 
         Ok(())
     }
@@ -113,7 +95,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
     async fn process_event(&mut self, event: Event) -> Vec<Action> {
         match event {
             Event::NewBlock(event) => {
-                // println!("New block: {:?}", event);
+                // info!("New block: {:?}", event);
                 let block_number = event.number.to::<u64>();
                 self.pool_state
                     .update_block_number(block_number)
@@ -122,14 +104,14 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
                 return vec![];
             }
             Event::UniswapV2Swap(swap) => {
-                println!(
+                info!(
                     "New UniswapV2 swap from {:?} on pool {:?}",
                     swap.sender, swap.to
                 );
                 return vec![];
             }
             Event::UniswapV3Swap(swap) => {
-                println!(
+                info!(
                     "New UniswapV3 swap from {:?} on pool {:?}",
                     swap.sender, swap.recipient
                 );
@@ -140,14 +122,12 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
             }
             Event::Log(log) => {
                 let pool_address = log.address();
-                // let tx_hash = log.transaction_hash.unwrap();
-                // check if log is a swap in uniswap v2 or v3
                 if log.topics()[0] == IUniswapV2Pair::Swap::SIGNATURE_HASH {
                     let pool = self.pool_state.pools.get_mut(&pool_address);
                     if pool.is_some() {
                         let mut pool_ref = pool.unwrap();
                         let pool = pool_ref.value_mut();
-                        println!("New uniswap v2 swap on pool {:?}", pool.name());
+                        info!("New uniswap v2 swap on pool {:?}", pool.name());
                         let mut amm_slice: &mut [AMM] = std::slice::from_mut(pool);
                         sync::populate_amms(
                             &mut amm_slice,
@@ -158,51 +138,37 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
                         .unwrap();
 
                         let updated_cycles = self.pool_state.get_updated_cycles(amm_slice.to_vec());
-                        println!("Found {} updated cycles", updated_cycles.len());
+                        info!("Found {} updated cycles", updated_cycles.len());
                         for cycle in updated_cycles {
-                            println!("{}: Profit: {}", cycle, cycle.get_profit_perc());
+                            info!("{}: Profit: {}", cycle, cycle.get_profit_perc());
                         }
                     } else {
-                        println!("New uniswap v2 swap on unknown pool {:?}", pool_address);
+                        info!("New uniswap v2 swap on unknown pool {:?}", pool_address);
                     }
                 } else if log.topics()[0] == IUniswapV3Pool::Swap::SIGNATURE_HASH {
                     let pool = self.pool_state.pools.get_mut(&pool_address);
                     if pool.is_some() {
                         let mut pool_ref = pool.unwrap();
                         let pool = pool_ref.value_mut();
-                        println!("New uniswap v3 swap on pool {:?}", pool.name());
-                        let amm_slice: &mut [AMM] = std::slice::from_mut(pool);
-                        sync::populate_amms(
-                            amm_slice,
-                            self.pool_state.block_number,
-                            self.client.clone(),
-                        )
-                        .await
-                        .unwrap();
+                        let price_before = pool.calculate_price(pool.tokens()[0]).unwrap();
+                        pool.sync_from_log(log).unwrap();
+                        let price_after = pool.calculate_price(pool.tokens()[0]).unwrap();
+                        info!(
+                            "New uniswap v3 swap on pool {:?}. Price: {:?} -> {:?}",
+                            pool.name(),
+                            price_before,
+                            price_after
+                        );
 
+                        let amm_slice: &mut [AMM] = std::slice::from_mut(pool);
                         let updated_cycles = self.pool_state.get_updated_cycles(amm_slice.to_vec());
-                        println!("Found {} updated cycles", updated_cycles.len());
+                        info!("Found {} updated cycles", updated_cycles.len());
                         for cycle in updated_cycles {
-                            println!("{}: Profit: {}", cycle, cycle.get_profit_perc());
+                            info!("{}: Profit: {}", cycle, cycle.get_profit_perc());
                         }
                     } else {
-                        println!("New uniswap v3 swap on unknown pool {:?}", pool_address);
+                        info!("New uniswap v3 swap on unknown pool {:?}", pool_address);
                     }
-
-                    // if let Some(p) = updated_pool {
-                    //     println!("New uniswap v3 swap on pool {:?}", p.name());
-                    //     // let mut amm_slice: &mut [AMM] = std::slice::from_mut(pool);
-                    //     sync::populate_amms(
-                    //         &mut [updated_pool],
-                    //         self.pool_state.block_number,
-                    //         self.client.clone(),
-                    //     )
-                    //     .await
-                    //     .unwrap();
-                    // }
-
-                    //     self.pool_state.set_pools(vec![pool.clone()]);
-                    //     println!("Set pools");
                 }
                 return vec![];
             }

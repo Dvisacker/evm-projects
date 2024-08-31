@@ -6,6 +6,7 @@ use shared::amm_utils::{filter_amms, store_uniswap_v2_pools, store_uniswap_v3_po
 use shared::config::get_chain_config;
 use shared::token_utils::load_pools_and_fetch_token_data;
 use std::sync::Arc;
+use tracing::{error, info};
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -81,7 +82,7 @@ async fn main() -> Result<(), Error> {
             let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
             let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
             let filtered_amms = filter_amms(chain, args.min_usd, &db_url).await?;
-            println!("Filtered AMMs: {:?}", filtered_amms.len());
+            info!("Filtered AMMs: {:?}", filtered_amms.len());
         }
 
         Commands::GetNamedPools(args) => {
@@ -91,7 +92,7 @@ async fn main() -> Result<(), Error> {
 
             load_pools_and_fetch_token_data(provider).await?;
 
-            println!("Token data has been fetched and saved to tokens.json");
+            info!("Token data has been fetched and saved to tokens.json");
         }
         Commands::GetUniswapV3Pools(args) => {
             let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
@@ -113,7 +114,7 @@ async fn main() -> Result<(), Error> {
             let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
 
             for block in (from_block..=to_block).step_by(step as usize) {
-                println!(
+                info!(
                     "Fetching pools from block {:?} to {:?}",
                     block,
                     block + step - 1
@@ -130,7 +131,7 @@ async fn main() -> Result<(), Error> {
                 .await?;
             }
 
-            // println!(
+            // info!(
             //     "{:?} pools have been fetched and stored in the database.",
             //     args.exchange
             // );

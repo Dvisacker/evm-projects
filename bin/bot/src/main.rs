@@ -42,7 +42,7 @@ async fn main() -> Result<()> {
     dotenv().ok();
     // env_logger::init();
     let filter = filter::Targets::new()
-        .with_target("uni-tri-arb", Level::INFO)
+        .with_target("uni_tri_arb_strategy", Level::INFO)
         .with_target("artemis_core", Level::INFO);
     tracing_subscriber::registry()
         .with(tracing_subscriber::fmt::layer())
