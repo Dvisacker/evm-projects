@@ -8,7 +8,7 @@ use amms::sync;
 use dashmap::DashMap;
 use db::establish_connection;
 use shared::types::Cycle;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 use types::exchange::{ExchangeName, ExchangeType};
 
@@ -17,14 +17,26 @@ pub struct PoolState<P: Provider> {
     provider: Arc<P>,
     pub block_number: u64,
     pub pools: DashMap<Address, AMM>,
+    pub pools_cycles_map: DashMap<Address, HashSet<String>>, // map of pool address to all cycles that include the pool
+    pub cycles: HashMap<String, Cycle>,                      // map of cycle id to cycle
+    pub inventory: Vec<Address>,                             // list of tokens that can be traded
 }
 
 impl<P: Provider + 'static> PoolState<P> {
-    pub fn new(provider: Arc<P>) -> Self {
+    pub fn new(provider: Arc<P>, inventory: Vec<Address>) -> Self {
         Self {
             provider,
+            inventory,
             block_number: 0,
             pools: DashMap::new(),
+            pools_cycles_map: DashMap::new(),
+            cycles: HashMap::new(),
+        }
+    }
+
+    pub fn print_pools(&self) {
+        for pool in self.pools.iter() {
+            println!("Pool: {}", pool.key().to_string().to_lowercase());
         }
     }
 
@@ -64,7 +76,8 @@ impl<P: Provider + 'static> PoolState<P> {
             if temp_out == token_out {
                 let mut pools = current_pairs.clone();
                 pools.push(pair.clone());
-                circles_copy.push(Cycle(pools));
+                let cycle = Cycle::new(pools);
+                circles_copy.push(cycle);
             } else if max_hops > 1 {
                 let mut new_pairs: Vec<AMM> = current_pairs.clone();
                 new_pairs.push(pair.clone());
@@ -81,6 +94,86 @@ impl<P: Provider + 'static> PoolState<P> {
         }
 
         circles_copy
+    }
+
+    pub fn set_pools(&self, amms: Vec<AMM>) {
+        for amm in amms {
+            println!("Setting pool: {:?}", amm.address());
+            self.pools.insert(amm.address(), amm);
+        }
+    }
+
+    pub fn get_updated_cycles(&self, amms: Vec<AMM>) -> Vec<Cycle> {
+        // get the cycles that include the amms
+        let mut cycles = vec![];
+        for amm in amms {
+            let pool_address = amm.address();
+            let pool_cycles = self.pools_cycles_map.get(&pool_address);
+            if let Some(c) = pool_cycles {
+                // flat map of the cycle ids
+                let cycle_ids = c.iter().collect::<Vec<_>>();
+                for cycle_id in cycle_ids {
+                    let cycle = self.cycles.get(cycle_id).unwrap().clone();
+                    cycles.push(cycle);
+                }
+            }
+        }
+
+        return cycles;
+    }
+
+    pub fn update_cycles(&mut self) {
+        let mut nb_cycles = 0;
+        for token in self.inventory.iter() {
+            // get all the tracked pools
+            let pools = self
+                .pools
+                .iter()
+                .map(|entry| entry.value().clone())
+                .collect::<Vec<_>>();
+
+            // compute all potential cycles
+            let cycles = Self::get_cycles(
+                &pools,
+                token.clone(),
+                token.clone(),
+                3,
+                &vec![],
+                &mut vec![],
+                &mut HashSet::new(),
+            );
+
+            println!("Found {} cycles", cycles.len());
+
+            for cycle in cycles {
+                nb_cycles += 1;
+                let id = cycle.id.clone();
+                // println!("Inserting cycle id: {} for cycle: {}", id, cycle);
+                // insert each cycle into an <cycle_id, cycle> map
+                self.cycles.insert(id.clone(), cycle.clone());
+
+                // insert each cycle into a <pool_address, [cycle_id] map
+                for pool in &cycle.amms {
+                    let pool_address = pool.address();
+                    let pool_cycles = self.pools_cycles_map.get_mut(&pool_address);
+                    if let Some(mut c) = pool_cycles {
+                        // let cyc = self.cycles.get(&id).unwrap().clone();
+                        // if let Some(c) = cyc {
+                        // println!(
+                        //     "Inserting cycle id: {} for cycle: {} into pool: {}",
+                        //     id, cycle, pool_address
+                        // );
+                        c.insert(id.clone());
+                    } else {
+                        self.pools_cycles_map
+                            .insert(pool_address, HashSet::from([id.clone()]));
+                    }
+                }
+            }
+        }
+
+        println!("Found {} cycles", self.cycles.len());
+        println!("Nb cycles: {}", nb_cycles);
     }
 
     pub async fn load_pools_from_checkpoint(&self, path: &str) -> Result<(), AMMError> {

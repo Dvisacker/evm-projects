@@ -28,7 +28,7 @@ dashmap = "6.0.1"
 shared = { path = "../../shared" }
 db = { path = "../../db" }
 types = { path = "../../types" }
-
+alloy-sol-types = "0.8.0"
 [features]
 integration-tests = []
 
