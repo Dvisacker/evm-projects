@@ -2,7 +2,7 @@
 
 diesel::table! {
     exchanges (id) {
-        id -> Nullable<Integer>,
+        id -> Integer,
         chain -> Text,
         factory_address -> Nullable<Text>,
         exchange_name -> Text,
@@ -31,7 +31,4 @@ diesel::table! {
     }
 }
 
-diesel::allow_tables_to_appear_in_same_query!(
-    exchanges,
-    pools,
-);
+diesel::allow_tables_to_appear_in_same_query!(exchanges, pools,);

@@ -29,7 +29,7 @@ pub struct NewPool {
     pub chain: String,
     pub factory_address: String,
     pub exchange_name: String,
-    pub exchange_type: String, // Add this line
+    pub exchange_type: String,
     pub token_a: String,
     pub token_a_symbol: String,
     pub token_a_decimals: i32,

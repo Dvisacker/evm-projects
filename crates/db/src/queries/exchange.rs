@@ -35,3 +35,16 @@ pub fn get_exchange_by_name(
         .filter(exchanges::exchange_name.eq(name))
         .first(conn)
 }
+
+pub fn get_exchanges_by_chain(
+    conn: &mut SqliteConnection,
+    chain: &str,
+) -> QueryResult<Vec<Exchange>> {
+    exchanges::table
+        .filter(exchanges::chain.eq(chain))
+        .load::<Exchange>(conn)
+}
+
+pub fn get_all_exchanges(conn: &mut SqliteConnection) -> QueryResult<Vec<Exchange>> {
+    exchanges::table.load::<Exchange>(conn)
+}
