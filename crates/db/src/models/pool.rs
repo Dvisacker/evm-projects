@@ -22,7 +22,7 @@ pub struct Pool {
     pub filtered: bool,
 }
 
-#[derive(Insertable)]
+#[derive(Insertable, Debug)]
 #[diesel(table_name = pools)]
 pub struct NewPool {
     pub address: String,

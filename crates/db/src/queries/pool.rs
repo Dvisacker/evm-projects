@@ -118,6 +118,39 @@ pub fn delete_pool(conn: &mut SqliteConnection, pool_address: &str) -> Result<us
     diesel::delete(pools::table.filter(pools::address.eq(pool_address))).execute(conn)
 }
 
+pub fn get_pools(
+    conn: &mut SqliteConnection,
+    chain_name: Option<&str>,
+    exchange_name: Option<&str>,
+    exchange_type: Option<&str>,
+    limit: Option<i64>,
+    filtered: Option<bool>,
+) -> Result<Vec<Pool>, Error> {
+    let mut query = pools::table.into_boxed();
+
+    if let Some(chain_name) = chain_name {
+        query = query.filter(pools::chain.eq(chain_name));
+    }
+
+    if let Some(exchange_name) = exchange_name {
+        query = query.filter(pools::exchange_name.eq(exchange_name));
+    }
+
+    if let Some(exchange_type) = exchange_type {
+        query = query.filter(pools::exchange_type.eq(exchange_type));
+    }
+
+    if let Some(limit) = limit {
+        query = query.limit(limit);
+    }
+
+    if let Some(filtered) = filtered {
+        query = query.filter(pools::filtered.eq(filtered));
+    }
+
+    query.load::<Pool>(conn)
+}
+
 // Add a new function to get pools by chain
 pub fn get_pools_by_chain(
     conn: &mut SqliteConnection,
@@ -138,20 +171,20 @@ pub fn get_pools_by_exchange(
         .load::<Pool>(conn)
 }
 
-pub fn get_pools(
-    conn: &mut SqliteConnection,
-    chain_name: &str,
-    exchange_name: &str,
-    exchange_type: &str,
-    limit: i64,
-) -> Result<Vec<Pool>, Error> {
-    pools::table
-        .filter(pools::chain.eq(chain_name))
-        .filter(pools::exchange_name.eq(exchange_name))
-        .filter(pools::exchange_type.eq(exchange_type))
-        .limit(limit)
-        .load::<Pool>(conn)
-}
+// pub fn get_pools(
+//     conn: &mut SqliteConnection,
+//     chain_name: &str,
+//     exchange_name: &str,
+//     exchange_type: &str,
+//     limit: i64,
+// ) -> Result<Vec<Pool>, Error> {
+//     pools::table
+//         .filter(pools::chain.eq(chain_name))
+//         .filter(pools::exchange_name.eq(exchange_name))
+//         .filter(pools::exchange_type.eq(exchange_type))
+//         .limit(limit)
+//         .load::<Pool>(conn)
+// }
 
 pub fn batch_update_filtered(
     conn: &mut SqliteConnection,

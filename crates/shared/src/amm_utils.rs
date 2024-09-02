@@ -161,10 +161,7 @@ pub async fn filter_amms(
         .map(|addr| Factory::UniswapV3Factory(UniswapV3Factory::new(addr, 0)))
         .collect();
 
-    let amms = pools
-        .iter()
-        .map(|pool| db_pool_to_amm(pool))
-        .collect::<Result<Vec<AMM>, AMMError>>()?;
+    let amms = db_pools_to_amms(&pools)?;
 
     let mut v2_pools = amms
         .iter()
@@ -243,49 +240,54 @@ pub async fn filter_amms(
     Ok(filtered_pools)
 }
 
-pub fn db_pool_to_amm(pool: &Pool) -> Result<AMM, AMMError> {
-    let address: Address = pool.address.parse().unwrap();
-    let token0: Address = pool.token_a.parse().unwrap();
-    let token1: Address = pool.token_b.parse().unwrap();
-    let exchange_type: ExchangeType = ExchangeType::from_str(&pool.exchange_type).unwrap();
-    let exchange_name: ExchangeName = ExchangeName::from_str(&pool.exchange_name).unwrap();
-    let chain: Chain = Chain::try_from(pool.chain.parse::<NamedChain>().unwrap()).unwrap();
+pub fn db_pools_to_amms(pools: &[Pool]) -> Result<Vec<AMM>, AMMError> {
+    pools
+        .iter()
+        .map(|pool| {
+            let address: Address = pool.address.parse().unwrap();
+            let token0: Address = pool.token_a.parse().unwrap();
+            let token1: Address = pool.token_b.parse().unwrap();
+            let exchange_type: ExchangeType = ExchangeType::from_str(&pool.exchange_type).unwrap();
+            let exchange_name: ExchangeName = ExchangeName::from_str(&pool.exchange_name).unwrap();
+            let chain: Chain = Chain::try_from(pool.chain.parse::<NamedChain>().unwrap()).unwrap();
 
-    match exchange_type {
-        ExchangeType::UniV2 => Ok(AMM::UniswapV2Pool(UniswapV2Pool {
-            address,
-            token_a: token0,
-            token_a_decimals: pool.token_a_decimals as u8,
-            token_a_symbol: pool.token_a_symbol.clone(),
-            token_b: token1,
-            token_b_decimals: pool.token_b_decimals as u8,
-            token_b_symbol: pool.token_b_symbol.clone(),
-            reserve_0: pool.reserve_0.parse().unwrap(),
-            reserve_1: pool.reserve_1.parse().unwrap(),
-            fee: pool.fee as u32,
-            exchange_name,
-            exchange_type,
-            chain: chain.named().unwrap(),
-        })),
-        ExchangeType::UniV3 => Ok(AMM::UniswapV3Pool(UniswapV3Pool {
-            address,
-            token_a: token0,
-            token_a_decimals: pool.token_a_decimals as u8,
-            token_a_symbol: pool.token_a_symbol.clone(),
-            token_b: token1,
-            token_b_decimals: pool.token_b_decimals as u8,
-            token_b_symbol: pool.token_b_symbol.clone(),
-            liquidity: 0,
-            sqrt_price: U256::from(0),
-            tick: 0,
-            tick_spacing: 0,
-            tick_bitmap: HashMap::new(),
-            ticks: HashMap::new(),
-            fee: pool.fee as u32,
-            exchange_name,
-            exchange_type,
-            chain: chain.named().unwrap(),
-        })),
-        _ => panic!("Unsupported exchange type"),
-    }
+            match exchange_type {
+                ExchangeType::UniV2 => Ok(AMM::UniswapV2Pool(UniswapV2Pool {
+                    address,
+                    token_a: token0,
+                    token_a_decimals: pool.token_a_decimals as u8,
+                    token_a_symbol: pool.token_a_symbol.clone(),
+                    token_b: token1,
+                    token_b_decimals: pool.token_b_decimals as u8,
+                    token_b_symbol: pool.token_b_symbol.clone(),
+                    reserve_0: pool.reserve_0.parse().unwrap(),
+                    reserve_1: pool.reserve_1.parse().unwrap(),
+                    fee: pool.fee as u32,
+                    exchange_name,
+                    exchange_type,
+                    chain: chain.named().unwrap(),
+                })),
+                ExchangeType::UniV3 => Ok(AMM::UniswapV3Pool(UniswapV3Pool {
+                    address,
+                    token_a: token0,
+                    token_a_decimals: pool.token_a_decimals as u8,
+                    token_a_symbol: pool.token_a_symbol.clone(),
+                    token_b: token1,
+                    token_b_decimals: pool.token_b_decimals as u8,
+                    token_b_symbol: pool.token_b_symbol.clone(),
+                    liquidity: 0,
+                    sqrt_price: U256::from(0),
+                    tick: 0,
+                    tick_spacing: 0,
+                    tick_bitmap: HashMap::new(),
+                    ticks: HashMap::new(),
+                    fee: pool.fee as u32,
+                    exchange_name,
+                    exchange_type,
+                    chain: chain.named().unwrap(),
+                })),
+                _ => panic!("Unsupported exchange type"),
+            }
+        })
+        .collect()
 }

@@ -14,20 +14,22 @@ use tracing::info;
 use types::exchange::{ExchangeName, ExchangeType};
 
 #[derive(Debug, Clone)]
-pub struct PoolState<P: Provider> {
+pub struct State<P: Provider> {
     provider: Arc<P>,
     pub block_number: u64,
+    pub inactive_pools: DashMap<Address, AMM>,
     pub pools: DashMap<Address, AMM>,
     pub pools_cycles_map: DashMap<Address, HashSet<String>>, // map of pool address to all cycles that include the pool
     pub cycles: HashMap<String, Cycle>,                      // map of cycle id to cycle
     pub inventory: Vec<Address>,                             // list of tokens that can be traded
 }
 
-impl<P: Provider + 'static> PoolState<P> {
+impl<P: Provider + 'static> State<P> {
     pub fn new(provider: Arc<P>, inventory: Vec<Address>) -> Self {
         Self {
             provider,
             inventory,
+            inactive_pools: DashMap::new(),
             block_number: 0,
             pools: DashMap::new(),
             pools_cycles_map: DashMap::new(),
@@ -103,6 +105,12 @@ impl<P: Provider + 'static> PoolState<P> {
         }
     }
 
+    pub fn set_inactive_pools(&self, amms: Vec<AMM>) {
+        for amm in amms {
+            self.inactive_pools.insert(amm.address(), amm);
+        }
+    }
+
     pub fn get_updated_cycles(&self, amms: Vec<AMM>) -> Vec<Cycle> {
         // get the cycles that include the amms
         let mut cycles = vec![];
@@ -165,30 +173,6 @@ impl<P: Provider + 'static> PoolState<P> {
 
         info!("Found {} cycles", self.cycles.len());
         info!("Nb cycles: {}", nb_cycles);
-    }
-
-    pub async fn load_pools_from_checkpoint(&self, path: &str) -> Result<(), AMMError> {
-        let (_, pools) =
-            sync::checkpoint::sync_amms_from_checkpoint(path, 200, self.provider.clone()).await?;
-        info!("Loaded {} pools from checkpoint", pools.len());
-        for pool in pools {
-            self.pools.insert(pool.address(), pool);
-        }
-        Ok(())
-    }
-
-    pub async fn load_pools_from_db(&self, db_url: &str) -> Result<(), AMMError> {
-        let mut conn = establish_connection(db_url);
-        let db_pools = db::queries::pool::get_filtered_pools(&mut conn, "arbitrum").unwrap();
-        // let db_pools = db::queries::pool::get_pools_by_chain(&mut conn, "arbitrum").unwrap();
-
-        info!("Loaded {} pools from db", db_pools.len());
-        for pool in db_pools {
-            let amm = shared::amm_utils::db_pool_to_amm(&pool).unwrap();
-            self.pools.insert(amm.address(), amm);
-        }
-
-        Ok(())
     }
 
     pub async fn add_pools(&self, addresses: Vec<Address>) -> Result<(), AMMError> {

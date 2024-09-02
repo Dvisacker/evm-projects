@@ -1,5 +1,6 @@
+use crate::state::State;
+
 use super::types::{Action, Event};
-use crate::state::PoolState;
 use alloy::{providers::Provider, signers::Signer, sol_types::SolEvent};
 use alloy_chains::NamedChain;
 use amms::{
@@ -15,7 +16,7 @@ use async_trait::async_trait;
 use bindings::iuniswapv2pair::IUniswapV2Pair;
 use db::queries::{exchange::get_exchanges_by_chain, pool::batch_upsert_pools};
 use db::{establish_connection, models::NewPool};
-use shared::{addressbook::Addressbook, utils::bytes32_to_string};
+use shared::{addressbook::Addressbook, amm_utils::db_pools_to_amms, utils::bytes32_to_string};
 use std::sync::Arc;
 use tracing::info;
 
@@ -23,7 +24,7 @@ use tracing::info;
 pub struct UniTriArb<P: Provider + 'static, S: Signer> {
     addressbook: Addressbook,
     pub client: Arc<P>,
-    pub pool_state: PoolState<P>,
+    pub state: State<P>,
     pub tx_signer: S,
     pub db_url: String,
 }
@@ -35,7 +36,7 @@ impl<P: Provider + 'static, S: Signer> UniTriArb<P, S> {
         Self {
             addressbook,
             client: client.clone(),
-            pool_state: PoolState::new(client.clone(), vec![weth]),
+            state: State::new(client.clone(), vec![weth]),
             tx_signer: signer,
             db_url,
         }
@@ -51,29 +52,43 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
 
         // update block number
         let block_number = self.client.get_block_number().await.unwrap();
-        self.pool_state
-            .update_block_number(block_number)
-            .await
-            .unwrap();
+        self.state.update_block_number(block_number).await.unwrap();
 
-        self.pool_state
-            .load_pools_from_db(&self.db_url)
-            .await
-            .unwrap();
+        let active_pools = db::queries::pool::get_pools(
+            &mut establish_connection(&self.db_url),
+            Some("arbitrum"),
+            None,
+            None,
+            None,
+            Some(true),
+        )
+        .unwrap();
 
-        let amms = self.pool_state.get_all_pools().await;
-        let (mut uniswap_v2_pools, mut uniswap_v3_pools, _) = sort_amms(amms);
+        let inactive_pools = db::queries::pool::get_pools(
+            &mut establish_connection(&self.db_url),
+            Some("arbitrum"),
+            None,
+            None,
+            None,
+            Some(false),
+        )
+        .unwrap();
+
+        let inactive_amms = db_pools_to_amms(&inactive_pools)?;
+        self.state.set_inactive_pools(inactive_amms);
+
+        let active_amms = db_pools_to_amms(&active_pools)?;
+        let (mut uniswap_v2_pools, mut uniswap_v3_pools, _) = sort_amms(active_amms);
 
         sync::populate_amms(&mut uniswap_v2_pools, block_number, self.client.clone()).await?;
         sync::populate_amms(&mut uniswap_v3_pools, block_number, self.client.clone()).await?;
         let synced_amms = vec![uniswap_v2_pools, uniswap_v3_pools].concat();
-
-        self.pool_state.set_pools(synced_amms);
-        self.pool_state.update_cycles();
+        self.state.set_pools(synced_amms);
+        self.state.update_cycles();
         // let profit_threshold = -0.99;
 
         let arb_cycles = self
-            .pool_state
+            .state
             .cycles
             .iter()
             .map(|entry| entry.1.clone())
@@ -89,7 +104,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
 
     async fn sync_state(&mut self) -> Result<()> {
         info!("Syncing state...");
-        self.pool_state
+        self.state
             .update_pools()
             .await
             .map_err(|e| anyhow::anyhow!("Failed to sync pools: {}", e))?;
@@ -102,10 +117,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
             Event::NewBlock(event) => {
                 // info!("New block: {:?}", event);
                 let block_number = event.number.to::<u64>();
-                self.pool_state
-                    .update_block_number(block_number)
-                    .await
-                    .unwrap();
+                self.state.update_block_number(block_number).await.unwrap();
                 return vec![];
             }
             Event::UniswapV2Swap(swap) => {
@@ -128,7 +140,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
             Event::Log(log) => {
                 let pool_address = log.address();
                 if log.topics()[0] == IUniswapV2Pair::Swap::SIGNATURE_HASH {
-                    let pool = self.pool_state.pools.get_mut(&pool_address);
+                    let pool = self.state.pools.get_mut(&pool_address);
                     if pool.is_some() {
                         let mut pool_ref = pool.unwrap();
                         let pool = pool_ref.value_mut();
@@ -136,17 +148,19 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
                         let mut amm_slice: &mut [AMM] = std::slice::from_mut(pool);
                         sync::populate_amms(
                             &mut amm_slice,
-                            self.pool_state.block_number,
+                            self.state.block_number,
                             self.client.clone(),
                         )
                         .await
                         .unwrap();
 
-                        let updated_cycles = self.pool_state.get_updated_cycles(amm_slice.to_vec());
+                        let updated_cycles = self.state.get_updated_cycles(amm_slice.to_vec());
                         info!("Found {} updated cycles", updated_cycles.len());
                         for cycle in updated_cycles {
                             info!("{}: Profit: {}", cycle, cycle.get_profit_perc());
                         }
+                    } else if self.state.inactive_pools.contains_key(&pool_address) {
+                        info!("New uniswap v2 swap on inactive pool {:?}", pool_address);
                     } else {
                         info!("New uniswap v2 swap on unknown pool {:?}", pool_address);
                         let provider = self.client.clone();
@@ -245,7 +259,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
                         }
                     }
                 } else if log.topics()[0] == IUniswapV3Pool::Swap::SIGNATURE_HASH {
-                    let pool = self.pool_state.pools.get_mut(&pool_address);
+                    let pool = self.state.pools.get_mut(&pool_address);
                     if pool.is_some() {
                         let mut pool_ref = pool.unwrap();
                         let pool = pool_ref.value_mut();
@@ -260,11 +274,13 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
                         );
 
                         let amm_slice: &mut [AMM] = std::slice::from_mut(pool);
-                        let updated_cycles = self.pool_state.get_updated_cycles(amm_slice.to_vec());
+                        let updated_cycles = self.state.get_updated_cycles(amm_slice.to_vec());
                         info!("Found {} updated cycles", updated_cycles.len());
                         for cycle in updated_cycles {
                             info!("{}: Profit: {}", cycle, cycle.get_profit_perc());
                         }
+                    } else if self.state.inactive_pools.contains_key(&pool_address) {
+                        info!("New uniswap v3 swap on inactive pool {:?}", pool_address);
                     } else {
                         info!("New uniswap v3 swap on unknown pool {:?}", pool_address);
                         let provider = self.client.clone();
