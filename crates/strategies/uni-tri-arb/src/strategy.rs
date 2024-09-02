@@ -3,14 +3,19 @@ use crate::state::PoolState;
 use alloy::{providers::Provider, signers::Signer, sol_types::SolEvent};
 use alloy_chains::NamedChain;
 use amms::{
-    amm::{AutomatedMarketMaker, AMM},
+    amm::{
+        common::fetch_pool_data_batch_request, uniswap_v3::IUniswapV3Pool, AutomatedMarketMaker,
+        AMM,
+    },
     sync::{self, checkpoint::sort_amms},
 };
 use anyhow::Result;
 use artemis_core::types::Strategy;
 use async_trait::async_trait;
-use bindings::{iuniswapv2pair::IUniswapV2Pair, iuniswapv3pool::IUniswapV3Pool};
-use shared::addressbook::Addressbook;
+use bindings::iuniswapv2pair::IUniswapV2Pair;
+use db::{establish_connection, models::NewPool};
+use db::queries::pool::batch_upsert_pools;
+use shared::{addressbook::Addressbook, utils::bytes32_to_string};
 use std::sync::Arc;
 use tracing::info;
 
@@ -144,6 +149,48 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
                         }
                     } else {
                         info!("New uniswap v2 swap on unknown pool {:?}", pool_address);
+                        let provider = self.client.clone();
+                        let pool_data = fetch_pool_data_batch_request(vec![pool_address], provider)
+                            .await
+                            .unwrap();
+
+                        if let Some(pool_data) = pool_data.as_array() {
+                            let token_a = pool_data[0].as_address().unwrap();
+                            let token_a_symbol = pool_data[1].as_bytes().unwrap();
+                            let token_a_decimals = pool_data[2].as_uint().unwrap();
+                            let token_b = pool_data[3].as_address().unwrap();
+                            let token_b_symbol = pool_data[4].as_bytes().unwrap();
+                            let token_b_decimals = pool_data[5].as_uint().unwrap();
+                            let factory = pool_data[6].as_address().unwrap();
+                            let reserve_0 = pool_data[7].as_uint().unwrap();
+                            let reserve_1 = pool_data[8].as_uint().unwrap();
+                            let fee = pool_data[9].as_uint().unwrap();
+
+                            let new_pool = NewPool {
+                                address: pool_address.to_string(),
+                                chain: "arbitrum".to_string(),
+                                factory_address: factory.to_string(),
+                                exchange_name: "unknown".to_string(),
+                                exchange_type: "univ2".to_string(),
+                                token_a: token_a.to_string(),
+                                token_a_symbol: bytes32_to_string(token_a_symbol),
+                                token_a_decimals: token_a_decimals.0.to::<i32>(),
+                                token_b: token_b.to_string(),
+                                token_b_symbol: bytes32_to_string(token_b_symbol),
+                                token_b_decimals: token_b_decimals.0.to::<i32>(),
+                                reserve_0: reserve_0.0.to::<u128>().to_string(),
+                                reserve_1: reserve_1.0.to::<u128>().to_string(),
+                                fee: fee.0.to::<i32>(),
+                                filtered: false,
+                            };
+
+                            let mut conn = establish_connection(&self.db_url);
+                            batch_upsert_pools(&mut conn, &vec![new_pool]).unwrap();
+                            info!(
+                                "Inserted unknown v2 pool {:?}:{:?}-{:?}",
+                                pool_address, token_a_symbol, token_b_symbol
+                            );
+                        }
                     }
                 } else if log.topics()[0] == IUniswapV3Pool::Swap::SIGNATURE_HASH {
                     let pool = self.pool_state.pools.get_mut(&pool_address);
@@ -168,6 +215,60 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
                         }
                     } else {
                         info!("New uniswap v3 swap on unknown pool {:?}", pool_address);
+                        let provider = self.client.clone();
+                        let pool_data = fetch_pool_data_batch_request(vec![pool_address], provider)
+                            .await
+                            .unwrap();
+
+                        if let Some(pool_data) = pool_data.as_array() {
+                            let pool_data = pool_data[0].as_tuple().unwrap();
+                            let token_a = pool_data[0].as_address().unwrap();
+                            let token_a_symbol = pool_data[1].as_bytes().unwrap();
+                            let token_a_decimals = pool_data[2].as_uint().unwrap();
+                            let token_b = pool_data[3].as_address().unwrap();
+                            let token_b_symbol = pool_data[4].as_bytes().unwrap();
+                            let token_b_decimals = pool_data[5].as_uint().unwrap();
+                            let factory = pool_data[6].as_address().unwrap();
+                            let reserve_0 = pool_data[7].as_uint().unwrap();
+                            let reserve_1 = pool_data[8].as_uint().unwrap();
+                            let fee = pool_data[9].as_uint().unwrap();
+
+                            // assign the exchange name if found in v3 factories
+                            let exchange_name = if self
+                                .addressbook
+                                .get_v3_factories(&NamedChain::Arbitrum)
+                                .contains(&factory)
+                            {
+                                "uniswapv3"
+                            } else {
+                                "unknown"
+                            };
+
+                            let new_pool = NewPool {
+                                address: pool_address.to_string(),
+                                chain: "arbitrum".to_string(),
+                                factory_address: factory.to_string(),
+                                exchange_name: "unknown".to_string(),
+                                exchange_type: "univ3".to_string(),
+                                token_a: token_a.to_string(),
+                                token_a_symbol: bytes32_to_string(token_a_symbol),
+                                token_a_decimals: token_a_decimals.0.to::<i32>(),
+                                token_b: token_b.to_string(),
+                                token_b_symbol: bytes32_to_string(token_b_symbol),
+                                token_b_decimals: token_b_decimals.0.to::<i32>(),
+                                reserve_0: reserve_0.0.to::<u128>().to_string(),
+                                reserve_1: reserve_1.0.to::<u128>().to_string(),
+                                fee: fee.0.to::<i32>(),
+                                filtered: false,
+                            };
+
+                            let mut conn = establish_connection(&self.db_url);
+                            batch_upsert_pools(&mut conn, &vec![new_pool]).unwrap();
+                            info!(
+                                "Inserted unknown v3 pool {:?}:{:?}-{:?}",
+                                pool_address, token_a_symbol, token_b_symbol
+                            );
+                        }
                     }
                 }
                 return vec![];

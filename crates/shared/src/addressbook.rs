@@ -219,6 +219,22 @@ impl Addressbook {
         ]
     }
 
+    // pub fn get_exchange_name(&self, chain: &NamedChain, factory: Address) -> Option<ExchangeName> {
+    //     let addressbook = self.get_chain_address_book(chain).unwrap();
+    //     let factory = addressbook.exchanges.univ2.uniswapv2.factory;
+
+    //     match factory {
+    //         addressbook.exchanges.univ2.uniswapv2.factory => Some(ExchangeName::UniswapV2),
+    //         addressbook.exchanges.univ2.sushiswapv2.factory => Some(ExchangeName::SushiSwapV2),
+    //         addressbook.exchanges.univ3.uniswapv3.factory => Some(ExchangeName::UniswapV3),
+    //         addressbook.exchanges.univ3.sushiswapv3.factory => Some(ExchangeName::SushiSwapV3),
+    //         addressbook.exchanges.univ3.camelotv3.factory => Some(ExchangeName::CamelotV3),
+    //         addressbook.exchanges.univ3.ramsesv2.factory => Some(ExchangeName::RamsesV2),
+    //         addressbook.exchanges.univ3.pancakeswapv3.factory => Some(ExchangeName::PancakeswapV3),
+    //         _ => None,
+    //     }
+    // }
+
     fn get_chain_address_book(&self, chain: &NamedChain) -> Option<&ChainAddressBook> {
         match chain {
             NamedChain::Arbitrum => Some(&self.arbitrum),

@@ -10,7 +10,7 @@ use db::establish_connection;
 use shared::types::Cycle;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
-use tracing::{info, Level};
+use tracing::info;
 use types::exchange::{ExchangeName, ExchangeType};
 
 #[derive(Debug, Clone)]
@@ -179,7 +179,7 @@ impl<P: Provider + 'static> PoolState<P> {
 
     pub async fn load_pools_from_db(&self, db_url: &str) -> Result<(), AMMError> {
         let mut conn = establish_connection(db_url);
-        let db_pools = db::get_filtered_pools(&mut conn, "arbitrum").unwrap();
+        let db_pools = db::queries::pool::get_pools_by_chain(&mut conn, "arbitrum").unwrap();
 
         info!("Loaded {} pools from db", db_pools.len());
         for pool in db_pools {

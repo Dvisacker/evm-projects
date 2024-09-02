@@ -19,13 +19,17 @@ use amms::{
         AMM,
     },
     filters::value::filter_amms_below_usd_threshold,
-    sync::{self, checkpoint},
+    sync::{self},
 };
+use db::establish_connection;
 use db::models::{NewPool, Pool};
-use db::{
-    batch_insert_pools, batch_update_filtered, batch_upsert_pools, establish_connection,
-    get_all_pools, get_pools, get_pools_by_chain,
+use db::queries::pool::{
+    batch_insert_pools, batch_update_filtered, batch_upsert_pools, get_pools_by_chain,
 };
+// use db::{
+//     batch_insert_pools, batch_update_filtered, batch_upsert_pools, establish_connection,
+//     get_pools_by_chain,
+// };
 use types::exchange::{ExchangeName, ExchangeType};
 use types::pool::DetailedPool;
 

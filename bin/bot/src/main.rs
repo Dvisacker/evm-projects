@@ -8,10 +8,7 @@ use alloy::{
 use alloy_chains::Chain;
 use anyhow::Result;
 use artemis_core::{
-    collectors::{
-        block_collector::BlockCollector, event_collector::EventCollector,
-        log_collector::LogCollector, multi_log_collector::MultiLogCollector,
-    },
+    collectors::{block_collector::BlockCollector, multi_log_collector::MultiLogCollector},
     engine::Engine,
     executors::mempool_executor::MempoolExecutor,
     types::{CollectorMap, ExecutorMap},

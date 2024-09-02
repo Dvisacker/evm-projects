@@ -32,6 +32,9 @@ download-contracts:
     echo "Downloading uniswap V3 factory from $uniswap_v3_factory_address"
     cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $uniswap_v3_factory_address
 
+    # echo "Downloading camelot V3 factory from $camelot_v3_factory_address"
+    # cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $camelot_v3_factory_address
+
     # echo "Downloading uniswap V2 pool from $weth_usdc_address"
     # cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $weth_usdc_address
 
@@ -82,8 +85,8 @@ run-bot-mainnet:
 get-filtered-pools CHAIN_ID:
     cargo run --bin cli -- filter --chain-id {{CHAIN_ID}}
 
-get-uniswap-v3-pools:
-    cargo run --bin cli -- get-uniswap-v3-pools --chain-id 42161 --exchange uniswap-v3 --from-block 1 --to-block 100000000 --step 100000
+get-uniswap-v3-pools EXCHANGE_NAME:
+    cargo run --bin cli -- get-uniswap-v3-pools --chain-id 42161 --exchange {{EXCHANGE_NAME}} --from-block 10000000 --to-block 100000000 --step 100000
 
 get-uniswap-v2-pools:
     cargo run --bin cli -- get-uniswap-v2-pools --chain-id 42161 --exchange uniswap-v2 

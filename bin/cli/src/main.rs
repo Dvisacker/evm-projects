@@ -6,7 +6,7 @@ use shared::amm_utils::{filter_amms, store_uniswap_v2_pools, store_uniswap_v3_po
 use shared::config::get_chain_config;
 use shared::token_utils::load_pools_and_fetch_token_data;
 use std::sync::Arc;
-use tracing::{error, info};
+use tracing::info;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]

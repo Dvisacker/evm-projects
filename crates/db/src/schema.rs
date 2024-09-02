@@ -1,6 +1,16 @@
 // @generated automatically by Diesel CLI.
 
 diesel::table! {
+    exchanges (id) {
+        id -> Nullable<Integer>,
+        chain -> Text,
+        factory_address -> Nullable<Text>,
+        exchange_name -> Text,
+        exchange_type -> Text,
+    }
+}
+
+diesel::table! {
     pools (id) {
         id -> Integer,
         address -> Text,
@@ -20,3 +30,8 @@ diesel::table! {
         filtered -> Bool,
     }
 }
+
+diesel::allow_tables_to_appear_in_same_query!(
+    exchanges,
+    pools,
+);
