@@ -1,13 +1,14 @@
 use std::fmt;
 
+use clap::ValueEnum;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize, Clone, Copy)]
+#[derive(Debug, Serialize, Deserialize, Clone, Copy, ValueEnum)]
 pub enum ExchangeName {
     UniswapV2,
-    SushiSwapV2,
+    SushiswapV2,
     UniswapV3,
-    SushiSwapV3,
+    SushiswapV3,
     CamelotV3,
     RamsesV2,
     PancakeswapV3,
@@ -24,9 +25,9 @@ impl ExchangeName {
     pub fn from_str(s: &str) -> Result<Self, String> {
         match s {
             "uniswapv2" => Ok(ExchangeName::UniswapV2),
-            "sushiswapv2" => Ok(ExchangeName::SushiSwapV2),
+            "sushiswapv2" => Ok(ExchangeName::SushiswapV2),
             "uniswapv3" => Ok(ExchangeName::UniswapV3),
-            "sushiswapv3" => Ok(ExchangeName::SushiSwapV3),
+            "sushiswapv3" => Ok(ExchangeName::SushiswapV3),
             "unknown" => Ok(ExchangeName::Unknown),
             "camelotv3" => Ok(ExchangeName::CamelotV3),
             "ramsesv2" => Ok(ExchangeName::RamsesV2),
@@ -38,9 +39,9 @@ impl ExchangeName {
     pub fn as_str(&self) -> &str {
         match self {
             ExchangeName::UniswapV2 => "uniswapv2",
-            ExchangeName::SushiSwapV2 => "sushiswapv2",
+            ExchangeName::SushiswapV2 => "sushiswapv2",
             ExchangeName::UniswapV3 => "uniswapv3",
-            ExchangeName::SushiSwapV3 => "sushiswapv3",
+            ExchangeName::SushiswapV3 => "sushiswapv3",
             ExchangeName::CamelotV3 => "camelotv3",
             ExchangeName::RamsesV2 => "ramsesv2",
             ExchangeName::PancakeswapV3 => "pancakeswapv3",

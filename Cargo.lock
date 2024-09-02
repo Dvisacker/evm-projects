@@ -1861,6 +1861,7 @@ dependencies = [
  "tokio",
  "tracing",
  "tracing-subscriber",
+ "types",
  "uni-tri-arb-strategy",
 ]
 
@@ -5709,6 +5710,7 @@ dependencies = [
  "alloy 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "alloy-chains",
  "alloy-rpc-types",
+ "clap",
  "db",
  "serde",
  "serde_json",

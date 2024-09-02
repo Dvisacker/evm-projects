@@ -114,8 +114,8 @@ pub fn get_exchange_type(exchange_name: ExchangeName) -> ExchangeType {
     match exchange_name {
         ExchangeName::UniswapV2 => ExchangeType::UniV2,
         ExchangeName::UniswapV3 => ExchangeType::UniV3,
-        ExchangeName::SushiSwapV2 => ExchangeType::UniV2,
-        ExchangeName::SushiSwapV3 => ExchangeType::UniV3,
+        ExchangeName::SushiswapV2 => ExchangeType::UniV2,
+        ExchangeName::SushiswapV3 => ExchangeType::UniV3,
         ExchangeName::CamelotV3 => ExchangeType::UniV3,
         ExchangeName::RamsesV2 => ExchangeType::UniV3,
         ExchangeName::PancakeswapV3 => ExchangeType::UniV3,
@@ -150,7 +150,7 @@ impl Addressbook {
                     .0
                     .get(pool_name)
                     .cloned(),
-                ExchangeName::SushiSwapV2 => book
+                ExchangeName::SushiswapV2 => book
                     .exchanges
                     .univ2
                     .sushiswapv2

@@ -2,11 +2,14 @@ use alloy_chains::Chain;
 use anyhow::{Error, Result};
 use clap::{Args, Parser, Subcommand, ValueEnum};
 use shared::addressbook::Addressbook;
-use shared::amm_utils::{filter_amms, store_uniswap_v2_pools, store_uniswap_v3_pools};
+use shared::amm_utils::{
+    activate_pools, filter_amms, store_uniswap_v2_pools, store_uniswap_v3_pools,
+};
 use shared::config::get_chain_config;
 use shared::token_utils::load_pools_and_fetch_token_data;
 use std::sync::Arc;
 use tracing::info;
+use types::exchange::ExchangeName;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -22,6 +25,7 @@ enum Commands {
     GetNamedPools(GetNamedPoolsArgs),
     GetUniswapV3Pools(GetUniswapV3PoolsArgs),
     GetUniswapV2Pools(GetUniswapV2PoolsArgs),
+    ActivatePools(ActivatePoolsArgs),
 }
 
 #[derive(Args)]
@@ -38,16 +42,17 @@ struct GetNamedPoolsArgs {
     chain_id: u64,
 }
 
-#[derive(Clone, ValueEnum)]
-enum ExchangeName {
-    UniswapV2,
-    SushiswapV2,
-    UniswapV3,
-    SushiswapV3,
-    CamelotV3,
-    RamsesV2,
-    PancakeswapV3,
-}
+// #[derive(Clone, ValueEnum)]
+// enum ExchangeName {
+//     UniswapV2,
+//     SushiswapV2,
+//     UniswapV3,
+//     SushiswapV3,
+//     CamelotV3,
+//     RamsesV2,
+//     PancakeswapV3,
+//     Unknown,
+// }
 
 #[derive(Args)]
 struct GetUniswapV3PoolsArgs {
@@ -71,6 +76,16 @@ struct GetUniswapV2PoolsArgs {
     exchange: ExchangeName,
 }
 
+#[derive(Args)]
+struct ActivatePoolsArgs {
+    #[arg(short, long)]
+    chain_id: u64,
+    #[arg(short, long)]
+    min_usd: f64,
+    #[arg(short, long)]
+    exchange: ExchangeName,
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Error> {
     let cli = Cli::parse();
@@ -82,12 +97,11 @@ async fn main() -> Result<(), Error> {
             strategy_parser.generate()?;
         }
         Commands::Filter(args) => {
-            let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
-            let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
-            let filtered_amms = filter_amms(chain, args.min_usd, &db_url).await?;
-            info!("Filtered AMMs: {:?}", filtered_amms.len());
+            // let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
+            // let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
+            // let filtered_amms = filter_amms(chain, args.min_usd, &db_url).await?;
+            // info!("Filtered AMMs: {:?}", filtered_amms.len());
         }
-
         Commands::GetNamedPools(args) => {
             let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
             let chain_config = get_chain_config(chain).await;
@@ -138,11 +152,6 @@ async fn main() -> Result<(), Error> {
                 )
                 .await?;
             }
-
-            // info!(
-            //     "{:?} pools have been fetched and stored in the database.",
-            //     args.exchange
-            // );
         }
         Commands::GetUniswapV2Pools(args) => {
             let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
@@ -161,6 +170,11 @@ async fn main() -> Result<(), Error> {
             let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
 
             store_uniswap_v2_pools(provider.clone(), chain, factory_address, &db_url).await?;
+        }
+        Commands::ActivatePools(args) => {
+            let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
+            let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
+            activate_pools(chain, args.exchange, args.min_usd, &db_url).await?;
         }
     }
 
