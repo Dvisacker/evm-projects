@@ -55,9 +55,9 @@ async fn main() -> Result<()> {
     let provider = ws;
     let mut engine: Engine<Event, Action> = Engine::default();
 
-    let block_collector = Box::new(BlockCollector::new(provider.clone()));
-    let block_collector = CollectorMap::new(block_collector, |block| Event::NewBlock(block));
-    engine.add_collector(Box::new(block_collector));
+    // let block_collector = Box::new(BlockCollector::new(provider.clone()));
+    // let block_collector = CollectorMap::new(block_collector, |block| Event::NewBlock(block));
+    // engine.add_collector(Box::new(block_collector));
 
     let uniswap_v2_filter = Filter::new()
         .from_block(BlockNumberOrTag::Latest)

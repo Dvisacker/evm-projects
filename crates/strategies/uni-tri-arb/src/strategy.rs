@@ -139,21 +139,26 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
             }
             Event::Log(log) => {
                 let pool_address = log.address();
+                let block_number = log.block_number.unwrap();
+                self.state.update_block_number(block_number).await.unwrap();
+
                 if log.topics()[0] == IUniswapV2Pair::Swap::SIGNATURE_HASH {
                     let pool = self.state.pools.get_mut(&pool_address);
                     if pool.is_some() {
                         let mut pool_ref = pool.unwrap();
                         let pool = pool_ref.value_mut();
-                        info!("New uniswap v2 swap on pool {:?}", pool.name());
-                        let mut amm_slice: &mut [AMM] = std::slice::from_mut(pool);
-                        sync::populate_amms(
-                            &mut amm_slice,
-                            self.state.block_number,
-                            self.client.clone(),
-                        )
-                        .await
-                        .unwrap();
+                        let price_before = pool.calculate_price(pool.tokens()[0]).unwrap();
+                        pool.sync_from_log(log).unwrap();
+                        let price_after = pool.calculate_price(pool.tokens()[0]).unwrap();
 
+                        info!(
+                            "New uniswap v3 swap on pool {:?}. Price: {:?} -> {:?}",
+                            pool.name(),
+                            price_before,
+                            price_after
+                        );
+
+                        let amm_slice: &mut [AMM] = std::slice::from_mut(pool);
                         let updated_cycles = self.state.get_updated_cycles(amm_slice.to_vec());
                         info!("Found {} updated cycles", updated_cycles.len());
                         for cycle in updated_cycles {
