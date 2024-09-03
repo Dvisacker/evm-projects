@@ -10,7 +10,6 @@ build-contracts:
 test-contracts: 
     forge test --root ./contracts
 
-
 download-contracts:
     #!/usr/bin/env bash
     addressbook_path="./addressbook.json"
@@ -21,26 +20,23 @@ download-contracts:
     uniswap_v3_factory_address=$(jq -r ".mainnet.exchanges.univ3.uniswapv3.factory" $addressbook_path)
     camelot_v3_factory_address=$(jq -r ".arbitrum.exchanges.univ3.camelotv3.factory" $addressbook_path)
 
-    # echo "Downloading multicall from $multicall_address"
-    # cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $multicall_address
+    echo "Downloading multicall from $multicall_address"
+    cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $multicall_address
 
-    # echo "Downloading uniswap V2 factory from $uniswap_v2_factory_address"
-    # cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $uniswap_v2_factory_address
+    echo "Downloading uniswap V2 factory from $uniswap_v2_factory_address"
+    cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $uniswap_v2_factory_address
 
-    # echo "Downloading uniswap V2 router from $uniswap_v2_router_address"
-    # cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $uniswap_v2_router_address
+    echo "Downloading uniswap V2 router from $uniswap_v2_router_address"
+    cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $uniswap_v2_router_address
 
-    # echo "Downloading uniswap V3 factory from $uniswap_v3_factory_address"
-    # cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $uniswap_v3_factory_address
+    echo "Downloading uniswap V3 factory from $uniswap_v3_factory_address"
+    cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $uniswap_v3_factory_address
 
-    # echo "Downloading camelot V3 factory from $camelot_v3_factory_address"
-    # cast etherscan-source --etherscan-api-key $ARBISCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $camelot_v3_factory_address -c 42161
+    echo "Downloading camelot V3 factory from $camelot_v3_factory_address"
+    cast etherscan-source --etherscan-api-key $ARBISCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $camelot_v3_factory_address -c 42161
 
-    echo "Downloading camelot v3 pool from 0xC99be44383BC8d82357F5A1D9ae9976EE9d75bee"
-    cast etherscan-source --etherscan-api-key $ARBISCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src 0xC99be44383BC8d82357F5A1D9ae9976EE9d75bee -c 42161
-
-    # echo "Downloading uniswap V2 pool from $weth_usdc_address"
-    # cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $weth_usdc_address
+    echo "Downloading uniswap V2 pool from $weth_usdc_address"
+    cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $weth_usdc_address
 
 generate-bindings:
     #!/usr/bin/env bash
@@ -48,14 +44,6 @@ generate-bindings:
     contract_root_path="./crates/strategies/uni-tri-arb/contracts/"
     rm -rf $bindings_path
     forge bind --bindings-path $bindings_path --root $contract_root_path --crate-name bindings --force --skip-cargo-toml --alloy
-
-
-generate-graphql-bindings:
-    #!/usr/bin/env bash
-    query_path="./crates/clients/graph/query.graphql"
-    schema_path="./crates/clients/graph/schema.graphql"
-    bindings_path="./crates/clients/graph/src"
-    graphql-client generate $query_path --schema-path $schema_path --output-directory $bindings_path
 
 build-bindings: download-contracts generate-bindings generate-graphql-bindings
 
