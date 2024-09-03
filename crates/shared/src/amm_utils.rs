@@ -277,12 +277,10 @@ pub async fn filter_amms(
         .collect::<Vec<AMM>>();
 
     if !v3_pools.is_empty() {
-        println!("Populating v3 amms");
         populate_amms(&mut v3_pools, block_number, provider.clone())
             .await
             .unwrap();
 
-        println!("Filtering v3 amms");
         v3_filtered_pools = filter_amms_below_usd_threshold(
             v3_pools,
             &factories,
@@ -295,8 +293,6 @@ pub async fn filter_amms(
         )
         .await?;
     }
-
-    println!("Concatenating v2 and v3 filtered pools");
 
     // concat v2 and v3 filtered pools
     let filtered_pools = v2_filtered_pools

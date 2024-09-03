@@ -80,14 +80,9 @@ where
     N: Network,
     P: Provider<T, N>,
 {
-    // Load the filtered pools JSON file
-    println!("Loading filtered pools...");
     let filtered_pools_json: String = fs::read_to_string("checkpoints/filtered-pools.json")?;
-    println!("Deserializing pools...");
     let mut filtered_pools: Value = serde_json::from_str(&filtered_pools_json)?;
-    // Extract unique token addresses
     let mut token_addresses = HashSet::new();
-    println!("Extracting token addresses...");
     if let Some(amms) = filtered_pools["amms"].as_array() {
         for amm in amms {
             if let Some(pool) = amm["UniswapV2Pool"].as_object() {
@@ -100,15 +95,12 @@ where
             }
         }
     }
-    println!("Converting token addresses to Address type...");
     // Convert token addresses to Address type
     let token_addresses: Vec<Address> = token_addresses
         .into_iter()
         .filter_map(|addr| addr.parse().ok())
         .collect();
 
-    // Fetch token data
-    println!("Fetching token data...");
     let token_data = get_erc20_data_batch_request(token_addresses, provider).await?;
 
     // Create a map of token addresses to token data
@@ -127,16 +119,6 @@ where
             )
         })
         .collect();
-
-    // println!("token_map type: {:?}", type_of(&token_map));
-    // println!("token_map: {:?}", type token_map);
-    println!("token_map keys: {:?}", token_map.keys().collect::<Vec<_>>());
-    let keys = token_map.keys().collect::<Vec<_>>();
-    println!("token_map.get(key0): {:?}", token_map.get(keys[0]));
-    println!(
-        "token_map.get(string): {:?}",
-        token_map.get("0x82af49447d8a07e3bd95bd0d56f35241523fbab1")
-    );
 
     println!("Adding token data to the filtered pools JSON...");
     // Add token data to the filtered pools JSON
@@ -167,16 +149,12 @@ where
         }
     }
 
-    // println!("filtered_pools: {:?}", filtered_pools);
-
     // Save updated filtered pools data to filtered-pools-named.json
     let filtered_pools_named_json = serde_json::to_string_pretty(&filtered_pools)?;
     fs::write(
         "checkpoints/filtered-pools-named.json",
         filtered_pools_named_json,
     )?;
-
-    println!("Updated filtered pools data saved to filtered-pools-named.json");
 
     Ok(())
 }

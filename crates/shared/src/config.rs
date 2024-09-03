@@ -125,7 +125,6 @@ pub async fn get_chain_config(chain: Chain) -> ChainConfig {
 
 // Add this new function to get Chain from string
 pub fn get_chain_from_string(chain_name: &str) -> Option<Chain> {
-    println!("Chain name: {}", chain_name);
     CHAIN_MAP.get(chain_name).cloned()
 }
 
