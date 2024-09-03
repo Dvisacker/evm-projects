@@ -6,6 +6,7 @@ use alloy::primitives::{Address, U256};
 use alloy::providers::Provider;
 use alloy::transports::Transport;
 use alloy_chains::{Chain, NamedChain};
+use amms::amm::camelot_v3::CamelotV3Pool;
 use amms::amm::common::get_detailed_pool_data_batch_request;
 use amms::amm::AutomatedMarketMaker;
 use amms::errors::AMMError;
@@ -186,16 +187,22 @@ pub async fn filter_amms(
     let weth_value_in_token_to_weth_pool_threshold = U256::from(1000000000000000000_u128); // 10 weth
 
     let block_number = provider.get_block_number().await.unwrap();
-    let v2_factories = addressbook.get_v2_factories(&named_chain);
-    let v2_factories: Vec<Factory> = v2_factories
-        .into_iter()
-        .map(|addr| Factory::UniswapV2Factory(UniswapV2Factory::new(addr, 0, 300)))
-        .collect();
-    let v3_factories = addressbook.get_v3_factories(&named_chain);
-    let v3_factories: Vec<Factory> = v3_factories
-        .into_iter()
-        .map(|addr| Factory::UniswapV3Factory(UniswapV3Factory::new(addr, 0)))
-        .collect();
+    // let v2_factories = addressbook.get_v2_factories(&named_chain);
+    // let v2_factories: Vec<Factory> = v2_factories
+    //     .into_iter()
+    //     .map(|addr| Factory::UniswapV2Factory(UniswapV2Factory::new(addr, 0, 300)))
+    //     .collect();
+    // let v3_factories = addressbook.get_v3_factories(&named_chain);
+    // let v3_factories: Vec<Factory> = v3_factories
+    //     .into_iter()
+    //     .map(|addr| Factory::UniswapV3Factory(UniswapV3Factory::new(addr, 0)))
+    //     .collect();
+
+    let factory = Factory::UniswapV3Factory(UniswapV3Factory::new(
+        addressbook.arbitrum.exchanges.univ3.uniswapv3.factory,
+        0,
+    ));
+    let factories = vec![factory];
 
     let mut v2_pools = amms
         .iter()
@@ -212,7 +219,7 @@ pub async fn filter_amms(
 
         v2_filtered_pools = filter_amms_below_usd_threshold(
             v2_pools,
-            &v2_factories,
+            &factories,
             weth_usdc_pool.clone(),
             usd_threshold,
             weth_address,
@@ -230,13 +237,15 @@ pub async fn filter_amms(
         .collect::<Vec<AMM>>();
 
     if !v3_pools.is_empty() {
+        println!("Populating v3 amms");
         populate_amms(&mut v3_pools, block_number, provider.clone())
             .await
             .unwrap();
 
+        println!("Filtering v3 amms");
         v3_filtered_pools = filter_amms_below_usd_threshold(
             v3_pools,
-            &v3_factories,
+            &factories,
             weth_usdc_pool,
             usd_threshold,
             weth_address,
@@ -247,7 +256,7 @@ pub async fn filter_amms(
         .await?;
     }
 
-    println!("Filtering amms");
+    println!("Concatenating v2 and v3 filtered pools");
 
     // concat v2 and v3 filtered pools
     let filtered_pools = v2_filtered_pools
@@ -286,6 +295,25 @@ pub fn db_pools_to_amms(pools: &[Pool]) -> Result<Vec<AMM>, AMMError> {
                     chain: chain.named().unwrap(),
                 })),
                 ExchangeType::UniV3 => Ok(AMM::UniswapV3Pool(UniswapV3Pool {
+                    address,
+                    token_a: token0,
+                    token_a_decimals: pool.token_a_decimals as u8,
+                    token_a_symbol: pool.token_a_symbol.clone(),
+                    token_b: token1,
+                    token_b_decimals: pool.token_b_decimals as u8,
+                    token_b_symbol: pool.token_b_symbol.clone(),
+                    liquidity: 0,
+                    sqrt_price: U256::from(0),
+                    tick: 0,
+                    tick_spacing: 0,
+                    tick_bitmap: HashMap::new(),
+                    ticks: HashMap::new(),
+                    fee: pool.fee as u32,
+                    exchange_name,
+                    exchange_type,
+                    chain: chain.named().unwrap(),
+                })),
+                ExchangeType::CamelotV3 => Ok(AMM::CamelotV3Pool(CamelotV3Pool {
                     address,
                     token_a: token0,
                     token_a_decimals: pool.token_a_decimals as u8,

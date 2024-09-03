@@ -19,21 +19,25 @@ download-contracts:
     uniswap_v2_router_address=$(jq -r ".mainnet.exchanges.univ2.uniswapv2.router" $addressbook_path)
     # weth_usdc_address=$(jq -r ".mainnet.univ2.uniswapv2.weth-usdc" $addressbook_path)
     uniswap_v3_factory_address=$(jq -r ".mainnet.exchanges.univ3.uniswapv3.factory" $addressbook_path)
+    camelot_v3_factory_address=$(jq -r ".arbitrum.exchanges.univ3.camelotv3.factory" $addressbook_path)
 
-    echo "Downloading multicall from $multicall_address"
-    cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $multicall_address
+    # echo "Downloading multicall from $multicall_address"
+    # cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $multicall_address
 
-    echo "Downloading uniswap V2 factory from $uniswap_v2_factory_address"
-    cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $uniswap_v2_factory_address
+    # echo "Downloading uniswap V2 factory from $uniswap_v2_factory_address"
+    # cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $uniswap_v2_factory_address
 
-    echo "Downloading uniswap V2 router from $uniswap_v2_router_address"
-    cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $uniswap_v2_router_address
+    # echo "Downloading uniswap V2 router from $uniswap_v2_router_address"
+    # cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $uniswap_v2_router_address
 
-    echo "Downloading uniswap V3 factory from $uniswap_v3_factory_address"
-    cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $uniswap_v3_factory_address
+    # echo "Downloading uniswap V3 factory from $uniswap_v3_factory_address"
+    # cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $uniswap_v3_factory_address
 
     # echo "Downloading camelot V3 factory from $camelot_v3_factory_address"
-    # cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $camelot_v3_factory_address
+    # cast etherscan-source --etherscan-api-key $ARBISCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $camelot_v3_factory_address -c 42161
+
+    echo "Downloading camelot v3 pool from 0xC99be44383BC8d82357F5A1D9ae9976EE9d75bee"
+    cast etherscan-source --etherscan-api-key $ARBISCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src 0xC99be44383BC8d82357F5A1D9ae9976EE9d75bee -c 42161
 
     # echo "Downloading uniswap V2 pool from $weth_usdc_address"
     # cast etherscan-source --etherscan-api-key $ETHERSCAN_API_KEY -d crates/strategies/uni-tri-arb/contracts/src $weth_usdc_address
@@ -77,7 +81,7 @@ db-print:
     diesel print-schema -- --migration-dir ./crates/db/migrations --config-file ./crates/db/diesel.toml
 
 run-bot-arbitrum:
-    cargo run --bin bot -- --chain-id 42161
+    RUST_BACKTRACE=1 cargo run --bin bot -- --chain-id 42161
 
 run-bot-mainnet:
     cargo run --bin bot -- --chain-id 1

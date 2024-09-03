@@ -160,8 +160,7 @@ impl Addressbook {
                     .cloned(),
                 _ => return None,
             },
-            ExchangeType::UniV3 => return None,
-            ExchangeType::Unknown => return None,
+            _ => return None,
         }
     }
 

@@ -60,6 +60,8 @@ impl Default for ExchangeName {
 pub enum ExchangeType {
     UniV2,
     UniV3,
+    CamelotV3,
+    ERC4626,
     Unknown,
 }
 
@@ -68,6 +70,8 @@ impl ExchangeType {
         match s {
             "univ2" => Ok(ExchangeType::UniV2),
             "univ3" => Ok(ExchangeType::UniV3),
+            "camelotv3" => Ok(ExchangeType::CamelotV3),
+            "erc4626" => Ok(ExchangeType::ERC4626),
             _ => Err(format!("Invalid exchange type: {}", s)),
         }
     }
@@ -76,6 +80,8 @@ impl ExchangeType {
         match self {
             ExchangeType::UniV2 => "univ2",
             ExchangeType::UniV3 => "univ3",
+            ExchangeType::CamelotV3 => "camelotv3",
+            ExchangeType::ERC4626 => "erc4626",
             ExchangeType::Unknown => "unknown",
         }
     }

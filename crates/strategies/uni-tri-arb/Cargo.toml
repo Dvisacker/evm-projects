@@ -29,6 +29,7 @@ shared = { path = "../../shared" }
 db = { path = "../../db" }
 types = { path = "../../types" }
 alloy-sol-types = "0.8.0"
+diesel = { version = "2.0.0", features = ["sqlite"] }
 [features]
 integration-tests = []
 

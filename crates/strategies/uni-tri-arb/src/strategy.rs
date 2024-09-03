@@ -1,13 +1,17 @@
 use crate::state::State;
 
 use super::types::{Action, Event};
-use alloy::{providers::Provider, signers::Signer, sol_types::SolEvent};
+use alloy::{
+    dyn_abi::DynSolValue, primitives::Address, providers::Provider, rpc::types::Log,
+    signers::Signer, sol_types::SolEvent,
+};
 use alloy_chains::NamedChain;
 use amms::{
     amm::{
         common::fetch_pool_data_batch_request, uniswap_v3::IUniswapV3Pool, AutomatedMarketMaker,
         AMM,
     },
+    errors::AMMError,
     sync::{self, checkpoint::sort_amms},
 };
 use anyhow::Result;
@@ -16,13 +20,13 @@ use async_trait::async_trait;
 use bindings::iuniswapv2pair::IUniswapV2Pair;
 use db::queries::{exchange::get_exchanges_by_chain, pool::batch_upsert_pools};
 use db::{establish_connection, models::NewPool};
+use diesel::SqliteConnection;
 use shared::{addressbook::Addressbook, amm_utils::db_pools_to_amms, utils::bytes32_to_string};
 use std::sync::Arc;
-use tracing::info;
+use tracing::{error, info};
 
 #[derive(Debug, Clone)]
 pub struct UniTriArb<P: Provider + 'static, S: Signer> {
-    addressbook: Addressbook,
     pub client: Arc<P>,
     pub state: State<P>,
     pub tx_signer: S,
@@ -34,7 +38,6 @@ impl<P: Provider + 'static, S: Signer> UniTriArb<P, S> {
         let addressbook = Addressbook::load().unwrap();
         let weth = addressbook.get_weth(&NamedChain::Arbitrum).unwrap();
         Self {
-            addressbook,
             client: client.clone(),
             state: State::new(client.clone(), vec![weth]),
             tx_signer: signer,
@@ -64,6 +67,8 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
         )
         .unwrap();
 
+        info!("Found {:?} active pools", active_pools);
+
         let inactive_pools = db::queries::pool::get_pools(
             &mut establish_connection(&self.db_url),
             Some("arbitrum"),
@@ -78,11 +83,14 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
         self.state.set_inactive_pools(inactive_amms);
 
         let active_amms = db_pools_to_amms(&active_pools)?;
-        let (mut uniswap_v2_pools, mut uniswap_v3_pools, _) = sort_amms(active_amms);
+        let (mut uniswap_v2_pools, mut uniswap_v3_pools, _, mut camelot_v3_pools) =
+            sort_amms(active_amms);
 
         sync::populate_amms(&mut uniswap_v2_pools, block_number, self.client.clone()).await?;
         sync::populate_amms(&mut uniswap_v3_pools, block_number, self.client.clone()).await?;
-        let synced_amms = vec![uniswap_v2_pools, uniswap_v3_pools].concat();
+        sync::populate_amms(&mut camelot_v3_pools, block_number, self.client.clone()).await?;
+
+        let synced_amms = vec![uniswap_v2_pools, uniswap_v3_pools, camelot_v3_pools].concat();
         self.state.set_pools(synced_amms);
         self.state.update_cycles();
         // let profit_threshold = -0.99;
@@ -140,261 +148,261 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
             Event::Log(log) => {
                 let pool_address = log.address();
                 let block_number = log.block_number.unwrap();
+                let mut conn = establish_connection(&self.db_url);
                 self.state.update_block_number(block_number).await.unwrap();
 
                 if log.topics()[0] == IUniswapV2Pair::Swap::SIGNATURE_HASH {
-                    let pool = self.state.pools.get_mut(&pool_address);
-                    if pool.is_some() {
-                        let mut pool_ref = pool.unwrap();
-                        let pool = pool_ref.value_mut();
-                        let price_before = pool.calculate_price(pool.tokens()[0]).unwrap();
-                        pool.sync_from_log(log).unwrap();
-                        let price_after = pool.calculate_price(pool.tokens()[0]).unwrap();
-
-                        info!(
-                            "New uniswap v3 swap on pool {:?}. Price: {:?} -> {:?}",
-                            pool.name(),
-                            price_before,
-                            price_after
-                        );
-
-                        let amm_slice: &mut [AMM] = std::slice::from_mut(pool);
-                        let updated_cycles = self.state.get_updated_cycles(amm_slice.to_vec());
-                        info!("Found {} updated cycles", updated_cycles.len());
-                        for cycle in updated_cycles {
-                            info!("{}: Profit: {}", cycle, cycle.get_profit_perc());
-                        }
-                    } else if self.state.inactive_pools.contains_key(&pool_address) {
-                        info!("New uniswap v2 swap on inactive pool {:?}", pool_address);
-                    } else {
-                        info!("New uniswap v2 swap on unknown pool {:?}", pool_address);
-                        let provider = self.client.clone();
-                        let result =
-                            fetch_pool_data_batch_request(vec![pool_address], provider).await;
-
-                        match result {
-                            Ok(tokens_arr) => {
-                                if let Some(tokens_arr) = tokens_arr.as_array() {
-                                    for token in tokens_arr {
-                                        if let Some(pool_data) = token.as_tuple() {
-                                            // If the pool token A is not zero, signaling that the pool data was polulated
-                                            if let Some(address) = pool_data[0].as_address() {
-                                                if !address.is_zero() {
-                                                    let token_a =
-                                                        pool_data[0].as_address().unwrap();
-                                                    let token_a_symbol =
-                                                        pool_data[1].as_fixed_bytes().unwrap();
-                                                    let token_a_decimals =
-                                                        pool_data[2].as_uint().unwrap();
-                                                    let token_b =
-                                                        pool_data[3].as_address().unwrap();
-                                                    let token_b_symbol =
-                                                        pool_data[4].as_fixed_bytes().unwrap();
-                                                    let token_b_decimals =
-                                                        pool_data[5].as_uint().unwrap();
-                                                    let factory =
-                                                        pool_data[6].as_address().unwrap();
-                                                    let reserve_0 = pool_data[7].as_uint().unwrap();
-                                                    let reserve_1 = pool_data[8].as_uint().unwrap();
-                                                    let fee = pool_data[9].as_uint().unwrap();
-
-                                                    let mut conn =
-                                                        establish_connection(&self.db_url);
-                                                    let known_exchanges = get_exchanges_by_chain(
-                                                        &mut conn, "arbitrum",
-                                                    )
-                                                    .unwrap();
-
-                                                    let exchange_name = known_exchanges
-                                                        .iter()
-                                                        .find(|e| {
-                                                            *e.factory_address.as_ref().unwrap()
-                                                                == factory.to_string()
-                                                        })
-                                                        .map(|e| e.exchange_name.clone())
-                                                        .unwrap_or("unknown".to_string());
-
-                                                    let new_pool = NewPool {
-                                                        address: pool_address.to_string(),
-                                                        chain: "arbitrum".to_string(),
-                                                        factory_address: factory.to_string(),
-                                                        exchange_name: exchange_name.clone(),
-                                                        exchange_type: "univ2".to_string(),
-                                                        token_a: token_a.to_string(),
-                                                        token_a_symbol: bytes32_to_string(
-                                                            token_a_symbol.0,
-                                                        ),
-                                                        token_a_decimals: token_a_decimals
-                                                            .0
-                                                            .to::<i32>(),
-                                                        token_b: token_b.to_string(),
-                                                        token_b_symbol: bytes32_to_string(
-                                                            token_b_symbol.0,
-                                                        ),
-                                                        token_b_decimals: token_b_decimals
-                                                            .0
-                                                            .to::<i32>(),
-                                                        reserve_0: reserve_0
-                                                            .0
-                                                            .to::<u128>()
-                                                            .to_string(),
-                                                        reserve_1: reserve_1
-                                                            .0
-                                                            .to::<u128>()
-                                                            .to_string(),
-                                                        fee: fee.0.to::<i32>(),
-                                                        filtered: false,
-                                                    };
-
-                                                    batch_upsert_pools(&mut conn, &vec![new_pool])
-                                                        .unwrap();
-                                                    info!(
-                                                        "Inserted unknown {:?} pool {:?}",
-                                                        exchange_name, pool_address
-                                                    );
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            Err(e) => {
-                                println!("Error: {:?}", e);
-                            }
-                        }
-                    }
+                    self.handle_uniswap_v2_swap(&mut conn, pool_address, log.clone())
+                        .await
+                        .unwrap_or_else(|e| {
+                            error!(
+                                "Failed to handle uniswap v2 swap: {:?}. Pool: {:?}. Log: {:?}",
+                                e, pool_address, log
+                            );
+                        });
                 } else if log.topics()[0] == IUniswapV3Pool::Swap::SIGNATURE_HASH {
-                    let pool = self.state.pools.get_mut(&pool_address);
-                    if pool.is_some() {
-                        let mut pool_ref = pool.unwrap();
-                        let pool = pool_ref.value_mut();
-                        let price_before = pool.calculate_price(pool.tokens()[0]).unwrap();
-                        pool.sync_from_log(log).unwrap();
-                        let price_after = pool.calculate_price(pool.tokens()[0]).unwrap();
-                        info!(
-                            "New uniswap v3 swap on pool {:?}. Price: {:?} -> {:?}",
-                            pool.name(),
-                            price_before,
-                            price_after
-                        );
-
-                        let amm_slice: &mut [AMM] = std::slice::from_mut(pool);
-                        let updated_cycles = self.state.get_updated_cycles(amm_slice.to_vec());
-                        info!("Found {} updated cycles", updated_cycles.len());
-                        for cycle in updated_cycles {
-                            info!("{}: Profit: {}", cycle, cycle.get_profit_perc());
-                        }
-                    } else if self.state.inactive_pools.contains_key(&pool_address) {
-                        info!("New uniswap v3 swap on inactive pool {:?}", pool_address);
-                    } else {
-                        info!("New uniswap v3 swap on unknown pool {:?}", pool_address);
-                        let provider = self.client.clone();
-                        let result =
-                            fetch_pool_data_batch_request(vec![pool_address], provider).await;
-
-                        match result {
-                            Err(e) => {
-                                println!("Error: {:?}", e);
-                            }
-                            Ok(tokens_arr) => {
-                                if let Some(tokens_arr) = tokens_arr.as_array() {
-                                    for token in tokens_arr {
-                                        if let Some(pool_data) = token.as_tuple() {
-                                            // If the pool token A is not zero, signaling that the pool data was polulated
-                                            if let Some(address) = pool_data[0].as_address() {
-                                                if !address.is_zero() {
-                                                    let token_a =
-                                                        pool_data[0].as_address().unwrap();
-                                                    let token_a_symbol =
-                                                        pool_data[1].as_fixed_bytes().unwrap();
-                                                    let token_a_decimals =
-                                                        pool_data[2].as_uint().unwrap();
-                                                    let token_b =
-                                                        pool_data[3].as_address().unwrap();
-                                                    let token_b_symbol =
-                                                        pool_data[4].as_fixed_bytes().unwrap();
-                                                    let token_b_decimals =
-                                                        pool_data[5].as_uint().unwrap();
-                                                    let factory =
-                                                        pool_data[6].as_address().unwrap();
-                                                    let reserve_0 = pool_data[7].as_uint().unwrap();
-                                                    let reserve_1 = pool_data[8].as_uint().unwrap();
-                                                    let fee = pool_data[9].as_uint().unwrap();
-
-                                                    let mut conn =
-                                                        establish_connection(&self.db_url);
-                                                    let known_exchanges = get_exchanges_by_chain(
-                                                        &mut conn, "arbitrum",
-                                                    )
-                                                    .unwrap();
-
-                                                    let exchange_name = known_exchanges
-                                                        .iter()
-                                                        .find(|e| {
-                                                            *e.factory_address.as_ref().unwrap()
-                                                                == factory.to_string()
-                                                        })
-                                                        .map(|e| e.exchange_name.clone())
-                                                        .unwrap_or("unknown".to_string());
-
-                                                    if exchange_name == "unknown" {
-                                                        info!(
-                                                            "Unknown v3 pool {:?}:{:?}-{:?}",
-                                                            pool_address,
-                                                            token_a_symbol,
-                                                            token_b_symbol
-                                                        );
-                                                    }
-
-                                                    let new_pool = NewPool {
-                                                        address: pool_address.to_string(),
-                                                        chain: "arbitrum".to_string(),
-                                                        factory_address: factory.to_string(),
-                                                        exchange_name: exchange_name.clone(),
-                                                        exchange_type: "univ3".to_string(),
-                                                        token_a: token_a.to_string(),
-                                                        token_a_symbol: bytes32_to_string(
-                                                            token_a_symbol.0,
-                                                        ),
-                                                        token_a_decimals: token_a_decimals
-                                                            .0
-                                                            .to::<i32>(),
-                                                        token_b: token_b.to_string(),
-                                                        token_b_symbol: bytes32_to_string(
-                                                            token_b_symbol.0,
-                                                        ),
-                                                        token_b_decimals: token_b_decimals
-                                                            .0
-                                                            .to::<i32>(),
-                                                        reserve_0: reserve_0
-                                                            .0
-                                                            .to::<u128>()
-                                                            .to_string(),
-                                                        reserve_1: reserve_1
-                                                            .0
-                                                            .to::<u128>()
-                                                            .to_string(),
-                                                        fee: fee.0.to::<i32>(),
-                                                        filtered: false,
-                                                    };
-
-                                                    batch_upsert_pools(&mut conn, &vec![new_pool])
-                                                        .unwrap();
-                                                    info!(
-                                                        "Inserted unknown {:?} pool {:?}",
-                                                        exchange_name, pool_address
-                                                    );
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    self.handle_uniswap_v3_swap(&mut conn, pool_address, log.clone())
+                        .await
+                        .unwrap_or_else(|e| {
+                            error!(
+                                "Failed to handle uniswap v3 swap: {:?}. Pool: {:?}. Log: {:?}",
+                                e, pool_address, log
+                            );
+                        });
                 }
             }
         }
         vec![]
+    }
+}
+
+impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
+    async fn handle_uniswap_v2_swap(
+        &self,
+        mut conn: &mut SqliteConnection,
+        pool_address: Address,
+        log: Log,
+    ) -> Result<()> {
+        let pool = self.state.pools.get_mut(&pool_address);
+        if pool.is_some() {
+            let mut pool_ref = pool.unwrap();
+            let pool = pool_ref.value_mut();
+            let price_before = pool.calculate_price(pool.tokens()[0])?;
+            pool.sync_from_log(log)?;
+            let price_after = pool.calculate_price(pool.tokens()[0])?;
+
+            info!(
+                "New uniswap v2 swap on pool {:?}. Price: {:?} -> {:?}",
+                pool.name(),
+                price_before,
+                price_after
+            );
+
+            let amm_slice: &mut [AMM] = std::slice::from_mut(pool);
+            let updated_cycles = self.state.get_updated_cycles(amm_slice.to_vec());
+            info!("Found {} updated cycles", updated_cycles.len());
+            for cycle in updated_cycles {
+                info!("{}: Profit: {}", cycle, cycle.get_profit_perc());
+            }
+
+            return Ok(());
+        }
+
+        if self.state.inactive_pools.contains_key(&pool_address) {
+            info!("New uniswap v2 swap on inactive pool {:?}", pool_address);
+            return Ok(());
+        }
+
+        info!("New uniswap v2 swap on unknown pool {:?}", pool_address);
+        let provider = self.client.clone();
+        let result = fetch_pool_data_batch_request(vec![pool_address], provider).await;
+
+        let uniswap_v2_log =
+            result.map_err(|e| anyhow::anyhow!("Failed to parse pool batch request: {:?}", e))?;
+
+        let new_pool = self.parse_uniswap_v2_log(uniswap_v2_log, &mut conn, pool_address)?;
+
+        batch_upsert_pools(&mut conn, &vec![new_pool]).unwrap();
+        Ok(())
+    }
+
+    async fn handle_uniswap_v3_swap(
+        &self,
+        mut conn: &mut SqliteConnection,
+        pool_address: Address,
+        log: Log,
+    ) -> Result<()> {
+        let pool = self.state.pools.get_mut(&pool_address);
+        if pool.is_some() {
+            let mut pool_ref = pool.unwrap();
+            let pool = pool_ref.value_mut();
+            let price_before = pool.calculate_price(pool.tokens()[0])?;
+            pool.sync_from_log(log)?;
+            let price_after = pool.calculate_price(pool.tokens()[0])?;
+            info!(
+                "New uniswap v3 swap on pool {:?}. Price: {:?} -> {:?}",
+                pool.name(),
+                price_before,
+                price_after
+            );
+
+            let amm_slice: &mut [AMM] = std::slice::from_mut(pool);
+            let updated_cycles = self.state.get_updated_cycles(amm_slice.to_vec());
+            info!("Found {} updated cycles", updated_cycles.len());
+            for cycle in updated_cycles {
+                info!("{}: Profit: {}", cycle, cycle.get_profit_perc());
+            }
+
+            return Ok(());
+        }
+
+        if self.state.inactive_pools.contains_key(&pool_address) {
+            info!("New uniswap v3 swap on inactive pool {:?}", pool_address);
+            return Ok(());
+        }
+
+        info!("New uniswap v3 swap on unknown pool {:?}", pool_address);
+        let result = fetch_pool_data_batch_request(vec![pool_address], self.client.clone()).await;
+
+        let uniswap_v3_log =
+            result.map_err(|e| anyhow::anyhow!("Failed to parse pool batch request: {:?}", e))?;
+
+        let new_pool = self.parse_uniswap_v3_log(uniswap_v3_log, &mut conn, pool_address)?;
+        batch_upsert_pools(&mut conn, &vec![new_pool]).unwrap();
+        Ok(())
+    }
+
+    fn parse_uniswap_v2_log(
+        &self,
+        log: DynSolValue,
+        mut conn: &mut SqliteConnection,
+        pool_address: Address,
+    ) -> Result<NewPool> {
+        let log = log
+            .as_array()
+            .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
+
+        for token in log {
+            let pool_data = token
+                .as_tuple()
+                .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
+
+            let address = pool_data[0]
+                .as_address()
+                .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
+
+            if !address.is_zero() {
+                let token_a = pool_data[0].as_address().unwrap();
+                let token_a_symbol = pool_data[1].as_fixed_bytes().unwrap();
+                let token_a_decimals = pool_data[2].as_uint().unwrap();
+                let token_b = pool_data[3].as_address().unwrap();
+                let token_b_symbol = pool_data[4].as_fixed_bytes().unwrap();
+                let token_b_decimals = pool_data[5].as_uint().unwrap();
+                let factory = pool_data[6].as_address().unwrap();
+                let reserve_0 = pool_data[7].as_uint().unwrap();
+                let reserve_1 = pool_data[8].as_uint().unwrap();
+                let fee = pool_data[9].as_uint().unwrap();
+
+                let known_exchanges = get_exchanges_by_chain(&mut conn, "arbitrum").unwrap();
+                let exchange_name = known_exchanges
+                    .iter()
+                    .find(|e| *e.factory_address.as_ref().unwrap() == factory.to_string())
+                    .map(|e| e.exchange_name.clone())
+                    .unwrap_or("unknown".to_string());
+
+                return Ok(NewPool {
+                    address: pool_address.to_string(),
+                    chain: "arbitrum".to_string(),
+                    factory_address: factory.to_string(),
+                    exchange_name: exchange_name.clone(),
+                    exchange_type: "univ2".to_string(),
+                    token_a: token_a.to_string(),
+                    token_a_symbol: bytes32_to_string(token_a_symbol.0),
+                    token_a_decimals: token_a_decimals.0.to::<i32>(),
+                    token_b: token_b.to_string(),
+                    token_b_symbol: bytes32_to_string(token_b_symbol.0),
+                    token_b_decimals: token_b_decimals.0.to::<i32>(),
+                    reserve_0: reserve_0.0.to::<u128>().to_string(),
+                    reserve_1: reserve_1.0.to::<u128>().to_string(),
+                    fee: fee.0.to::<i32>(),
+                    filtered: false,
+                });
+            } else {
+                break;
+            };
+        }
+        return Err(anyhow::anyhow!("Failed to parse pool data"));
+    }
+
+    fn parse_uniswap_v3_log(
+        &self,
+        log: DynSolValue,
+        conn: &mut SqliteConnection,
+        pool_address: Address,
+    ) -> Result<NewPool> {
+        let log = log
+            .as_array()
+            .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
+
+        for token in log {
+            let pool_data = token
+                .as_tuple()
+                .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
+
+            let address = pool_data[0]
+                .as_address()
+                .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
+
+            // If the pool token A is not zero, signaling that the pool data was polulated
+            if !address.is_zero() {
+                let token_a = pool_data[0].as_address().unwrap();
+                let token_a_symbol = pool_data[1].as_fixed_bytes().unwrap();
+                let token_a_decimals = pool_data[2].as_uint().unwrap();
+                let token_b = pool_data[3].as_address().unwrap();
+                let token_b_symbol = pool_data[4].as_fixed_bytes().unwrap();
+                let token_b_decimals = pool_data[5].as_uint().unwrap();
+                let factory = pool_data[6].as_address().unwrap();
+                let reserve_0 = pool_data[7].as_uint().unwrap();
+                let reserve_1 = pool_data[8].as_uint().unwrap();
+                let fee = pool_data[9].as_uint().unwrap();
+
+                let mut conn = establish_connection(&self.db_url);
+                let known_exchanges = get_exchanges_by_chain(&mut conn, "arbitrum").unwrap();
+
+                let exchange_name = known_exchanges
+                    .iter()
+                    .find(|e| *e.factory_address.as_ref().unwrap() == factory.to_string())
+                    .map(|e| e.exchange_name.clone())
+                    .unwrap_or("unknown".to_string());
+
+                if exchange_name == "unknown" {
+                    info!(
+                        "Unknown v3 pool {:?}:{:?}-{:?}",
+                        pool_address, token_a_symbol, token_b_symbol
+                    );
+                }
+
+                return Ok(NewPool {
+                    address: pool_address.to_string(),
+                    chain: "arbitrum".to_string(),
+                    factory_address: factory.to_string(),
+                    exchange_name: exchange_name.clone(),
+                    exchange_type: "univ3".to_string(),
+                    token_a: token_a.to_string(),
+                    token_a_symbol: bytes32_to_string(token_a_symbol.0),
+                    token_a_decimals: token_a_decimals.0.to::<i32>(),
+                    token_b: token_b.to_string(),
+                    token_b_symbol: bytes32_to_string(token_b_symbol.0),
+                    token_b_decimals: token_b_decimals.0.to::<i32>(),
+                    reserve_0: reserve_0.0.to::<u128>().to_string(),
+                    reserve_1: reserve_1.0.to::<u128>().to_string(),
+                    fee: fee.0.to::<i32>(),
+                    filtered: false,
+                });
+            } else {
+                break;
+            }
+        }
+        return Err(anyhow::anyhow!("Failed to parse pool data"));
     }
 }

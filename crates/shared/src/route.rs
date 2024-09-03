@@ -31,6 +31,14 @@ pub fn simulate_route(
                 }
             }
 
+            AMM::CamelotV3Pool(pool) => {
+                if token_in == pool.token_a {
+                    pool.token_b
+                } else {
+                    pool.token_a
+                }
+            }
+
             _ => unreachable!(),
         };
 
