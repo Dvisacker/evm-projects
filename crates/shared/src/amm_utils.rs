@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::str::FromStr;
 use std::sync::Arc;
 
 use alloy::network::Network;
@@ -10,6 +11,7 @@ use amms::amm::camelot_v3::CamelotV3Pool;
 use amms::amm::common::get_detailed_pool_data_batch_request;
 use amms::amm::AutomatedMarketMaker;
 use amms::errors::AMMError;
+use amms::filters::value::get_weth_values_in_amms;
 use amms::sync::populate_amms;
 use amms::{
     amm::{
@@ -163,6 +165,44 @@ pub async fn activate_pools(
 
     batch_update_filtered(&mut conn, &filtered_addresses, true).unwrap();
     Ok(filtered_pools)
+}
+
+pub async fn get_amm_value(chain: Chain, pool_address: Address) -> Result<U256, AMMError> {
+    let chain_config = get_chain_config(chain).await;
+    let provider = chain_config.ws;
+    let addressbook = Addressbook::load().unwrap();
+    let named_chain = chain.named().unwrap();
+    let weth_address = addressbook.get_weth(&named_chain).unwrap();
+
+    let weth_usdc = Address::from_str("0xc31e54c7a869b9fcbecc14363cf510d1c41fa443").unwrap();
+    let weth_usdc_pool = AMM::UniswapV2Pool(
+        UniswapV2Pool::new_from_address(weth_usdc, 300, provider.clone()).await?,
+    );
+    let block_number = provider.get_block_number().await.unwrap();
+    let amm = UniswapV3Pool::new_from_address(pool_address, block_number, provider.clone()).await?;
+
+    // let factory = Factory::UniswapV3Factory(UniswapV3Factory::new(
+    //     addressbook.arbitrum.exchanges.univ3.uniswapv3.factory,
+    //     0,
+    // ));
+    // let factories = vec![factory];
+
+    // let weth_usd_price = weth_usdc_pool.calculate_price(weth_address)?;
+    // println!("Weth usd price: {:?}", weth_usd_price);
+
+    // let weth_values_in_pools = get_weth_values_in_amms(
+    //     &[amm],
+    //     &vec![],
+    //     weth_address,
+    //     weth_value_in_token_to_weth_pool_threshold,
+    //     100,
+    //     provider,
+    // )
+    // .await?;
+
+    // let weth_value_in_amm = weth_values_in_pools[0];
+
+    Ok(U256::from(0))
 }
 
 pub async fn filter_amms(

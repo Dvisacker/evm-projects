@@ -95,5 +95,8 @@ get-uniswap-v3-pools EXCHANGE_NAME:
 get-uniswap-v2-pools:
     cargo run --bin cli -- get-uniswap-v2-pools --chain-id 42161 --exchange uniswap-v2 
 
+get-amm-value POOL_ADDRESS:
+    cargo run --bin cli -- get-amm-value --chain-id 42161 --pool-address {{POOL_ADDRESS}}
+
 activate-pools NETWORK_ID EXCHANGE_NAME:
     cargo run --bin cli -- activate-pools --chain-id {{NETWORK_ID}} --exchange {{EXCHANGE_NAME}} --min-usd 100000

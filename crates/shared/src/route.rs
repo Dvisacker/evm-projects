@@ -13,34 +13,18 @@ pub fn simulate_route(
 
     for pool in route {
         amount_out = pool.simulate_swap(token_in, amount_in).unwrap();
-
-        token_in = match pool {
-            AMM::UniswapV2Pool(pool) => {
-                if token_in == pool.token_a {
-                    pool.token_b
-                } else {
-                    pool.token_a
-                }
-            }
-
-            AMM::UniswapV3Pool(pool) => {
-                if token_in == pool.token_a {
-                    pool.token_b
-                } else {
-                    pool.token_a
-                }
-            }
-
-            AMM::CamelotV3Pool(pool) => {
-                if token_in == pool.token_a {
-                    pool.token_b
-                } else {
-                    pool.token_a
-                }
-            }
-
-            _ => unreachable!(),
+        let tokens = pool.tokens();
+        let [token_a, token_b] = tokens.as_slice() else {
+            todo!()
         };
+
+        println!("Swapping on pool {:?}", pool.address());
+
+        if token_in == *token_a {
+            token_in = *token_b;
+        } else {
+            token_in = *token_a;
+        }
 
         amount_in = amount_out
     }

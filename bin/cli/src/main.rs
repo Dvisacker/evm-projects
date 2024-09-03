@@ -1,12 +1,14 @@
+use alloy::primitives::Address;
 use alloy_chains::Chain;
 use anyhow::{Error, Result};
 use clap::{Args, Parser, Subcommand, ValueEnum};
 use shared::addressbook::Addressbook;
 use shared::amm_utils::{
-    activate_pools, filter_amms, store_uniswap_v2_pools, store_uniswap_v3_pools,
+    activate_pools, filter_amms, get_amm_value, store_uniswap_v2_pools, store_uniswap_v3_pools,
 };
 use shared::config::get_chain_config;
 use shared::token_utils::load_pools_and_fetch_token_data;
+use std::str::FromStr;
 use std::sync::Arc;
 use tracing::info;
 use types::exchange::ExchangeName;
@@ -25,6 +27,7 @@ enum Commands {
     GetNamedPools(GetNamedPoolsArgs),
     GetUniswapV3Pools(GetUniswapV3PoolsArgs),
     GetUniswapV2Pools(GetUniswapV2PoolsArgs),
+    GetAMMValue(GetAMMValueArgs),
     ActivatePools(ActivatePoolsArgs),
 }
 
@@ -84,6 +87,14 @@ struct ActivatePoolsArgs {
     min_usd: f64,
     #[arg(short, long)]
     exchange: ExchangeName,
+}
+
+#[derive(Args)]
+struct GetAMMValueArgs {
+    #[arg(short, long)]
+    chain_id: u64,
+    #[arg(short, long)]
+    pool_address: String,
 }
 
 #[tokio::main]
@@ -175,6 +186,12 @@ async fn main() -> Result<(), Error> {
             let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
             let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
             activate_pools(chain, args.exchange, args.min_usd, &db_url).await?;
+        }
+        Commands::GetAMMValue(args) => {
+            let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
+            let pool_address = Address::from_str(&args.pool_address).expect("Invalid pool address");
+            let amm_value = get_amm_value(chain, pool_address).await?;
+            // info!("AMM value: {:?}", amm_value);
         }
     }
 
