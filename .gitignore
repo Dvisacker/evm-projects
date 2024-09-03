@@ -23,3 +23,5 @@ archives/
 checkpoints/*
 
 crates/db/dev.db
+
+data/

@@ -67,7 +67,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
         )
         .unwrap();
 
-        info!("Found {:?} active pools", active_pools);
+        info!("{:?} active pools", active_pools.len());
 
         let inactive_pools = db::queries::pool::get_pools(
             &mut establish_connection(&self.db_url),
@@ -93,16 +93,17 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
         let synced_amms = vec![uniswap_v2_pools, uniswap_v3_pools, camelot_v3_pools].concat();
         self.state.set_pools(synced_amms);
         self.state.update_cycles();
-        // let profit_threshold = -0.99;
+        let profit_threshold = -0.20;
 
         let arb_cycles = self
             .state
             .cycles
             .iter()
+            .filter(|entry| entry.1.get_profit_perc() > profit_threshold)
             .map(|entry| entry.1.clone())
             .collect::<Vec<_>>();
 
-        info!("Found {} arbitrage cycles", arb_cycles.len());
+        info!("{} arbitrage cycles", arb_cycles.len());
         for cycle in arb_cycles {
             info!("{}: Profit: {}", cycle, cycle.get_profit_perc());
         }

@@ -18,8 +18,6 @@ pub fn simulate_route(
             todo!()
         };
 
-        println!("Swapping on pool {:?}", pool.address());
-
         if token_in == *token_a {
             token_in = *token_b;
         } else {
