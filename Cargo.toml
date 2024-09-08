@@ -8,7 +8,7 @@ members = [
     "crates/db",
     "crates/bindings",
     "crates/shared", 
-    "integration", "crates/types",
+    "crates/types",
 ]
 
 default-members = ["bin/bot", "bin/cli", "crates/shared", "crates/db","crates/artemis-core", "crates/bindings"]

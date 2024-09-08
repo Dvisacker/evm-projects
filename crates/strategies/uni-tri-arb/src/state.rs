@@ -130,17 +130,16 @@ impl<P: Provider + 'static> State<P> {
         return cycles;
     }
 
-    pub fn update_cycles(&mut self) {
+    pub fn update_cycles(&mut self) -> Vec<Cycle> {
         let mut nb_cycles = 0;
+        let mut all_cycles = vec![];
         for token in self.inventory.iter() {
-            // get all the tracked pools
             let pools = self
                 .pools
                 .iter()
                 .map(|entry| entry.value().clone())
                 .collect::<Vec<_>>();
 
-            // compute all potential cycles
             let cycles = Self::get_cycles(
                 &pools,
                 token.clone(),
@@ -151,28 +150,35 @@ impl<P: Provider + 'static> State<P> {
                 &mut HashSet::new(),
             );
 
-            info!("Found {} cycles", cycles.len());
+            all_cycles.extend(cycles);
+        }
 
-            for cycle in cycles {
-                nb_cycles += 1;
-                let id = cycle.id.clone();
-                self.cycles.insert(id.clone(), cycle.clone());
+        let profit_threshold = -0.20;
+        let potential_cycles: Vec<Cycle> = all_cycles
+            .into_iter()
+            .filter(|cycle| cycle.get_profit_perc() > profit_threshold)
+            .collect();
 
-                for pool in &cycle.amms {
-                    let pool_address = pool.address();
-                    let pool_cycles = self.pools_cycles_map.get_mut(&pool_address);
-                    if let Some(mut c) = pool_cycles {
-                        c.insert(id.clone());
-                    } else {
-                        self.pools_cycles_map
-                            .insert(pool_address, HashSet::from([id.clone()]));
-                    }
+        for cycle in potential_cycles.clone() {
+            nb_cycles += 1;
+            let id = cycle.id.clone();
+            self.cycles.insert(id.clone(), cycle.clone());
+
+            for pool in &cycle.amms {
+                let pool_address = pool.address();
+                let pool_cycles = self.pools_cycles_map.get_mut(&pool_address);
+                if let Some(mut c) = pool_cycles {
+                    c.insert(id.clone());
+                } else {
+                    self.pools_cycles_map
+                        .insert(pool_address, HashSet::from([id.clone()]));
                 }
             }
         }
 
         info!("Found {} cycles", self.cycles.len());
         info!("Nb cycles: {}", nb_cycles);
+        return potential_cycles;
     }
 
     pub async fn add_pools(&self, addresses: Vec<Address>) -> Result<(), AMMError> {

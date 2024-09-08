@@ -45,7 +45,7 @@ generate-bindings:
     rm -rf $bindings_path
     forge bind --bindings-path $bindings_path --root $contract_root_path --crate-name bindings --force --skip-cargo-toml --alloy
 
-build-bindings: download-contracts generate-bindings generate-graphql-bindings
+build-bindings: download-contracts generate-bindings
 
 fmt: 
     cargo +nightly fmt --all
