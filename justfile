@@ -77,14 +77,14 @@ run-bot-mainnet:
 get-filtered-pools CHAIN_ID:
     cargo run --bin cli -- filter --chain-id {{CHAIN_ID}}
 
-get-uniswap-v3-pools EXCHANGE_NAME:
-    cargo run --bin cli -- get-uniswap-v3-pools --chain-id 42161 --exchange {{EXCHANGE_NAME}} --from-block 10000000 --to-block 100000000 --step 100000
+get-uniswap-v3-pools CHAIN_ID EXCHANGE_NAME:
+    cargo run --bin cli -- get-uniswap-v3-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}} --from-block 10000000 --to-block 100000000 --step 100000
 
-get-uniswap-v2-pools:
-    cargo run --bin cli -- get-uniswap-v2-pools --chain-id 42161 --exchange uniswap-v2 
+get-uniswap-v2-pools CHAIN_ID EXCHANGE_NAME:
+    cargo run --bin cli -- get-uniswap-v2-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}}
 
-get-amm-value POOL_ADDRESS:
-    cargo run --bin cli -- get-amm-value --chain-id 42161 --pool-address {{POOL_ADDRESS}}
+get-amm-value CHAIN_ID POOL_ADDRESS:
+    cargo run --bin cli -- get-amm-value --chain-id {{CHAIN_ID}} --pool-address {{POOL_ADDRESS}}
 
-activate-pools NETWORK_ID EXCHANGE_NAME:
-    cargo run --bin cli -- activate-pools --chain-id {{NETWORK_ID}} --exchange {{EXCHANGE_NAME}} --min-usd 100000
+activate-pools CHAIN_ID EXCHANGE_NAME:
+    cargo run --bin cli -- activate-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}} --min-usd 100000

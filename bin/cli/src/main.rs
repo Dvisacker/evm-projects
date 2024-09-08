@@ -1,5 +1,5 @@
 use alloy::primitives::Address;
-use alloy_chains::Chain;
+use alloy_chains::{Chain, ChainKind, NamedChain};
 use anyhow::{Error, Result};
 use clap::{Args, Parser, Subcommand, ValueEnum};
 use shared::addressbook::Addressbook;
@@ -10,7 +10,8 @@ use shared::config::get_chain_config;
 use shared::token_utils::load_pools_and_fetch_token_data;
 use std::str::FromStr;
 use std::sync::Arc;
-use tracing::info;
+use tracing::{error, info, warn, Level};
+use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 use types::exchange::ExchangeName;
 
 #[derive(Parser)]
@@ -102,6 +103,19 @@ async fn main() -> Result<(), Error> {
     let cli = Cli::parse();
     dotenv::dotenv().ok();
 
+    // Updated tracing configuration
+    let env_filter = EnvFilter::try_from_default_env()
+        .unwrap_or_else(|_| EnvFilter::new("info"))
+        .add_directive("uni_tri_arb_strategy=info".parse().unwrap())
+        .add_directive("artemis_core=info".parse().unwrap())
+        .add_directive("shared=info".parse().unwrap())
+        .add_directive("amms_rs=info".parse().unwrap());
+
+    tracing_subscriber::registry()
+        .with(fmt::layer())
+        .with(env_filter)
+        .init();
+
     match &cli.command {
         Commands::GenerateStrategy => {
             let strategy_parser = generator::parser::StrategyParser::parse();
@@ -170,17 +184,38 @@ async fn main() -> Result<(), Error> {
             let provider = Arc::new(chain_config.ws);
             let addressbook = Addressbook::load().unwrap();
 
-            let factory_address = match args.exchange {
-                ExchangeName::UniswapV2 => addressbook.arbitrum.exchanges.univ2.uniswapv2.factory,
-                ExchangeName::SushiswapV2 => {
-                    addressbook.arbitrum.exchanges.univ2.sushiswapv2.factory
-                }
-                _ => panic!("Choose a uniswap v2 exchange"),
+            let factory_address = match chain.kind() {
+                ChainKind::Named(NamedChain::Arbitrum) => match args.exchange {
+                    ExchangeName::UniswapV2 => {
+                        addressbook.arbitrum.exchanges.univ2.uniswapv2.factory
+                    }
+                    ExchangeName::SushiswapV2 => {
+                        addressbook.arbitrum.exchanges.univ2.sushiswapv2.factory
+                    }
+                    _ => panic!("Choose a uniswap v2 type exchange"),
+                },
+                ChainKind::Named(NamedChain::Mainnet) => match args.exchange {
+                    ExchangeName::UniswapV2 => {
+                        addressbook.mainnet.exchanges.univ2.uniswapv2.factory
+                    }
+                    ExchangeName::SushiswapV2 => {
+                        addressbook.mainnet.exchanges.univ2.sushiswapv2.factory
+                    }
+                    _ => panic!("Choose a uniswap v2 type exchange"),
+                },
+                _ => panic!("Unsupported chain"),
             };
 
+            info!("Downloading pools from {:?}", factory_address);
             let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
-
-            store_uniswap_v2_pools(provider.clone(), chain, factory_address, &db_url).await?;
+            store_uniswap_v2_pools(
+                provider.clone(),
+                chain,
+                args.exchange,
+                factory_address,
+                &db_url,
+            )
+            .await?;
         }
         Commands::ActivatePools(args) => {
             let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");

@@ -91,6 +91,7 @@ where
 pub async fn store_uniswap_v2_pools<P, T, N>(
     provider: Arc<P>,
     chain: Chain,
+    exchange_name: ExchangeName,
     factory_address: Address,
     db_url: &str,
 ) -> Result<(), AMMError>
@@ -102,6 +103,7 @@ where
     let mut conn = establish_connection(db_url);
     let factory = Factory::UniswapV2Factory(UniswapV2Factory::new(factory_address, 0, 3000));
 
+    tracing::info!("Syncing uniswap v2 pools");
     let (amms, _) = sync::sync_amms(vec![factory], provider.clone(), None, 100000)
         .await
         .unwrap();
@@ -113,7 +115,7 @@ where
                 pool.address(),
                 chain.named().unwrap(),
                 Some(ExchangeType::UniV2),
-                Some(ExchangeName::UniswapV2),
+                Some(exchange_name),
             )
         })
         .collect::<Vec<DetailedPool>>();
