@@ -5,7 +5,7 @@ use alloy::{
     dyn_abi::DynSolValue, primitives::Address, providers::Provider, rpc::types::Log,
     signers::Signer, sol_types::SolEvent,
 };
-use alloy_chains::NamedChain;
+use alloy_chains::{Chain, NamedChain};
 use amms::{
     amm::{
         common::fetch_pool_data_batch_request, uniswap_v3::IUniswapV3Pool, AutomatedMarketMaker,
@@ -24,9 +24,11 @@ use diesel::SqliteConnection;
 use shared::{addressbook::Addressbook, amm_utils::db_pools_to_amms, utils::bytes32_to_string};
 use std::sync::Arc;
 use tracing::{error, info};
+use types::exchange::ExchangeName;
 
 #[derive(Debug, Clone)]
 pub struct UniTriArb<P: Provider + 'static, S: Signer> {
+    pub chain: Chain,
     pub client: Arc<P>,
     pub state: State<P>,
     pub tx_signer: S,
@@ -34,10 +36,11 @@ pub struct UniTriArb<P: Provider + 'static, S: Signer> {
 }
 
 impl<P: Provider + 'static, S: Signer> UniTriArb<P, S> {
-    pub fn new(client: Arc<P>, signer: S, db_url: String) -> Self {
+    pub fn new(chain: Chain, client: Arc<P>, signer: S, db_url: String) -> Self {
         let addressbook = Addressbook::load().unwrap();
-        let weth = addressbook.get_weth(&NamedChain::Arbitrum).unwrap();
+        let weth = addressbook.get_weth(&chain.named().unwrap()).unwrap();
         Self {
+            chain,
             client: client.clone(),
             state: State::new(client.clone(), vec![weth]),
             tx_signer: signer,
@@ -59,7 +62,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
 
         let active_pools = db::queries::pool::get_pools(
             &mut establish_connection(&self.db_url),
-            Some("arbitrum"),
+            Some(&self.chain.named().unwrap().to_string()),
             None,
             None,
             None,
@@ -71,7 +74,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
 
         let inactive_pools = db::queries::pool::get_pools(
             &mut establish_connection(&self.db_url),
-            Some("arbitrum"),
+            Some(&self.chain.named().unwrap().to_string()),
             None,
             None,
             None,
@@ -294,8 +297,9 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
                 let reserve_0 = pool_data[7].as_uint().unwrap();
                 let reserve_1 = pool_data[8].as_uint().unwrap();
                 let fee = pool_data[9].as_uint().unwrap();
+                let chain = self.chain.named().unwrap().to_string();
 
-                let known_exchanges = get_exchanges_by_chain(&mut conn, "arbitrum").unwrap();
+                let known_exchanges = get_exchanges_by_chain(&mut conn, &chain).unwrap();
                 let exchange_name = known_exchanges
                     .iter()
                     .find(|e| *e.factory_address.as_ref().unwrap() == factory.to_string())
@@ -304,7 +308,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
 
                 return Ok(NewPool {
                     address: pool_address.to_string(),
-                    chain: "arbitrum".to_string(),
+                    chain: self.chain.named().unwrap().to_string(),
                     factory_address: factory.to_string(),
                     exchange_name: exchange_name.clone(),
                     exchange_type: "univ2".to_string(),
@@ -357,9 +361,10 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
                 let reserve_0 = pool_data[7].as_uint().unwrap();
                 let reserve_1 = pool_data[8].as_uint().unwrap();
                 let fee = pool_data[9].as_uint().unwrap();
+                let chain = self.chain.named().unwrap().to_string();
 
                 let mut conn = establish_connection(&self.db_url);
-                let known_exchanges = get_exchanges_by_chain(&mut conn, "arbitrum").unwrap();
+                let known_exchanges = get_exchanges_by_chain(&mut conn, &chain).unwrap();
 
                 let exchange_name = known_exchanges
                     .iter()
@@ -376,7 +381,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
 
                 return Ok(NewPool {
                     address: pool_address.to_string(),
-                    chain: "arbitrum".to_string(),
+                    chain: chain,
                     factory_address: factory.to_string(),
                     exchange_name: exchange_name.clone(),
                     exchange_type: "univ3".to_string(),

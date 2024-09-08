@@ -130,7 +130,7 @@ where
             .collect::<Vec<NewPool>>();
 
         batch_upsert_pools(&mut conn, &new_pools).unwrap();
-        println!("Inserted {:?} pools", new_pools.len());
+        tracing::info!("Inserted {:?} pools", new_pools.len());
     }
 
     Ok(())

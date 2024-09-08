@@ -18,7 +18,7 @@ use clap::Parser;
 use dotenv::dotenv;
 use shared::config::get_chain_config;
 use tracing::{info, Level};
-use tracing_subscriber::{filter, prelude::*};
+use tracing_subscriber::{filter, fmt, prelude::*, EnvFilter};
 use uni_tri_arb_strategy::{
     strategy::UniTriArb,
     types::{Action, Event},
@@ -38,12 +38,16 @@ struct Args {
 async fn main() -> Result<()> {
     dotenv().ok();
     // env_logger::init();
-    let filter = filter::Targets::new()
-        .with_target("uni_tri_arb_strategy", Level::INFO)
-        .with_target("artemis_core", Level::INFO);
+    let env_filter = EnvFilter::try_from_default_env()
+        .unwrap_or_else(|_| EnvFilter::new("info"))
+        .add_directive("uni_tri_arb_strategy=info".parse().unwrap())
+        .add_directive("artemis_core=info".parse().unwrap())
+        .add_directive("shared=info".parse().unwrap())
+        .add_directive("amms_rs=info".parse().unwrap());
+
     tracing_subscriber::registry()
-        .with(tracing_subscriber::fmt::layer())
-        .with(filter)
+        .with(fmt::layer())
+        .with(env_filter)
         .init();
 
     let args = Args::parse();
@@ -74,7 +78,7 @@ async fn main() -> Result<()> {
     engine.add_collector(Box::new(multi_log_collector));
 
     info!("Adding strategy...");
-    let strategy = UniTriArb::new(Arc::new(provider.clone()), signer, db_url);
+    let strategy = UniTriArb::new(chain, Arc::new(provider.clone()), signer, db_url);
     engine.add_strategy(Box::new(strategy));
 
     info!("Adding executor...");
