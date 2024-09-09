@@ -112,8 +112,16 @@ pub fn get_pools(
     }
 
     if let Some(filtered) = filtered {
-        query = query.filter(pools::filtered.eq(filtered));
+        if filtered {
+            query = query.filter(pools::filtered.eq(true));
+        } else {
+            query = query.filter(pools::filtered.eq(false));
+        }
+    } else {
+        query = query.filter(pools::filtered.is_null());
     }
+
+    // query = query.filter(pools::filtered.eq_any(filtered));
 
     query.load::<Pool>(conn)
 }

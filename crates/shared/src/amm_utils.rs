@@ -152,7 +152,7 @@ pub async fn activate_pools(
         Some(&exchange_name.to_string()),
         None,
         None,
-        Some(false),
+        None,
     )
     .unwrap();
     let amms = db_pools_to_amms(&pools)?;

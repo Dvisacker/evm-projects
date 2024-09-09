@@ -78,9 +78,11 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
             None,
             None,
             None,
-            Some(false),
+            None,
         )
         .unwrap();
+
+        info!("{:?} inactive pools", inactive_pools.len());
 
         let inactive_amms = db_pools_to_amms(&inactive_pools)?;
         self.state.set_inactive_pools(inactive_amms);
