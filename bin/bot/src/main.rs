@@ -63,9 +63,12 @@ async fn main() -> Result<()> {
     // let block_collector = CollectorMap::new(block_collector, |block| Event::NewBlock(block));
     // engine.add_collector(Box::new(block_collector));
 
+    // let uniswap_v2_filter = Filter::new()
+    //     .from_block(BlockNumberOrTag::Latest)
+    //     .event(IUniswapV2Pair::Swap::SIGNATURE);
     let uniswap_v2_filter = Filter::new()
         .from_block(BlockNumberOrTag::Latest)
-        .event(IUniswapV2Pair::Swap::SIGNATURE);
+        .event(IUniswapV2Pair::Sync::SIGNATURE);
     let uniswap_v3_filter = Filter::new()
         .from_block(BlockNumberOrTag::Latest)
         .event(IUniswapV3Pool::Swap::SIGNATURE);

@@ -5,13 +5,12 @@ use alloy::{
     dyn_abi::DynSolValue, primitives::Address, providers::Provider, rpc::types::Log,
     signers::Signer, sol_types::SolEvent,
 };
-use alloy_chains::{Chain, NamedChain};
+use alloy_chains::Chain;
 use amms::{
     amm::{
         common::fetch_pool_data_batch_request, uniswap_v3::IUniswapV3Pool, AutomatedMarketMaker,
         AMM,
     },
-    errors::AMMError,
     sync::{self, checkpoint::sort_amms},
 };
 use anyhow::Result;
@@ -149,16 +148,25 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
                 self.state.update_block_number(block_number).await.unwrap();
 
                 if log.topics()[0] == IUniswapV2Pair::Swap::SIGNATURE_HASH {
-                    self.handle_uniswap_v2_swap(&mut conn, pool_address, log.clone())
+                    // self.handle_uniswap_v2_swap(&mut conn, pool_address, log.clone())
+                    //     .await
+                    //     .unwrap_or_else(|e| {
+                    //         error!(
+                    //             "Failed to handle uniswap v2 swap: {:?}. Pool: {:?}. Log: {:?}",
+                    //             e, pool_address, log
+                    //         );
+                    //     });
+                } else if log.topics()[0] == IUniswapV3Pool::Swap::SIGNATURE_HASH {
+                    self.handle_uniswap_v3_swap(&mut conn, pool_address, log.clone())
                         .await
                         .unwrap_or_else(|e| {
                             error!(
-                                "Failed to handle uniswap v2 swap: {:?}. Pool: {:?}. Log: {:?}",
+                                "Failed to handle uniswap v3 swap: {:?}. Pool: {:?}. Log: {:?}",
                                 e, pool_address, log
                             );
                         });
-                } else if log.topics()[0] == IUniswapV3Pool::Swap::SIGNATURE_HASH {
-                    self.handle_uniswap_v3_swap(&mut conn, pool_address, log.clone())
+                } else if log.topics()[0] == IUniswapV2Pair::Sync::SIGNATURE_HASH {
+                    self.handle_uniswap_v2_sync(&mut conn, pool_address, log.clone())
                         .await
                         .unwrap_or_else(|e| {
                             error!(
@@ -174,7 +182,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
 }
 
 impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
-    async fn handle_uniswap_v2_swap(
+    async fn handle_uniswap_v2_sync(
         &self,
         mut conn: &mut PgConnection,
         pool_address: Address,
@@ -182,6 +190,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
     ) -> Result<()> {
         let pool = self.state.pools.get_mut(&pool_address);
         if pool.is_some() {
+            info!("New uniswap v2 swap on known pool {:?}", pool_address);
             let mut pool_ref = pool.unwrap();
             let pool = pool_ref.value_mut();
             let price_before = pool.calculate_price(pool.tokens()[0])?;
@@ -214,10 +223,10 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
         let provider = self.client.clone();
         let result = fetch_pool_data_batch_request(vec![pool_address], provider).await;
 
-        let uniswap_v2_log =
+        let pool_data =
             result.map_err(|e| anyhow::anyhow!("Failed to parse pool batch request: {:?}", e))?;
 
-        let new_pool = self.parse_uniswap_v2_log(uniswap_v2_log, &mut conn, pool_address)?;
+        let new_pool = self.parse_uniswap_v2_log(pool_data, &mut conn, pool_address)?;
 
         batch_upsert_pools(&mut conn, &vec![new_pool]).unwrap();
         Ok(())
@@ -271,15 +280,16 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
 
     fn parse_uniswap_v2_log(
         &self,
-        log: DynSolValue,
+        pool_data: DynSolValue,
         mut conn: &mut PgConnection,
         pool_address: Address,
     ) -> Result<NewPool> {
-        let log = log
+        // info!("Parsing uniswap v2 log");
+        let pool_data = pool_data
             .as_array()
             .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
 
-        for token in log {
+        for token in pool_data {
             let pool_data = token
                 .as_tuple()
                 .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;

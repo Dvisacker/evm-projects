@@ -229,18 +229,7 @@ pub async fn filter_amms(
         UniswapV2Pool::new_from_address(weth_usdc_address, 300, provider.clone()).await?,
     );
     let weth_value_in_token_to_weth_pool_threshold = U256::from(1000000000000000000_u128); // 10 weth
-
     let block_number = provider.get_block_number().await.unwrap();
-    // let v2_factories = addressbook.get_v2_factories(&named_chain);
-    // let v2_factories: Vec<Factory> = v2_factories
-    //     .into_iter()
-    //     .map(|addr| Factory::UniswapV2Factory(UniswapV2Factory::new(addr, 0, 300)))
-    //     .collect();
-    // let v3_factories = addressbook.get_v3_factories(&named_chain);
-    // let v3_factories: Vec<Factory> = v3_factories
-    //     .into_iter()
-    //     .map(|addr| Factory::UniswapV3Factory(UniswapV3Factory::new(addr, 0)))
-    //     .collect();
 
     let factory = Factory::UniswapV3Factory(UniswapV3Factory::new(
         addressbook.arbitrum.exchanges.univ3.uniswapv3.factory,

@@ -90,7 +90,10 @@
                 "uniswapv2": {
                     "factory": "0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f",
                     "router": "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D",
-                    "pools": {}
+                    "pools": {
+                        "WETH-USDC": "0xb4e16d0168e52d35cacd2c6185b44281ec28c9dc",
+                        "WETH-USDT": "0x0d4a11d5eeaac28ec3f61d100daf4d40471f1852"
+                    }
                 },
                 "sushiswapv2": {
                     "factory": "0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac",
@@ -102,7 +105,10 @@
                 "uniswapv3": {
                     "factory": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
                     "router": "0xE592427A0AEce92De3Edee1F18E0157C05861564",
-                    "pools": {}
+                    "pools": {
+                        "WETH-USDC": "0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640",
+                        "WETH-USDT": "0x4e68ccd3e89f51c3074ca5072bbac773960dfa36"
+                    }
                 },
                 "sushiswapv3": {
                     "factory": "0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac",
