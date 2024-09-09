@@ -12,6 +12,7 @@ pub enum ExchangeName {
     CamelotV3,
     RamsesV2,
     PancakeswapV3,
+    Curve,
     Unknown,
 }
 
@@ -45,6 +46,7 @@ impl ExchangeName {
             ExchangeName::CamelotV3 => "camelotv3",
             ExchangeName::RamsesV2 => "ramsesv2",
             ExchangeName::PancakeswapV3 => "pancakeswapv3",
+            ExchangeName::Curve => "curve",
             ExchangeName::Unknown => "unknown",
         }
     }
@@ -61,6 +63,7 @@ pub enum ExchangeType {
     UniV2,
     UniV3,
     CamelotV3,
+    Curve,
     ERC4626,
     Unknown,
 }
@@ -72,6 +75,7 @@ impl ExchangeType {
             "univ3" => Ok(ExchangeType::UniV3),
             "camelotv3" => Ok(ExchangeType::CamelotV3),
             "erc4626" => Ok(ExchangeType::ERC4626),
+            "curve" => Ok(ExchangeType::Curve),
             _ => Err(format!("Invalid exchange type: {}", s)),
         }
     }
@@ -82,6 +86,7 @@ impl ExchangeType {
             ExchangeType::UniV3 => "univ3",
             ExchangeType::CamelotV3 => "camelotv3",
             ExchangeType::ERC4626 => "erc4626",
+            ExchangeType::Curve => "curve",
             ExchangeType::Unknown => "unknown",
         }
     }
