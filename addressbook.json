@@ -34,6 +34,9 @@
                 },
                 "pancakeswapv3": {
                     "factory": "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865"
+                },
+                "solidlyv3": {
+                    "factory": "0x70Fe4a44EA505cFa3A57b95cF2862D4fd5F0f687"
                 }
             }
         },
