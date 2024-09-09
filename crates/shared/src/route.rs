@@ -12,17 +12,22 @@ pub fn simulate_route(
     let mut amount_out = U256::ZERO;
 
     for pool in route {
-        amount_out = pool.simulate_swap(token_in, amount_in).unwrap();
         let tokens = pool.tokens();
         let [token_a, token_b] = tokens.as_slice() else {
             todo!()
         };
 
+        let token_out;
+
         if token_in == *token_a {
             token_in = *token_b;
+            token_out = *token_a;
         } else {
             token_in = *token_a;
+            token_out = *token_b;
         }
+
+        amount_out = pool.simulate_swap(token_in, amount_in, token_out).unwrap();
 
         amount_in = amount_out
     }

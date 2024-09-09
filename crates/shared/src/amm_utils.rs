@@ -11,7 +11,6 @@ use amms::amm::camelot_v3::CamelotV3Pool;
 use amms::amm::common::get_detailed_pool_data_batch_request;
 use amms::amm::AutomatedMarketMaker;
 use amms::errors::AMMError;
-use amms::filters::value::get_weth_values_in_amms;
 use amms::sync::populate_amms;
 use amms::{
     amm::{
@@ -25,9 +24,7 @@ use amms::{
 };
 use db::establish_connection;
 use db::models::{NewPool, Pool};
-use db::queries::pool::{
-    batch_insert_pools, batch_update_filtered, batch_upsert_pools, get_pools, get_pools_by_chain,
-};
+use db::queries::pool::{batch_update_filtered, batch_upsert_pools, get_pools};
 use types::exchange::{ExchangeName, ExchangeType};
 use types::pool::DetailedPool;
 
@@ -176,14 +173,15 @@ pub async fn get_amm_value(chain: Chain, pool_address: Address) -> Result<U256, 
     let provider = chain_config.ws;
     let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
-    let weth_address = addressbook.get_weth(&named_chain).unwrap();
+    let _weth_address = addressbook.get_weth(&named_chain).unwrap();
 
     let weth_usdc = Address::from_str("0xc31e54c7a869b9fcbecc14363cf510d1c41fa443").unwrap();
-    let weth_usdc_pool = AMM::UniswapV2Pool(
+    let _weth_usdc_pool = AMM::UniswapV2Pool(
         UniswapV2Pool::new_from_address(weth_usdc, 300, provider.clone()).await?,
     );
     let block_number = provider.get_block_number().await.unwrap();
-    let amm = UniswapV3Pool::new_from_address(pool_address, block_number, provider.clone()).await?;
+    let _amm =
+        UniswapV3Pool::new_from_address(pool_address, block_number, provider.clone()).await?;
 
     // let factory = Factory::UniswapV3Factory(UniswapV3Factory::new(
     //     addressbook.arbitrum.exchanges.univ3.uniswapv3.factory,

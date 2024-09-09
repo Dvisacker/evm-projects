@@ -12,6 +12,7 @@ members = [
 ]
 
 default-members = ["bin/bot", "bin/cli", "crates/shared", "crates/db","crates/artemis-core", "crates/bindings"]
+# default-members = ["crates/amms-rs"]
 resolver = "2"
 
 [workspace.dependencies]
