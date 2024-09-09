@@ -6,6 +6,9 @@ build-contracts:
     forge test --root ./contracts
 
 
+build-amm-contracts:
+    forge compile --root ./crates/amms-rs/contracts
+
 #test contracts using forge
 test-contracts: 
     forge test --root ./contracts
@@ -77,8 +80,9 @@ run-bot-mainnet:
 get-filtered-pools CHAIN_ID:
     cargo run --bin cli -- filter --chain-id {{CHAIN_ID}}
 
-get-uniswap-v3-pools CHAIN_ID EXCHANGE_NAME:
-    cargo run --bin cli -- get-uniswap-v3-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}} --from-block 10000000 --to-block 100000000 --step 100000
+# creation uniswap v3 on mainnet: 12369621
+get-uniswap-v3-pools CHAIN_ID EXCHANGE_NAME STEP:
+    cargo run --bin cli -- get-uniswap-v3-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}} --from-block 12369621 --to-block 20709779 --step {{STEP}}
 
 get-uniswap-v2-pools CHAIN_ID EXCHANGE_NAME:
     cargo run --bin cli -- get-uniswap-v2-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}}
@@ -88,3 +92,9 @@ get-amm-value CHAIN_ID POOL_ADDRESS:
 
 activate-pools CHAIN_ID EXCHANGE_NAME:
     cargo run --bin cli -- activate-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}} --min-usd 100000
+
+
+# 0x7858e59e0c01ea06df3af3d20ac7b0003275d4bf
+# 0xf83d5aaab14507a53f97d3c18bdb52c4a62efc40
+# 0x886072a44bdd944495eff38ace8ce75c1eacdaf6
+# 0xc2e9f25be6257c210d7adf0d4cd6e3e881ba25f8

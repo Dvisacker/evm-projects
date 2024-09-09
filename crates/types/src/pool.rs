@@ -53,6 +53,7 @@ impl DetailedPool {
     pub fn empty(
         address: Address,
         chain: NamedChain,
+        factory_address: Option<Address>,
         exchange_type: Option<ExchangeType>,
         exchange_name: Option<ExchangeName>,
     ) -> DetailedPool {
@@ -63,6 +64,7 @@ impl DetailedPool {
                 .unwrap_or(ExchangeName::UniswapV2)
                 .as_str()
                 .to_string(),
+            factory_address: factory_address.unwrap_or(Address::ZERO),
             exchange_type: exchange_type.unwrap_or(ExchangeType::UniV2),
             token_a: Address::ZERO,
             token_a_symbol: String::new(),
@@ -70,7 +72,6 @@ impl DetailedPool {
             token_b: Address::ZERO,
             token_b_symbol: String::new(),
             token_b_decimals: 0,
-            factory_address: Address::ZERO,
             reserve_0: 0,
             reserve_1: 0,
             fee: 0,

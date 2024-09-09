@@ -1,7 +1,7 @@
 use alloy::primitives::Address;
 use alloy_chains::{Chain, ChainKind, NamedChain};
 use anyhow::{Error, Result};
-use clap::{Args, Parser, Subcommand, ValueEnum};
+use clap::{Args, Parser, Subcommand};
 use shared::addressbook::Addressbook;
 use shared::amm_utils::{
     activate_pools, filter_amms, get_amm_value, store_uniswap_v2_pools, store_uniswap_v3_pools,
@@ -10,7 +10,7 @@ use shared::config::get_chain_config;
 use shared::token_utils::load_pools_and_fetch_token_data;
 use std::str::FromStr;
 use std::sync::Arc;
-use tracing::{error, info, warn, Level};
+use tracing::{info, Level};
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 use types::exchange::ExchangeName;
 
@@ -142,17 +142,36 @@ async fn main() -> Result<(), Error> {
             let provider = Arc::new(chain_config.ws);
             let addressbook = Addressbook::load().unwrap();
 
-            let factory_address = match args.exchange {
-                ExchangeName::UniswapV3 => addressbook.arbitrum.exchanges.univ3.uniswapv3.factory,
-                ExchangeName::SushiswapV3 => {
-                    addressbook.arbitrum.exchanges.univ3.sushiswapv3.factory
-                }
-                ExchangeName::CamelotV3 => addressbook.arbitrum.exchanges.univ3.camelotv3.factory,
-                ExchangeName::RamsesV2 => addressbook.arbitrum.exchanges.univ3.ramsesv2.factory,
-                ExchangeName::PancakeswapV3 => {
-                    addressbook.arbitrum.exchanges.univ3.pancakeswapv3.factory
-                }
-                _ => panic!("Choose a uniswap v3 exchange"),
+            let factory_address = match chain.kind() {
+                ChainKind::Named(NamedChain::Arbitrum) => match args.exchange {
+                    ExchangeName::UniswapV3 => {
+                        addressbook.arbitrum.exchanges.univ3.uniswapv3.factory
+                    }
+                    ExchangeName::SushiswapV3 => {
+                        addressbook.arbitrum.exchanges.univ3.sushiswapv3.factory
+                    }
+                    ExchangeName::CamelotV3 => {
+                        addressbook.arbitrum.exchanges.univ3.camelotv3.factory
+                    }
+                    ExchangeName::RamsesV2 => addressbook.arbitrum.exchanges.univ3.ramsesv2.factory,
+                    ExchangeName::PancakeswapV3 => {
+                        addressbook.arbitrum.exchanges.univ3.pancakeswapv3.factory
+                    }
+                    _ => panic!("Choose a uniswap v3 exchange"),
+                },
+                ChainKind::Named(NamedChain::Mainnet) => match args.exchange {
+                    ExchangeName::UniswapV3 => {
+                        addressbook.mainnet.exchanges.univ3.uniswapv3.factory
+                    }
+                    ExchangeName::SushiswapV3 => {
+                        addressbook.mainnet.exchanges.univ3.sushiswapv3.factory
+                    }
+                    ExchangeName::PancakeswapV3 => {
+                        addressbook.mainnet.exchanges.univ3.pancakeswapv3.factory
+                    }
+                    _ => panic!("Choose a uniswap v3 exchange"),
+                },
+                _ => panic!("Unsupported chain"),
             };
 
             let from_block = args.from_block;

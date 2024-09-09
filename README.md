@@ -43,6 +43,9 @@ just activate-pools 42161 uniswap-v3
 
 This will activate all pools with at least 100k USD of liquidity.
 
+## TODO
+- [ ] Fix MKR token swap events
+
 
 
 

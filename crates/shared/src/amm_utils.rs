@@ -55,14 +55,13 @@ where
         .get_pools_from_logs(from_block, to_block, step, provider.clone())
         .await?;
 
-    println!("Got {:?} pools", pools.len());
-
     let mut pools = pools
         .iter()
         .map(|pool| {
             DetailedPool::empty(
                 pool.address(),
                 chain.named().unwrap(),
+                Some(factory_address),
                 Some(ExchangeType::UniV3),
                 Some(ExchangeName::UniswapV3),
             )
@@ -76,7 +75,9 @@ where
         .map(|pool| pool.to_new_pool())
         .collect::<Vec<NewPool>>();
 
-    batch_insert_pools(&mut conn, &new_pools).unwrap();
+    tracing::info!("Got new pools: {:?}", new_pools);
+
+    batch_upsert_pools(&mut conn, &new_pools).unwrap();
 
     println!(
         "Inserted {:?} pools created from block {:?} to {:?}",
@@ -114,6 +115,7 @@ where
             DetailedPool::empty(
                 pool.address(),
                 chain.named().unwrap(),
+                Some(factory_address),
                 Some(ExchangeType::UniV2),
                 Some(exchange_name),
             )
