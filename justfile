@@ -81,8 +81,9 @@ get-filtered-pools CHAIN_ID:
     cargo run --bin cli -- filter --chain-id {{CHAIN_ID}}
 
 # creation uniswap v3 on mainnet: 12369621
+# last indexed: 12465620
 get-uniswap-v3-pools CHAIN_ID EXCHANGE_NAME STEP:
-    cargo run --bin cli -- get-uniswap-v3-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}} --from-block 12369621 --to-block 20709779 --step {{STEP}}
+    cargo run --bin cli -- get-uniswap-v3-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}} --from-block 18457620 --to-block 20709779 --step {{STEP}}
 
 get-uniswap-v2-pools CHAIN_ID EXCHANGE_NAME:
     cargo run --bin cli -- get-uniswap-v2-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}}

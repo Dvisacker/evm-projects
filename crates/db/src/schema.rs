@@ -27,7 +27,7 @@ diesel::table! {
         reserve_0 -> Text,
         reserve_1 -> Text,
         fee -> Integer,
-        filtered -> Bool,
+        filtered -> Nullable<Bool>,
     }
 }
 

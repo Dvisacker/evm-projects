@@ -19,7 +19,7 @@ pub struct Pool {
     pub reserve_0: String,
     pub reserve_1: String,
     pub fee: i32,
-    pub filtered: bool,
+    pub filtered: Option<bool>,
 }
 
 #[derive(Insertable, Debug)]
@@ -39,5 +39,5 @@ pub struct NewPool {
     pub reserve_0: String,
     pub reserve_1: String,
     pub fee: i32,
-    pub filtered: bool,
+    pub filtered: Option<bool>,
 }

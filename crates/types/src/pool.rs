@@ -20,7 +20,7 @@ pub struct DetailedPool {
     pub reserve_0: u128,
     pub reserve_1: u128,
     pub fee: u32,
-    pub filtered: bool,
+    pub filtered: Option<bool>,
 }
 
 impl From<NewPool> for DetailedPool {
@@ -75,7 +75,7 @@ impl DetailedPool {
             reserve_0: 0,
             reserve_1: 0,
             fee: 0,
-            filtered: false,
+            filtered: None,
         }
     }
 

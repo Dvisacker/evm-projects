@@ -321,7 +321,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
                     reserve_0: reserve_0.0.to::<u128>().to_string(),
                     reserve_1: reserve_1.0.to::<u128>().to_string(),
                     fee: fee.0.to::<i32>(),
-                    filtered: false,
+                    filtered: None,
                 });
             } else {
                 break;
@@ -394,7 +394,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
                     reserve_0: reserve_0.0.to::<u128>().to_string(),
                     reserve_1: reserve_1.0.to::<u128>().to_string(),
                     fee: fee.0.to::<i32>(),
-                    filtered: false,
+                    filtered: None,
                 });
             } else {
                 break;
