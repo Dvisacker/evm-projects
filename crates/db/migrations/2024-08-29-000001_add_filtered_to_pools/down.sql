@@ -1,1 +1,0 @@
-ALTER TABLE pools DROP COLUMN filtered;

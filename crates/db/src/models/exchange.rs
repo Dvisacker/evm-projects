@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Queryable, Selectable, Insertable, Serialize, Deserialize, Debug, Clone)]
 #[diesel(table_name = crate::schema::exchanges)]
-#[diesel(check_for_backend(diesel::sqlite::Sqlite))]
+#[diesel(check_for_backend(diesel::pg::Pg))]
 pub struct Exchange {
     pub id: i32,
     pub chain: String,

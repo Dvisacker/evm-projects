@@ -4,13 +4,13 @@ use anyhow::{Error, Result};
 use clap::{Args, Parser, Subcommand};
 use shared::addressbook::Addressbook;
 use shared::amm_utils::{
-    activate_pools, filter_amms, get_amm_value, store_uniswap_v2_pools, store_uniswap_v3_pools,
+    activate_pools, get_amm_value, store_uniswap_v2_pools, store_uniswap_v3_pools,
 };
 use shared::config::get_chain_config;
 use shared::token_utils::load_pools_and_fetch_token_data;
 use std::str::FromStr;
 use std::sync::Arc;
-use tracing::{info, Level};
+use tracing::info;
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 use types::exchange::ExchangeName;
 

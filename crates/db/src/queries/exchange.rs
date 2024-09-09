@@ -1,32 +1,23 @@
 use crate::models::{Exchange, NewExchange};
 use crate::schema::exchanges;
+use diesel::pg::PgConnection;
 use diesel::prelude::*;
-use diesel::sqlite::SqliteConnection;
 
 pub fn insert_exchange(
-    conn: &mut SqliteConnection,
+    conn: &mut PgConnection,
     new_exchange: &NewExchange,
 ) -> Result<Exchange, diesel::result::Error> {
-    let result = diesel::insert_into(exchanges::table)
+    diesel::insert_into(exchanges::table)
         .values(new_exchange)
-        .execute(conn);
-
-    if result.is_err() {
-        return Err(result.err().unwrap());
-    }
-
-    exchanges::table
-        .order(exchanges::id.desc())
-        .first(conn)
-        .map_err(|_| diesel::result::Error::NotFound)
+        .get_result(conn)
 }
 
-pub fn get_exchanges(conn: &mut SqliteConnection) -> QueryResult<Vec<Exchange>> {
+pub fn get_exchanges(conn: &mut PgConnection) -> QueryResult<Vec<Exchange>> {
     exchanges::table.load::<Exchange>(conn)
 }
 
 pub fn get_exchange_by_name(
-    conn: &mut SqliteConnection,
+    conn: &mut PgConnection,
     chain: &str,
     name: &str,
 ) -> QueryResult<Exchange> {
@@ -36,15 +27,12 @@ pub fn get_exchange_by_name(
         .first(conn)
 }
 
-pub fn get_exchanges_by_chain(
-    conn: &mut SqliteConnection,
-    chain: &str,
-) -> QueryResult<Vec<Exchange>> {
+pub fn get_exchanges_by_chain(conn: &mut PgConnection, chain: &str) -> QueryResult<Vec<Exchange>> {
     exchanges::table
         .filter(exchanges::chain.eq(chain))
         .load::<Exchange>(conn)
 }
 
-pub fn get_all_exchanges(conn: &mut SqliteConnection) -> QueryResult<Vec<Exchange>> {
+pub fn get_all_exchanges(conn: &mut PgConnection) -> QueryResult<Vec<Exchange>> {
     exchanges::table.load::<Exchange>(conn)
 }

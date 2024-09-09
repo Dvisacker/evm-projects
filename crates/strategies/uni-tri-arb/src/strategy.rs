@@ -20,7 +20,7 @@ use async_trait::async_trait;
 use bindings::iuniswapv2pair::IUniswapV2Pair;
 use db::queries::{exchange::get_exchanges_by_chain, pool::batch_upsert_pools};
 use db::{establish_connection, models::NewPool};
-use diesel::SqliteConnection;
+use diesel::PgConnection;
 use shared::{addressbook::Addressbook, amm_utils::db_pools_to_amms, utils::bytes32_to_string};
 use std::sync::Arc;
 use tracing::{error, info};
@@ -174,7 +174,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
 impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
     async fn handle_uniswap_v2_swap(
         &self,
-        mut conn: &mut SqliteConnection,
+        mut conn: &mut PgConnection,
         pool_address: Address,
         log: Log,
     ) -> Result<()> {
@@ -223,7 +223,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
 
     async fn handle_uniswap_v3_swap(
         &self,
-        mut conn: &mut SqliteConnection,
+        mut conn: &mut PgConnection,
         pool_address: Address,
         log: Log,
     ) -> Result<()> {
@@ -270,7 +270,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
     fn parse_uniswap_v2_log(
         &self,
         log: DynSolValue,
-        mut conn: &mut SqliteConnection,
+        mut conn: &mut PgConnection,
         pool_address: Address,
     ) -> Result<NewPool> {
         let log = log
@@ -333,7 +333,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
     fn parse_uniswap_v3_log(
         &self,
         log: DynSolValue,
-        conn: &mut SqliteConnection,
+        conn: &mut PgConnection,
         pool_address: Address,
     ) -> Result<NewPool> {
         let log = log
@@ -375,7 +375,9 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
                 if exchange_name == "unknown" {
                     info!(
                         "Unknown v3 pool {:?}:{:?}-{:?}",
-                        pool_address, token_a_symbol, token_b_symbol
+                        pool_address,
+                        bytes32_to_string(token_a_symbol.0),
+                        bytes32_to_string(token_b_symbol.0)
                     );
                 }
 
