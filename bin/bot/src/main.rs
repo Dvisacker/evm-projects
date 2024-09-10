@@ -8,7 +8,7 @@ use alloy::{
 use alloy_chains::Chain;
 use anyhow::Result;
 use artemis_core::{
-    collectors::{block_collector::BlockCollector, multi_log_collector::MultiLogCollector},
+    collectors::multi_log_collector::MultiLogCollector,
     engine::Engine,
     executors::mempool_executor::MempoolExecutor,
     types::{CollectorMap, ExecutorMap},
@@ -17,8 +17,8 @@ use bindings::{iuniswapv2pair::IUniswapV2Pair, iuniswapv3pool::IUniswapV3Pool};
 use clap::Parser;
 use dotenv::dotenv;
 use shared::config::get_chain_config;
-use tracing::{info, Level};
-use tracing_subscriber::{filter, fmt, prelude::*, EnvFilter};
+use tracing::info;
+use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 use uni_tri_arb_strategy::{
     strategy::UniTriArb,
     types::{Action, Event},

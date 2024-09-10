@@ -3,8 +3,8 @@ members = [
     "bin/bot",
     "bin/cli",
     "crates/artemis-core",
-    "crates/generator",
     "crates/strategies/*",
+    "crates/amms-rs",
     "crates/db",
     "crates/bindings",
     "crates/shared", 
@@ -16,7 +16,14 @@ default-members = ["bin/bot", "bin/cli", "crates/shared", "crates/db","crates/ar
 resolver = "2"
 
 [workspace.dependencies]
-## eth
+alloy = { version = "0.3.3", features = [
+    "full"
+] }
+alloy-primitives = "0.8"
+alloy-rpc-types = "0.3.3"
+alloy-consensus = "0.3.3"
+alloy-chains = "0.1.27"
+uniswap_v3_math = { git = "https://github.com/0xKitsune/uniswap-v3-math.git" }
 
 
 [profile.release]

@@ -24,20 +24,11 @@ struct Cli {
 #[derive(Subcommand)]
 enum Commands {
     GenerateStrategy,
-    Filter(FilterArgs),
     GetNamedPools(GetNamedPoolsArgs),
     GetUniswapV3Pools(GetUniswapV3PoolsArgs),
     GetUniswapV2Pools(GetUniswapV2PoolsArgs),
     GetAMMValue(GetAMMValueArgs),
     ActivatePools(ActivatePoolsArgs),
-}
-
-#[derive(Args)]
-struct FilterArgs {
-    #[arg(short, long)]
-    chain_id: u64,
-    #[arg(short, long, default_value = "10000")]
-    min_usd: f64,
 }
 
 #[derive(Args)]
@@ -120,12 +111,6 @@ async fn main() -> Result<(), Error> {
         Commands::GenerateStrategy => {
             let strategy_parser = generator::parser::StrategyParser::parse();
             strategy_parser.generate()?;
-        }
-        Commands::Filter(args) => {
-            // let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
-            // let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
-            // let filtered_amms = filter_amms(chain, args.min_usd, &db_url).await?;
-            // info!("Filtered AMMs: {:?}", filtered_amms.len());
         }
         Commands::GetNamedPools(args) => {
             let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
@@ -244,7 +229,7 @@ async fn main() -> Result<(), Error> {
         Commands::GetAMMValue(args) => {
             let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
             let pool_address = Address::from_str(&args.pool_address).expect("Invalid pool address");
-            let amm_value = get_amm_value(chain, pool_address).await?;
+            let _amm_value = get_amm_value(chain, pool_address).await?;
             // info!("AMM value: {:?}", amm_value);
         }
     }

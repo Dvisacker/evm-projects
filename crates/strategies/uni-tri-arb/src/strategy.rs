@@ -23,7 +23,6 @@ use diesel::PgConnection;
 use shared::{addressbook::Addressbook, amm_utils::db_pools_to_amms, utils::bytes32_to_string};
 use std::sync::Arc;
 use tracing::{error, info};
-use types::exchange::ExchangeName;
 
 #[derive(Debug, Clone)]
 pub struct UniTriArb<P: Provider + 'static, S: Signer> {

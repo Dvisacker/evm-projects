@@ -6,7 +6,6 @@ use amms::amm::{AutomatedMarketMaker, AMM};
 use amms::errors::AMMError;
 use amms::sync;
 use dashmap::DashMap;
-use db::establish_connection;
 use shared::types::Cycle;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;

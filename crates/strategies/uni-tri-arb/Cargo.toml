@@ -6,9 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-alloy = { version = "0.2", features = ["full"] }
-alloy-chains = "0.1.0"
-tokio = { version = "1.18", features = ["full"] }
+alloy = { workspace = true }
+alloy-chains = { workspace = true }
+tokio = { version = "1.40.0", features = ["full"] }
 mev-share = "0.1.4"
 async-trait = "0.1.64"
 artemis-core = { path = "../../artemis-core" }
@@ -21,15 +21,13 @@ indicatif = "0.17.8"
 # uni-tri-arb-bindings = { path = "./contracts/bindings" }
 bindings = { path = "../../bindings" }
 serde_json = "1.0"
-# amms = { path = "http://github.com/darkforestry/amms-rs" }
-# amms = "0.6.3"
 amms = { path = "../../amms-rs" }
 dashmap = "6.0.1"
 shared = { path = "../../shared" }
 db = { path = "../../db" }
 types = { path = "../../types" }
-alloy-sol-types = "0.8.0"
-diesel = { version = "2.0.0", features = ["sqlite"] }
+alloy-sol-types = "0.8.1"
+diesel = { version = "2.0.0", features = ["postgres"] }
 [features]
 integration-tests = []
 

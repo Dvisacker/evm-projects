@@ -16,7 +16,7 @@ cargo test --all
 ## Requirements:
 - `rustc` >= 1.74
 - `foundry` >= 0.2.0
-- `sqlite`
+- `postgres`
 
 ## Setup DB: 
 
@@ -45,6 +45,17 @@ This will activate all pools with at least 100k USD of liquidity.
 
 ## TODO
 - [ ] Fix MKR token swap events
+- [ ] Basic curve support
+- [ ] Listen to curve swaps 
+- [ ] Listen to curve
+- [ ] 4626 vaults
+- [ ] REVM simulator base
+- [ ] Executor Contract
+- [ ] Uniswap v2 REVM simulator
+- [ ] Uniswap v3 REVM simulator
+- [ ] Honeypot Filter 
+- [ ] Optimism support
+- [ ] Base support
 
 
 
