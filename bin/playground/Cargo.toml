@@ -6,7 +6,7 @@ license = "MIT OR Apache-2.0"
 
 
 [dependencies]
-tokio = { version = "1.40.0", features = ["full"] }
+tokio = { workspace = true }
 dotenv = "0.15.0"
 async-trait = "0.1.64"
 artemis-core = { path = "../../crates/artemis-core" }
@@ -14,7 +14,7 @@ futures = "0.3.27"
 uni-tri-arb-strategy = { path = "../../crates/strategies/uni-tri-arb" }
 graph = { path = "../../crates/clients/graph" }
 anyhow = "1.0.70"
-tracing = "0.1.37"
+tracing = { workspace = true }
 tracing-subscriber = "0.3.16"
 clap = { version = "4.2.5", features = ["derive"] }
 

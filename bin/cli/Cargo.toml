@@ -7,17 +7,18 @@ edition = "2021"
 
 [dependencies]
 alloy = { workspace = true }
+tokio = { workspace = true }
+alloy-chains = { workspace = true }
+
+generator = { path = "../../crates/generator" }
+shared = { path = "../../crates/shared" }
+uni-tri-arb-strategy = { path = "../../crates/strategies/uni-tri-arb" }
+types = { path = "../../crates/types" }
 
 anyhow = "1.0.70"
-generator = { path = "../../crates/generator" }
 clap = { version = "4.2.5", features = ["derive"] }
-tokio = { version = "1.40.0", features = ["full"] }
-uni-tri-arb-strategy = { path = "../../crates/strategies/uni-tri-arb" }
-shared = { path = "../../crates/shared" }
-alloy-chains = { workspace = true }
 dotenv = "0.15.0"
-tracing = "0.1.37"
+tracing = { workspace = true }
 tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }
-types = { path = "../../crates/types" }
 
 
