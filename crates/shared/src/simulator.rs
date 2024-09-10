@@ -16,33 +16,34 @@
 // use crate::constants::SIMULATOR_CODE;
 // use crate::interfaces::{pool::V2PoolABI, simulator::SimulatorABI, token::TokenABI};
 
-use alloy::network::AnyNetwork;
+use alloy::network::Network;
 use alloy::primitives::Address;
 use alloy::providers::Provider;
 use alloy::transports::Transport;
-use foundry_evm::backend::{BlockchainDb, BlockchainDbMeta, SharedBackend};
-use foundry_evm::revm::{db::CacheDB, Evm};
-use revm::db::EmptyDB;
-use std::collections::BTreeSet;
+use alloy_rpc_types::BlockId;
+use foundry_evm::revm::{db::AlloyDB, db::CacheDB, Evm};
 use std::marker::PhantomData;
 use std::sync::Arc;
 
+type AlloyCacheDB<T, N, P> = CacheDB<AlloyDB<T, N, Arc<P>>>;
+
 // #[derive(Clone)]
-pub struct EvmSimulator<T, P>
+pub struct EvmSimulator<T, N, P>
 where
-    T: Transport + Clone + Unpin,
-    P: Provider<T, AnyNetwork> + Unpin + 'static + Clone,
+    T: Transport + Clone,
+    N: Network,
+    P: Provider<T, N> + 'static,
 {
     pub provider: Arc<P>,
     pub owner: Address,
-    pub evm: Evm<'static, (), CacheDB<EmptyDB>>,
+    pub evm: Evm<'static, (), AlloyCacheDB<T, N, P>>,
     pub block_number: u64,
 
     // pub token: TokenABI,
     // pub v2_pool: V2PoolABI,
     // pub simulator: SimulatorABI,
     pub simulator_address: Address,
-    _phantom: PhantomData<T>,
+    _phantom: PhantomData<(T, N)>,
 }
 
 #[derive(Debug, Clone)]
@@ -61,43 +62,41 @@ pub struct TxResult {
     pub gas_refunded: u64,
 }
 
-// impl<M: Provider> EvmSimulator<M> {
-//     pub fn new(provider: Arc<M>, owner: Address, block_number: U64) -> Self {
-//         let shared_backend = SharedBackend::spawn_backend_thread(
-//             provider.clone(),
-//             BlockchainDb::new(
-//                 BlockchainDbMeta {
-//                     cfg_env: Default::default(),
-//                     block_env: Default::default(),
-
-impl<T, P> EvmSimulator<T, P>
+impl<T, N, P> EvmSimulator<T, N, P>
 where
-    T: Transport + Clone + Unpin,
-    P: Provider<T, AnyNetwork> + Unpin + 'static + Clone,
+    T: Transport + Clone,
+    N: Network,
+    P: Provider<T, N>,
 {
     pub async fn new(provider: P, owner: Address, block_number: u64) -> Self
     where
-        P: Provider<T, AnyNetwork> + Unpin + 'static + Clone + Send + Sync,
-        T: Transport + Clone + Unpin + Send + Sync,
+        T: Transport + Clone,
+        N: Network,
+        P: Provider<T, N>,
     {
-        let meta = BlockchainDbMeta {
-            cfg_env: Default::default(),
-            block_env: Default::default(),
-            hosts: BTreeSet::from([]),
-        };
         let provider = Arc::new(provider);
-        let blockchain_db = BlockchainDb::new(meta, None);
-        let backend = SharedBackend::spawn_backend(provider.clone(), blockchain_db, None).await;
-        let db = CacheDB::new(EmptyDB::default());
-        let evm = Evm::builder().with_db(db).build();
+        let block_id = BlockId::Number(block_number.into());
+        let chain_id = provider
+            .get_chain_id()
+            .await
+            .expect("Failed to get chain id");
+        let alloy_db = AlloyDB::new(provider.clone(), block_id).unwrap();
+        let db = CacheDB::new(alloy_db);
+
+        let evm = Evm::builder()
+            .with_db(db)
+            .modify_cfg_env(|c| {
+                c.chain_id = chain_id;
+            })
+            .build();
 
         Self {
-            _phantom: PhantomData,
             provider: provider.clone(),
             owner,
             evm,
             block_number,
             simulator_address: Address::ZERO,
+            _phantom: PhantomData,
         }
     }
 }
