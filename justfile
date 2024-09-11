@@ -5,7 +5,6 @@ build-contracts:
     forge install --root ./contracts
     forge test --root ./contracts
 
-
 build-amm-contracts:
     forge compile --root ./crates/amms-rs/contracts
 
@@ -80,22 +79,27 @@ run-bot-mainnet:
 get-filtered-pools CHAIN_ID:
     cargo run --bin cli -- filter --chain-id {{CHAIN_ID}}
 
-# creation uniswap v3 on mainnet: 12369621
-# last indexed: 12465620
-get-uniswap-v3-pools CHAIN_ID EXCHANGE_NAME STEP:
-    cargo run --bin cli -- get-uniswap-v3-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}} --from-block 17439720 --to-block 20709779 --step {{STEP}}
+get-uniswap-v3-pools CHAIN_ID EXCHANGE_NAME STEP START_BLOCK:
+    cargo run --bin cli -- get-uniswap-v3-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}} --from-block {{START_BLOCK}} --to-block 20709779 --step {{STEP}}
 
 get-uniswap-v2-pools CHAIN_ID EXCHANGE_NAME:
     cargo run --bin cli -- get-uniswap-v2-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}}
+
+## TODO. make this command interactive
+get-pools
+    # mainnet
+    cargo run --bin cli -- get-uniswap-v3-pools --chain-id 1 --exchange sushiswap-v3 --from-block {{START_BLOCK}} --to-block 20709779 --step 50000
+    cargo run --bin cli -- get-uniswap-v3-pools --chain-id 1 --exchange uniswap-v3 --from-block {{START_BLOCK}} --to-block 20709779 --step 50000
+    cargo run --bin cli -- get-uniswap-v2-pools --chain-id 1 --exchange uniswap-v2
+    cargo run --bin cli -- get-uniswap-v2-pools --chain-id 1 --exchange sushiswap-v2
+    # arbitrum
+    cargo run --bin cli -- get-uniswap-v3-pools --chain-id 42161 --exchange uniswap-v3 --from-block {{START_BLOCK}} --to-block 20709779 --step 50000
+    cargo run --bin cli -- get-uniswap-v3-pools --chain-id 42161 --exchange sushiswap-v3 --from-block {{START_BLOCK}} --to-block 20709779 --step 50000
+    cargo run --bin cli -- get-uniswap-v2-pools --chain-id 42161 --exchange uniswap-v2
+    cargo run --bin cli -- get-uniswap-v2-pools --chain-id 42161 --exchange sushiswap-v2
 
 get-amm-value CHAIN_ID POOL_ADDRESS:
     cargo run --bin cli -- get-amm-value --chain-id {{CHAIN_ID}} --pool-address {{POOL_ADDRESS}}
 
 activate-pools CHAIN_ID EXCHANGE_NAME:
     cargo run --bin cli -- activate-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}} --min-usd 100000
-
-
-# 0x7858e59e0c01ea06df3af3d20ac7b0003275d4bf
-# 0xf83d5aaab14507a53f97d3c18bdb52c4a62efc40
-# 0x886072a44bdd944495eff38ace8ce75c1eacdaf6
-# 0xc2e9f25be6257c210d7adf0d4cd6e3e881ba25f8

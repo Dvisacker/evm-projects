@@ -14,7 +14,7 @@ use std::sync::Arc;
 type AlloyCacheDB<T, N, P> = CacheDB<AlloyDB<T, N, Arc<P>>>;
 
 // #[derive(Clone)]
-pub struct EvmSimulator<T, N, P>
+pub struct RevmSimulator<T, N, P>
 where
     T: Transport + Clone,
     N: Network,
@@ -48,7 +48,8 @@ pub struct TxResult {
     pub gas_refunded: u64,
 }
 
-impl<T, N, P> EvmSimulator<T, N, P>
+// This simulator might be faster than the foundry simulator
+impl<T, N, P> RevmSimulator<T, N, P>
 where
     T: Transport + Clone,
     N: Network,

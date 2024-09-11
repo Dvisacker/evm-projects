@@ -6612,6 +6612,7 @@ version = "0.1.0"
 dependencies = [
  "alloy",
  "alloy-chains",
+ "alloy-primitives 0.8.3",
  "alloy-rpc-types",
  "alloy-sol-types",
  "amms",
