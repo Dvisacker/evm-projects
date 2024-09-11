@@ -21,8 +21,10 @@ alloy = { version = "0.3.3", features = [
 ] }
 alloy-primitives = "0.8"
 alloy-rpc-types = "0.3.3"
+alloy-sol-types = "0.8.3"
 alloy-consensus = "0.3.3"
 alloy-chains = "0.1.27"
+foundry-config = "0.2.0"
 uniswap_v3_math = { git = "https://github.com/0xKitsune/uniswap-v3-math.git" }
 tokio = { version = "1.40.0", features = ["full"] }
 tracing = "0.1.37"

@@ -3,7 +3,8 @@ pub mod proxy;
 
 pub mod amm_utils;
 pub mod route;
-pub mod simulator;
+pub mod simulator_foundry;
+pub mod simulator_revm;
 pub mod token_utils;
 pub mod types;
 pub mod utils;

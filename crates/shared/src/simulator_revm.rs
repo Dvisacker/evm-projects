@@ -1,27 +1,13 @@
-// use anyhow::{anyhow, Result};
-// use bytes::Bytes;
-// use foundry_evm::{
-//     // executor::{
-//     //     fork::{BlockchainDb, BlockchainDbMeta, SharedBackend},
-//     //     Bytecode, ExecutionResult, Output, TransactTo,
-//     // },
-//     revm::{
-//         db::{AlloyDB, CacheDB, Database},
-//         primitives::{keccak256, AccountInfo, U256 as rU256},
-//         EVM,
-//     },
-// };
-// use std::{collections::BTreeSet, str::FromStr, sync::Arc};
-
-// use crate::constants::SIMULATOR_CODE;
-// use crate::interfaces::{pool::V2PoolABI, simulator::SimulatorABI, token::TokenABI};
-
 use alloy::network::Network;
 use alloy::primitives::Address;
 use alloy::providers::Provider;
 use alloy::transports::Transport;
-use alloy_rpc_types::BlockId;
+use alloy_rpc_types::{BlockId, Transaction};
+use alloy_sol_types::{sol, SolCall, SolValue};
+use anyhow::Result;
+use foundry_evm;
 use foundry_evm::revm::{db::AlloyDB, db::CacheDB, Evm};
+use revm::primitives::{AccountInfo, Bytecode, ExecutionResult, Output, TransactTo, B256, U256};
 use std::marker::PhantomData;
 use std::sync::Arc;
 
@@ -99,62 +85,212 @@ where
             _phantom: PhantomData,
         }
     }
+
+    pub fn get_block_number(&mut self) -> U256 {
+        self.evm.context.evm.inner.env.block.number
+    }
+
+    pub fn get_coinbase(&mut self) -> Address {
+        self.evm.context.evm.inner.env.block.coinbase
+    }
+
+    pub fn get_base_fee(&mut self) -> U256 {
+        self.evm.context.evm.inner.env.block.basefee
+    }
+
+    // pub fn _call(&mut self, tx: Tx, commit: bool) -> Result<TxResult> {
+    //     self.evm.context.evm.inner.env.tx.caller = tx.caller.into();
+    //     self.evm.context.evm.inner.env.tx.transact_to = TransactTo::Call(tx.transact_to.into());
+    //     // self.evm.env.tx.data = tx.data;
+    //     // self.evm.env.tx.value = tx.value.into();
+    //     // self.evm.env.tx.gas_price = tx.gas_price.into();
+    //     // self.evm.env.tx.gas_limit = tx.gas_limit;
+
+    //     // let result;
+
+    //     // if commit {
+    //     //     result = match self.evm.transact_commit() {
+    //     //         Ok(result) => result,
+    //     //         Err(e) => return Err(anyhow!("EVM call failed: {:?}", e)),
+    //     //     };
+    //     // } else {
+    //     //     let ref_tx = self
+    //     //         .evm
+    //     //         .transact_ref()
+    //     //         .map_err(|e| anyhow!("EVM staticcall failed: {:?}", e))?;
+    //     //     result = ref_tx.result;
+    //     // }
+
+    //     // let output = match result {
+    //     //     ExecutionResult::Success {
+    //     //         gas_used,
+    //     //         gas_refunded,
+    //     //         output,
+    //     //         logs,
+    //     //         ..
+    //     //     } => match output {
+    //     //         Output::Call(o) => TxResult {
+    //     //             output: o,
+    //     //             logs: Some(logs),
+    //     //             gas_used,
+    //     //             gas_refunded,
+    //     //         },
+    //     //         Output::Create(o, _) => TxResult {
+    //     //             output: o,
+    //     //             logs: Some(logs),
+    //     //             gas_used,
+    //     //             gas_refunded,
+    //     //         },
+    //     //     },
+    //     //     ExecutionResult::Revert { gas_used, output } => {
+    //     //         return Err(anyhow!(
+    //     //             "EVM REVERT: {:?} / Gas used: {:?}",
+    //     //             output,
+    //     //             gas_used
+    //     //         ))
+    //     //     }
+    //     //     ExecutionResult::Halt { reason, .. } => return Err(anyhow!("EVM HALT: {:?}", reason)),
+    //     };
+
+    //     Ok(output)
+    // }
+
+    pub fn insert_account_storage(
+        &mut self,
+        target: Address,
+        slot: U256,
+        value: U256,
+    ) -> Result<()> {
+        self.evm
+            .context
+            .evm
+            .db
+            .insert_account_storage(target.into(), slot, value)?;
+        Ok(())
+    }
+
+    pub fn insert_account_info(&mut self, target: Address, info: AccountInfo) -> Result<()> {
+        self.evm
+            .context
+            .evm
+            .db
+            .insert_account_info(target.into(), info);
+        Ok(())
+    }
+
+    pub fn get_eth_balance(&mut self, address: Address) -> Result<U256> {
+        let acc = self.evm.context.evm.db.load_account(address)?;
+        Ok(acc.info.balance)
+    }
+
+    pub fn set_eth_balance(&mut self, address: Address, balance: U256) -> Result<()> {
+        let user_balance = balance;
+        let user_info = AccountInfo::new(user_balance, 0, B256::ZERO, Bytecode::default());
+        self.insert_account_info(address, user_info)?;
+        Ok(())
+    }
+
+    pub fn set_v2_pool_reserves(&mut self, pool: Address, reserves: U256) -> Result<()> {
+        let slot = U256::from(8);
+        self.insert_account_storage(pool, slot, reserves)?;
+        Ok(())
+    }
+
+    // pub fn get_token_balance(&mut self, token: Address, address: Address) -> Result<U256> {
+    //     sol! {
+    //         function balanceOf(address account) public returns (uint256);
+    //     }
+
+    //     let encoded = balanceOfCall { account: address }.abi_encode();
+    //     let evm = self.evm;
+    // }
+
+    // fn balance_of(self, token: Address, address: Address) -> Result<U256> {
+    //     sol! {
+    //         function balanceOf(address account) public returns (uint256);
+    //     }
+
+    //     let encoded = balanceOfCall { account: address }.abi_encode();
+    //     let evm = self.evm;
+
+    // let evm = self.evm.modify_tx_env(|tx| {
+    //         // 0x1 because calling USDC proxy from zero address fails
+    //         tx.caller = address!("0000000000000000000000000000000000000001");
+    //         tx.transact_to = TransactTo::Call(token);
+    //         tx.data = encoded.into();
+    //         tx.value = U256::from(0);
+    //     })
+
+    // let ref_tx = evm.transact().unwrap();
+    // let result = ref_tx.result;
+
+    // let value = match result {
+    //     ExecutionResult::Success {
+    //         output: Output::Call(value),
+    //         ..
+    //     } => value,
+    //     result => return Err(anyhow!("'balanceOf' execution failed: {result:?}")),
+    // };
+
+    // let balance = <U256>::abi_decode(&value, false)?;
+
+    // Ok(balance)
 }
 
-//     pub fn run_pending_tx(&mut self, tx: &Transaction) -> Result<TxResult> {
-//         // We simply need to commit changes to the DB
-//         self.evm.env.tx.caller = tx.from.0.into();
-//         self.evm.env.tx.transact_to = TransactTo::Call(tx.to.unwrap_or_default().0.into());
-//         self.evm.env.tx.data = tx.input.0.clone();
-//         self.evm.env.tx.value = tx.value.into();
-//         self.evm.env.tx.chain_id = tx.chain_id.map(|id| id.as_u64());
-//         self.evm.env.tx.gas_limit = tx.gas.as_u64();
+// pub fn run_pending_tx(&mut self, tx: &Transaction) -> Result<TxResult> {
+//     // We simply need to commit changes to the DB
+//     self.evm.env.tx.caller = tx.from.0.into();
+//     self.evm.env.tx.transact_to = TransactTo::Call(tx.to.unwrap_or_default().0.into());
+//     self.evm.env.tx.data = tx.input.0.clone();
+//     self.evm.env.tx.value = tx.value.into();
+//     self.evm.env.tx.chain_id = tx.chain_id.map(|id| id.as_u64());
+//     self.evm.env.tx.gas_limit = tx.gas.as_u64();
 
-//         match tx.transaction_type {
-//             Some(U64([0])) => self.evm.env.tx.gas_price = tx.gas_price.unwrap_or_default().into(),
-//             Some(_) => {
-//                 self.evm.env.tx.gas_priority_fee =
-//                     tx.max_priority_fee_per_gas.map(|mpf| mpf.into());
-//                 self.evm.env.tx.gas_price = tx.max_fee_per_gas.unwrap_or_default().into();
-//             }
-//             None => self.evm.env.tx.gas_price = tx.gas_price.unwrap_or_default().into(),
+//     match tx.transaction_type {
+//         Some(U64([0])) => self.evm.env.tx.gas_price = tx.gas_price.unwrap_or_default().into(),
+//         Some(_) => {
+//             self.evm.env.tx.gas_priority_fee =
+//                 tx.max_priority_fee_per_gas.map(|mpf| mpf.into());
+//             self.evm.env.tx.gas_price = tx.max_fee_per_gas.unwrap_or_default().into();
 //         }
+//         None => self.evm.env.tx.gas_price = tx.gas_price.unwrap_or_default().into(),
+//     }
 
-//         let result = match self.evm.transact_commit() {
-//             Ok(result) => result,
-//             Err(e) => return Err(anyhow!("EVM call failed: {:?}", e)),
-//         };
+//     let result = match self.evm.transact_commit() {
+//         Ok(result) => result,
+//         Err(e) => return Err(anyhow!("EVM call failed: {}", e)),
+//     };
 
-//         let output = match result {
-//             ExecutionResult::Success {
+//     let output = match result {
+//         ExecutionResult::Success {
+//             gas_used,
+//             gas_refunded,
+//             output,
+//             ..
+//         } => match output {
+//             Output::Call(o) => TxResult {
+//                 output: o,
 //                 gas_used,
 //                 gas_refunded,
-//                 output,
-//                 ..
-//             } => match output {
-//                 Output::Call(o) => TxResult {
-//                     output: o,
-//                     gas_used,
-//                     gas_refunded,
-//                 },
-//                 Output::Create(o, _) => TxResult {
-//                     output: o,
-//                     gas_used,
-//                     gas_refunded,
-//                 },
 //             },
-//             ExecutionResult::Revert { gas_used, output } => {
-//                 return Err(anyhow!(
-//                     "EVM REVERT: {:?} / Gas used: {:?}",
-//                     output,
-//                     gas_used
-//                 ))
-//             }
-//             ExecutionResult::Halt { reason, .. } => return Err(anyhow!("EVM HALT: {:?}", reason)),
-//         };
+//             Output::Create(o, _) => TxResult {
+//                 output: o,
+//                 gas_used,
+//                 gas_refunded,
+//             },
+//         },
+//         ExecutionResult::Revert { gas_used, output } => {
+//             return Err(anyhow!(
+//                 "EVM REVERT: {:?} / Gas used: {:?}",
+//                 output,
+//                 gas_used
+//             ))
+//         }
+//         ExecutionResult::Halt { reason, .. } => return Err(anyhow!("EVM HALT: {:?}", reason)),
+//     };
 
-//         Ok(output)
-//     }
+//     Ok(output)
+// }
 
 //     pub fn _call(&mut self, tx: Tx, commit: bool) -> Result<TxResult> {
 //         self.evm.env.tx.caller = tx.caller.into();
