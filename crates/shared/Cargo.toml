@@ -8,6 +8,7 @@ alloy = { workspace = true }
 alloy-rpc-types = { workspace = true }
 foundry-config = { workspace = true }
 alloy-sol-types = { workspace = true }
+alloy-primitives = { workspace = true }
 alloy-chains = { workspace = true }
 tokio = { workspace = true }
 
