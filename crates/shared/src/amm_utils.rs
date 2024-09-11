@@ -65,18 +65,19 @@ where
         })
         .collect::<Vec<DetailedPool>>();
 
-    get_detailed_pool_data_batch_request(&mut pools, provider.clone()).await?;
+    let max_batch_size = 50;
+    for chunk in pools.chunks_mut(max_batch_size) {
+        get_detailed_pool_data_batch_request(chunk, provider.clone()).await?;
+    }
 
     let new_pools = pools
         .iter()
         .map(|pool| pool.to_new_pool())
         .collect::<Vec<NewPool>>();
 
-    tracing::info!("Got new pools: {:?}", new_pools);
-
     batch_upsert_pools(&mut conn, &new_pools).unwrap();
 
-    println!(
+    tracing::info!(
         "Inserted {:?} pools created from block {:?} to {:?}",
         new_pools.len(),
         from_block,
