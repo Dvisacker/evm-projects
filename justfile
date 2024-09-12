@@ -80,26 +80,29 @@ get-filtered-pools CHAIN_ID:
     cargo run --bin cli -- filter --chain-id {{CHAIN_ID}}
 
 get-uniswap-v3-pools CHAIN_ID EXCHANGE_NAME STEP START_BLOCK:
-    cargo run --bin cli -- get-uniswap-v3-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}} --from-block {{START_BLOCK}} --to-block 20709779 --step {{STEP}}
+    cargo run --bin cli -- get-uniswap-v3-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}} --from-block {{START_BLOCK}} --to-block 252438476 --step {{STEP}}
 
 get-uniswap-v2-pools CHAIN_ID EXCHANGE_NAME:
     cargo run --bin cli -- get-uniswap-v2-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}}
 
-## TODO. make this command interactive
-get-pools
-    # mainnet
-    cargo run --bin cli -- get-uniswap-v3-pools --chain-id 1 --exchange sushiswap-v3 --from-block {{START_BLOCK}} --to-block 20709779 --step 50000
-    cargo run --bin cli -- get-uniswap-v3-pools --chain-id 1 --exchange uniswap-v3 --from-block {{START_BLOCK}} --to-block 20709779 --step 50000
-    cargo run --bin cli -- get-uniswap-v2-pools --chain-id 1 --exchange uniswap-v2
-    cargo run --bin cli -- get-uniswap-v2-pools --chain-id 1 --exchange sushiswap-v2
-    # arbitrum
-    cargo run --bin cli -- get-uniswap-v3-pools --chain-id 42161 --exchange uniswap-v3 --from-block {{START_BLOCK}} --to-block 20709779 --step 50000
-    cargo run --bin cli -- get-uniswap-v3-pools --chain-id 42161 --exchange sushiswap-v3 --from-block {{START_BLOCK}} --to-block 20709779 --step 50000
-    cargo run --bin cli -- get-uniswap-v2-pools --chain-id 42161 --exchange uniswap-v2
-    cargo run --bin cli -- get-uniswap-v2-pools --chain-id 42161 --exchange sushiswap-v2
+get-contract-creation-block CHAIN_ID CONTRACT_ADDRESS:
+    cargo run --bin cli -- get-contract-creation-block --chain-id {{CHAIN_ID}} --contract-address {{CONTRACT_ADDRESS}}
+
+# ## TODO. make this command interactive
+# get-pools:
+#     # mainnet
+#     cargo run --bin cli -- get-uniswap-v3-pools --chain-id 1 --exchange sushiswap-v3 --from-block {{START_BLOCK}} --to-block 20709779 --step 50000
+#     cargo run --bin cli -- get-uniswap-v3-pools --chain-id 1 --exchange uniswap-v3 --from-block {{START_BLOCK}} --to-block 20709779 --step 50000
+#     cargo run --bin cli -- get-uniswap-v2-pools --chain-id 1 --exchange uniswap-v2
+#     cargo run --bin cli -- get-uniswap-v2-pools --chain-id 1 --exchange sushiswap-v2
+#     # arbitrum
+#     cargo run --bin cli -- get-uniswap-v3-pools --chain-id 42161 --exchange uniswap-v3 --from-block {{START_BLOCK}} --to-block 20709779 --step 50000
+#     cargo run --bin cli -- get-uniswap-v3-pools --chain-id 42161 --exchange sushiswap-v3 --from-block {{START_BLOCK}} --to-block 20709779 --step 50000
+#     cargo run --bin cli -- get-uniswap-v2-pools --chain-id 42161 --exchange uniswap-v2
+#     cargo run --bin cli -- get-uniswap-v2-pools --chain-id 42161 --exchange sushiswap-v2
 
 get-amm-value CHAIN_ID POOL_ADDRESS:
     cargo run --bin cli -- get-amm-value --chain-id {{CHAIN_ID}} --pool-address {{POOL_ADDRESS}}
 
 activate-pools CHAIN_ID EXCHANGE_NAME:
-    cargo run --bin cli -- activate-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}} --min-usd 100000
+    cargo run --bin cli -- activate-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}} --min-usd 20000

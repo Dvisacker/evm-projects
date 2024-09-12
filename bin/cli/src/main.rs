@@ -1,4 +1,5 @@
 use alloy::primitives::Address;
+use alloy::providers::Provider;
 use alloy_chains::{Chain, ChainKind, NamedChain};
 use anyhow::{Error, Result};
 use clap::{Args, Parser, Subcommand};
@@ -7,6 +8,7 @@ use shared::amm_utils::{
     activate_pools, get_amm_value, store_uniswap_v2_pools, store_uniswap_v3_pools,
 };
 use shared::config::get_chain_config;
+use shared::helpers::get_contract_creation_block;
 use shared::token_utils::load_pools_and_fetch_token_data;
 use std::str::FromStr;
 use std::sync::Arc;
@@ -29,6 +31,7 @@ enum Commands {
     GetUniswapV2Pools(GetUniswapV2PoolsArgs),
     GetAMMValue(GetAMMValueArgs),
     ActivatePools(ActivatePoolsArgs),
+    GetContractCreationBlock(GetContractCreationBlockArgs),
 }
 
 #[derive(Args)]
@@ -87,6 +90,18 @@ struct GetAMMValueArgs {
     chain_id: u64,
     #[arg(short, long)]
     pool_address: String,
+}
+
+#[derive(Args)]
+struct GetContractCreationBlockArgs {
+    #[arg(short, long)]
+    chain_id: u64,
+    #[arg(long)]
+    contract_address: String,
+    #[arg(long)]
+    start_block: Option<u64>,
+    #[arg(long)]
+    end_block: Option<u64>,
 }
 
 #[tokio::main]
@@ -231,6 +246,27 @@ async fn main() -> Result<(), Error> {
             let pool_address = Address::from_str(&args.pool_address).expect("Invalid pool address");
             let _amm_value = get_amm_value(chain, pool_address).await?;
             // info!("AMM value: {:?}", amm_value);
+        }
+        Commands::GetContractCreationBlock(args) => {
+            let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
+            let chain_config = get_chain_config(chain).await;
+            let provider = Arc::new(chain_config.ws);
+            let contract_address =
+                Address::from_str(&args.contract_address).expect("Invalid contract address");
+
+            // let start_block = args.start_block.unwrap_or(0);
+            let start_block = 20001989;
+            let end_block = match args.end_block {
+                Some(block) => block,
+                None => provider.get_block_number().await?,
+            };
+
+            match get_contract_creation_block(provider, contract_address, start_block, end_block)
+                .await
+            {
+                Ok(block) => info!("Contract creation block: {}", block),
+                Err(e) => info!("Error finding contract creation block: {}", e),
+            }
         }
     }
 
