@@ -1,6 +1,6 @@
 use alloy::providers::Provider;
-use alloy_primitives::{Address, Bytes, TxKind};
-use alloy_rpc_types::{BlockId, BlockNumberOrTag, TransactionInput, TransactionRequest};
+use alloy_primitives::{Address, Bytes};
+use alloy_rpc_types::{BlockId, BlockNumberOrTag};
 use std::sync::Arc;
 
 pub async fn get_contract_creation_block<P: Provider>(
@@ -38,18 +38,9 @@ async fn get_code_at_block<P: Provider>(
     address: Address,
     block: u64,
 ) -> Result<Bytes, Box<dyn std::error::Error>> {
-    let input = TransactionInput {
-        data: Some(Bytes::from_static(&[0x3b])), // EXTCODESIZE opcode
-        ..Default::default()
-    };
-    let tx = TransactionRequest {
-        to: Some(TxKind::Call(address)),
-        chain_id: Some(1),
-        input: input,
-        ..Default::default()
-    };
+    tracing::info!("Getting code at block: {}", block);
     let block_number = BlockNumberOrTag::Number(block.into());
     let block_id = BlockId::Number(block_number);
-    let result = provider.call(&tx).block(block_id).await?;
+    let result = provider.get_code_at(address).block_id(block_id).await?;
     Ok(result)
 }

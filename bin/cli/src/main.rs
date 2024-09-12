@@ -255,7 +255,7 @@ async fn main() -> Result<(), Error> {
                 Address::from_str(&args.contract_address).expect("Invalid contract address");
 
             // let start_block = args.start_block.unwrap_or(0);
-            let start_block = 20001989;
+            let start_block = 0;
             let end_block = match args.end_block {
                 Some(block) => block,
                 None => provider.get_block_number().await?,
