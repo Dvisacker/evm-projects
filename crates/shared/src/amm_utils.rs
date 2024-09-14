@@ -234,7 +234,7 @@ pub async fn activate_pools(
     exchange_name: ExchangeName,
     usd_threshold: f64,
     db_url: &str,
-) -> Result<Vec<AMM>, AMMError> {
+) -> Result<(), AMMError> {
     let named_chain = chain.named().unwrap();
     let mut conn = establish_connection(db_url);
     let pools = get_pools(
@@ -250,16 +250,32 @@ pub async fn activate_pools(
 
     println!("Got {:?} pools", pools.len());
 
-    let filtered_pools = filter_amms(chain, usd_threshold, amms).await?;
-    let filtered_addresses = filtered_pools
-        .iter()
-        .map(|amm| amm.address().to_string())
-        .collect::<Vec<String>>();
+    for chunk in amms.chunks(1000) {
+        let result = filter_amms(chain, usd_threshold, chunk.to_vec()).await;
+        if result.is_err() {
+            tracing::error!("Error filtering amms: {:?}", result.err());
+            continue;
+        }
+        let filtered_pools = result.unwrap();
+        let active_pools = filtered_pools
+            .iter()
+            .map(|amm| amm.address().to_string())
+            .collect::<Vec<String>>();
 
-    println!("Filtered pools: {:?}", filtered_pools.len());
+        let inactive_pools = chunk
+            .iter()
+            .filter(|amm| !active_pools.contains(&amm.address().to_string()))
+            .map(|amm| amm.address().to_string())
+            .collect::<Vec<String>>();
 
-    batch_update_filtered(&mut conn, &filtered_addresses, true).unwrap();
-    Ok(filtered_pools)
+        println!("Active pools: {:?}", active_pools.len());
+        println!("Inactive pools: {:?}", inactive_pools.len());
+
+        batch_update_filtered(&mut conn, &active_pools, true).unwrap();
+        batch_update_filtered(&mut conn, &inactive_pools, false).unwrap();
+    }
+
+    Ok(())
 }
 
 /// Calculates the value of a specific AMM pool.
@@ -280,44 +296,56 @@ pub async fn get_amm_value(chain: Chain, pool_address: Address) -> Result<U256, 
     let named_chain = chain.named().unwrap();
     let weth_address = addressbook.get_weth(&named_chain).unwrap();
 
-    let weth_usdc_univ3 = Address::from_str("0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640").unwrap();
-    let mut weth_usdc_pool = UniswapV3Pool::new_empty(weth_usdc_univ3, named_chain).await?;
-    let block_number = provider.get_block_number().await.unwrap();
-
-    weth_usdc_pool
-        .populate_data(Some(block_number), provider.clone())
-        .await?;
-
-    let weth_usdc_pool = AMM::UniswapV3Pool(weth_usdc_pool);
-    let weth_usd_price = weth_usdc_pool.calculate_price(weth_address)?;
-    println!("Weth usd price: {:?}", weth_usd_price);
-
-    // get the pool type from the address ?
+    let weth_usdc_address =
+        Address::from_str("0xc31e54c7a869b9fcbecc14363cf510d1c41fa443").unwrap();
+    let mut weth_usdc_pool = AMM::UniswapV3Pool(UniswapV3Pool {
+        address: weth_usdc_address,
+        exchange_name: ExchangeName::UniswapV3,
+        exchange_type: ExchangeType::UniV3,
+        chain: named_chain,
+        ..Default::default()
+    });
+    weth_usdc_pool.populate_data(None, provider.clone()).await?;
     let pool_type = get_pool_type(pool_address, provider.clone()).await?;
 
-    let amm: AMM;
+    let mut amm: AMM;
     match pool_type {
         ExchangeType::UniV2 => {
-            let pool =
-                UniswapV2Pool::new_from_address(pool_address, 3000, provider.clone()).await?;
+            let pool = UniswapV2Pool {
+                address: pool_address,
+                exchange_name: ExchangeName::UniswapV2,
+                exchange_type: ExchangeType::UniV2,
+                chain: named_chain,
+                ..Default::default()
+            };
             amm = AMM::UniswapV2Pool(pool);
         }
         ExchangeType::UniV3 => {
-            let pool =
-                UniswapV3Pool::new_from_address(pool_address, block_number, provider.clone())
-                    .await?;
+            let pool = UniswapV3Pool {
+                address: pool_address,
+                exchange_name: ExchangeName::UniswapV3,
+                exchange_type: ExchangeType::UniV3,
+                chain: named_chain,
+                ..Default::default()
+            };
             amm = AMM::UniswapV3Pool(pool);
         }
         ExchangeType::CamelotV3 => {
-            let pool =
-                CamelotV3Pool::new_from_address(pool_address, block_number, provider.clone())
-                    .await?;
+            let pool = CamelotV3Pool {
+                address: pool_address,
+                exchange_name: ExchangeName::CamelotV3,
+                exchange_type: ExchangeType::CamelotV3,
+                chain: named_chain,
+                ..Default::default()
+            };
             amm = AMM::CamelotV3Pool(pool);
         }
         _ => {
             return Err(AMMError::UnknownPoolType);
         }
     }
+
+    amm.populate_data(None, provider.clone()).await?;
 
     let v3_factories = addressbook.get_v3_factories(&named_chain);
 
@@ -330,7 +358,7 @@ pub async fn get_amm_value(chain: Chain, pool_address: Address) -> Result<U256, 
         &[amm],
         &factories,
         weth_address,
-        U256::from(1000000000000000000_u128),
+        U256::from(10000000000000000000_u128),
         100,
         provider,
     )
@@ -362,24 +390,21 @@ pub async fn filter_amms(
     let provider = chain_config.ws;
     let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
-
     let weth_address = addressbook.get_weth(&named_chain).unwrap();
     let exchange_name: ExchangeName = ExchangeName::UniswapV2;
     let weth_usdc_address = addressbook
         .get_pool_by_name(&named_chain, exchange_name, "WETH-USDC")
         .unwrap();
-
     let weth_usdc_pool = AMM::UniswapV2Pool(
         UniswapV2Pool::new_from_address(weth_usdc_address, 300, provider.clone()).await?,
     );
     let weth_value_in_token_to_weth_pool_threshold = U256::from(1000000000000000000_u128); // 10 weth
     let block_number = provider.get_block_number().await.unwrap();
-
-    let factory = Factory::UniswapV3Factory(UniswapV3Factory::new(
-        addressbook.arbitrum.exchanges.univ3.uniswapv3.factory,
+    let uniswap_v3_factory = addressbook.get_v3_factories(&named_chain)[0];
+    let factories = vec![Factory::UniswapV3Factory(UniswapV3Factory::new(
+        uniswap_v3_factory,
         0,
-    ));
-    let factories = vec![factory];
+    ))];
 
     let mut v2_pools = amms
         .iter()

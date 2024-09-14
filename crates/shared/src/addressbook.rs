@@ -209,13 +209,19 @@ impl Addressbook {
 
     pub fn get_v3_factories(&self, chain: &NamedChain) -> Vec<Address> {
         let chain_config = self.get_chain_address_book(chain).unwrap();
-        vec![
+        let factories = vec![
             chain_config.exchanges.univ3.uniswapv3.factory,
             chain_config.exchanges.univ3.sushiswapv3.factory,
             chain_config.exchanges.univ3.camelotv3.factory,
             chain_config.exchanges.univ3.ramsesv2.factory,
             chain_config.exchanges.univ3.pancakeswapv3.factory,
-        ]
+        ];
+
+        // Filter out empty addresses
+        factories
+            .into_iter()
+            .filter(|addr| !addr.is_zero())
+            .collect()
     }
 
     // pub fn get_exchange_name(&self, chain: &NamedChain, factory: Address) -> Option<ExchangeName> {
