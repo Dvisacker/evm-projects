@@ -8,9 +8,12 @@ use alloy::providers::Provider;
 use alloy::transports::Transport;
 use alloy_chains::{Chain, NamedChain};
 use amms::amm::camelot_v3::CamelotV3Pool;
-use amms::amm::common::get_detailed_pool_data_batch_request;
+use amms::amm::common::get_standard_pool_data_batch_request;
+use amms::amm::uniswap_v2::IUniswapV2Pair;
+use amms::amm::uniswap_v3::IUniswapV3Pool;
 use amms::amm::AutomatedMarketMaker;
 use amms::errors::AMMError;
+use amms::filters::value::get_weth_values_in_amms;
 use amms::sync::populate_amms;
 use amms::{
     amm::{
@@ -26,11 +29,75 @@ use db::establish_connection;
 use db::models::{NewPool, Pool};
 use db::queries::pool::{batch_update_filtered, batch_upsert_pools, get_pools};
 use types::exchange::{ExchangeName, ExchangeType};
-use types::pool::DetailedPool;
+use types::standard_pool::StandardPool;
 
 use crate::addressbook::Addressbook;
 use crate::config::get_chain_config;
 
+/// Determines the exchange type of a pool given its address.
+///
+/// This function attempts to identify whether a pool is UniswapV2, UniswapV3, CamelotV3, or Unknown
+/// by calling specific functions on the pool contract.
+///
+/// # Arguments
+/// * `address` - The address of the pool to check
+/// * `provider` - An Arc-wrapped provider for making RPC calls
+///
+/// # Returns
+/// A Result containing the ExchangeType or an AMMError
+pub async fn get_pool_type<P, T, N>(
+    address: Address,
+    provider: Arc<P>,
+) -> Result<ExchangeType, AMMError>
+where
+    P: Provider<T, N>,
+    T: Transport + Clone,
+    N: Network,
+{
+    let univ2_pool = IUniswapV2Pair::new(address, provider.clone());
+    let univ3_pool = IUniswapV3Pool::new(address, provider.clone());
+
+    match univ3_pool.factory().call().await {
+        Ok(_factory) => match univ3_pool.tickSpacing().call().await {
+            Ok(_tick_spacing) => {
+                return Ok(ExchangeType::UniV3);
+            }
+            Err(_) => match univ2_pool.getReserves().call().await {
+                Ok(_reserves) => {
+                    return Ok(ExchangeType::UniV2);
+                }
+                Err(_) => {
+                    return Ok(ExchangeType::Unknown);
+                }
+            },
+        },
+        Err(_) => match univ3_pool.tickSpacing().call().await {
+            Ok(_tick_spacing) => {
+                return Ok(ExchangeType::CamelotV3);
+            }
+            Err(_) => {
+                return Ok(ExchangeType::Unknown);
+            }
+        },
+    }
+}
+
+/// Stores Uniswap V3 pools in the database.
+///
+/// This function fetches Uniswap V3 pools from logs within a specified block range,
+/// populates their data, and stores them in the database.
+///
+/// # Arguments
+/// * `provider` - An Arc-wrapped provider for making RPC calls
+/// * `chain` - The blockchain on which the pools exist
+/// * `factory_address` - The address of the Uniswap V3 factory
+/// * `from_block` - The starting block number to fetch pools from
+/// * `to_block` - The ending block number to fetch pools to
+/// * `step` - The number of blocks to process in each iteration
+/// * `db_url` - The URL of the database to store the pools
+///
+/// # Returns
+/// A Result indicating success or an AMMError
 pub async fn store_uniswap_v3_pools<P, T, N>(
     provider: Arc<P>,
     chain: Chain,
@@ -55,7 +122,7 @@ where
     let mut pools = pools
         .iter()
         .map(|pool| {
-            DetailedPool::empty(
+            StandardPool::empty(
                 pool.address(),
                 chain.named().unwrap(),
                 Some(factory_address),
@@ -63,11 +130,11 @@ where
                 Some(ExchangeName::UniswapV3),
             )
         })
-        .collect::<Vec<DetailedPool>>();
+        .collect::<Vec<StandardPool>>();
 
     let max_batch_size = 50;
     for chunk in pools.chunks_mut(max_batch_size) {
-        get_detailed_pool_data_batch_request(chunk, provider.clone()).await?;
+        get_standard_pool_data_batch_request(chunk, provider.clone()).await?;
     }
 
     let new_pools = pools
@@ -87,6 +154,19 @@ where
     Ok(())
 }
 
+/// Stores Uniswap V2 pools in the database.
+///
+/// This function syncs Uniswap V2 pools, populates their data, and stores them in the database.
+///
+/// # Arguments
+/// * `provider` - An Arc-wrapped provider for making RPC calls
+/// * `chain` - The blockchain on which the pools exist
+/// * `exchange_name` - The name of the exchange (e.g., UniswapV2)
+/// * `factory_address` - The address of the Uniswap V2 factory
+/// * `db_url` - The URL of the database to store the pools
+///
+/// # Returns
+/// A Result indicating success or an AMMError
 pub async fn store_uniswap_v2_pools<P, T, N>(
     provider: Arc<P>,
     chain: Chain,
@@ -110,7 +190,7 @@ where
     let pools = amms
         .iter()
         .map(|pool| {
-            DetailedPool::empty(
+            StandardPool::empty(
                 pool.address(),
                 chain.named().unwrap(),
                 Some(factory_address),
@@ -118,11 +198,11 @@ where
                 Some(exchange_name),
             )
         })
-        .collect::<Vec<DetailedPool>>();
+        .collect::<Vec<StandardPool>>();
 
     for chunk in pools.chunks(50) {
         let mut chunk = chunk.to_vec();
-        get_detailed_pool_data_batch_request(&mut chunk, provider.clone()).await?;
+        get_standard_pool_data_batch_request(&mut chunk, provider.clone()).await?;
 
         let new_pools = chunk
             .iter()
@@ -136,6 +216,19 @@ where
     Ok(())
 }
 
+/// Activates pools that meet a certain USD value threshold.
+///
+/// This function retrieves pools from the database, filters them based on a USD threshold,
+/// and marks the filtered pools as active in the database.
+///
+/// # Arguments
+/// * `chain` - The blockchain on which the pools exist
+/// * `exchange_name` - The name of the exchange to filter pools for
+/// * `usd_threshold` - The minimum USD value for a pool to be considered active
+/// * `db_url` - The URL of the database to retrieve and update pools
+///
+/// # Returns
+/// A Result containing a vector of activated AMMs or an AMMError
 pub async fn activate_pools(
     chain: Chain,
     exchange_name: ExchangeName,
@@ -169,45 +262,97 @@ pub async fn activate_pools(
     Ok(filtered_pools)
 }
 
+/// Calculates the value of a specific AMM pool.
+///
+/// This function determines the type of pool, creates the appropriate AMM object,
+/// and calculates its value in terms of WETH.
+///
+/// # Arguments
+/// * `chain` - The blockchain on which the pool exists
+/// * `pool_address` - The address of the pool to value
+///
+/// # Returns
+/// A Result containing the U256 value of the pool or an AMMError
 pub async fn get_amm_value(chain: Chain, pool_address: Address) -> Result<U256, AMMError> {
     let chain_config = get_chain_config(chain).await;
     let provider = chain_config.ws;
     let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
-    let _weth_address = addressbook.get_weth(&named_chain).unwrap();
+    let weth_address = addressbook.get_weth(&named_chain).unwrap();
 
-    let weth_usdc = Address::from_str("0xc31e54c7a869b9fcbecc14363cf510d1c41fa443").unwrap();
-    let _weth_usdc_pool = AMM::UniswapV2Pool(
-        UniswapV2Pool::new_from_address(weth_usdc, 300, provider.clone()).await?,
-    );
+    let weth_usdc_univ3 = Address::from_str("0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640").unwrap();
+    let mut weth_usdc_pool = UniswapV3Pool::new_empty(weth_usdc_univ3, named_chain).await?;
     let block_number = provider.get_block_number().await.unwrap();
-    let _amm =
-        UniswapV3Pool::new_from_address(pool_address, block_number, provider.clone()).await?;
 
-    // let factory = Factory::UniswapV3Factory(UniswapV3Factory::new(
-    //     addressbook.arbitrum.exchanges.univ3.uniswapv3.factory,
-    //     0,
-    // ));
-    // let factories = vec![factory];
+    weth_usdc_pool
+        .populate_data(Some(block_number), provider.clone())
+        .await?;
 
-    // let weth_usd_price = weth_usdc_pool.calculate_price(weth_address)?;
-    // println!("Weth usd price: {:?}", weth_usd_price);
+    let weth_usdc_pool = AMM::UniswapV3Pool(weth_usdc_pool);
+    let weth_usd_price = weth_usdc_pool.calculate_price(weth_address)?;
+    println!("Weth usd price: {:?}", weth_usd_price);
 
-    // let weth_values_in_pools = get_weth_values_in_amms(
-    //     &[amm],
-    //     &vec![],
-    //     weth_address,
-    //     weth_value_in_token_to_weth_pool_threshold,
-    //     100,
-    //     provider,
-    // )
-    // .await?;
+    // get the pool type from the address ?
+    let pool_type = get_pool_type(pool_address, provider.clone()).await?;
 
-    // let weth_value_in_amm = weth_values_in_pools[0];
+    let amm: AMM;
+    match pool_type {
+        ExchangeType::UniV2 => {
+            let pool =
+                UniswapV2Pool::new_from_address(pool_address, 3000, provider.clone()).await?;
+            amm = AMM::UniswapV2Pool(pool);
+        }
+        ExchangeType::UniV3 => {
+            let pool =
+                UniswapV3Pool::new_from_address(pool_address, block_number, provider.clone())
+                    .await?;
+            amm = AMM::UniswapV3Pool(pool);
+        }
+        ExchangeType::CamelotV3 => {
+            let pool =
+                CamelotV3Pool::new_from_address(pool_address, block_number, provider.clone())
+                    .await?;
+            amm = AMM::CamelotV3Pool(pool);
+        }
+        _ => {
+            return Err(AMMError::UnknownPoolType);
+        }
+    }
+
+    let v3_factories = addressbook.get_v3_factories(&named_chain);
+
+    let factories = v3_factories
+        .iter()
+        .map(|factory| Factory::UniswapV3Factory(UniswapV3Factory::new(*factory, 0)))
+        .collect::<Vec<Factory>>();
+
+    let weth_values_in_pools = get_weth_values_in_amms(
+        &[amm],
+        &factories,
+        weth_address,
+        U256::from(1000000000000000000_u128),
+        100,
+        provider,
+    )
+    .await?;
+
+    let weth_value_in_amm = weth_values_in_pools[0];
+    println!("Weth value in amm: {:?}", weth_value_in_amm);
 
     Ok(U256::from(0))
 }
 
+/// Filters AMMs based on a USD value threshold.
+///
+/// This function takes a list of AMMs and filters out those below a specified USD value threshold.
+///
+/// # Arguments
+/// * `chain` - The blockchain on which the AMMs exist
+/// * `usd_threshold` - The minimum USD value for an AMM to be included
+/// * `amms` - A vector of AMMs to filter
+///
+/// # Returns
+/// A Result containing a vector of filtered AMMs or an AMMError
 pub async fn filter_amms(
     chain: Chain,
     usd_threshold: f64,
@@ -295,6 +440,16 @@ pub async fn filter_amms(
     Ok(filtered_pools)
 }
 
+/// Converts database pool objects to AMM objects.
+///
+/// This function takes a slice of Pool objects from the database and converts them
+/// into the appropriate AMM objects based on their exchange type.
+///
+/// # Arguments
+/// * `pools` - A slice of Pool objects from the database
+///
+/// # Returns
+/// A Result containing a vector of AMM objects or an AMMError
 pub fn db_pools_to_amms(pools: &[Pool]) -> Result<Vec<AMM>, AMMError> {
     pools
         .iter()

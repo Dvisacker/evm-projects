@@ -225,7 +225,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
         let pool_data =
             result.map_err(|e| anyhow::anyhow!("Failed to parse pool batch request: {:?}", e))?;
 
-        let new_pool = self.parse_uniswap_v2_log(pool_data, &mut conn, pool_address)?;
+        let new_pool = self.parse_univ2_pool_data(pool_data, &mut conn, pool_address)?;
 
         batch_upsert_pools(&mut conn, &vec![new_pool]).unwrap();
         Ok(())
@@ -272,12 +272,12 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
         let uniswap_v3_log =
             result.map_err(|e| anyhow::anyhow!("Failed to parse pool batch request: {:?}", e))?;
 
-        let new_pool = self.parse_uniswap_v3_log(uniswap_v3_log, &mut conn, pool_address)?;
+        let new_pool = self.parse_univ3_pool_data(uniswap_v3_log, &mut conn, pool_address)?;
         batch_upsert_pools(&mut conn, &vec![new_pool]).unwrap();
         Ok(())
     }
 
-    fn parse_uniswap_v2_log(
+    fn parse_univ2_pool_data(
         &self,
         pool_data: DynSolValue,
         mut conn: &mut PgConnection,
@@ -341,7 +341,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
         return Err(anyhow::anyhow!("Failed to parse pool data"));
     }
 
-    fn parse_uniswap_v3_log(
+    fn parse_univ3_pool_data(
         &self,
         log: DynSolValue,
         conn: &mut PgConnection,

@@ -1,3 +1,3 @@
 pub mod chain_serde;
 pub mod exchange;
-pub mod pool;
+pub mod standard_pool;

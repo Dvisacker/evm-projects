@@ -2,12 +2,11 @@ use alloy::network::Network;
 use alloy::primitives::Address;
 use alloy::providers::Provider;
 use alloy::transports::Transport;
-use alloy_rpc_types::{BlockId, Transaction};
-use alloy_sol_types::{sol, SolCall, SolValue};
+use alloy_rpc_types::BlockId;
 use anyhow::Result;
 use foundry_evm;
 use foundry_evm::revm::{db::AlloyDB, db::CacheDB, Evm};
-use revm::primitives::{AccountInfo, Bytecode, ExecutionResult, Output, TransactTo, B256, U256};
+use revm::primitives::{AccountInfo, Bytecode, B256, U256};
 use std::marker::PhantomData;
 use std::sync::Arc;
 

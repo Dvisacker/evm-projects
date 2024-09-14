@@ -40,18 +40,6 @@ struct GetNamedPoolsArgs {
     chain_id: u64,
 }
 
-// #[derive(Clone, ValueEnum)]
-// enum ExchangeName {
-//     UniswapV2,
-//     SushiswapV2,
-//     UniswapV3,
-//     SushiswapV3,
-//     CamelotV3,
-//     RamsesV2,
-//     PancakeswapV3,
-//     Unknown,
-// }
-
 #[derive(Args)]
 struct GetUniswapV3PoolsArgs {
     #[arg(short, long)]
@@ -254,8 +242,7 @@ async fn main() -> Result<(), Error> {
             let contract_address =
                 Address::from_str(&args.contract_address).expect("Invalid contract address");
 
-            // let start_block = args.start_block.unwrap_or(0);
-            let start_block = 0;
+            let start_block = args.start_block.unwrap_or(0);
             let end_block = match args.end_block {
                 Some(block) => block,
                 None => provider.get_block_number().await?,

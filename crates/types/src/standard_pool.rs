@@ -5,7 +5,7 @@ use db::models::NewPool;
 use crate::exchange::{ExchangeName, ExchangeType};
 
 #[derive(Debug, Clone)]
-pub struct DetailedPool {
+pub struct StandardPool {
     pub address: Address,
     pub chain: NamedChain,
     pub exchange_name: String,
@@ -23,9 +23,9 @@ pub struct DetailedPool {
     pub filtered: Option<bool>,
 }
 
-impl From<NewPool> for DetailedPool {
+impl From<NewPool> for StandardPool {
     fn from(pool: NewPool) -> Self {
-        DetailedPool {
+        StandardPool {
             chain: pool.chain.parse::<NamedChain>().unwrap(),
             exchange_name: pool.exchange_name.to_string(),
             exchange_type: ExchangeType::from_str(&pool.exchange_type).unwrap(),
@@ -45,7 +45,7 @@ impl From<NewPool> for DetailedPool {
     }
 }
 
-impl DetailedPool {
+impl StandardPool {
     pub fn name(&self) -> String {
         format!("{}_{}", self.token_a_symbol, self.token_b_symbol)
     }
@@ -56,8 +56,8 @@ impl DetailedPool {
         factory_address: Option<Address>,
         exchange_type: Option<ExchangeType>,
         exchange_name: Option<ExchangeName>,
-    ) -> DetailedPool {
-        DetailedPool {
+    ) -> StandardPool {
+        StandardPool {
             address,
             chain: chain.clone(),
             exchange_name: exchange_name
