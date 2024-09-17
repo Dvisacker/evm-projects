@@ -1,6 +1,6 @@
 use alloy::primitives::Address;
 use alloy_chains::NamedChain;
-use db::models::NewPool;
+use db::models::NewDbPool;
 
 use crate::exchange::{ExchangeName, ExchangeType};
 
@@ -23,8 +23,8 @@ pub struct StandardPool {
     pub filtered: Option<bool>,
 }
 
-impl From<NewPool> for StandardPool {
-    fn from(pool: NewPool) -> Self {
+impl From<NewDbPool> for StandardPool {
+    fn from(pool: NewDbPool) -> Self {
         StandardPool {
             chain: pool.chain.parse::<NamedChain>().unwrap(),
             exchange_name: pool.exchange_name.to_string(),
@@ -79,8 +79,8 @@ impl StandardPool {
         }
     }
 
-    pub fn to_new_pool(&self) -> NewPool {
-        NewPool {
+    pub fn to_new_db_pool(&self) -> NewDbPool {
+        NewDbPool {
             address: self.address.to_string(),
             chain: self.chain.as_str().to_string(),
             factory_address: self.factory_address.to_string(),

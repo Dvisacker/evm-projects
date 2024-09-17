@@ -42,22 +42,18 @@ diesel::table! {
         token_b -> Varchar,
         token_b_decimals -> Int4,
         token_b_symbol -> Varchar,
-        liquidity -> Numeric,
-        sqrt_price -> Numeric,
-        fee -> Int4,
-        tick -> Int4,
-        tick_spacing -> Int4,
-        tick_bitmap -> Jsonb,
-        ticks -> Jsonb,
-        exchange_name -> Varchar,
-        exchange_type -> Varchar,
-        created_at -> Timestamp,
-        updated_at -> Timestamp,
+        liquidity -> Nullable<Varchar>,
+        sqrt_price -> Nullable<Varchar>,
+        fee -> Nullable<Int4>,
+        tick -> Nullable<Int4>,
+        tick_spacing -> Nullable<Int4>,
+        tick_bitmap -> Nullable<Jsonb>,
+        ticks -> Nullable<Jsonb>,
+        exchange_name -> Nullable<Varchar>,
+        exchange_type -> Nullable<Varchar>,
+        created_at -> Timestamptz,
+        updated_at -> Timestamptz,
     }
 }
 
-diesel::allow_tables_to_appear_in_same_query!(
-    exchanges,
-    pools,
-    uni_v3_pools,
-);
+diesel::allow_tables_to_appear_in_same_query!(exchanges, pools, uni_v3_pools,);

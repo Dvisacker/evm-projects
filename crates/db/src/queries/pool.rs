@@ -1,11 +1,11 @@
-use crate::models::{NewPool, Pool};
+use crate::models::{DbPool, NewDbPool};
 use crate::schema::pools;
 use diesel::pg::PgConnection;
 use diesel::prelude::*;
 use diesel::result::Error;
 use diesel::upsert::excluded;
 
-pub fn insert_pool(conn: &mut PgConnection, new_pool: &NewPool) -> Result<Pool, Error> {
+pub fn insert_pool(conn: &mut PgConnection, new_pool: &NewDbPool) -> Result<DbPool, Error> {
     diesel::insert_into(pools::table)
         .values(new_pool)
         .get_result(conn)
@@ -13,8 +13,8 @@ pub fn insert_pool(conn: &mut PgConnection, new_pool: &NewPool) -> Result<Pool, 
 
 pub fn batch_insert_pools(
     conn: &mut PgConnection,
-    new_pools: &Vec<NewPool>,
-) -> Result<Vec<Pool>, Error> {
+    new_pools: &Vec<NewDbPool>,
+) -> Result<Vec<DbPool>, Error> {
     diesel::insert_into(pools::table)
         .values(new_pools)
         .get_results(conn)
@@ -22,8 +22,8 @@ pub fn batch_insert_pools(
 
 pub fn batch_upsert_pools(
     conn: &mut PgConnection,
-    new_pools: &Vec<NewPool>,
-) -> Result<Vec<Pool>, Error> {
+    new_pools: &Vec<NewDbPool>,
+) -> Result<Vec<DbPool>, Error> {
     diesel::insert_into(pools::table)
         .values(new_pools)
         .on_conflict((pools::chain, pools::address))
@@ -45,11 +45,11 @@ pub fn batch_upsert_pools(
         .get_results(conn)
 }
 
-pub fn get_all_pools(conn: &mut PgConnection) -> Result<Vec<Pool>, Error> {
-    pools::table.load::<Pool>(conn)
+pub fn get_all_pools(conn: &mut PgConnection) -> Result<Vec<DbPool>, Error> {
+    pools::table.load::<DbPool>(conn)
 }
 
-pub fn get_pool_by_address(conn: &mut PgConnection, pool_address: &str) -> Result<Pool, Error> {
+pub fn get_pool_by_address(conn: &mut PgConnection, pool_address: &str) -> Result<DbPool, Error> {
     pools::table
         .filter(pools::address.eq(pool_address))
         .first(conn)
@@ -58,8 +58,8 @@ pub fn get_pool_by_address(conn: &mut PgConnection, pool_address: &str) -> Resul
 pub fn update_pool(
     conn: &mut PgConnection,
     pool_address: &str,
-    updated_pool: &NewPool,
-) -> Result<Pool, Error> {
+    updated_pool: &NewDbPool,
+) -> Result<DbPool, Error> {
     diesel::update(pools::table.filter(pools::address.eq(pool_address)))
         .set((
             pools::chain.eq(updated_pool.chain.clone()),
@@ -92,7 +92,7 @@ pub fn get_pools(
     exchange_type: Option<&str>,
     limit: Option<i64>,
     filtered: Option<bool>,
-) -> Result<Vec<Pool>, Error> {
+) -> Result<Vec<DbPool>, Error> {
     let mut query = pools::table.into_boxed();
 
     if let Some(chain_name) = chain_name {
@@ -123,24 +123,24 @@ pub fn get_pools(
 
     // query = query.filter(pools::filtered.eq_any(filtered));
 
-    query.load::<Pool>(conn)
+    query.load::<DbPool>(conn)
 }
 
 // Add a new function to get pools by chain
-pub fn get_pools_by_chain(conn: &mut PgConnection, chain_name: &str) -> Result<Vec<Pool>, Error> {
+pub fn get_pools_by_chain(conn: &mut PgConnection, chain_name: &str) -> Result<Vec<DbPool>, Error> {
     pools::table
         .filter(pools::chain.eq(chain_name))
-        .load::<Pool>(conn)
+        .load::<DbPool>(conn)
 }
 
 // Add a new function to get pools by exchange
 pub fn get_pools_by_exchange(
     conn: &mut PgConnection,
     exchange_name: &str,
-) -> Result<Vec<Pool>, Error> {
+) -> Result<Vec<DbPool>, Error> {
     pools::table
         .filter(pools::exchange_name.eq(exchange_name))
-        .load::<Pool>(conn)
+        .load::<DbPool>(conn)
 }
 
 pub fn batch_update_filtered(
@@ -154,9 +154,9 @@ pub fn batch_update_filtered(
         .execute(conn)
 }
 
-pub fn get_filtered_pools(conn: &mut PgConnection, chain_name: &str) -> Result<Vec<Pool>, Error> {
+pub fn get_filtered_pools(conn: &mut PgConnection, chain_name: &str) -> Result<Vec<DbPool>, Error> {
     pools::table
         .filter(pools::chain.eq(chain_name))
         .filter(pools::filtered.eq(true))
-        .load::<Pool>(conn)
+        .load::<DbPool>(conn)
 }

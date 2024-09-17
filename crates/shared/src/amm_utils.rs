@@ -26,7 +26,7 @@ use amms::{
     sync::{self},
 };
 use db::establish_connection;
-use db::models::{NewPool, Pool};
+use db::models::{DbPool, NewDbPool};
 use db::queries::pool::{batch_update_filtered, batch_upsert_pools, get_pools};
 use types::exchange::{ExchangeName, ExchangeType};
 use types::standard_pool::StandardPool;
@@ -139,8 +139,8 @@ where
 
     let new_pools = pools
         .iter()
-        .map(|pool| pool.to_new_pool())
-        .collect::<Vec<NewPool>>();
+        .map(|pool| pool.to_new_db_pool())
+        .collect::<Vec<NewDbPool>>();
 
     batch_upsert_pools(&mut conn, &new_pools).unwrap();
 
@@ -206,8 +206,8 @@ where
 
         let new_pools = chunk
             .iter()
-            .map(|pool| pool.to_new_pool())
-            .collect::<Vec<NewPool>>();
+            .map(|pool| pool.to_new_db_pool())
+            .collect::<Vec<NewDbPool>>();
 
         batch_upsert_pools(&mut conn, &new_pools).unwrap();
         tracing::info!("Inserted {:?} pools", new_pools.len());
@@ -473,11 +473,11 @@ pub async fn filter_amms(
 /// into the appropriate AMM objects based on their exchange type.
 ///
 /// # Arguments
-/// * `pools` - A slice of Pool objects from the database
+/// * `pools` - A slice of DbPool objects from the database
 ///
 /// # Returns
 /// A Result containing a vector of AMM objects or an AMMError
-pub fn db_pools_to_amms(pools: &[Pool]) -> Result<Vec<AMM>, AMMError> {
+pub fn db_pools_to_amms(pools: &[DbPool]) -> Result<Vec<AMM>, AMMError> {
     pools
         .iter()
         .map(|pool| {

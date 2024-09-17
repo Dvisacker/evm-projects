@@ -3,7 +3,7 @@ use diesel::prelude::*;
 
 #[derive(Queryable, Selectable, Debug)]
 #[diesel(table_name = pools)]
-pub struct Pool {
+pub struct DbPool {
     pub id: i32,
     pub address: String,
     pub chain: String,
@@ -24,7 +24,7 @@ pub struct Pool {
 
 #[derive(Insertable, Debug)]
 #[diesel(table_name = pools)]
-pub struct NewPool {
+pub struct NewDbPool {
     pub address: String,
     pub chain: String,
     pub factory_address: String,
