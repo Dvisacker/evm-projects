@@ -21,7 +21,10 @@
             },
             "univ3": {
                 "uniswapv3": {
-                    "factory": "0x1F98431c8aD98523631AE4a59f267346ea31F984"
+                    "factory": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
+                    "pools": {
+                        "WETH-USDC": "0xc31e54c7a869b9fcbecc14363cf510d1c41fa443"
+                    }
                 },
                 "sushiswapv3": {
                     "factory": "0x1af415a1EbA07a4986a52B6f2e7dE7003D82231e"

@@ -268,11 +268,13 @@ pub async fn activate_pools(
             .map(|amm| amm.address().to_string())
             .collect::<Vec<String>>();
 
-        println!("Active pools: {:?}", active_pools.len());
-        println!("Inactive pools: {:?}", inactive_pools.len());
-
         batch_update_filtered(&mut conn, &active_pools, true).unwrap();
         batch_update_filtered(&mut conn, &inactive_pools, false).unwrap();
+        tracing::info!(
+            "Processed pool chunk. Active pools: {:?}. Inactive pools: {:?}",
+            active_pools.len(),
+            inactive_pools.len()
+        );
     }
 
     Ok(())

@@ -95,6 +95,8 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
 
         let synced_amms = vec![uniswap_v2_pools, uniswap_v3_pools, camelot_v3_pools].concat();
         self.state.set_pools(synced_amms);
+        info!("Updated pools: {:?}", self.state.pools);
+
         let arb_cycles = self.state.update_cycles();
 
         info!("{} arbitrage cycles", arb_cycles.len());

@@ -114,8 +114,11 @@ impl<P: Provider + 'static> State<P> {
         // get the cycles that include the amms
         let mut cycles = vec![];
         for amm in amms {
+            tracing::info!("Getting pool cycles for: {:?}", amm.name());
             let pool_address = amm.address();
+            tracing::info!("Pool address: {:?}", pool_address);
             let pool_cycles = self.pools_cycles_map.get(&pool_address);
+            tracing::info!("Updated pool cycles: {:?}", pool_cycles);
             if let Some(c) = pool_cycles {
                 // flat map of the cycle ids
                 let cycle_ids = c.iter().collect::<Vec<_>>();
@@ -152,7 +155,9 @@ impl<P: Provider + 'static> State<P> {
             all_cycles.extend(cycles);
         }
 
-        let profit_threshold = -0.20;
+        tracing::info!("Found {} potential cycles", all_cycles.len());
+
+        let profit_threshold = -0.50;
         let potential_cycles: Vec<Cycle> = all_cycles
             .into_iter()
             .filter(|cycle| cycle.get_profit_perc() > profit_threshold)
