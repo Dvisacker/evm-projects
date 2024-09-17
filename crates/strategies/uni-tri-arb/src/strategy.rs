@@ -8,8 +8,11 @@ use alloy::{
 use alloy_chains::Chain;
 use amms::{
     amm::{
-        common::fetch_pool_data_batch_request, uniswap_v3::IUniswapV3Pool, AutomatedMarketMaker,
-        AMM,
+        common::fetch_pool_data_batch_request,
+        uniswap_v3::{
+            batch_request::get_uniswap_v3_tick_data_batch_request, IUniswapV3Pool, UniswapV3Pool,
+        },
+        AutomatedMarketMaker, AMM,
     },
     sync::{self, checkpoint::sort_amms},
 };
@@ -86,11 +89,39 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
         self.state.set_inactive_pools(inactive_amms);
 
         let active_amms = db_pools_to_amms(&active_pools)?;
+
         let (mut uniswap_v2_pools, mut uniswap_v3_pools, _, mut camelot_v3_pools) =
             sort_amms(active_amms);
 
+        // take only 50 uniswap v3 pools for testing
+        let mut uniswap_v3_pools: Vec<AMM> = uniswap_v3_pools
+            .into_iter()
+            .filter(|pool| matches!(pool, AMM::UniswapV3Pool(_)))
+            .take(50)
+            .collect();
+
         sync::populate_amms(&mut uniswap_v2_pools, block_number, self.client.clone()).await?;
         sync::populate_amms(&mut uniswap_v3_pools, block_number, self.client.clone()).await?;
+        for pool in &mut uniswap_v3_pools {
+            if let AMM::UniswapV3Pool(uniswap_v3_pool) = pool {
+                let tick_start = uniswap_v3_pool.tick - 20;
+                let num_ticks = 40;
+                let (tick_data, _) = get_uniswap_v3_tick_data_batch_request(
+                    &uniswap_v3_pool,
+                    tick_start,
+                    false,
+                    num_ticks,
+                    Some(block_number),
+                    self.client.clone(),
+                )
+                .await?;
+                uniswap_v3_pool.populate_ticks_from_tick_data(tick_data);
+                println!(
+                    "Populated tick data for pool: {:?}",
+                    uniswap_v3_pool.address
+                );
+            }
+        }
         sync::populate_amms(&mut camelot_v3_pools, block_number, self.client.clone()).await?;
 
         let synced_amms = vec![uniswap_v2_pools, uniswap_v3_pools, camelot_v3_pools].concat();
@@ -346,7 +377,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
     fn parse_univ3_pool_data(
         &self,
         log: DynSolValue,
-        conn: &mut PgConnection,
+        mut conn: &mut PgConnection,
         pool_address: Address,
     ) -> Result<NewPool> {
         let log = log
@@ -376,7 +407,6 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
                 let fee = pool_data[9].as_uint().unwrap();
                 let chain = self.chain.named().unwrap().to_string();
 
-                let mut conn = establish_connection(&self.db_url);
                 let known_exchanges = get_exchanges_by_chain(&mut conn, &chain).unwrap();
 
                 let exchange_name = known_exchanges
