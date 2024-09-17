@@ -28,6 +28,7 @@ foundry-config = "0.2.0"
 uniswap_v3_math = { git = "https://github.com/0xKitsune/uniswap-v3-math.git" }
 tokio = { version = "1.40.0", features = ["full"] }
 tracing = "0.1.37"
+async-recursion = "1.0.5"
 
 
 [profile.release]
