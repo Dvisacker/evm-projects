@@ -31,7 +31,33 @@ diesel::table! {
     }
 }
 
+diesel::table! {
+    uni_v3_pools (id) {
+        id -> Int4,
+        address -> Varchar,
+        chain -> Varchar,
+        token_a -> Varchar,
+        token_a_decimals -> Int4,
+        token_a_symbol -> Varchar,
+        token_b -> Varchar,
+        token_b_decimals -> Int4,
+        token_b_symbol -> Varchar,
+        liquidity -> Numeric,
+        sqrt_price -> Numeric,
+        fee -> Int4,
+        tick -> Int4,
+        tick_spacing -> Int4,
+        tick_bitmap -> Jsonb,
+        ticks -> Jsonb,
+        exchange_name -> Varchar,
+        exchange_type -> Varchar,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
+    }
+}
+
 diesel::allow_tables_to_appear_in_same_query!(
     exchanges,
     pools,
+    uni_v3_pools,
 );
