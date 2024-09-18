@@ -1,0 +1,1 @@
+DROP TABLE erc4626_vaults;

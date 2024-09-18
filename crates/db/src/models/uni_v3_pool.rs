@@ -4,7 +4,7 @@ use diesel::prelude::*;
 use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
 
-#[derive(Queryable, Selectable, Debug)]
+#[derive(Queryable, Selectable, Debug, Clone)]
 #[diesel(table_name = uni_v3_pools)]
 pub struct DbUniV3Pool {
     pub id: i32,
@@ -49,6 +49,4 @@ pub struct NewDbUniV3Pool {
     pub ticks: Option<JsonValue>,
     pub exchange_name: Option<String>,
     pub exchange_type: Option<String>,
-    pub created_at: NaiveDateTime,
-    pub updated_at: NaiveDateTime,
 }

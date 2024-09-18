@@ -21,7 +21,7 @@ use artemis_core::types::Strategy;
 use async_trait::async_trait;
 use bindings::iuniswapv2pair::IUniswapV2Pair;
 use db::queries::{exchange::get_exchanges_by_chain, pool::batch_upsert_pools};
-use db::{establish_connection, models::NewPool};
+use db::{establish_connection, models::NewDbUniV2Pool};
 use diesel::PgConnection;
 use shared::{addressbook::Addressbook, amm_utils::db_pools_to_amms, utils::bytes32_to_string};
 use std::sync::Arc;
@@ -315,7 +315,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
         pool_data: DynSolValue,
         mut conn: &mut PgConnection,
         pool_address: Address,
-    ) -> Result<NewPool> {
+    ) -> Result<NewDbUniV2Pool> {
         // info!("Parsing uniswap v2 log");
         let pool_data = pool_data
             .as_array()
@@ -350,7 +350,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
                     .map(|e| e.exchange_name.clone())
                     .unwrap_or("unknown".to_string());
 
-                return Ok(NewPool {
+                return Ok(NewDbUniV2Pool {
                     address: pool_address.to_string(),
                     chain: self.chain.named().unwrap().to_string(),
                     factory_address: factory.to_string(),
@@ -379,7 +379,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
         log: DynSolValue,
         mut conn: &mut PgConnection,
         pool_address: Address,
-    ) -> Result<NewPool> {
+    ) -> Result<NewDbUniV2Pool> {
         let log = log
             .as_array()
             .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
@@ -424,7 +424,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
                     );
                 }
 
-                return Ok(NewPool {
+                return Ok(NewDbUniV2Pool {
                     address: pool_address.to_string(),
                     chain: chain,
                     factory_address: factory.to_string(),

@@ -2,5 +2,16 @@
     "editor.tokenColorCustomizations": {
         "comments": "",
         "textMateRules": []
+    },
+    "rust-analyzer.checkOnSave.command": "check",
+    "rust-analyzer.checkOnSave.extraArgs": ["--target-dir", "target/ra-check"],
+    "rust-analyzer.cargo.loadOutDirsFromCheck": true,
+    "rust-analyzer.procMacro.enable": true,
+    "rust-analyzer.cargo.buildScripts.enable": true,
+    "rust-analyzer.diagnostics.disabled": ["unresolved-proc-macro"],
+    "rust-analyzer.lru.capacity": 256,
+    "rust-analyzer.cargo.incremental": true,
+    "rust-analyzer.server.extraEnv": {
+        "RUST_ANALYZER_MEMORY_LIMIT": "2048"
     }
 }

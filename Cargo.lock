@@ -7478,6 +7478,7 @@ dependencies = [
  "alloy",
  "alloy-chains",
  "alloy-rpc-types",
+ "chrono",
  "clap",
  "db",
  "serde",

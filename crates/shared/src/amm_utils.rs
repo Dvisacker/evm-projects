@@ -1,4 +1,3 @@
-use std::collections::HashMap;
 use std::str::FromStr;
 use std::sync::Arc;
 
@@ -8,9 +7,12 @@ use alloy::providers::Provider;
 use alloy::transports::Transport;
 use alloy_chains::{Chain, NamedChain};
 use amms::amm::camelot_v3::CamelotV3Pool;
-use amms::amm::common::get_standard_pool_data_batch_request;
+// use amms::amm::common::get_standard_pool_data_batch_request;
 use amms::amm::uniswap_v2::IUniswapV2Pair;
-use amms::amm::uniswap_v3::IUniswapV3Pool;
+use amms::amm::uniswap_v3::batch_request::{
+    get_amm_data_batch_request, get_v3_pool_data_batch_request,
+};
+use amms::amm::uniswap_v3::{json_to_tickbitmap, json_to_ticks, IUniswapV3Pool};
 use amms::amm::AutomatedMarketMaker;
 use amms::errors::AMMError;
 use amms::filters::value::get_weth_values_in_amms;
@@ -26,13 +28,53 @@ use amms::{
     sync::{self},
 };
 use db::establish_connection;
-use db::models::{DbPool, NewDbPool};
-use db::queries::pool::{batch_update_filtered, batch_upsert_pools, get_pools};
+use db::models::db_pool::DbPool;
+use db::models::{NewDbPool, NewDbUniV3Pool};
+use db::queries::uni_v2_pool::{batch_update_filtered, batch_upsert_pools, get_pools};
+use db::queries::uni_v3_pool::batch_upsert_uni_v3_pools;
 use types::exchange::{ExchangeName, ExchangeType};
-use types::standard_pool::StandardPool;
+// use types::standard_pool::StandardPool;
 
 use crate::addressbook::Addressbook;
 use crate::config::get_chain_config;
+
+fn extract_v2_pools(amms: &[AMM]) -> Vec<UniswapV2Pool> {
+    amms.iter()
+        .filter_map(|amm| {
+            if let AMM::UniswapV2Pool(pool) = amm {
+                Some(pool.clone())
+            } else {
+                None
+            }
+        })
+        .collect()
+}
+
+// Function to extract UniswapV3Pools
+fn extract_v3_pools(amms: &[AMM]) -> Vec<UniswapV3Pool> {
+    amms.iter()
+        .filter_map(|amm| {
+            if let AMM::UniswapV3Pool(pool) = amm {
+                Some(pool.clone())
+            } else {
+                None
+            }
+        })
+        .collect()
+}
+
+// Function to extract CamelotV3Pools
+fn extract_camelot_v3_pools(amms: &[AMM]) -> Vec<CamelotV3Pool> {
+    amms.iter()
+        .filter_map(|amm| {
+            if let AMM::CamelotV3Pool(pool) = amm {
+                Some(pool.clone())
+            } else {
+                None
+            }
+        })
+        .collect()
+}
 
 /// Determines the exchange type of a pool given its address.
 ///
@@ -98,7 +140,63 @@ where
 ///
 /// # Returns
 /// A Result indicating success or an AMMError
-pub async fn store_uniswap_v3_pools<P, T, N>(
+// pub async fn store_uniswap_v3_pools<P, T, N>(
+//     provider: Arc<P>,
+//     chain: Chain,
+//     factory_address: Address,
+//     from_block: u64,
+//     to_block: u64,
+//     step: u64,
+//     db_url: &str,
+// ) -> Result<(), AMMError>
+// where
+//     P: Provider<T, N>,
+//     T: Transport + Clone,
+//     N: Network,
+// {
+//     let mut conn = establish_connection(db_url);
+//     let factory = UniswapV3Factory::new(factory_address, from_block);
+
+//     let pools = factory
+//         .get_pools_from_logs(from_block, to_block, step, provider.clone())
+//         .await?;
+
+//     let mut pools = pools
+//         .iter()
+//         .map(|pool| {
+//             StandardPool::empty(
+//                 pool.address(),
+//                 chain.named().unwrap(),
+//                 Some(factory_address),
+//                 Some(ExchangeType::UniV3),
+//                 Some(ExchangeName::UniswapV3),
+//             )
+//         })
+//         .collect::<Vec<StandardPool>>();
+
+//     let max_batch_size = 50;
+//     for chunk in pools.chunks_mut(max_batch_size) {
+//         get_standard_pool_data_batch_request(chunk, provider.clone()).await?;
+//     }
+
+//     let new_pools = pools
+//         .iter()
+//         .map(|pool| pool.to_new_db_pool())
+//         .collect::<Vec<NewDbPool>>();
+
+//     batch_upsert_pools(&mut conn, &new_pools).unwrap();
+
+//     tracing::info!(
+//         "Inserted {:?} pools created from block {:?} to {:?}",
+//         new_pools.len(),
+//         from_block,
+//         to_block
+//     );
+
+//     Ok(())
+// }
+
+pub async fn store_uniswap_v3_pools_2<P, T, N>(
     provider: Arc<P>,
     chain: Chain,
     factory_address: Address,
@@ -115,38 +213,39 @@ where
     let mut conn = establish_connection(db_url);
     let factory = UniswapV3Factory::new(factory_address, from_block);
 
-    let pools = factory
+    let amms = factory
         .get_pools_from_logs(from_block, to_block, step, provider.clone())
         .await?;
 
-    let mut pools = pools
-        .iter()
-        .map(|pool| {
-            StandardPool::empty(
-                pool.address(),
-                chain.named().unwrap(),
-                Some(factory_address),
-                Some(ExchangeType::UniV3),
-                Some(ExchangeName::UniswapV3),
-            )
-        })
-        .collect::<Vec<StandardPool>>();
+    let pools = extract_v3_pools(&amms);
 
     let max_batch_size = 50;
+    let block_number = provider.get_block_number().await.unwrap();
     for chunk in pools.chunks_mut(max_batch_size) {
-        get_standard_pool_data_batch_request(chunk, provider.clone()).await?;
+        get_v3_pool_data_batch_request(&mut chunk, Some(block_number), provider.clone()).await?;
     }
 
-    let new_pools = pools
+    let db_pools = pools
         .iter()
         .map(|pool| pool.to_new_db_pool())
         .collect::<Vec<NewDbPool>>();
 
-    batch_upsert_pools(&mut conn, &new_pools).unwrap();
+    // let v3_db_pools = db_pools
+    //     .iter()
+    //     .filter_map(|pool| {
+    //         if let NewDbPool::UniV3(pool) = pool {
+    //             Some(pool)
+    //         } else {
+    //             None
+    //         }
+    //     })
+    //     .collect::<Vec<NewDbUniV3Pool>>();
+
+    batch_upsert_uni_v3_pools(&mut conn, v3_db_pools.as_slice()).unwrap();
 
     tracing::info!(
         "Inserted {:?} pools created from block {:?} to {:?}",
-        new_pools.len(),
+        v3_db_pools.len(),
         from_block,
         to_block
     );
@@ -187,20 +286,20 @@ where
         .await
         .unwrap();
 
-    let pools = amms
-        .iter()
-        .map(|pool| {
-            StandardPool::empty(
-                pool.address(),
-                chain.named().unwrap(),
-                Some(factory_address),
-                Some(ExchangeType::UniV2),
-                Some(exchange_name),
-            )
-        })
-        .collect::<Vec<StandardPool>>();
+    // let pools = amms
+    //     .iter()
+    //     .map(|pool| {
+    //         StandardPool::empty(
+    //             pool.address(),
+    //             chain.named().unwrap(),
+    //             Some(factory_address),
+    //             Some(ExchangeType::UniV2),
+    //             Some(exchange_name),
+    //         )
+    //     })
+    //     .collect::<Vec<StandardPool>>();
 
-    for chunk in pools.chunks(50) {
+    for chunk in amms.chunks(50) {
         let mut chunk = chunk.to_vec();
         get_standard_pool_data_batch_request(&mut chunk, provider.clone()).await?;
 
@@ -246,7 +345,13 @@ pub async fn activate_pools(
         None,
     )
     .unwrap();
-    let amms = db_pools_to_amms(&pools)?;
+
+    let v2_pools = pools
+        .iter()
+        .map(|pool| DbPool::UniV2((*pool).clone()))
+        .collect::<Vec<DbPool>>();
+
+    let amms = db_pools_to_amms(&v2_pools)?;
 
     println!("Got {:?} pools", pools.len());
 
@@ -270,6 +375,7 @@ pub async fn activate_pools(
 
         batch_update_filtered(&mut conn, &active_pools, true).unwrap();
         batch_update_filtered(&mut conn, &inactive_pools, false).unwrap();
+
         tracing::info!(
             "Processed pool chunk. Active pools: {:?}. Inactive pools: {:?}",
             active_pools.len(),
@@ -480,16 +586,19 @@ pub async fn filter_amms(
 pub fn db_pools_to_amms(pools: &[DbPool]) -> Result<Vec<AMM>, AMMError> {
     pools
         .iter()
-        .map(|pool| {
-            let address: Address = pool.address.parse().unwrap();
-            let token0: Address = pool.token_a.parse().unwrap();
-            let token1: Address = pool.token_b.parse().unwrap();
-            let exchange_type: ExchangeType = ExchangeType::from_str(&pool.exchange_type).unwrap();
-            let exchange_name: ExchangeName = ExchangeName::from_str(&pool.exchange_name).unwrap();
-            let chain: Chain = Chain::try_from(pool.chain.parse::<NamedChain>().unwrap()).unwrap();
+        .map(|pool| match pool {
+            DbPool::UniV2(pool) => {
+                let address: Address = pool.address.parse().unwrap();
+                let token0: Address = pool.token_a.parse().unwrap();
+                let token1: Address = pool.token_b.parse().unwrap();
+                let exchange_type: ExchangeType =
+                    ExchangeType::from_str(&pool.exchange_type).unwrap();
+                let exchange_name: ExchangeName =
+                    ExchangeName::from_str(&pool.exchange_name).unwrap();
+                let chain: Chain =
+                    Chain::try_from(pool.chain.parse::<NamedChain>().unwrap()).unwrap();
 
-            match exchange_type {
-                ExchangeType::UniV2 => Ok(AMM::UniswapV2Pool(UniswapV2Pool {
+                Ok(AMM::UniswapV2Pool(UniswapV2Pool {
                     address,
                     token_a: token0,
                     token_a_decimals: pool.token_a_decimals as u8,
@@ -502,48 +611,86 @@ pub fn db_pools_to_amms(pools: &[DbPool]) -> Result<Vec<AMM>, AMMError> {
                     fee: pool.fee as u32,
                     exchange_name,
                     exchange_type,
-                    chain: chain.named().unwrap(),
-                })),
-                ExchangeType::UniV3 => Ok(AMM::UniswapV3Pool(UniswapV3Pool {
-                    address,
-                    token_a: token0,
-                    token_a_decimals: pool.token_a_decimals as u8,
-                    token_a_symbol: pool.token_a_symbol.clone(),
-                    token_b: token1,
-                    token_b_decimals: pool.token_b_decimals as u8,
-                    token_b_symbol: pool.token_b_symbol.clone(),
-                    liquidity: 0,
-                    sqrt_price: U256::from(0),
-                    tick: 0,
-                    tick_spacing: 0,
-                    tick_bitmap: HashMap::new(),
-                    ticks: HashMap::new(),
-                    fee: pool.fee as u32,
-                    exchange_name,
-                    exchange_type,
-                    chain: chain.named().unwrap(),
-                })),
-                ExchangeType::CamelotV3 => Ok(AMM::CamelotV3Pool(CamelotV3Pool {
-                    address,
-                    token_a: token0,
-                    token_a_decimals: pool.token_a_decimals as u8,
-                    token_a_symbol: pool.token_a_symbol.clone(),
-                    token_b: token1,
-                    token_b_decimals: pool.token_b_decimals as u8,
-                    token_b_symbol: pool.token_b_symbol.clone(),
-                    liquidity: 0,
-                    sqrt_price: U256::from(0),
-                    tick: 0,
-                    tick_spacing: 0,
-                    tick_bitmap: HashMap::new(),
-                    ticks: HashMap::new(),
-                    fee: pool.fee as u32,
-                    exchange_name,
-                    exchange_type,
-                    chain: chain.named().unwrap(),
-                })),
-                _ => panic!("Unsupported exchange type"),
+                    chain: chain.named().ok_or(AMMError::ParseError)?,
+                }))
             }
+            DbPool::UniV3(pool) => {
+                let address: Address = pool.address.parse().unwrap();
+                let token0: Address = pool.token_a.parse().unwrap();
+                let token1: Address = pool.token_b.parse().unwrap();
+                let exchange_type: ExchangeType =
+                    ExchangeType::from_str(&pool.exchange_type.as_ref().unwrap()).unwrap();
+                let exchange_name: ExchangeName =
+                    ExchangeName::from_str(&pool.exchange_name.as_ref().unwrap()).unwrap();
+                let chain: Chain =
+                    Chain::try_from(pool.chain.parse::<NamedChain>().unwrap()).unwrap();
+
+                let pool = match exchange_type {
+                    ExchangeType::UniV3 => AMM::UniswapV3Pool(UniswapV3Pool {
+                        address,
+                        token_a: token0,
+                        token_a_decimals: pool.token_a_decimals as u8,
+                        token_a_symbol: pool.token_a_symbol.clone(),
+                        token_b: token1,
+                        token_b_decimals: pool.token_b_decimals as u8,
+                        token_b_symbol: pool.token_b_symbol.clone(),
+                        liquidity: pool
+                            .liquidity
+                            .as_ref()
+                            .and_then(|l| l.parse().ok())
+                            .unwrap_or(0),
+                        sqrt_price: pool
+                            .sqrt_price
+                            .as_ref()
+                            .and_then(|s| s.parse().ok())
+                            .unwrap_or(U256::from(0)),
+                        tick: pool.tick.unwrap_or(0),
+                        tick_spacing: pool.tick_spacing.unwrap_or(0),
+                        tick_bitmap: json_to_tickbitmap(
+                            pool.tick_bitmap.clone().unwrap_or_default(),
+                        ),
+                        ticks: json_to_ticks(pool.ticks.clone().unwrap_or_default()),
+                        fee: pool.fee.unwrap_or(0) as u32,
+                        exchange_name,
+                        exchange_type,
+                        chain: chain.named().ok_or(AMMError::ParseError)?,
+                    }),
+                    ExchangeType::CamelotV3 => AMM::CamelotV3Pool(CamelotV3Pool {
+                        address,
+                        token_a: token0,
+                        token_a_decimals: pool.token_a_decimals as u8,
+                        token_a_symbol: pool.token_a_symbol.clone(),
+                        token_b: token1,
+                        token_b_decimals: pool.token_b_decimals as u8,
+                        token_b_symbol: pool.token_b_symbol.clone(),
+                        liquidity: pool
+                            .liquidity
+                            .as_ref()
+                            .and_then(|l| l.parse().ok())
+                            .unwrap_or(0),
+                        sqrt_price: pool
+                            .sqrt_price
+                            .as_ref()
+                            .and_then(|s| s.parse().ok())
+                            .unwrap_or(U256::from(0)),
+                        tick: pool.tick.unwrap_or(0),
+                        tick_spacing: pool.tick_spacing.unwrap_or(0),
+                        tick_bitmap: json_to_tickbitmap(
+                            pool.tick_bitmap.clone().unwrap_or_default(),
+                        ),
+                        ticks: json_to_ticks(pool.ticks.clone().unwrap_or_default()),
+                        fee: pool.fee.unwrap_or(0) as u32,
+                        exchange_name,
+                        exchange_type,
+                        chain: chain.named().ok_or(AMMError::ParseError)?,
+                    }),
+                    _ => return Err(AMMError::UnsupportedExchangeType),
+                };
+
+                Ok(pool)
+            }
+            DbPool::ERC4626Vault(_) => Err(AMMError::UnsupportedPoolType),
+            DbPool::Curve(_) => Err(AMMError::UnsupportedPoolType),
         })
         .collect()
 }

@@ -28,6 +28,7 @@ enum Commands {
     GenerateStrategy,
     GetNamedPools(GetNamedPoolsArgs),
     GetUniswapV3Pools(GetUniswapV3PoolsArgs),
+    GetUniswapV3Pools2(GetUniswapV3PoolsArgs),
     GetUniswapV2Pools(GetUniswapV2PoolsArgs),
     GetAMMValue(GetAMMValueArgs),
     ActivatePools(ActivatePoolsArgs),
@@ -42,6 +43,20 @@ struct GetNamedPoolsArgs {
 
 #[derive(Args)]
 struct GetUniswapV3PoolsArgs {
+    #[arg(short, long)]
+    chain_id: u64,
+    #[arg(long, default_value = "0")]
+    from_block: u64,
+    #[arg(long, default_value = "1000000")]
+    to_block: u64,
+    #[arg(long, default_value = "10000")]
+    step: u64,
+    #[arg(long, value_enum)]
+    exchange: ExchangeName,
+}
+
+#[derive(Args)]
+struct GetUniswapV3Pools2Args {
     #[arg(short, long)]
     chain_id: u64,
     #[arg(long, default_value = "0")]
@@ -130,6 +145,68 @@ async fn main() -> Result<(), Error> {
             let provider = Arc::new(chain_config.ws);
             let addressbook = Addressbook::load().unwrap();
 
+            let factory_address = match chain.kind() {
+                ChainKind::Named(NamedChain::Arbitrum) => match args.exchange {
+                    ExchangeName::UniswapV3 => {
+                        addressbook.arbitrum.exchanges.univ3.uniswapv3.factory
+                    }
+                    ExchangeName::SushiswapV3 => {
+                        addressbook.arbitrum.exchanges.univ3.sushiswapv3.factory
+                    }
+                    ExchangeName::CamelotV3 => {
+                        addressbook.arbitrum.exchanges.univ3.camelotv3.factory
+                    }
+                    ExchangeName::RamsesV2 => addressbook.arbitrum.exchanges.univ3.ramsesv2.factory,
+                    ExchangeName::PancakeswapV3 => {
+                        addressbook.arbitrum.exchanges.univ3.pancakeswapv3.factory
+                    }
+                    _ => panic!("Choose a uniswap v3 exchange"),
+                },
+                ChainKind::Named(NamedChain::Mainnet) => match args.exchange {
+                    ExchangeName::UniswapV3 => {
+                        addressbook.mainnet.exchanges.univ3.uniswapv3.factory
+                    }
+                    ExchangeName::SushiswapV3 => {
+                        addressbook.mainnet.exchanges.univ3.sushiswapv3.factory
+                    }
+                    ExchangeName::PancakeswapV3 => {
+                        addressbook.mainnet.exchanges.univ3.pancakeswapv3.factory
+                    }
+                    _ => panic!("Choose a uniswap v3 exchange"),
+                },
+                _ => panic!("Unsupported chain"),
+            };
+
+            let from_block = args.from_block;
+            let to_block = args.to_block;
+            let step = args.step;
+            let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
+
+            for block in (from_block..=to_block).step_by(step as usize) {
+                info!(
+                    "Fetching pools from block {:?} to {:?}",
+                    block,
+                    block + step - 1
+                );
+                store_uniswap_v3_pools(
+                    provider.clone(),
+                    chain,
+                    factory_address,
+                    block,
+                    block + step - 1,
+                    step,
+                    &db_url,
+                )
+                .await?;
+            }
+        }
+        Commands::GetUniswapV3Pools2(args) => {
+            let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
+            let chain_config = get_chain_config(chain).await;
+            let provider = Arc::new(chain_config.ws);
+            let addressbook = Addressbook::load().unwrap();
+
+            // todo: refactor this
             let factory_address = match chain.kind() {
                 ChainKind::Named(NamedChain::Arbitrum) => match args.exchange {
                     ExchangeName::UniswapV3 => {

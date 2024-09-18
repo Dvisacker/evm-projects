@@ -1,0 +1,1 @@
+DROP TABLE curve_pools;

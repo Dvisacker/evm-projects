@@ -25,7 +25,7 @@ pub fn batch_insert_uni_v3_pools(
 
 pub fn batch_upsert_uni_v3_pools(
     conn: &mut PgConnection,
-    new_pools: &Vec<NewDbUniV3Pool>,
+    new_pools: &[NewDbUniV3Pool],
 ) -> Result<Vec<DbUniV3Pool>, Error> {
     diesel::insert_into(uni_v3_pools::table)
         .values(new_pools)

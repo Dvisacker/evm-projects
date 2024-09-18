@@ -15,6 +15,7 @@ default-members = ["bin/bot", "bin/cli", "crates/shared", "crates/db","crates/ar
 # default-members = ["crates/amms-rs"]
 resolver = "2"
 
+
 [workspace.dependencies]
 alloy = { version = "0.3.3", features = [
     "full"
@@ -36,3 +37,4 @@ panic = 'abort'
 
 [profile.dev]
 panic = 'abort'
+incremental = true
