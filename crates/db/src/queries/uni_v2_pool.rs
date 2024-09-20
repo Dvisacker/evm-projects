@@ -97,7 +97,7 @@ pub fn get_uni_v2_pools(
     exchange_name: Option<&str>,
     exchange_type: Option<&str>,
     limit: Option<i64>,
-    filtered: Option<bool>,
+    active: Option<bool>,
 ) -> Result<Vec<DbUniV2Pool>, Error> {
     let mut query = uni_v2_pools::table.into_boxed();
 
@@ -117,14 +117,14 @@ pub fn get_uni_v2_pools(
         query = query.limit(limit);
     }
 
-    if let Some(filtered) = filtered {
-        if filtered {
-            query = query.filter(uni_v2_pools::filtered.eq(true));
+    if let Some(active) = active {
+        if active {
+            query = query.filter(uni_v2_pools::active.eq(true));
         } else {
-            query = query.filter(uni_v2_pools::filtered.eq(false));
+            query = query.filter(uni_v2_pools::active.eq(false));
         }
     } else {
-        query = query.filter(uni_v2_pools::filtered.is_null());
+        query = query.filter(uni_v2_pools::active.is_null());
     }
 
     query.load::<DbUniV2Pool>(conn)
@@ -150,23 +150,23 @@ pub fn get_uni_v2_pools_by_exchange(
         .load::<DbUniV2Pool>(conn)
 }
 
-pub fn batch_update_uni_v2_pool_filtered(
+pub fn batch_update_uni_v2_pool_active(
     conn: &mut PgConnection,
     pool_addresses: &[String],
-    filtered: bool,
+    active: bool,
 ) -> QueryResult<usize> {
     diesel::update(uni_v2_pools::table)
         .filter(uni_v2_pools::address.eq_any(pool_addresses))
-        .set(uni_v2_pools::filtered.eq(filtered))
+        .set(uni_v2_pools::active.eq(active))
         .execute(conn)
 }
 
-pub fn get_uni_v2_filtered_pools(
+pub fn get_uni_v2_active_pools(
     conn: &mut PgConnection,
     chain_name: &str,
 ) -> Result<Vec<DbUniV2Pool>, Error> {
     uni_v2_pools::table
         .filter(uni_v2_pools::chain.eq(chain_name))
-        .filter(uni_v2_pools::filtered.eq(true))
+        .filter(uni_v2_pools::active.eq(true))
         .load::<DbUniV2Pool>(conn)
 }

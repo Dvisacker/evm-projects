@@ -26,10 +26,10 @@ pub struct DbUniV3Pool {
     pub ticks: Option<JsonValue>,
     pub exchange_name: Option<String>,
     pub exchange_type: Option<String>,
+    pub factory_address: Option<String>,
+    pub active: Option<bool>,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
-    pub factory: Option<String>,
-    pub filtered: Option<bool>,
 }
 
 impl From<DbUniV3Pool> for DbPool {
@@ -58,6 +58,6 @@ pub struct NewDbUniV3Pool {
     pub ticks: Option<JsonValue>,
     pub exchange_name: Option<String>,
     pub exchange_type: Option<String>,
-    pub factory: Option<String>,
-    pub filtered: Option<bool>,
+    pub factory_address: Option<String>,
+    pub active: Option<bool>,
 }

@@ -1,1 +1,0 @@
-ALTER TABLE pools RENAME TO uni_v2_pools;

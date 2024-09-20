@@ -20,6 +20,7 @@ pub struct DbErc4626Vault {
     pub withdraw_fee: i32,
     pub exchange_name: Option<String>,
     pub exchange_type: Option<String>,
+    pub active: Option<bool>,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
 }
@@ -39,6 +40,7 @@ pub struct NewDbErc4626Vault {
     pub asset_reserve: String,
     pub deposit_fee: i32,
     pub withdraw_fee: i32,
+    pub active: Option<bool>,
     pub exchange_name: Option<String>,
     pub exchange_type: Option<String>,
 }

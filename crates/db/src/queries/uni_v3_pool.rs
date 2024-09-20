@@ -32,7 +32,6 @@ pub fn batch_upsert_uni_v3_pools(
         .on_conflict((uni_v3_pools::chain, uni_v3_pools::address))
         .do_update()
         .set((
-            uni_v3_pools::chain.eq(excluded(uni_v3_pools::chain)),
             uni_v3_pools::token_a.eq(excluded(uni_v3_pools::token_a)),
             uni_v3_pools::token_a_decimals.eq(excluded(uni_v3_pools::token_a_decimals)),
             uni_v3_pools::token_a_symbol.eq(excluded(uni_v3_pools::token_a_symbol)),
@@ -48,6 +47,10 @@ pub fn batch_upsert_uni_v3_pools(
             uni_v3_pools::ticks.eq(excluded(uni_v3_pools::ticks)),
             uni_v3_pools::exchange_name.eq(excluded(uni_v3_pools::exchange_name)),
             uni_v3_pools::exchange_type.eq(excluded(uni_v3_pools::exchange_type)),
+            uni_v3_pools::factory_address.eq(excluded(uni_v3_pools::factory_address)),
+            uni_v3_pools::active.eq(excluded(uni_v3_pools::active)),
+            uni_v3_pools::created_at.eq(excluded(uni_v3_pools::created_at)),
+            uni_v3_pools::updated_at.eq(excluded(uni_v3_pools::updated_at)),
         ))
         .get_results(conn)
 }
@@ -67,7 +70,7 @@ pub fn get_uni_v3_pools(
     exchange_name: Option<&str>,
     exchange_type: Option<&str>,
     limit: Option<i64>,
-    filtered: Option<bool>,
+    active: Option<bool>,
 ) -> Result<Vec<DbUniV3Pool>, Error> {
     let mut query = uni_v3_pools::table.into_boxed();
 
@@ -87,14 +90,14 @@ pub fn get_uni_v3_pools(
         query = query.limit(limit);
     }
 
-    if let Some(filtered) = filtered {
-        if filtered {
-            query = query.filter(uni_v3_pools::filtered.eq(true));
+    if let Some(active) = active {
+        if active {
+            query = query.filter(uni_v3_pools::active.eq(true));
         } else {
-            query = query.filter(uni_v3_pools::filtered.eq(false));
+            query = query.filter(uni_v3_pools::active.eq(false));
         }
     } else {
-        query = query.filter(uni_v3_pools::filtered.is_null());
+        query = query.filter(uni_v3_pools::active.is_null());
     }
 
     query.load::<DbUniV3Pool>(conn)

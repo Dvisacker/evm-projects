@@ -23,6 +23,7 @@ diesel::table! {
         token_d_balance -> Nullable<Varchar>,
         exchange_name -> Nullable<Varchar>,
         exchange_type -> Nullable<Varchar>,
+        active -> Nullable<Bool>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
     }
@@ -45,6 +46,7 @@ diesel::table! {
         withdraw_fee -> Int4,
         exchange_name -> Nullable<Varchar>,
         exchange_type -> Nullable<Varchar>,
+        active -> Nullable<Bool>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
     }
@@ -65,9 +67,6 @@ diesel::table! {
         id -> Int4,
         address -> Varchar,
         chain -> Varchar,
-        factory_address -> Varchar,
-        exchange_name -> Varchar,
-        exchange_type -> Varchar,
         token_a -> Varchar,
         token_a_symbol -> Varchar,
         token_a_decimals -> Int4,
@@ -77,8 +76,12 @@ diesel::table! {
         reserve_0 -> Varchar,
         reserve_1 -> Varchar,
         fee -> Int4,
-        filtered -> Nullable<Bool>,
-        factory -> Nullable<Varchar>,
+        exchange_name -> Nullable<Varchar>,
+        exchange_type -> Nullable<Varchar>,
+        factory_address -> Nullable<Varchar>,
+        active -> Nullable<Bool>,
+        created_at -> Timestamp,
+        updated_at -> Timestamp,
     }
 }
 
@@ -102,10 +105,10 @@ diesel::table! {
         ticks -> Nullable<Jsonb>,
         exchange_name -> Nullable<Varchar>,
         exchange_type -> Nullable<Varchar>,
+        factory_address -> Nullable<Varchar>,
+        active -> Nullable<Bool>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
-        factory -> Nullable<Varchar>,
-        filtered -> Nullable<Bool>,
     }
 }
 

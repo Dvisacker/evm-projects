@@ -4,7 +4,7 @@ services:
   db:
     image: postgres:16.1
     environment:
-      POSTGRES_DB: bot
+      POSTGRES_DB: artemis
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:

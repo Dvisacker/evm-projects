@@ -80,10 +80,10 @@ where
     N: Network,
     P: Provider<T, N>,
 {
-    let filtered_pools_json: String = fs::read_to_string("checkpoints/filtered-pools.json")?;
-    let mut filtered_pools: Value = serde_json::from_str(&filtered_pools_json)?;
+    let active_pools_json: String = fs::read_to_string("checkpoints/active-pools.json")?;
+    let mut active_pools: Value = serde_json::from_str(&active_pools_json)?;
     let mut token_addresses = HashSet::new();
-    if let Some(amms) = filtered_pools["amms"].as_array() {
+    if let Some(amms) = active_pools["amms"].as_array() {
         for amm in amms {
             if let Some(pool) = amm["UniswapV2Pool"].as_object() {
                 if let (Some(token_a), Some(token_b)) =
@@ -120,9 +120,9 @@ where
         })
         .collect();
 
-    println!("Adding token data to the filtered pools JSON...");
-    // Add token data to the filtered pools JSON
-    if let Some(amms) = filtered_pools["amms"].as_array_mut() {
+    println!("Adding token data to the active pools JSON...");
+    // Add token data to the active pools JSON
+    if let Some(amms) = active_pools["amms"].as_array_mut() {
         for amm in amms {
             if let Some(pool) = amm["UniswapV2Pool"].as_object_mut() {
                 if let (Some(token_a), Some(token_b)) =
@@ -149,11 +149,11 @@ where
         }
     }
 
-    // Save updated filtered pools data to filtered-pools-named.json
-    let filtered_pools_named_json = serde_json::to_string_pretty(&filtered_pools)?;
+    // Save updated active pools data to active-pools-named.json
+    let active_pools_named_json = serde_json::to_string_pretty(&active_pools)?;
     fs::write(
-        "checkpoints/filtered-pools-named.json",
-        filtered_pools_named_json,
+        "checkpoints/active-pools-named.json",
+        active_pools_named_json,
     )?;
 
     Ok(())

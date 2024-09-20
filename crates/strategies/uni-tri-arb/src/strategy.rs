@@ -407,8 +407,8 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
                 populate_v2_pool_data(&mut pool, &pool_data)?;
 
                 let mut db_pool: NewDbUniV2Pool = pool.into();
-                db_pool.exchange_name = exchange_name;
-                db_pool.exchange_type = "univ2".to_string();
+                db_pool.exchange_name = Some(exchange_name);
+                db_pool.exchange_type = Some("univ2".to_string());
                 db_pool.chain = chain;
 
                 return Ok(db_pool);

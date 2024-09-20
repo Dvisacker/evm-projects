@@ -26,6 +26,7 @@ pub struct DbCurvePool {
     pub token_d_balance: Option<String>,
     pub exchange_name: Option<String>,
     pub exchange_type: Option<String>,
+    pub active: Option<bool>,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
 }
@@ -51,6 +52,7 @@ pub struct NewDbCurvePool {
     pub token_d_decimals: Option<i32>,
     pub token_d_symbol: Option<String>,
     pub token_d_balance: Option<String>,
+    pub active: Option<bool>,
     pub exchange_name: Option<String>,
     pub exchange_type: Option<String>,
 }

@@ -29,7 +29,7 @@ use db::establish_connection;
 use db::models::db_pool::DbPool;
 use db::models::{DbUniV2Pool, DbUniV3Pool, NewDbPool, NewDbUniV2Pool, NewDbUniV3Pool};
 use db::queries::uni_v2_pool::{
-    batch_update_uni_v2_pool_filtered, batch_upsert_uni_v2_pools, get_uni_v2_pools,
+    batch_update_uni_v2_pool_active, batch_upsert_uni_v2_pools, get_uni_v2_pools,
 };
 use db::queries::uni_v3_pool::batch_upsert_uni_v3_pools;
 use types::exchange::{ExchangeName, ExchangeType};
@@ -265,7 +265,7 @@ where
 /// Activates pools that meet a certain USD value threshold.
 ///
 /// This function retrieves pools from the database, filters them based on a USD threshold,
-/// and marks the filtered pools as active in the database.
+/// and marks the active pools as active in the database.
 ///
 /// # Arguments
 /// * `chain` - The blockchain on which the pools exist
@@ -308,8 +308,8 @@ pub async fn activate_pools(
             tracing::error!("Error filtering amms: {:?}", result.err());
             continue;
         }
-        let filtered_pools = result.unwrap();
-        let active_pools = filtered_pools
+        let active_pools = result.unwrap();
+        let active_pools = active_pools
             .iter()
             .map(|amm| amm.address().to_string())
             .collect::<Vec<String>>();
@@ -320,8 +320,8 @@ pub async fn activate_pools(
             .map(|amm| amm.address().to_string())
             .collect::<Vec<String>>();
 
-        batch_update_uni_v2_pool_filtered(&mut conn, &active_pools, true).unwrap();
-        batch_update_uni_v2_pool_filtered(&mut conn, &inactive_pools, false).unwrap();
+        batch_update_uni_v2_pool_active(&mut conn, &active_pools, true).unwrap();
+        batch_update_uni_v2_pool_active(&mut conn, &inactive_pools, false).unwrap();
 
         tracing::info!(
             "Processed pool chunk. Active pools: {:?}. Inactive pools: {:?}",
@@ -435,7 +435,7 @@ pub async fn get_amm_value(chain: Chain, pool_address: Address) -> Result<U256, 
 /// * `amms` - A vector of AMMs to filter
 ///
 /// # Returns
-/// A Result containing a vector of filtered AMMs or an AMMError
+/// A Result containing a vector of active AMMs or an AMMError
 pub async fn filter_amms(
     chain: Chain,
     usd_threshold: f64,
@@ -467,14 +467,14 @@ pub async fn filter_amms(
         .cloned()
         .collect::<Vec<AMM>>();
 
-    let mut v2_filtered_pools = Vec::new();
-    let mut v3_filtered_pools = Vec::new();
+    let mut v2_active_pools = Vec::new();
+    let mut v3_active_pools = Vec::new();
     if !v2_pools.is_empty() {
         populate_amms(&mut v2_pools, block_number, provider.clone())
             .await
             .unwrap();
 
-        v2_filtered_pools = filter_amms_below_usd_threshold(
+        v2_active_pools = filter_amms_below_usd_threshold(
             v2_pools,
             &factories,
             weth_usdc_pool.clone(),
@@ -498,7 +498,7 @@ pub async fn filter_amms(
             .await
             .unwrap();
 
-        v3_filtered_pools = filter_amms_below_usd_threshold(
+        v3_active_pools = filter_amms_below_usd_threshold(
             v3_pools,
             &factories,
             weth_usdc_pool,
@@ -511,13 +511,13 @@ pub async fn filter_amms(
         .await?;
     }
 
-    // concat v2 and v3 filtered pools
-    let filtered_pools = v2_filtered_pools
+    // concat v2 and v3 active pools
+    let active_pools = v2_active_pools
         .into_iter()
-        .chain(v3_filtered_pools.into_iter())
+        .chain(v3_active_pools.into_iter())
         .collect::<Vec<AMM>>();
 
-    Ok(filtered_pools)
+    Ok(active_pools)
 }
 
 pub fn db_pools_to_amms(pools: &[DbPool]) -> Result<Vec<AMM>, AMMError> {
@@ -537,8 +537,10 @@ pub fn db_univ2_pool_to_amm(pool: &DbUniV2Pool) -> Result<AMM, AMMError> {
     let address: Address = pool.address.parse().unwrap();
     let token0: Address = pool.token_a.parse().unwrap();
     let token1: Address = pool.token_b.parse().unwrap();
-    let exchange_type: ExchangeType = ExchangeType::from_str(&pool.exchange_type).unwrap();
-    let exchange_name: ExchangeName = ExchangeName::from_str(&pool.exchange_name).unwrap();
+    let exchange_type: ExchangeType =
+        ExchangeType::from_str(pool.exchange_type.as_ref().unwrap()).unwrap();
+    let exchange_name: ExchangeName =
+        ExchangeName::from_str(pool.exchange_name.as_ref().unwrap()).unwrap();
     let chain: Chain = Chain::try_from(pool.chain.parse::<NamedChain>().unwrap()).unwrap();
 
     Ok(AMM::UniswapV2Pool(UniswapV2Pool {
