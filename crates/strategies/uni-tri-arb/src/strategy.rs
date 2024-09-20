@@ -8,20 +8,31 @@ use alloy::{
 use alloy_chains::Chain;
 use amms::{
     amm::{
-        common::fetch_pool_data_batch_request,
+        uniswap_v2::{
+            batch_request::{fetch_v2_pool_data_batch_request, populate_v2_pool_data},
+            UniswapV2Pool,
+        },
         uniswap_v3::{
-            batch_request::get_uniswap_v3_tick_data_batch_request, IUniswapV3Pool, UniswapV3Pool,
+            batch_request::{fetch_v3_pool_data_batch_request, populate_v3_pool_data},
+            IUniswapV3Pool, UniswapV3Pool,
         },
         AutomatedMarketMaker, AMM,
     },
-    sync::{self, checkpoint::sort_amms},
+    sync::{self},
 };
 use anyhow::Result;
 use artemis_core::types::Strategy;
 use async_trait::async_trait;
 use bindings::iuniswapv2pair::IUniswapV2Pair;
-use db::queries::{exchange::get_exchanges_by_chain, pool::batch_upsert_pools};
-use db::{establish_connection, models::NewDbUniV2Pool};
+use db::{
+    establish_connection,
+    models::{db_pool::DbPool, DbUniV3Pool, NewDbUniV2Pool},
+    queries::{
+        uni_v2_pool::{batch_upsert_uni_v2_pools, get_uni_v2_pools},
+        uni_v3_pool::{batch_upsert_uni_v3_pools, get_uni_v3_pools},
+    },
+};
+use db::{models::NewDbUniV3Pool, queries::exchange::get_exchanges_by_chain};
 use diesel::PgConnection;
 use shared::{addressbook::Addressbook, amm_utils::db_pools_to_amms, utils::bytes32_to_string};
 use std::sync::Arc;
@@ -57,75 +68,65 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
     async fn init_state(&mut self) -> Result<()> {
         info!("Initializing state...");
 
-        // update block number
         let block_number = self.client.get_block_number().await.unwrap();
+        let chain = self.chain.named().unwrap();
         self.state.update_block_number(block_number).await.unwrap();
 
-        let active_pools = db::queries::pool::get_pools(
+        let active_v2_pools = get_uni_v2_pools(
             &mut establish_connection(&self.db_url),
-            Some(&self.chain.named().unwrap().to_string()),
+            Some(&chain.to_string()),
             None,
             None,
             None,
             Some(true),
         )
-        .unwrap();
+        .unwrap()
+        .into_iter()
+        .map(|p| p.into())
+        .collect::<Vec<DbPool>>();
 
-        info!("{:?} active pools", active_pools.len());
-
-        let inactive_pools = db::queries::pool::get_pools(
+        let active_v3_pools = get_uni_v3_pools(
             &mut establish_connection(&self.db_url),
-            Some(&self.chain.named().unwrap().to_string()),
+            Some(&chain.to_string()),
             None,
             None,
             None,
-            None,
+            Some(true),
         )
-        .unwrap();
+        .unwrap()
+        .into_iter()
+        .map(|p| p.into())
+        .collect::<Vec<DbPool>>();
 
-        info!("{:?} inactive pools", inactive_pools.len());
+        let active_camelot_v3_pools = get_uni_v3_pools(
+            &mut establish_connection(&self.db_url),
+            Some(&chain.to_string()),
+            None,
+            None,
+            None,
+            Some(true),
+        )
+        .unwrap()
+        .into_iter()
+        .map(|p| p.into())
+        .collect::<Vec<DbPool>>();
 
-        let inactive_amms = db_pools_to_amms(&inactive_pools)?;
-        self.state.set_inactive_pools(inactive_amms);
+        let mut active_v2_amms = db_pools_to_amms(&active_v2_pools)?;
+        let mut active_v3_amms = db_pools_to_amms(&active_v3_pools)?;
+        let mut active_camelot_v3_amms = db_pools_to_amms(&active_camelot_v3_pools)?;
 
-        let active_amms = db_pools_to_amms(&active_pools)?;
+        sync::populate_amms(&mut active_v2_amms, block_number, self.client.clone()).await?;
+        sync::populate_amms(&mut active_v3_amms, block_number, self.client.clone()).await?;
+        sync::populate_amms(
+            &mut active_camelot_v3_amms,
+            block_number,
+            self.client.clone(),
+        )
+        .await?;
 
-        let (mut uniswap_v2_pools, mut uniswap_v3_pools, _, mut camelot_v3_pools) =
-            sort_amms(active_amms);
-
-        // take only 50 uniswap v3 pools for testing
-        let mut uniswap_v3_pools: Vec<AMM> = uniswap_v3_pools
-            .into_iter()
-            .filter(|pool| matches!(pool, AMM::UniswapV3Pool(_)))
-            .take(50)
-            .collect();
-
-        sync::populate_amms(&mut uniswap_v2_pools, block_number, self.client.clone()).await?;
-        sync::populate_amms(&mut uniswap_v3_pools, block_number, self.client.clone()).await?;
-        for pool in &mut uniswap_v3_pools {
-            if let AMM::UniswapV3Pool(uniswap_v3_pool) = pool {
-                let tick_start = uniswap_v3_pool.tick - 20;
-                let num_ticks = 40;
-                let (tick_data, _) = get_uniswap_v3_tick_data_batch_request(
-                    &uniswap_v3_pool,
-                    tick_start,
-                    false,
-                    num_ticks,
-                    Some(block_number),
-                    self.client.clone(),
-                )
-                .await?;
-                uniswap_v3_pool.populate_ticks_from_tick_data(tick_data);
-                println!(
-                    "Populated tick data for pool: {:?}",
-                    uniswap_v3_pool.address
-                );
-            }
-        }
-        sync::populate_amms(&mut camelot_v3_pools, block_number, self.client.clone()).await?;
-
-        let synced_amms = vec![uniswap_v2_pools, uniswap_v3_pools, camelot_v3_pools].concat();
+        let synced_amms = vec![active_v2_amms, active_v3_amms, active_camelot_v3_amms].concat();
         self.state.set_pools(synced_amms);
+
         info!("Updated pools: {:?}", self.state.pools);
 
         let arb_cycles = self.state.update_cycles();
@@ -136,6 +137,67 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
         }
 
         Ok(())
+
+        // info!("{:?} active pools", active_pools.len());
+
+        // let inactive_v2_pools = get_uni_v2_pools(
+        //     &mut establish_connection(&self.db_url),
+        //     Some(&chain.to_string()),
+        //     None,
+        //     None,
+        //     None,
+        //     None,
+        // )
+        // .unwrap();
+
+        // let inactive_v2_pools = info!("{:?} inactive pools", inactive_v2_pools.len());
+
+        // let inactive_amms = db_pools_to_amms(
+        //     &inactive_v2_pools
+        //         .into_iter()
+        //         .map(|p| p.into())
+        //         .collect::<Vec<DbPool>>(),
+        // )?;
+
+        // self.state.set_inactive_pools(inactive_amms);
+
+        // let uniswap_v2_amms = db_pools_to_amms(&active_pools)?;
+
+        // let active_amms = db_pools_to_amms(&active_pools)?;
+
+        // let (mut uniswap_v2_pools, mut uniswap_v3_pools, _, mut camelot_v3_pools) =
+        //     sort_amms(active_amms);
+
+        // take only 50 uniswap v3 pools for testing
+        // let mut uniswap_v3_pools: Vec<AMM> = uniswap_v3_pools
+        //     .into_iter()
+        //     .filter(|pool| matches!(pool, AMM::UniswapV3Pool(_)))
+        //     .take(50)
+        //     .collect();
+
+        // sync::populate_amms(&mut uniswap_v3_pools, block_number, self.client.clone()).await?;
+        // sync::populate_amms(&mut camelot_v3_pools, block_number, self.client.clone()).await?;
+
+        // for pool in &mut uniswap_v3_pools {
+        //     if let AMM::UniswapV3Pool(uniswap_v3_pool) = pool {
+        //         let tick_start = uniswap_v3_pool.tick - 20;
+        //         let num_ticks = 40;
+        //         let (tick_data, _) = get_uniswap_v3_tick_data_batch_request(
+        //             &uniswap_v3_pool,
+        //             tick_start,
+        //             false,
+        //             num_ticks,
+        //             Some(block_number),
+        //             self.client.clone(),
+        //         )
+        //         .await?;
+        //         uniswap_v3_pool.populate_ticks_from_tick_data(tick_data);
+        //         println!(
+        //             "Populated tick data for pool: {:?}",
+        //             uniswap_v3_pool.address
+        //         );
+        //     }
+        // }
     }
 
     async fn sync_state(&mut self) -> Result<()> {
@@ -253,14 +315,14 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
 
         info!("New uniswap v2 swap on unknown pool {:?}", pool_address);
         let provider = self.client.clone();
-        let result = fetch_pool_data_batch_request(vec![pool_address], provider).await;
+        let result = fetch_v2_pool_data_batch_request(&[pool_address], provider).await;
 
         let pool_data =
             result.map_err(|e| anyhow::anyhow!("Failed to parse pool batch request: {:?}", e))?;
 
-        let new_pool = self.parse_univ2_pool_data(pool_data, &mut conn, pool_address)?;
+        let new_pool = self.populate_uni_v2_db_pool_data(pool_data, &mut conn, pool_address)?;
 
-        batch_upsert_pools(&mut conn, &vec![new_pool]).unwrap();
+        batch_upsert_uni_v2_pools(&mut conn, &vec![new_pool]).unwrap();
         Ok(())
     }
 
@@ -300,23 +362,23 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
         }
 
         info!("New uniswap v3 swap on unknown pool {:?}", pool_address);
-        let result = fetch_pool_data_batch_request(vec![pool_address], self.client.clone()).await;
+        let result =
+            fetch_v3_pool_data_batch_request(&[pool_address], None, self.client.clone()).await;
 
         let uniswap_v3_log =
             result.map_err(|e| anyhow::anyhow!("Failed to parse pool batch request: {:?}", e))?;
 
         let new_pool = self.parse_univ3_pool_data(uniswap_v3_log, &mut conn, pool_address)?;
-        batch_upsert_pools(&mut conn, &vec![new_pool]).unwrap();
+        batch_upsert_uni_v3_pools(&mut conn, &vec![new_pool]).unwrap();
         Ok(())
     }
 
-    fn parse_univ2_pool_data(
+    fn populate_uni_v2_db_pool_data(
         &self,
         pool_data: DynSolValue,
         mut conn: &mut PgConnection,
         pool_address: Address,
     ) -> Result<NewDbUniV2Pool> {
-        // info!("Parsing uniswap v2 log");
         let pool_data = pool_data
             .as_array()
             .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
@@ -331,42 +393,25 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
                 .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
 
             if !address.is_zero() {
-                let token_a = pool_data[0].as_address().unwrap();
-                let token_a_symbol = pool_data[1].as_fixed_bytes().unwrap();
-                let token_a_decimals = pool_data[2].as_uint().unwrap();
-                let token_b = pool_data[3].as_address().unwrap();
-                let token_b_symbol = pool_data[4].as_fixed_bytes().unwrap();
-                let token_b_decimals = pool_data[5].as_uint().unwrap();
-                let factory = pool_data[6].as_address().unwrap();
-                let reserve_0 = pool_data[7].as_uint().unwrap();
-                let reserve_1 = pool_data[8].as_uint().unwrap();
-                let fee = pool_data[9].as_uint().unwrap();
-                let chain = self.chain.named().unwrap().to_string();
+                let mut pool = UniswapV2Pool::default();
+                pool.address = pool_address;
 
+                let chain = self.chain.named().unwrap().to_string();
                 let known_exchanges = get_exchanges_by_chain(&mut conn, &chain).unwrap();
                 let exchange_name = known_exchanges
                     .iter()
-                    .find(|e| *e.factory_address.as_ref().unwrap() == factory.to_string())
+                    .find(|e| *e.factory_address.as_ref().unwrap() == pool.factory.to_string())
                     .map(|e| e.exchange_name.clone())
                     .unwrap_or("unknown".to_string());
 
-                return Ok(NewDbUniV2Pool {
-                    address: pool_address.to_string(),
-                    chain: self.chain.named().unwrap().to_string(),
-                    factory_address: factory.to_string(),
-                    exchange_name: exchange_name.clone(),
-                    exchange_type: "univ2".to_string(),
-                    token_a: token_a.to_string(),
-                    token_a_symbol: bytes32_to_string(token_a_symbol.0),
-                    token_a_decimals: token_a_decimals.0.to::<i32>(),
-                    token_b: token_b.to_string(),
-                    token_b_symbol: bytes32_to_string(token_b_symbol.0),
-                    token_b_decimals: token_b_decimals.0.to::<i32>(),
-                    reserve_0: reserve_0.0.to::<u128>().to_string(),
-                    reserve_1: reserve_1.0.to::<u128>().to_string(),
-                    fee: fee.0.to::<i32>(),
-                    filtered: None,
-                });
+                populate_v2_pool_data(&mut pool, &pool_data)?;
+
+                let mut db_pool: NewDbUniV2Pool = pool.into();
+                db_pool.exchange_name = exchange_name;
+                db_pool.exchange_type = "univ2".to_string();
+                db_pool.chain = chain;
+
+                return Ok(db_pool);
             } else {
                 break;
             };
@@ -376,15 +421,15 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
 
     fn parse_univ3_pool_data(
         &self,
-        log: DynSolValue,
+        data: DynSolValue,
         mut conn: &mut PgConnection,
         pool_address: Address,
-    ) -> Result<NewDbUniV2Pool> {
-        let log = log
+    ) -> Result<NewDbUniV3Pool> {
+        let data = data
             .as_array()
             .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
 
-        for token in log {
+        for token in data {
             let pool_data = token
                 .as_tuple()
                 .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
@@ -395,52 +440,34 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
 
             // If the pool token A is not zero, signaling that the pool data was polulated
             if !address.is_zero() {
-                let token_a = pool_data[0].as_address().unwrap();
-                let token_a_symbol = pool_data[1].as_fixed_bytes().unwrap();
-                let token_a_decimals = pool_data[2].as_uint().unwrap();
-                let token_b = pool_data[3].as_address().unwrap();
-                let token_b_symbol = pool_data[4].as_fixed_bytes().unwrap();
-                let token_b_decimals = pool_data[5].as_uint().unwrap();
-                let factory = pool_data[6].as_address().unwrap();
-                let reserve_0 = pool_data[7].as_uint().unwrap();
-                let reserve_1 = pool_data[8].as_uint().unwrap();
-                let fee = pool_data[9].as_uint().unwrap();
+                let mut pool = UniswapV3Pool::default();
+                pool.address = pool_address;
+
                 let chain = self.chain.named().unwrap().to_string();
-
                 let known_exchanges = get_exchanges_by_chain(&mut conn, &chain).unwrap();
-
                 let exchange_name = known_exchanges
                     .iter()
-                    .find(|e| *e.factory_address.as_ref().unwrap() == factory.to_string())
+                    .find(|e| *e.factory_address.as_ref().unwrap() == pool.factory.to_string())
                     .map(|e| e.exchange_name.clone())
                     .unwrap_or("unknown".to_string());
 
-                if exchange_name == "unknown" {
-                    info!(
-                        "Unknown v3 pool {:?}:{:?}-{:?}",
-                        pool_address,
-                        bytes32_to_string(token_a_symbol.0),
-                        bytes32_to_string(token_b_symbol.0)
-                    );
-                }
+                populate_v3_pool_data(&mut pool, &pool_data)?;
 
-                return Ok(NewDbUniV2Pool {
-                    address: pool_address.to_string(),
-                    chain: chain,
-                    factory_address: factory.to_string(),
-                    exchange_name: exchange_name.clone(),
-                    exchange_type: "univ3".to_string(),
-                    token_a: token_a.to_string(),
-                    token_a_symbol: bytes32_to_string(token_a_symbol.0),
-                    token_a_decimals: token_a_decimals.0.to::<i32>(),
-                    token_b: token_b.to_string(),
-                    token_b_symbol: bytes32_to_string(token_b_symbol.0),
-                    token_b_decimals: token_b_decimals.0.to::<i32>(),
-                    reserve_0: reserve_0.0.to::<u128>().to_string(),
-                    reserve_1: reserve_1.0.to::<u128>().to_string(),
-                    fee: fee.0.to::<i32>(),
-                    filtered: None,
-                });
+                let mut db_pool: NewDbUniV3Pool = pool.into();
+                db_pool.exchange_name = Some(exchange_name);
+                db_pool.exchange_type = Some("univ3".to_string());
+                db_pool.chain = chain;
+
+                // if exchange_name == "unknown" {
+                //     info!(
+                //         "Unknown v3 pool {:?}:{:?}-{:?}",
+                //         pool_address,
+                //         bytes32_to_string(token_a_symbol.0),
+                //         bytes32_to_string(token_b_symbol.0)
+                //     );
+                // }
+
+                return Ok(db_pool);
             } else {
                 break;
             }

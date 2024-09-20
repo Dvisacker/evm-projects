@@ -191,6 +191,7 @@ async fn main() -> Result<(), Error> {
                 store_uniswap_v3_pools(
                     provider.clone(),
                     chain,
+                    args.exchange,
                     factory_address,
                     block,
                     block + step - 1,

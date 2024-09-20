@@ -1,8 +1,9 @@
 use crate::schema::uni_v3_pools;
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
-use serde::{Deserialize, Serialize};
 use serde_json::Value as JsonValue;
+
+use super::db_pool::DbPool;
 
 #[derive(Queryable, Selectable, Debug, Clone)]
 #[diesel(table_name = uni_v3_pools)]
@@ -27,6 +28,14 @@ pub struct DbUniV3Pool {
     pub exchange_type: Option<String>,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
+    pub factory: Option<String>,
+    pub filtered: Option<bool>,
+}
+
+impl From<DbUniV3Pool> for DbPool {
+    fn from(pool: DbUniV3Pool) -> Self {
+        DbPool::UniV3(pool)
+    }
 }
 
 #[derive(Insertable, Debug)]
@@ -49,4 +58,6 @@ pub struct NewDbUniV3Pool {
     pub ticks: Option<JsonValue>,
     pub exchange_name: Option<String>,
     pub exchange_type: Option<String>,
+    pub factory: Option<String>,
+    pub filtered: Option<bool>,
 }

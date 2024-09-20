@@ -185,36 +185,6 @@ impl<P: Provider + 'static> State<P> {
         return potential_cycles;
     }
 
-    pub async fn add_pools(&self, addresses: Vec<Address>) -> Result<(), AMMError> {
-        let mut amms: Vec<AMM> = addresses
-            .into_iter()
-            .map(|address| {
-                AMM::UniswapV2Pool(UniswapV2Pool::new(
-                    address,
-                    Address::ZERO,
-                    0,
-                    "".to_string(),
-                    Address::ZERO,
-                    0,
-                    "".to_string(),
-                    0,
-                    0,
-                    3000,
-                    ExchangeName::UniswapV2,
-                    ExchangeType::UniV2,
-                    NamedChain::Arbitrum,
-                ))
-            })
-            .collect();
-
-        sync::populate_amms(&mut amms, self.block_number, self.provider.clone()).await?;
-
-        for amm in amms {
-            self.pools.insert(amm.address(), amm);
-        }
-        Ok(())
-    }
-
     pub async fn update_pools(&self) -> Result<(), AMMError> {
         let mut amms: Vec<AMM> = self
             .pools

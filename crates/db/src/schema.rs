@@ -61,7 +61,7 @@ diesel::table! {
 }
 
 diesel::table! {
-    pools (id) {
+    uni_v2_pools (id) {
         id -> Int4,
         address -> Varchar,
         chain -> Varchar,
@@ -78,6 +78,7 @@ diesel::table! {
         reserve_1 -> Varchar,
         fee -> Int4,
         filtered -> Nullable<Bool>,
+        factory -> Nullable<Varchar>,
     }
 }
 
@@ -103,6 +104,8 @@ diesel::table! {
         exchange_type -> Nullable<Varchar>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
+        factory -> Nullable<Varchar>,
+        filtered -> Nullable<Bool>,
     }
 }
 
@@ -110,6 +113,6 @@ diesel::allow_tables_to_appear_in_same_query!(
     curve_pools,
     erc4626_vaults,
     exchanges,
-    pools,
+    uni_v2_pools,
     uni_v3_pools,
 );

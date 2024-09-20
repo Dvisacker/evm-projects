@@ -1,97 +1,97 @@
 use crate::models::{DbUniV2Pool, NewDbUniV2Pool};
-use crate::schema::pools;
+use crate::schema::uni_v2_pools;
 use diesel::pg::PgConnection;
 use diesel::prelude::*;
 use diesel::result::Error;
 use diesel::upsert::excluded;
 
-pub fn insert_pool(
+pub fn insert_uni_v2_pool(
     conn: &mut PgConnection,
     new_pool: &NewDbUniV2Pool,
 ) -> Result<DbUniV2Pool, Error> {
-    diesel::insert_into(pools::table)
+    diesel::insert_into(uni_v2_pools::table)
         .values(new_pool)
         .get_result(conn)
 }
 
-pub fn batch_insert_pools(
+pub fn batch_insert_uni_v2_pools(
     conn: &mut PgConnection,
     new_pools: &Vec<NewDbUniV2Pool>,
 ) -> Result<Vec<DbUniV2Pool>, Error> {
-    diesel::insert_into(pools::table)
+    diesel::insert_into(uni_v2_pools::table)
         .values(new_pools)
         .get_results(conn)
 }
 
-pub fn batch_upsert_pools(
+pub fn batch_upsert_uni_v2_pools(
     conn: &mut PgConnection,
     new_pools: &Vec<NewDbUniV2Pool>,
 ) -> Result<Vec<DbUniV2Pool>, Error> {
-    diesel::insert_into(pools::table)
+    diesel::insert_into(uni_v2_pools::table)
         .values(new_pools)
-        .on_conflict((pools::chain, pools::address))
+        .on_conflict((uni_v2_pools::chain, uni_v2_pools::address))
         .do_update()
         .set((
-            pools::factory_address.eq(excluded(pools::factory_address)),
-            pools::exchange_name.eq(excluded(pools::exchange_name)),
-            pools::exchange_type.eq(excluded(pools::exchange_type)),
-            pools::token_a.eq(excluded(pools::token_a)),
-            pools::token_a_symbol.eq(excluded(pools::token_a_symbol)),
-            pools::token_a_decimals.eq(excluded(pools::token_a_decimals)),
-            pools::token_b.eq(excluded(pools::token_b)),
-            pools::token_b_symbol.eq(excluded(pools::token_b_symbol)),
-            pools::token_b_decimals.eq(excluded(pools::token_b_decimals)),
-            pools::reserve_0.eq(excluded(pools::reserve_0)),
-            pools::reserve_1.eq(excluded(pools::reserve_1)),
-            pools::fee.eq(excluded(pools::fee)),
+            uni_v2_pools::factory_address.eq(excluded(uni_v2_pools::factory_address)),
+            uni_v2_pools::exchange_name.eq(excluded(uni_v2_pools::exchange_name)),
+            uni_v2_pools::exchange_type.eq(excluded(uni_v2_pools::exchange_type)),
+            uni_v2_pools::token_a.eq(excluded(uni_v2_pools::token_a)),
+            uni_v2_pools::token_a_symbol.eq(excluded(uni_v2_pools::token_a_symbol)),
+            uni_v2_pools::token_a_decimals.eq(excluded(uni_v2_pools::token_a_decimals)),
+            uni_v2_pools::token_b.eq(excluded(uni_v2_pools::token_b)),
+            uni_v2_pools::token_b_symbol.eq(excluded(uni_v2_pools::token_b_symbol)),
+            uni_v2_pools::token_b_decimals.eq(excluded(uni_v2_pools::token_b_decimals)),
+            uni_v2_pools::reserve_0.eq(excluded(uni_v2_pools::reserve_0)),
+            uni_v2_pools::reserve_1.eq(excluded(uni_v2_pools::reserve_1)),
+            uni_v2_pools::fee.eq(excluded(uni_v2_pools::fee)),
         ))
         .get_results(conn)
 }
 
-pub fn get_all_pools(conn: &mut PgConnection) -> Result<Vec<DbUniV2Pool>, Error> {
-    pools::table.load::<DbUniV2Pool>(conn)
+pub fn get_all_uni_v2_pools(conn: &mut PgConnection) -> Result<Vec<DbUniV2Pool>, Error> {
+    uni_v2_pools::table.load::<DbUniV2Pool>(conn)
 }
 
-pub fn get_pool_by_address(
+pub fn get_uni_v2_pool_by_address(
     conn: &mut PgConnection,
     pool_address: &str,
 ) -> Result<DbUniV2Pool, Error> {
-    pools::table
-        .filter(pools::address.eq(pool_address))
+    uni_v2_pools::table
+        .filter(uni_v2_pools::address.eq(pool_address))
         .first(conn)
 }
 
-pub fn update_pool(
+pub fn update_uni_v2_pool(
     conn: &mut PgConnection,
     pool_address: &str,
     updated_pool: &NewDbUniV2Pool,
 ) -> Result<DbUniV2Pool, Error> {
-    diesel::update(pools::table.filter(pools::address.eq(pool_address)))
+    diesel::update(uni_v2_pools::table.filter(uni_v2_pools::address.eq(pool_address)))
         .set((
-            pools::chain.eq(updated_pool.chain.clone()),
-            pools::factory_address.eq(updated_pool.factory_address.clone()),
-            pools::exchange_name.eq(updated_pool.exchange_name.clone()),
-            pools::exchange_type.eq(updated_pool.exchange_type.clone()), // Add this line
-            pools::token_a.eq(updated_pool.token_a.clone()),
-            pools::token_a_symbol.eq(updated_pool.token_a_symbol.clone()),
-            pools::token_a_decimals.eq(updated_pool.token_a_decimals),
-            pools::token_b.eq(updated_pool.token_b.clone()),
-            pools::token_b_symbol.eq(updated_pool.token_b_symbol.clone()),
-            pools::token_b_decimals.eq(updated_pool.token_b_decimals),
-            pools::reserve_0.eq(updated_pool.reserve_0.clone()),
-            pools::reserve_1.eq(updated_pool.reserve_1.clone()),
-            pools::fee.eq(updated_pool.fee),
+            uni_v2_pools::chain.eq(updated_pool.chain.clone()),
+            uni_v2_pools::factory_address.eq(updated_pool.factory_address.clone()),
+            uni_v2_pools::exchange_name.eq(updated_pool.exchange_name.clone()),
+            uni_v2_pools::exchange_type.eq(updated_pool.exchange_type.clone()), // Add this line
+            uni_v2_pools::token_a.eq(updated_pool.token_a.clone()),
+            uni_v2_pools::token_a_symbol.eq(updated_pool.token_a_symbol.clone()),
+            uni_v2_pools::token_a_decimals.eq(updated_pool.token_a_decimals),
+            uni_v2_pools::token_b.eq(updated_pool.token_b.clone()),
+            uni_v2_pools::token_b_symbol.eq(updated_pool.token_b_symbol.clone()),
+            uni_v2_pools::token_b_decimals.eq(updated_pool.token_b_decimals),
+            uni_v2_pools::reserve_0.eq(updated_pool.reserve_0.clone()),
+            uni_v2_pools::reserve_1.eq(updated_pool.reserve_1.clone()),
+            uni_v2_pools::fee.eq(updated_pool.fee),
         ))
         .execute(conn)?;
 
-    get_pool_by_address(conn, pool_address)
+    get_uni_v2_pool_by_address(conn, pool_address)
 }
 
-pub fn delete_pool(conn: &mut PgConnection, pool_address: &str) -> Result<usize, Error> {
-    diesel::delete(pools::table.filter(pools::address.eq(pool_address))).execute(conn)
+pub fn delete_uni_v2_pool(conn: &mut PgConnection, pool_address: &str) -> Result<usize, Error> {
+    diesel::delete(uni_v2_pools::table.filter(uni_v2_pools::address.eq(pool_address))).execute(conn)
 }
 
-pub fn get_pools(
+pub fn get_uni_v2_pools(
     conn: &mut PgConnection,
     chain_name: Option<&str>,
     exchange_name: Option<&str>,
@@ -99,18 +99,18 @@ pub fn get_pools(
     limit: Option<i64>,
     filtered: Option<bool>,
 ) -> Result<Vec<DbUniV2Pool>, Error> {
-    let mut query = pools::table.into_boxed();
+    let mut query = uni_v2_pools::table.into_boxed();
 
     if let Some(chain_name) = chain_name {
-        query = query.filter(pools::chain.eq(chain_name));
+        query = query.filter(uni_v2_pools::chain.eq(chain_name));
     }
 
     if let Some(exchange_name) = exchange_name {
-        query = query.filter(pools::exchange_name.eq(exchange_name));
+        query = query.filter(uni_v2_pools::exchange_name.eq(exchange_name));
     }
 
     if let Some(exchange_type) = exchange_type {
-        query = query.filter(pools::exchange_type.eq(exchange_type));
+        query = query.filter(uni_v2_pools::exchange_type.eq(exchange_type));
     }
 
     if let Some(limit) = limit {
@@ -119,56 +119,54 @@ pub fn get_pools(
 
     if let Some(filtered) = filtered {
         if filtered {
-            query = query.filter(pools::filtered.eq(true));
+            query = query.filter(uni_v2_pools::filtered.eq(true));
         } else {
-            query = query.filter(pools::filtered.eq(false));
+            query = query.filter(uni_v2_pools::filtered.eq(false));
         }
     } else {
-        query = query.filter(pools::filtered.is_null());
+        query = query.filter(uni_v2_pools::filtered.is_null());
     }
-
-    // query = query.filter(pools::filtered.eq_any(filtered));
 
     query.load::<DbUniV2Pool>(conn)
 }
 
 // Add a new function to get pools by chain
-pub fn get_pools_by_chain(
+pub fn get_uni_v2_pools_by_chain(
     conn: &mut PgConnection,
     chain_name: &str,
 ) -> Result<Vec<DbUniV2Pool>, Error> {
-    pools::table
-        .filter(pools::chain.eq(chain_name))
+    uni_v2_pools::table
+        .filter(uni_v2_pools::chain.eq(chain_name))
         .load::<DbUniV2Pool>(conn)
 }
 
 // Add a new function to get pools by exchange
-pub fn get_pools_by_exchange(
+pub fn get_uni_v2_pools_by_exchange(
     conn: &mut PgConnection,
     exchange_name: &str,
 ) -> Result<Vec<DbUniV2Pool>, Error> {
-    pools::table
-        .filter(pools::exchange_name.eq(exchange_name))
+    uni_v2_pools::table
+        .filter(uni_v2_pools::exchange_name.eq(exchange_name))
         .load::<DbUniV2Pool>(conn)
 }
 
-pub fn batch_update_filtered(
+pub fn batch_update_uni_v2_pool_filtered(
     conn: &mut PgConnection,
     pool_addresses: &[String],
     filtered: bool,
 ) -> QueryResult<usize> {
-    diesel::update(pools::table)
-        .filter(pools::address.eq_any(pool_addresses))
-        .set(pools::filtered.eq(filtered))
+    diesel::update(uni_v2_pools::table)
+        .filter(uni_v2_pools::address.eq_any(pool_addresses))
+        .set(uni_v2_pools::filtered.eq(filtered))
         .execute(conn)
 }
 
-pub fn get_filtered_pools(
+pub fn get_uni_v2_filtered_pools(
     conn: &mut PgConnection,
     chain_name: &str,
 ) -> Result<Vec<DbUniV2Pool>, Error> {
-    pools::table
-        .filter(pools::chain.eq(chain_name))
-        .filter(pools::filtered.eq(true))
+    uni_v2_pools::table
+        .filter(uni_v2_pools::chain.eq(chain_name))
+        .filter(uni_v2_pools::filtered.eq(true))
         .load::<DbUniV2Pool>(conn)
 }

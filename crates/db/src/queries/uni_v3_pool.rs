@@ -67,6 +67,7 @@ pub fn get_uni_v3_pools(
     exchange_name: Option<&str>,
     exchange_type: Option<&str>,
     limit: Option<i64>,
+    filtered: Option<bool>,
 ) -> Result<Vec<DbUniV3Pool>, Error> {
     let mut query = uni_v3_pools::table.into_boxed();
 
@@ -84,6 +85,16 @@ pub fn get_uni_v3_pools(
 
     if let Some(limit) = limit {
         query = query.limit(limit);
+    }
+
+    if let Some(filtered) = filtered {
+        if filtered {
+            query = query.filter(uni_v3_pools::filtered.eq(true));
+        } else {
+            query = query.filter(uni_v3_pools::filtered.eq(false));
+        }
+    } else {
+        query = query.filter(uni_v3_pools::filtered.is_null());
     }
 
     query.load::<DbUniV3Pool>(conn)
