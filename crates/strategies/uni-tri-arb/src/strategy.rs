@@ -36,7 +36,7 @@ use db::{models::NewDbUniV3Pool, queries::exchange::get_exchanges_by_chain};
 use diesel::PgConnection;
 use shared::{addressbook::Addressbook, amm_utils::db_pools_to_amms};
 use std::sync::Arc;
-use tracing::{error, info};
+use tracing::{debug, error, info, warn};
 
 #[derive(Debug, Clone)]
 pub struct UniTriArb<P: Provider + 'static, S: Signer> {
@@ -254,17 +254,15 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
                     self.handle_uniswap_v3_swap(&mut conn, pool_address, log.clone())
                         .await
                         .unwrap_or_else(|e| {
-                            error!(
-                                "Failed to handle uniswap v3 swap: {:?}. Pool: {:?}. Log: {:?}",
-                                e, pool_address, log
-                            );
+                            debug!("Failed to handle uniswap v3 swap. Pool: {:?}", e);
+                            warn!("Failed to handle uniswap v3 swap: {:?}", pool_address);
                         });
                 } else if log.topics()[0] == IUniswapV2Pair::Sync::SIGNATURE_HASH {
                     self.handle_uniswap_v2_sync(&mut conn, pool_address, log.clone())
                         .await
                         .unwrap_or_else(|e| {
                             error!(
-                                "Failed to handle uniswap v3 swap: {:?}. Pool: {:?}. Log: {:?}",
+                                "Failed to handle uniswap v2 swap: {:?}. Pool: {:?}. Log: {:?}",
                                 e, pool_address, log
                             );
                         });
@@ -366,7 +364,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
             fetch_v3_pool_data_batch_request(&[pool_address], None, self.client.clone()).await;
 
         let uniswap_v3_log =
-            result.map_err(|e| anyhow::anyhow!("Failed to parse pool batch request: {:?}", e))?;
+            result.map_err(|e| anyhow::anyhow!("Failed to pool batch request: {:?}", e))?;
 
         let new_pool = self.parse_univ3_pool_data(uniswap_v3_log, &mut conn, pool_address)?;
         batch_upsert_uni_v3_pools(&mut conn, &vec![new_pool]).unwrap();
