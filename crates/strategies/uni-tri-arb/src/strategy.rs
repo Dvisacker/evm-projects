@@ -26,7 +26,7 @@ use async_trait::async_trait;
 use bindings::iuniswapv2pair::IUniswapV2Pair;
 use db::{
     establish_connection,
-    models::{db_pool::DbPool, DbUniV3Pool, NewDbUniV2Pool},
+    models::{db_pool::DbPool, NewDbUniV2Pool},
     queries::{
         uni_v2_pool::{batch_upsert_uni_v2_pools, get_uni_v2_pools},
         uni_v3_pool::{batch_upsert_uni_v3_pools, get_uni_v3_pools},
@@ -34,7 +34,7 @@ use db::{
 };
 use db::{models::NewDbUniV3Pool, queries::exchange::get_exchanges_by_chain};
 use diesel::PgConnection;
-use shared::{addressbook::Addressbook, amm_utils::db_pools_to_amms, utils::bytes32_to_string};
+use shared::{addressbook::Addressbook, amm_utils::db_pools_to_amms};
 use std::sync::Arc;
 use tracing::{error, info};
 

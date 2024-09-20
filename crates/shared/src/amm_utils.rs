@@ -63,6 +63,7 @@ fn extract_v3_pools(amms: &[AMM]) -> Vec<UniswapV3Pool> {
 }
 
 // Function to extract CamelotV3Pools
+#[allow(dead_code)]
 fn extract_camelot_v3_pools(amms: &[AMM]) -> Vec<CamelotV3Pool> {
     amms.iter()
         .filter_map(|amm| {

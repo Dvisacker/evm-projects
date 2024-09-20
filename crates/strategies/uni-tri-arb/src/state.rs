@@ -1,7 +1,5 @@
 use alloy::primitives::Address;
 use alloy::providers::Provider;
-use alloy_chains::NamedChain;
-use amms::amm::uniswap_v2::UniswapV2Pool;
 use amms::amm::{AutomatedMarketMaker, AMM};
 use amms::errors::AMMError;
 use amms::sync;
@@ -10,7 +8,6 @@ use shared::types::Cycle;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 use tracing::info;
-use types::exchange::{ExchangeName, ExchangeType};
 
 #[derive(Debug, Clone)]
 pub struct State<P: Provider> {
