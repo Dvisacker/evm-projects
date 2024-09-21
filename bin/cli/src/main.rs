@@ -139,7 +139,7 @@ async fn main() -> Result<(), Error> {
 
             info!("Token data has been fetched and saved to tokens.json");
         }
-        Commands::GetUniswapV3Pools(args) => {
+        Commands::GetUniswapV3Pools2(args) => {
             let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
             let chain_config = get_chain_config(chain).await;
             let provider = Arc::new(chain_config.ws);
@@ -193,15 +193,15 @@ async fn main() -> Result<(), Error> {
                     chain,
                     args.exchange,
                     factory_address,
-                    block,
-                    block + step - 1,
+                    Some(block),
+                    Some(block + step - 1),
                     step,
                     &db_url,
                 )
                 .await?;
             }
         }
-        Commands::GetUniswapV3Pools2(args) => {
+        Commands::GetUniswapV3Pools(args) => {
             let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
             let chain_config = get_chain_config(chain).await;
             let provider = Arc::new(chain_config.ws);
@@ -241,28 +241,20 @@ async fn main() -> Result<(), Error> {
             };
 
             let from_block = args.from_block;
-            let to_block = args.to_block;
             let step = args.step;
             let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
 
-            for block in (from_block..=to_block).step_by(step as usize) {
-                info!(
-                    "Fetching pools from block {:?} to {:?}",
-                    block,
-                    block + step - 1
-                );
-                store_uniswap_v3_pools(
-                    provider.clone(),
-                    chain,
-                    args.exchange,
-                    factory_address,
-                    block,
-                    block + step - 1,
-                    step,
-                    &db_url,
-                )
-                .await?;
-            }
+            store_uniswap_v3_pools(
+                provider.clone(),
+                chain,
+                args.exchange,
+                factory_address,
+                Some(from_block),
+                None,
+                step,
+                &db_url,
+            )
+            .await?;
         }
         Commands::GetUniswapV2Pools(args) => {
             let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");

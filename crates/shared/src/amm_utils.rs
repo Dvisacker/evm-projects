@@ -36,6 +36,7 @@ use types::exchange::{ExchangeName, ExchangeType};
 
 use crate::addressbook::Addressbook;
 use crate::config::get_chain_config;
+use crate::helpers::get_contract_creation_block;
 
 fn extract_v2_pools(amms: &[AMM]) -> Vec<UniswapV2Pool> {
     amms.iter()
@@ -145,8 +146,8 @@ pub async fn store_uniswap_v3_pools<P, T, N>(
     chain: Chain,
     exchange_name: ExchangeName,
     factory_address: Address,
-    from_block: u64,
-    to_block: u64,
+    from_block: Option<u64>,
+    to_block: Option<u64>,
     step: u64,
     db_url: &str,
 ) -> Result<(), AMMError>
@@ -156,46 +157,56 @@ where
     N: Network,
 {
     let mut conn = establish_connection(db_url);
-    let factory = UniswapV3Factory::new(factory_address, from_block);
 
-    let amms = factory
-        .get_pools_from_logs(from_block, to_block, step, provider.clone())
-        .await?;
+    let start_block = from_block.unwrap_or(0);
+    let end_block = to_block.unwrap_or(provider.get_block_number().await.unwrap());
 
-    let mut pools = extract_v3_pools(&amms);
+    let contract_creation_block =
+        get_contract_creation_block(provider.clone(), factory_address, start_block, end_block)
+            .await
+            .unwrap();
 
-    let max_batch_size = 50;
-    let block_number = provider.get_block_number().await.unwrap();
-    for chunk in pools.chunks_mut(max_batch_size) {
-        get_v3_pool_data_batch_request(chunk, Some(block_number), provider.clone()).await?;
+    let contract_creation_block = if contract_creation_block > start_block {
+        contract_creation_block
+    } else {
+        start_block
+    };
+
+    let factory = UniswapV3Factory::new(factory_address, contract_creation_block);
+
+    for block in (contract_creation_block..=end_block).step_by(step as usize) {
+        tracing::info!("Fetching pools from block {:?}", block);
+
+        let amms = factory
+            .get_pools_from_logs(block, block + step - 1, step, provider.clone())
+            .await?;
+
+        let mut pools = extract_v3_pools(&amms);
+
+        for mut chunk in pools.chunks_mut(50) {
+            get_v3_pool_data_batch_request(chunk, None, provider.clone()).await?;
+
+            let new_pools = chunk
+                .iter_mut()
+                .map(|pool| {
+                    pool.exchange_type = ExchangeType::UniV3;
+                    pool.exchange_name = exchange_name;
+                    pool.chain = chain.named().unwrap();
+                    pool.to_new_db_pool()
+                })
+                .filter_map(|db_pool| {
+                    if let NewDbPool::UniV3(v3_pool) = db_pool {
+                        Some(v3_pool)
+                    } else {
+                        None
+                    }
+                })
+                .collect::<Vec<NewDbUniV3Pool>>();
+
+            batch_upsert_uni_v3_pools(&mut conn, &new_pools).unwrap();
+            tracing::info!("Inserted {:?} pools", new_pools.len());
+        }
     }
-
-    let v3_pools: Vec<NewDbUniV3Pool> = pools
-        .iter_mut()
-        .map(|pool| {
-            pool.exchange_type = ExchangeType::UniV3;
-            pool.exchange_name = exchange_name;
-            pool.chain = chain.named().unwrap();
-            pool.to_new_db_pool()
-        })
-        .filter_map(|db_pool| {
-            if let NewDbPool::UniV3(v3_pool) = db_pool {
-                Some(v3_pool)
-            } else {
-                None
-            }
-        })
-        .collect();
-
-    // convert db pools to a slice of NewDbUniV3Pool
-    batch_upsert_uni_v3_pools(&mut conn, v3_pools.as_slice()).unwrap();
-
-    tracing::info!(
-        "Inserted {:?} pools created from block {:?} to {:?}",
-        v3_pools.len(),
-        from_block,
-        to_block
-    );
 
     Ok(())
 }
