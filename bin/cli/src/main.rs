@@ -28,7 +28,6 @@ enum Commands {
     GenerateStrategy,
     GetNamedPools(GetNamedPoolsArgs),
     GetUniswapV3Pools(GetUniswapV3PoolsArgs),
-    GetUniswapV3Pools2(GetUniswapV3PoolsArgs),
     GetUniswapV2Pools(GetUniswapV2PoolsArgs),
     GetAMMValue(GetAMMValueArgs),
     ActivatePools(ActivatePoolsArgs),
@@ -138,68 +137,6 @@ async fn main() -> Result<(), Error> {
             load_pools_and_fetch_token_data(provider).await?;
 
             info!("Token data has been fetched and saved to tokens.json");
-        }
-        Commands::GetUniswapV3Pools2(args) => {
-            let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
-            let chain_config = get_chain_config(chain).await;
-            let provider = Arc::new(chain_config.ws);
-            let addressbook = Addressbook::load().unwrap();
-
-            let factory_address = match chain.kind() {
-                ChainKind::Named(NamedChain::Arbitrum) => match args.exchange {
-                    ExchangeName::UniswapV3 => {
-                        addressbook.arbitrum.exchanges.univ3.uniswapv3.factory
-                    }
-                    ExchangeName::SushiswapV3 => {
-                        addressbook.arbitrum.exchanges.univ3.sushiswapv3.factory
-                    }
-                    ExchangeName::CamelotV3 => {
-                        addressbook.arbitrum.exchanges.univ3.camelotv3.factory
-                    }
-                    ExchangeName::RamsesV2 => addressbook.arbitrum.exchanges.univ3.ramsesv2.factory,
-                    ExchangeName::PancakeswapV3 => {
-                        addressbook.arbitrum.exchanges.univ3.pancakeswapv3.factory
-                    }
-                    _ => panic!("Choose a uniswap v3 exchange"),
-                },
-                ChainKind::Named(NamedChain::Mainnet) => match args.exchange {
-                    ExchangeName::UniswapV3 => {
-                        addressbook.mainnet.exchanges.univ3.uniswapv3.factory
-                    }
-                    ExchangeName::SushiswapV3 => {
-                        addressbook.mainnet.exchanges.univ3.sushiswapv3.factory
-                    }
-                    ExchangeName::PancakeswapV3 => {
-                        addressbook.mainnet.exchanges.univ3.pancakeswapv3.factory
-                    }
-                    _ => panic!("Choose a uniswap v3 exchange"),
-                },
-                _ => panic!("Unsupported chain"),
-            };
-
-            let from_block = args.from_block;
-            let to_block = args.to_block;
-            let step = args.step;
-            let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
-
-            for block in (from_block..=to_block).step_by(step as usize) {
-                info!(
-                    "Fetching pools from block {:?} to {:?}",
-                    block,
-                    block + step - 1
-                );
-                store_uniswap_v3_pools(
-                    provider.clone(),
-                    chain,
-                    args.exchange,
-                    factory_address,
-                    Some(block),
-                    Some(block + step - 1),
-                    step,
-                    &db_url,
-                )
-                .await?;
-            }
         }
         Commands::GetUniswapV3Pools(args) => {
             let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
