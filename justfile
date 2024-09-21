@@ -79,10 +79,10 @@ run-bot-mainnet:
 get-filtered-pools CHAIN_ID:
     cargo run --bin cli -- filter --chain-id {{CHAIN_ID}}
 
-get-uniswap-v3-pools CHAIN_ID EXCHANGE_NAME STEP START_BLOCK:
+get-uni-v3-pools CHAIN_ID EXCHANGE_NAME STEP START_BLOCK:
     cargo run --bin cli -- get-uniswap-v3-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}} --from-block {{START_BLOCK}} --step {{STEP}}
 
-get-uniswap-v2-pools CHAIN_ID EXCHANGE_NAME:
+get-uni-v2-pools CHAIN_ID EXCHANGE_NAME:
     cargo run --bin cli -- get-uniswap-v2-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}}
 
 get-contract-creation-block CHAIN_ID CONTRACT_ADDRESS:
