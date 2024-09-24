@@ -261,10 +261,8 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
                     self.handle_uniswap_v2_sync(&mut conn, pool_address, log.clone())
                         .await
                         .unwrap_or_else(|e| {
-                            error!(
-                                "Failed to handle uniswap v2 swap: {:?}. Pool: {:?}. Log: {:?}",
-                                e, pool_address, log
-                            );
+                            warn!("Failed to handle uniswap v2 swap: {:?}", pool_address);
+                            debug!("Error: {:?}. Pool: {:?}. Log: {:?}", e, pool_address, log);
                         });
                 }
             }
@@ -318,7 +316,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
         let pool_data =
             result.map_err(|e| anyhow::anyhow!("Failed to parse pool batch request: {:?}", e))?;
 
-        let new_pool = self.populate_uni_v2_db_pool_data(pool_data, &mut conn, pool_address)?;
+        let new_pool = self.parse_univ2_pool_data(pool_data, &mut conn, pool_address)?;
 
         batch_upsert_uni_v2_pools(&mut conn, &vec![new_pool]).unwrap();
         Ok(())
@@ -371,7 +369,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
         Ok(())
     }
 
-    fn populate_uni_v2_db_pool_data(
+    fn parse_univ2_pool_data(
         &self,
         pool_data: DynSolValue,
         mut conn: &mut PgConnection,
@@ -395,14 +393,15 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
                 pool.address = pool_address;
 
                 let chain = self.chain.named().unwrap().to_string();
+
+                populate_v2_pool_data(&mut pool, &pool_data)?;
+
                 let known_exchanges = get_exchanges_by_chain(&mut conn, &chain).unwrap();
                 let exchange_name = known_exchanges
                     .iter()
                     .find(|e| *e.factory_address.as_ref().unwrap() == pool.factory.to_string())
                     .map(|e| e.exchange_name.clone())
                     .unwrap_or("unknown".to_string());
-
-                populate_v2_pool_data(&mut pool, &pool_data)?;
 
                 let mut db_pool: NewDbUniV2Pool = pool.into();
                 db_pool.exchange_name = Some(exchange_name);
@@ -436,34 +435,32 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
                 .as_address()
                 .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
 
-            // If the pool token A is not zero, signaling that the pool data was polulated
+            // If the pool token A is not zero, signaling that the pool data was populated
             if !address.is_zero() {
                 let mut pool = UniswapV3Pool::default();
                 pool.address = pool_address;
 
                 let chain = self.chain.named().unwrap().to_string();
                 let known_exchanges = get_exchanges_by_chain(&mut conn, &chain).unwrap();
+
+                populate_v3_pool_data(&mut pool, &pool_data)?;
+
                 let exchange_name = known_exchanges
                     .iter()
                     .find(|e| *e.factory_address.as_ref().unwrap() == pool.factory.to_string())
                     .map(|e| e.exchange_name.clone())
                     .unwrap_or("unknown".to_string());
 
-                populate_v3_pool_data(&mut pool, &pool_data)?;
-
                 let mut db_pool: NewDbUniV3Pool = pool.into();
                 db_pool.exchange_name = Some(exchange_name);
                 db_pool.exchange_type = Some("univ3".to_string());
                 db_pool.chain = chain;
 
-                // if exchange_name == "unknown" {
-                //     info!(
-                //         "Unknown v3 pool {:?}:{:?}-{:?}",
-                //         pool_address,
-                //         bytes32_to_string(token_a_symbol.0),
-                //         bytes32_to_string(token_b_symbol.0)
-                //     );
-                // }
+                info!(
+                    "Parsed pool: Factory: {}, Exchange: {}",
+                    db_pool.factory_address.as_ref().unwrap(),
+                    db_pool.exchange_name.as_ref().unwrap()
+                );
 
                 return Ok(db_pool);
             } else {
