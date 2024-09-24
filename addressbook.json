@@ -23,23 +23,32 @@
                 "uniswapv3": {
                     "factory": "0x1F98431c8aD98523631AE4a59f267346ea31F984",
                     "pools": {
-                        "WETH-USDC": "0xc31e54c7a869b9fcbecc14363cf510d1c41fa443"
+                        "WETH-USDC": "0xc31e54c7a869b9fcbecc14363cf510d1c41fa443",
+                        "WETH-USDT": "0x4e68ccd3e89f51c3074ca5072bbac773960dfa36"
                     }
                 },
                 "sushiswapv3": {
-                    "factory": "0x1af415a1EbA07a4986a52B6f2e7dE7003D82231e"
+                    "factory": "0x1af415a1EbA07a4986a52B6f2e7dE7003D82231e",
+                    "pools": {
+                        "WETH-USDC": "0x4e68ccd3e89f51c3074ca5072bbac773960dfa36",
+                        "WETH-USDT": "0x4e68ccd3e89f51c3074ca5072bbac773960dfa36"
+                    }
                 },
                 "camelotv3": {
-                    "factory": "0x1a3c9B1d2F0529D97f2afC5136Cc23e58f1FD35B"
+                    "factory": "0x1a3c9B1d2F0529D97f2afC5136Cc23e58f1FD35B",
+                    "pools": {}
                 },
                 "ramsesv2": {
-                    "factory": "0xAA2cd7477c451E703f3B9Ba5663334914763edF8"
+                    "factory": "0xAA2cd7477c451E703f3B9Ba5663334914763edF8",
+                    "pools": {}
                 },
                 "pancakeswapv3": {
-                    "factory": "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865"
+                    "factory": "0x0BFbCF9fa4f9C56B0F40a671Ad40E0805A091865",
+                    "pools": {}
                 },
                 "solidlyv3": {
-                    "factory": "0x70Fe4a44EA505cFa3A57b95cF2862D4fd5F0f687"
+                    "factory": "0x70Fe4a44EA505cFa3A57b95cF2862D4fd5F0f687",
+                    "pools": {}
                 }
             }
         },
@@ -73,13 +82,16 @@
                     "pools": {}
                 },
                 "camelotv3": {
-                    "factory": "0x0000000000000000000000000000000000000000"
+                    "factory": "0x0000000000000000000000000000000000000000",
+                    "pools": {}
                 },
                 "ramsesv2": {
-                    "factory": "0x0000000000000000000000000000000000000000"
+                    "factory": "0x0000000000000000000000000000000000000000",
+                    "pools": {}
                 },
                 "pancakeswapv3": {
-                    "factory": "0x0000000000000000000000000000000000000000"
+                    "factory": "0x0000000000000000000000000000000000000000",
+                    "pools": {}
                 }
             }
         },
@@ -119,13 +131,16 @@
                     "pools": {}
                 },
                 "camelotv3": {
-                    "factory": "0x0000000000000000000000000000000000000000"
+                    "factory": "0x0000000000000000000000000000000000000000",
+                    "pools": {}
                 },
                 "ramsesv2": {
-                    "factory": "0x0000000000000000000000000000000000000000"
+                    "factory": "0x0000000000000000000000000000000000000000",
+                    "pools": {}
                 },
                 "pancakeswapv3": {
-                    "factory": "0x0000000000000000000000000000000000000000"
+                    "factory": "0x0000000000000000000000000000000000000000",
+                    "pools": {}
                 }
             }
         },

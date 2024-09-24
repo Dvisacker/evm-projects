@@ -28,6 +28,7 @@ use amms::{
 use db::establish_connection;
 use db::models::db_pool::DbPool;
 use db::models::{DbUniV2Pool, DbUniV3Pool, NewDbPool, NewDbUniV2Pool, NewDbUniV3Pool};
+use db::queries::exchange::get_exchange_by_name;
 use db::queries::uni_v2_pool::{
     batch_update_uni_v2_pool_active, batch_upsert_uni_v2_pools, get_uni_v2_pools,
 };
@@ -301,7 +302,7 @@ pub async fn activate_v3_pools(
 
     let amms = db_pools_to_amms(&v3_pools)?;
 
-    println!("Got {:?} pools", pools.len());
+    tracing::info!("Got {:?} uni v3 pools", pools.len());
 
     for chunk in amms.chunks(1000) {
         let result = filter_amms(chain, usd_threshold, chunk.to_vec()).await;
@@ -406,12 +407,21 @@ pub async fn activate_v2_pools(
 /// A Result containing a vector of activated AMMs or an AMMError
 pub async fn activate_pools(
     chain: Chain,
-    exchange_type: ExchangeType,
     exchange_name: ExchangeName,
     usd_threshold: f64,
     db_url: &str,
 ) -> Result<(), AMMError> {
     let mut conn = establish_connection(db_url);
+
+    let exchange = get_exchange_by_name(
+        &mut conn,
+        &chain.named().unwrap().to_string(),
+        &exchange_name.to_string(),
+    )
+    .unwrap();
+
+    let exchange_type =
+        ExchangeType::from_str(&exchange.exchange_type).expect("Invalid exchange type");
 
     match exchange_type {
         ExchangeType::UniV2 => {
@@ -536,25 +546,64 @@ pub async fn filter_amms(
     usd_threshold: f64,
     amms: Vec<AMM>,
 ) -> Result<Vec<AMM>, AMMError> {
+    println!("Amms {:?}", amms);
     let chain_config = get_chain_config(chain).await;
     let provider = chain_config.ws;
+
+    println!("Filter univ2 pools");
+    let v2_active_pools =
+        filter_univ2_pools(amms.clone(), chain, provider.clone(), usd_threshold).await?;
+    println!("Filter univ3 pools");
+    let v3_active_pools =
+        filter_univ3_pools(amms.clone(), chain, provider.clone(), usd_threshold).await?;
+
+    let active_pools = v2_active_pools
+        .into_iter()
+        .chain(v3_active_pools.into_iter())
+        .collect::<Vec<AMM>>();
+
+    Ok(active_pools)
+}
+
+pub async fn filter_univ2_pools<P, T, N>(
+    amms: Vec<AMM>,
+    chain: Chain,
+    provider: Arc<P>,
+    usd_threshold: f64,
+) -> Result<Vec<AMM>, AMMError>
+where
+    P: Provider<T, N> + 'static,
+    T: Transport + Clone,
+    N: Network,
+{
     let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
     let weth_address = addressbook.get_weth(&named_chain).unwrap();
     let exchange_name: ExchangeName = ExchangeName::UniswapV2;
+    println!("I AM HERE 3");
+
     let weth_usdc_address = addressbook
         .get_pool_by_name(&named_chain, exchange_name, "WETH-USDC")
         .unwrap();
+    println!("I AM HERE 4");
+
+    println!("Weth usdc address {:?}", weth_usdc_address);
+
     let weth_usdc_pool = AMM::UniswapV2Pool(
         UniswapV2Pool::new_from_address(weth_usdc_address, 300, provider.clone()).await?,
     );
+    println!("I AM HERE 5");
+
     let weth_value_in_token_to_weth_pool_threshold = U256::from(1000000000000000000_u128); // 10 weth
     let block_number = provider.get_block_number().await.unwrap();
     let uniswap_v3_factory = addressbook.get_v3_factories(&named_chain)[0];
+    println!("I AM HERE 6");
     let factories = vec![Factory::UniswapV3Factory(UniswapV3Factory::new(
         uniswap_v3_factory,
         0,
     ))];
+
+    println!("I AM HERE");
 
     let mut v2_pools = amms
         .iter()
@@ -562,8 +611,9 @@ pub async fn filter_amms(
         .cloned()
         .collect::<Vec<AMM>>();
 
+    println!("I AM HERE 2");
+
     let mut v2_active_pools = Vec::new();
-    let mut v3_active_pools = Vec::new();
     if !v2_pools.is_empty() {
         populate_amms(&mut v2_pools, block_number, provider.clone())
             .await
@@ -582,12 +632,51 @@ pub async fn filter_amms(
         .await?;
     }
 
+    Ok(v2_active_pools)
+}
+
+pub async fn filter_univ3_pools<P, T, N>(
+    amms: Vec<AMM>,
+    chain: Chain,
+    provider: Arc<P>,
+    usd_threshold: f64,
+) -> Result<Vec<AMM>, AMMError>
+where
+    P: Provider<T, N> + 'static,
+    T: Transport + Clone,
+    N: Network,
+{
+    let addressbook = Addressbook::load().unwrap();
+    let named_chain = chain.named().unwrap();
+    let weth_address = addressbook.get_weth(&named_chain).unwrap();
+    let exchange_name: ExchangeName = ExchangeName::UniswapV3;
+    println!(
+        "Named chain {:?}. Exchange_name {:?}",
+        named_chain, exchange_name
+    );
+    let weth_usdc_address = addressbook
+        .get_pool_by_name(&named_chain, exchange_name, "WETH-USDC")
+        .expect("WETH-USDC pool not found");
+    let weth_usdc_pool = AMM::UniswapV3Pool(
+        UniswapV3Pool::new_from_address(weth_usdc_address, 300, provider.clone())
+            .await
+            .expect("Failed to create WETH-USDC pool"),
+    );
+    let weth_value_in_token_to_weth_pool_threshold = U256::from(1000000000000000000_u128); // 10 weth
+    let block_number = provider.get_block_number().await.unwrap();
+    let uniswap_v3_factory = addressbook.get_v3_factories(&named_chain)[0];
+    let factories = vec![Factory::UniswapV3Factory(UniswapV3Factory::new(
+        uniswap_v3_factory,
+        0,
+    ))];
+
     let mut v3_pools = amms
         .iter()
         .filter(|amm| matches!(amm, AMM::UniswapV3Pool(_)))
         .cloned()
         .collect::<Vec<AMM>>();
 
+    let mut v3_active_pools = Vec::new();
     if !v3_pools.is_empty() {
         populate_amms(&mut v3_pools, block_number, provider.clone())
             .await
@@ -606,13 +695,7 @@ pub async fn filter_amms(
         .await?;
     }
 
-    // concat v2 and v3 active pools
-    let active_pools = v2_active_pools
-        .into_iter()
-        .chain(v3_active_pools.into_iter())
-        .collect::<Vec<AMM>>();
-
-    Ok(active_pools)
+    Ok(v3_active_pools)
 }
 
 pub fn db_pools_to_amms(pools: &[DbPool]) -> Result<Vec<AMM>, AMMError> {

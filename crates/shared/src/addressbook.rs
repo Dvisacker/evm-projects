@@ -71,6 +71,7 @@ pub struct UniV2Addresses {
 pub struct UniV3Addresses {
     #[serde(deserialize_with = "deserialize_address")]
     pub factory: Address,
+    pub pools: AddressMap,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -154,6 +155,17 @@ impl Addressbook {
                     .exchanges
                     .univ2
                     .sushiswapv2
+                    .pools
+                    .0
+                    .get(pool_name)
+                    .cloned(),
+                _ => return None,
+            },
+            ExchangeType::UniV3 => match exchange_name {
+                ExchangeName::UniswapV3 => book
+                    .exchanges
+                    .univ3
+                    .uniswapv3
                     .pools
                     .0
                     .get(pool_name)

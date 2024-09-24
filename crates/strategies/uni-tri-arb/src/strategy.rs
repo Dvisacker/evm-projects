@@ -36,7 +36,7 @@ use db::{models::NewDbUniV3Pool, queries::exchange::get_exchanges_by_chain};
 use diesel::PgConnection;
 use shared::{addressbook::Addressbook, amm_utils::db_pools_to_amms};
 use std::sync::Arc;
-use tracing::{debug, error, info, warn};
+use tracing::{debug, info, warn};
 
 #[derive(Debug, Clone)]
 pub struct UniTriArb<P: Provider + 'static, S: Signer> {
