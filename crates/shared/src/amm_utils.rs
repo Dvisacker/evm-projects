@@ -546,14 +546,11 @@ pub async fn filter_amms(
     usd_threshold: f64,
     amms: Vec<AMM>,
 ) -> Result<Vec<AMM>, AMMError> {
-    println!("Amms {:?}", amms);
     let chain_config = get_chain_config(chain).await;
     let provider = chain_config.ws;
 
-    println!("Filter univ2 pools");
     let v2_active_pools =
         filter_univ2_pools(amms.clone(), chain, provider.clone(), usd_threshold).await?;
-    println!("Filter univ3 pools");
     let v3_active_pools =
         filter_univ3_pools(amms.clone(), chain, provider.clone(), usd_threshold).await?;
 
@@ -580,38 +577,28 @@ where
     let named_chain = chain.named().unwrap();
     let weth_address = addressbook.get_weth(&named_chain).unwrap();
     let exchange_name: ExchangeName = ExchangeName::UniswapV2;
-    println!("I AM HERE 3");
 
     let weth_usdc_address = addressbook
         .get_pool_by_name(&named_chain, exchange_name, "WETH-USDC")
         .unwrap();
-    println!("I AM HERE 4");
-
-    println!("Weth usdc address {:?}", weth_usdc_address);
 
     let weth_usdc_pool = AMM::UniswapV2Pool(
         UniswapV2Pool::new_from_address(weth_usdc_address, 300, provider.clone()).await?,
     );
-    println!("I AM HERE 5");
 
     let weth_value_in_token_to_weth_pool_threshold = U256::from(1000000000000000000_u128); // 10 weth
     let block_number = provider.get_block_number().await.unwrap();
     let uniswap_v3_factory = addressbook.get_v3_factories(&named_chain)[0];
-    println!("I AM HERE 6");
     let factories = vec![Factory::UniswapV3Factory(UniswapV3Factory::new(
         uniswap_v3_factory,
         0,
     ))];
-
-    println!("I AM HERE");
 
     let mut v2_pools = amms
         .iter()
         .filter(|amm| matches!(amm, AMM::UniswapV2Pool(_)))
         .cloned()
         .collect::<Vec<AMM>>();
-
-    println!("I AM HERE 2");
 
     let mut v2_active_pools = Vec::new();
     if !v2_pools.is_empty() {
@@ -657,11 +644,14 @@ where
     let weth_usdc_address = addressbook
         .get_pool_by_name(&named_chain, exchange_name, "WETH-USDC")
         .expect("WETH-USDC pool not found");
-    let weth_usdc_pool = AMM::UniswapV3Pool(
-        UniswapV3Pool::new_from_address(weth_usdc_address, 300, provider.clone())
-            .await
-            .expect("Failed to create WETH-USDC pool"),
-    );
+    let mut weth_usdc_pool = AMM::UniswapV3Pool(UniswapV3Pool {
+        address: weth_usdc_address,
+        exchange_name: ExchangeName::UniswapV3,
+        exchange_type: ExchangeType::UniV3,
+        chain: named_chain,
+        ..Default::default()
+    });
+    weth_usdc_pool.populate_data(None, provider.clone()).await?;
     let weth_value_in_token_to_weth_pool_threshold = U256::from(1000000000000000000_u128); // 10 weth
     let block_number = provider.get_block_number().await.unwrap();
     let uniswap_v3_factory = addressbook.get_v3_factories(&named_chain)[0];
