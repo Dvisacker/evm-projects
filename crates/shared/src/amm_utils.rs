@@ -31,7 +31,10 @@ use db::models::{DbUniV2Pool, DbUniV3Pool, NewDbPool, NewDbUniV2Pool, NewDbUniV3
 use db::queries::uni_v2_pool::{
     batch_update_uni_v2_pool_active, batch_upsert_uni_v2_pools, get_uni_v2_pools,
 };
-use db::queries::uni_v3_pool::batch_upsert_uni_v3_pools;
+use db::queries::uni_v3_pool::{
+    batch_update_uni_v3_pool_active, batch_upsert_uni_v3_pools, get_uni_v3_pools,
+};
+use diesel::PgConnection;
 use types::exchange::{ExchangeName, ExchangeType};
 
 use crate::addressbook::Addressbook;
@@ -273,27 +276,72 @@ where
     Ok(())
 }
 
-/// Activates pools that meet a certain USD value threshold.
-///
-/// This function retrieves pools from the database, filters them based on a USD threshold,
-/// and marks the active pools as active in the database.
-///
-/// # Arguments
-/// * `chain` - The blockchain on which the pools exist
-/// * `exchange_name` - The name of the exchange to filter pools for
-/// * `usd_threshold` - The minimum USD value for a pool to be considered active
-/// * `db_url` - The URL of the database to retrieve and update pools
-///
-/// # Returns
-/// A Result containing a vector of activated AMMs or an AMMError
-pub async fn activate_pools(
+pub async fn activate_v3_pools(
     chain: Chain,
+    mut conn: &mut PgConnection,
     exchange_name: ExchangeName,
     usd_threshold: f64,
-    db_url: &str,
 ) -> Result<(), AMMError> {
     let named_chain = chain.named().unwrap();
-    let mut conn = establish_connection(db_url);
+
+    let pools = get_uni_v3_pools(
+        &mut conn,
+        Some(&named_chain.to_string()),
+        Some(&exchange_name.to_string()),
+        None,
+        None,
+        None,
+    )
+    .unwrap();
+
+    let v3_pools = pools
+        .iter()
+        .map(|pool| DbPool::UniV3((*pool).clone()))
+        .collect::<Vec<DbPool>>();
+
+    let amms = db_pools_to_amms(&v3_pools)?;
+
+    println!("Got {:?} pools", pools.len());
+
+    for chunk in amms.chunks(1000) {
+        let result = filter_amms(chain, usd_threshold, chunk.to_vec()).await;
+        if result.is_err() {
+            tracing::error!("Error filtering amms: {:?}", result.err());
+            continue;
+        }
+        let active_pools = result.unwrap();
+        let active_pools = active_pools
+            .iter()
+            .map(|amm| amm.address().to_string())
+            .collect::<Vec<String>>();
+
+        let inactive_pools = chunk
+            .iter()
+            .filter(|amm| !active_pools.contains(&amm.address().to_string()))
+            .map(|amm| amm.address().to_string())
+            .collect::<Vec<String>>();
+
+        batch_update_uni_v3_pool_active(&mut conn, &active_pools, true).unwrap();
+        batch_update_uni_v3_pool_active(&mut conn, &inactive_pools, false).unwrap();
+
+        tracing::info!(
+            "Processed pool chunk. Active pools: {:?}. Inactive pools: {:?}",
+            active_pools.len(),
+            inactive_pools.len()
+        );
+    }
+
+    Ok(())
+}
+
+pub async fn activate_v2_pools(
+    chain: Chain,
+    mut conn: &mut PgConnection,
+    exchange_name: ExchangeName,
+    usd_threshold: f64,
+) -> Result<(), AMMError> {
+    let named_chain = chain.named().unwrap();
+
     let pools = get_uni_v2_pools(
         &mut conn,
         Some(&named_chain.to_string()),
@@ -339,6 +387,42 @@ pub async fn activate_pools(
             active_pools.len(),
             inactive_pools.len()
         );
+    }
+
+    Ok(())
+}
+/// Activates pools that meet a certain USD value threshold.
+///
+/// This function retrieves pools from the database, filters them based on a USD threshold,
+/// and marks the active pools as active in the database.
+///
+/// # Arguments
+/// * `chain` - The blockchain on which the pools exist
+/// * `exchange_name` - The name of the exchange to filter pools for
+/// * `usd_threshold` - The minimum USD value for a pool to be considered active
+/// * `db_url` - The URL of the database to retrieve and update pools
+///
+/// # Returns
+/// A Result containing a vector of activated AMMs or an AMMError
+pub async fn activate_pools(
+    chain: Chain,
+    exchange_type: ExchangeType,
+    exchange_name: ExchangeName,
+    usd_threshold: f64,
+    db_url: &str,
+) -> Result<(), AMMError> {
+    let mut conn = establish_connection(db_url);
+
+    match exchange_type {
+        ExchangeType::UniV2 => {
+            activate_v2_pools(chain, &mut conn, exchange_name, usd_threshold).await?;
+        }
+        ExchangeType::UniV3 => {
+            activate_v3_pools(chain, &mut conn, exchange_name, usd_threshold).await?;
+        }
+        _ => {
+            return Err(AMMError::UnknownPoolType);
+        }
     }
 
     Ok(())

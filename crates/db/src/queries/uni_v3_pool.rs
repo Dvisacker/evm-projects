@@ -130,6 +130,17 @@ pub fn update_uni_v3_pool(
         .get_result(conn)
 }
 
+pub fn batch_update_uni_v3_pool_active(
+    conn: &mut PgConnection,
+    pool_addresses: &[String],
+    active: bool,
+) -> QueryResult<usize> {
+    diesel::update(uni_v3_pools::table)
+        .filter(uni_v3_pools::address.eq_any(pool_addresses))
+        .set(uni_v3_pools::active.eq(active))
+        .execute(conn)
+}
+
 pub fn delete_uni_v3_pool(conn: &mut PgConnection, pool_address: &str) -> Result<usize, Error> {
     diesel::delete(uni_v3_pools::table.filter(uni_v3_pools::address.eq(pool_address))).execute(conn)
 }
