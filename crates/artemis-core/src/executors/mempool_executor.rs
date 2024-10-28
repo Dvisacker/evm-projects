@@ -48,23 +48,25 @@ where
             .await
             .context("Error estimating gas usage: {}")?;
 
-        let bid_gas_price: u128;
+        let bid_gas_price: u64;
         if let Some(gas_bid_info) = action.gas_bid_info {
             // gas price at which we'd break even, meaning 100% of profit goes to validator
-            let breakeven_gas_price: u128 = gas_bid_info.total_profit.to::<u128>() / gas_usage;
+            let breakeven_gas_price: u64 = gas_bid_info.total_profit.to::<u64>() / gas_usage;
             // gas price corresponding to bid percentage
             bid_gas_price = breakeven_gas_price
-                .mul(u128::from(gas_bid_info.bid_percentage))
+                .mul(u64::from(gas_bid_info.bid_percentage))
                 .div(100);
         } else {
             bid_gas_price = self
                 .client
                 .get_gas_price()
                 .await
-                .context("Error getting gas price: {}")?;
+                .context("Error getting gas price: {}")?
+                .try_into()
+                .context("Error converting gas price to u64: {}")?;
         }
 
-        action.tx.gas_price = Some(bid_gas_price);
+        action.tx.gas_price = Some(bid_gas_price.into());
         let receipt = self
             .client
             .send_transaction(action.tx)
