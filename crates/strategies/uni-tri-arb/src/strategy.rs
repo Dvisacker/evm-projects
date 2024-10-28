@@ -13,7 +13,10 @@ use amms::{
             UniswapV2Pool,
         },
         uniswap_v3::{
-            batch_request::{fetch_v3_pool_data_batch_request, populate_v3_pool_data},
+            batch_request::{
+                fetch_v3_pool_data_batch_request, get_uniswap_v3_tick_data_batch_request,
+                populate_v3_pool_data,
+            },
             IUniswapV3Pool, UniswapV3Pool,
         },
         AutomatedMarketMaker, AMM,
@@ -124,6 +127,27 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
         )
         .await?;
 
+        // for pool in &mut active_v3_amms {
+        //     if let AMM::UniswapV3Pool(uniswap_v3_pool) = pool {
+        //         let tick_start = uniswap_v3_pool.tick - 40;
+        //         let num_ticks = 80;
+        //         let (tick_data, _) = get_uniswap_v3_tick_data_batch_request(
+        //             &uniswap_v3_pool,
+        //             tick_start,
+        //             false,
+        //             num_ticks,
+        //             Some(block_number),
+        //             self.client.clone(),
+        //         )
+        //         .await?;
+        //         uniswap_v3_pool.populate_ticks_from_tick_data(tick_data);
+        //         println!(
+        //             "Populated tick data for pool: {:?} - {:?}",
+        //             uniswap_v3_pool.address, uniswap_v3_pool
+        //         );
+        //     }
+        // }
+
         let synced_amms = vec![active_v2_amms, active_v3_amms, active_camelot_v3_amms].concat();
         self.state.set_pools(synced_amms);
 
@@ -177,27 +201,6 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
 
         // sync::populate_amms(&mut uniswap_v3_pools, block_number, self.client.clone()).await?;
         // sync::populate_amms(&mut camelot_v3_pools, block_number, self.client.clone()).await?;
-
-        // for pool in &mut uniswap_v3_pools {
-        //     if let AMM::UniswapV3Pool(uniswap_v3_pool) = pool {
-        //         let tick_start = uniswap_v3_pool.tick - 20;
-        //         let num_ticks = 40;
-        //         let (tick_data, _) = get_uniswap_v3_tick_data_batch_request(
-        //             &uniswap_v3_pool,
-        //             tick_start,
-        //             false,
-        //             num_ticks,
-        //             Some(block_number),
-        //             self.client.clone(),
-        //         )
-        //         .await?;
-        //         uniswap_v3_pool.populate_ticks_from_tick_data(tick_data);
-        //         println!(
-        //             "Populated tick data for pool: {:?}",
-        //             uniswap_v3_pool.address
-        //         );
-        //     }
-        // }
     }
 
     async fn sync_state(&mut self) -> Result<()> {

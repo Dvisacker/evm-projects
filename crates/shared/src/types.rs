@@ -74,6 +74,14 @@ impl Cycle {
         profit
     }
 
+    pub fn get_profit_no_slippage(&self, amount_in: U256) -> i128 {
+        let token_in = self.get_entry_token();
+        let amount_out = simulate_route(token_in, amount_in, &self.amms).unwrap();
+        let profit = amount_out.to::<i128>() - amount_in.to::<i128>();
+
+        profit
+    }
+
     pub fn get_profit_perc(&self) -> f64 {
         let amount_in = U256::from(10u64.pow(18));
         let profit = self.get_profit(amount_in);
