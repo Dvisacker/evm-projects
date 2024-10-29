@@ -1,6 +1,6 @@
-use anyhow::{Error, Result};
 use clap::{Parser, ValueHint};
 use convert_case::{Case, Casing};
+use eyre::{Error, Result};
 use quote::__private::TokenStream;
 use std::fs::{create_dir, File};
 use std::io::Write;

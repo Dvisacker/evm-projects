@@ -3,7 +3,7 @@ use alloy::{
     transports::Transport,
 };
 use amms::errors::AMMError;
-use anyhow::Result;
+use eyre::Result;
 use serde_json::Value;
 use std::collections::HashSet;
 use std::fs;

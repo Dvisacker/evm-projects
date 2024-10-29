@@ -208,7 +208,6 @@ where
 {
     // 1. Get quote from Li.Fi API
     let client = reqwest::Client::new();
-
     let from_token = IERC20::new(from_token_address, provider.clone());
 
     let quote_request = LiFiQuoteRequest {
@@ -231,24 +230,14 @@ where
         .await
         .wrap_err("Failed to get quote from Li.Fi API")?;
 
-    println!("Response: {:?}", response);
-
     let quote_response: LiFiQuoteResponse = response.json().await?;
-
-    println!("Quote response: {:?}", quote_response);
-
     let bridge_address = Address::from_str(&quote_response.transaction_request.to)?;
+
+    // 2. Approve tokens to bridge
     let approve_tx = from_token.approve(bridge_address, amount).send().await?;
+    let _approve_receipt = approve_tx.get_receipt().await.unwrap();
 
-    let approve_receipt = approve_tx.get_receipt().await.unwrap();
-    println!("Approve receipt: {:?}", approve_receipt);
-
-    println!(
-        "Transaction request: {:?}",
-        quote_response.transaction_request
-    );
-
-    // // 2. Execute the bridge transaction
+    // 3. Execute the bridge transaction
     let data = hex::decode(&quote_response.transaction_request.data[2..])
         .wrap_err("Failed to decode transaction data")?;
     let to_address = Address::from_str(&quote_response.transaction_request.to)
@@ -268,15 +257,14 @@ where
         .max_fee_per_gas(gas_price.try_into().unwrap())
         .max_priority_fee_per_gas(gas_price.try_into().unwrap());
 
-    println!("Tx request: {:?}", tx_request);
+    // println!("Tx request: {:?}", tx_request);
 
     let pending_tx = provider.send_transaction(tx_request).await?;
-
     let receipt = pending_tx.get_receipt().await?;
 
     println!("Receipt: {:?}", receipt);
 
-    // // 3. Monitor bridge status
+    // 4. Monitor bridge status
     let status = "PENDING".to_string();
     while status == "PENDING" {
         let status_response = client
@@ -325,7 +313,6 @@ mod tests {
 
     #[tokio::test]
     async fn test_bridge_usdc_arbitrum_to_base() -> Result<()> {
-        // Load environment variables
         dotenv::dotenv().ok();
 
         let signer: PrivateKeySigner = std::env::var("DEV_PRIVATE_KEY")
@@ -336,19 +323,14 @@ mod tests {
         let wallet_address = signer.address();
         let wallet = EthereumWallet::new(signer);
         let provider = get_provider(Chain::from_named(NamedChain::Arbitrum), wallet).await;
-
-        // Test addresses
         let from_address = wallet_address;
-        let to_address = wallet_address; // Using same address for testing
-
-        // Token addresses
+        let to_address = wallet_address;
         let usdc_arb = Address::from_str(USDC_ARBITRUM).expect("Invalid USDC Arbitrum address");
         let usdc_base = Address::from_str(USDC_BASE).expect("Invalid USDC Base address");
 
         // Amount to bridge (e.g., 1 USDC = 10_000_000 because USDC has 6 decimals)
         let amount = U256::from(1_000_000u64);
 
-        // Execute bridge
         let result = bridge_lifi(
             provider,
             ARBITRUM_CHAIN_ID,

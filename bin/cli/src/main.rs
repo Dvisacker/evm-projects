@@ -1,14 +1,10 @@
+pub mod cmd;
 use alloy::primitives::Address;
-use alloy::providers::Provider;
-use alloy_chains::{Chain, ChainKind, NamedChain};
-use anyhow::{Error, Result};
+use alloy_chains::Chain;
 use clap::{Args, Parser, Subcommand};
-use shared::addressbook::Addressbook;
-use shared::amm_utils::{
-    activate_pools, get_amm_value, store_uniswap_v2_pools, store_uniswap_v3_pools,
-};
+use eyre::Error;
+use shared::amm_utils::{activate_pools, get_amm_value};
 use shared::config::get_chain_config;
-use shared::helpers::get_contract_creation_block;
 use shared::token_utils::load_pools_and_fetch_token_data;
 use std::str::FromStr;
 use std::sync::Arc;
@@ -32,6 +28,16 @@ enum Commands {
     GetAMMValue(GetAMMValueArgs),
     ActivatePools(ActivatePoolsArgs),
     GetContractCreationBlock(GetContractCreationBlockArgs),
+    Bridge {
+        #[arg(short, long)]
+        from_chain: String,
+
+        #[arg(short, long)]
+        to_chain: String,
+
+        #[arg(short, long)]
+        amount: String,
+    },
 }
 
 #[derive(Args)]
@@ -133,104 +139,20 @@ async fn main() -> Result<(), Error> {
             let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
             let chain_config = get_chain_config(chain).await;
             let provider = Arc::new(chain_config.ws);
-
             load_pools_and_fetch_token_data(provider).await?;
-
             info!("Token data has been fetched and saved to tokens.json");
         }
         Commands::GetUniswapV3Pools(args) => {
-            let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
-            let chain_config = get_chain_config(chain).await;
-            let provider = Arc::new(chain_config.ws);
-            let addressbook = Addressbook::load().unwrap();
-
-            // todo: refactor this
-            let factory_address = match chain.kind() {
-                ChainKind::Named(NamedChain::Arbitrum) => match args.exchange {
-                    ExchangeName::UniswapV3 => {
-                        addressbook.arbitrum.exchanges.univ3.uniswapv3.factory
-                    }
-                    ExchangeName::SushiswapV3 => {
-                        addressbook.arbitrum.exchanges.univ3.sushiswapv3.factory
-                    }
-                    ExchangeName::CamelotV3 => {
-                        addressbook.arbitrum.exchanges.univ3.camelotv3.factory
-                    }
-                    ExchangeName::RamsesV2 => addressbook.arbitrum.exchanges.univ3.ramsesv2.factory,
-                    ExchangeName::PancakeswapV3 => {
-                        addressbook.arbitrum.exchanges.univ3.pancakeswapv3.factory
-                    }
-                    _ => panic!("Choose a uniswap v3 exchange"),
-                },
-                ChainKind::Named(NamedChain::Mainnet) => match args.exchange {
-                    ExchangeName::UniswapV3 => {
-                        addressbook.mainnet.exchanges.univ3.uniswapv3.factory
-                    }
-                    ExchangeName::SushiswapV3 => {
-                        addressbook.mainnet.exchanges.univ3.sushiswapv3.factory
-                    }
-                    ExchangeName::PancakeswapV3 => {
-                        addressbook.mainnet.exchanges.univ3.pancakeswapv3.factory
-                    }
-                    _ => panic!("Choose a uniswap v3 exchange"),
-                },
-                _ => panic!("Unsupported chain"),
-            };
-
-            let from_block = args.from_block;
-            let step = args.step;
-            let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
-
-            store_uniswap_v3_pools(
-                provider.clone(),
-                chain,
+            cmd::get_uniswap_v3_pools_command(
+                args.chain_id,
                 args.exchange,
-                factory_address,
-                Some(from_block),
-                None,
-                step,
-                &db_url,
+                args.from_block,
+                args.step,
             )
             .await?;
         }
         Commands::GetUniswapV2Pools(args) => {
-            let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
-            let chain_config = get_chain_config(chain).await;
-            let provider = Arc::new(chain_config.ws);
-            let addressbook = Addressbook::load().unwrap();
-
-            let factory_address = match chain.kind() {
-                ChainKind::Named(NamedChain::Arbitrum) => match args.exchange {
-                    ExchangeName::UniswapV2 => {
-                        addressbook.arbitrum.exchanges.univ2.uniswapv2.factory
-                    }
-                    ExchangeName::SushiswapV2 => {
-                        addressbook.arbitrum.exchanges.univ2.sushiswapv2.factory
-                    }
-                    _ => panic!("Choose a uniswap v2 type exchange"),
-                },
-                ChainKind::Named(NamedChain::Mainnet) => match args.exchange {
-                    ExchangeName::UniswapV2 => {
-                        addressbook.mainnet.exchanges.univ2.uniswapv2.factory
-                    }
-                    ExchangeName::SushiswapV2 => {
-                        addressbook.mainnet.exchanges.univ2.sushiswapv2.factory
-                    }
-                    _ => panic!("Choose a uniswap v2 type exchange"),
-                },
-                _ => panic!("Unsupported chain"),
-            };
-
-            info!("Downloading pools from {:?}", factory_address);
-            let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
-            store_uniswap_v2_pools(
-                provider.clone(),
-                chain,
-                args.exchange,
-                factory_address,
-                &db_url,
-            )
-            .await?;
+            cmd::get_uniswap_v2_pools_command(args.chain_id, args.exchange).await?;
         }
         Commands::ActivatePools(args) => {
             let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
@@ -244,24 +166,20 @@ async fn main() -> Result<(), Error> {
             // info!("AMM value: {:?}", amm_value);
         }
         Commands::GetContractCreationBlock(args) => {
-            let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
-            let chain_config = get_chain_config(chain).await;
-            let provider = Arc::new(chain_config.ws);
-            let contract_address =
-                Address::from_str(&args.contract_address).expect("Invalid contract address");
-
-            let start_block = args.start_block.unwrap_or(0);
-            let end_block = match args.end_block {
-                Some(block) => block,
-                None => provider.get_block_number().await?,
-            };
-
-            match get_contract_creation_block(provider, contract_address, start_block, end_block)
-                .await
-            {
-                Ok(block) => info!("Contract creation block: {}", block),
-                Err(e) => info!("Error finding contract creation block: {}", e),
-            }
+            cmd::get_contract_creation_block_command(
+                args.chain_id,
+                &args.contract_address,
+                args.start_block,
+                args.end_block,
+            )
+            .await?;
+        }
+        Commands::Bridge {
+            from_chain,
+            to_chain,
+            amount,
+        } => {
+            cmd::bridge_command(from_chain, to_chain, amount).await?;
         }
     }
 

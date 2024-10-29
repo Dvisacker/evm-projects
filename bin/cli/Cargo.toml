@@ -9,6 +9,8 @@ edition = "2021"
 alloy = { workspace = true }
 tokio = { workspace = true }
 alloy-chains = { workspace = true }
+eyre = { workspace = true }
+alloy-primitives = { workspace = true }
 
 generator = { path = "../../crates/generator" }
 shared = { path = "../../crates/shared" }

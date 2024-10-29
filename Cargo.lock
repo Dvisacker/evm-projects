@@ -1967,9 +1967,11 @@ version = "0.1.0"
 dependencies = [
  "alloy",
  "alloy-chains",
+ "alloy-primitives 0.8.9",
  "anyhow",
  "clap",
  "dotenv",
+ "eyre",
  "generator",
  "shared",
  "tokio",
@@ -3801,6 +3803,7 @@ dependencies = [
  "anyhow",
  "clap",
  "convert_case 0.6.0",
+ "eyre",
  "quote",
 ]
 
