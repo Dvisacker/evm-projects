@@ -46,8 +46,7 @@ async fn main() -> Result<()> {
         wallet_address,
         weth_usdc_v2,
         token_in,
-        amount_in,
-        amount_out_min,
+        amount_in, // amount_out_min,
     )
     .await?;
 
