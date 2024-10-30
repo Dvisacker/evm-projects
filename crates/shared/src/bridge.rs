@@ -328,7 +328,7 @@ mod tests {
         let usdc_arb = Address::from_str(USDC_ARBITRUM).expect("Invalid USDC Arbitrum address");
         let usdc_base = Address::from_str(USDC_BASE).expect("Invalid USDC Base address");
 
-        // Amount to bridge (e.g., 1 USDC = 10_000_000 because USDC has 6 decimals)
+        // Amount to bridge (e.g., 1 USDC = 1_000_000 because USDC has 6 decimals)
         let amount = U256::from(1_000_000u64);
 
         let result = bridge_lifi(
