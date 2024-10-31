@@ -16,7 +16,7 @@ bindings = { path = "../bindings" }
 types = { path = "../types" }
 db = { path = "../db" }
 amms = { path = "../../crates/amms-rs" }
-artemis-core = { path = "../../crates/artemis-core" }
+# artemis-core = { path = "../../crates/artemis-core" }
 diesel = { version = "2.0.0", features = ["postgres", "serde_json", "chrono"] }
 dotenv = "0.15.0"
 once_cell = "1.18.0"

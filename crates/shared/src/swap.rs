@@ -9,6 +9,7 @@ use alloy::{
     providers::Provider,
     transports::Transport,
 };
+use alloy_chains::NamedChain;
 use alloy_primitives::{aliases::U24, Address, U160, U256};
 use alloy_rpc_types::TransactionReceipt;
 use amms::{
@@ -16,9 +17,18 @@ use amms::{
     errors::AMMError,
 };
 use eyre::Error;
+use types::exchange::ExchangeName;
 
-use crate::helpers::get_contract_creation_block;
+use crate::{addressbook::Addressbook, helpers::get_contract_creation_block};
 use alloy::sol;
+
+sol! {
+    #[derive(Debug, PartialEq, Eq)]
+    #[sol(rpc)]
+    contract IUniswapV2Factory {
+        function getPair(address tokenA, address tokenB) external view returns (address pair);
+    }
+}
 
 sol! {
     /// Interface of the UniswapV2Pair
@@ -101,6 +111,7 @@ sol! {
     #[sol(rpc)]
     contract IERC20 {
         function approve(address spender, uint256 amount) external returns (bool);
+        function balanceOf(address account) external view returns (uint256);
     }
 }
 
@@ -194,24 +205,81 @@ where
     Ok(pool)
 }
 
+pub async fn swap<T, P>(
+    provider: Arc<P>,
+    chain: NamedChain,
+    exchange_name: ExchangeName,
+    recipient: Address,
+    token_in_address: Address,
+    token_out_address: Address,
+    amount_in: U256,
+) -> Result<U256, Error>
+where
+    T: Transport + Clone,
+    P: Provider<T, Ethereum>,
+{
+    match exchange_name {
+        ExchangeName::UniswapV2 => {
+            swap_v2_pool(
+                provider,
+                chain,
+                exchange_name,
+                recipient,
+                token_in_address,
+                token_out_address,
+                amount_in,
+            )
+            .await
+        }
+        ExchangeName::UniswapV3 => {
+            swap_v3_pool(
+                provider,
+                chain,
+                exchange_name,
+                recipient,
+                token_in_address,
+                token_out_address,
+                amount_in,
+            )
+            .await
+        }
+        _ => Err(eyre::eyre!("Unknown exchange")),
+    }
+}
+
 pub async fn swap_v2_pool<T, N, P>(
     provider: Arc<P>,
+    chain: NamedChain,
+    exchange_name: ExchangeName,
     recipient: Address,
-    pool_address: Address,
     token_in_address: Address,
+    token_out_address: Address,
     amount_in: U256,
-) -> Result<U256, AMMError>
+) -> Result<U256, Error>
 where
     T: Transport + Clone,
     N: Network,
     P: Provider<T, N>,
 {
-    let router_address = Address::from_str("0x1b02dA8Cb0d097eB8D57A175b88c7D8b47997506")
-        .expect("Invalid router address");
+    let addressbook = Addressbook::load(None).unwrap();
+    let router_address = addressbook
+        .get_uni_v2_swap_router(&chain, exchange_name)
+        .unwrap();
     let router = IUniswapV2Router02::new(router_address, provider.clone());
+    let factory_address = addressbook.get_factory(&chain, exchange_name).unwrap();
+    let factory = IUniswapV2Factory::new(factory_address, provider.clone());
+    let pool_address = match factory
+        .getPair(token_in_address, token_out_address)
+        .call()
+        .await
+    {
+        Ok(pool) => pool.pair,
+        Err(e) => return Err(eyre::eyre!("Error getting pool address: {:?}", e)),
+    };
 
     let pool = load_uni_v2_pool(pool_address, provider.clone()).await?;
     let token_in = IERC20::new(token_in_address, provider.clone());
+    let token_out = IERC20::new(token_out_address, provider.clone());
     let zero_for_one = token_in_address == pool.token_a;
     let token_out_address = if zero_for_one {
         pool.token_b
@@ -243,6 +311,11 @@ where
         .as_secs()
         + 1200; // 20 minutes
 
+    let balance_before = match token_out.balanceOf(recipient).call().await {
+        Ok(balance) => balance._0,
+        Err(e) => return Err(eyre::eyre!("Error getting balance before: {:?}", e)),
+    };
+
     // 5. Execute swap
     let swap_tx = router
         .swapExactTokensForTokens(
@@ -255,10 +328,16 @@ where
         .send()
         .await?;
 
+    let balance_after = match token_out.balanceOf(recipient).call().await {
+        Ok(balance) => balance._0,
+        Err(e) => return Err(eyre::eyre!("Error getting balance after: {:?}", e)),
+    };
+
+    let amount_out = balance_after - balance_before;
     let receipt = swap_tx.get_receipt().await.unwrap();
     println!("Swap completed in tx: {:?}", receipt);
 
-    Ok(U256::ZERO)
+    Ok(amount_out)
 }
 
 // /* This function makes extra calls to get not only the best fee tier but also the corresponding pool address
@@ -365,6 +444,8 @@ When calling the router/quoter, the pool address is not needed so in that case, 
 because it uses less calls. */
 pub async fn find_best_v3_fee_tier<T, N, P>(
     provider: Arc<P>,
+    chain: NamedChain,
+    exchange_name: ExchangeName,
     token_in: Address,
     token_out: Address,
     amount_in: U256,
@@ -379,11 +460,12 @@ where
     let mut best_fee = 0u32;
     let mut best_quote = U256::ZERO;
 
-    // Get quote for this pool
-    let quoter = IQuoter::new(
-        Address::from_str("0x61fFE014bA17989E743c5F6cB21bF9697530B21e").unwrap(),
-        provider.clone(),
-    );
+    let addressbook = Addressbook::load(None).unwrap();
+    let quoter_address = addressbook
+        .get_uni_v3_quoter(&chain, exchange_name)
+        .unwrap();
+
+    let quoter = IQuoter::new(quoter_address, provider.clone());
 
     for fee in fee_tiers {
         println!(
@@ -427,6 +509,8 @@ where
 
 pub async fn swap_v3_pool<T, P>(
     provider: Arc<P>,
+    chain: NamedChain,
+    exchange_name: ExchangeName,
     recipient: Address,
     token_in_address: Address,
     token_out_address: Address,
@@ -436,15 +520,26 @@ where
     T: Transport + Clone,
     P: Provider<T, Ethereum>,
 {
+    let addressbook = Addressbook::load(None).unwrap();
+
     // Uniswap V3 Router address
-    let router_address = Address::from_str("0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45")
-        .expect("Invalid router address");
+    let router_address = addressbook
+        .get_uni_v3_swap_router(&chain, exchange_name)
+        .unwrap();
 
     let router = ISwapRouter::new(router_address, provider.clone());
     let token_in = IERC20::new(token_in_address, provider.clone());
+    let token_out = IERC20::new(token_out_address, provider.clone());
 
-    let (fee, quote) =
-        find_best_v3_fee_tier(provider, token_in_address, token_out_address, amount_in).await?;
+    let (fee, quote) = find_best_v3_fee_tier(
+        provider,
+        chain,
+        exchange_name,
+        token_in_address,
+        token_out_address,
+        amount_in,
+    )
+    .await?;
 
     // 1. Approve the router to spend our tokens
     let approve_tx = token_in.approve(router_address, amount_in).send().await?;
@@ -467,31 +562,44 @@ where
         sqrtPriceLimitX96: U160::ZERO, // No price limit
     };
 
-    // // 5. Execute the swap
+    let balance_before = match token_out.balanceOf(recipient).call().await {
+        Ok(balance) => balance._0,
+        Err(e) => return Err(eyre::eyre!("Error getting balance before: {:?}", e)),
+    };
+
+    // 5. Execute the swap
     let swap_tx = router.exactInputSingle(params).send().await?;
     let receipt: TransactionReceipt = swap_tx.get_receipt().await.unwrap();
 
-    println!("Swap transaction hash: {:?}", receipt);
+    let balance_after = match token_out.balanceOf(recipient).call().await {
+        Ok(balance) => balance._0,
+        Err(e) => return Err(eyre::eyre!("Error getting balance after: {:?}", e)),
+    };
 
-    // Return the actual amount out
-    Ok(quote)
-    // Ok(quote)
+    let amount_out = balance_after - balance_before;
+
+    println!("Swap receipt: {:?}", receipt);
+    Ok(amount_out)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::provider::get_provider;
+    use crate::{addressbook::Addressbook, provider::get_provider};
     use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
     use alloy_chains::{Chain, NamedChain};
     use std::str::FromStr;
 
-    const WETH_ARBITRUM: &str = "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1";
-    const USDC_ARBITRUM: &str = "0xaf88d065e77c8cc2239327c5edb3a432268e5831";
+    const EXCHANGE_NAME: ExchangeName = ExchangeName::UniswapV3;
+    const CHAIN: NamedChain = NamedChain::Arbitrum;
 
     #[tokio::test]
     async fn test_swap_eth_to_usdc_arbitrum() -> Result<(), Error> {
         dotenv::dotenv().ok();
+
+        let addressbook = Addressbook::load(None).unwrap();
+        let weth = addressbook.get_weth(&CHAIN).unwrap();
+        let usdc = addressbook.get_usdc(&CHAIN).unwrap();
 
         // Setup wallet and provider
         let signer: PrivateKeySigner = std::env::var("DEV_PRIVATE_KEY")
@@ -501,16 +609,23 @@ mod tests {
 
         let wallet_address = signer.address();
         let wallet = EthereumWallet::new(signer);
-        let provider = get_provider(Chain::from_named(NamedChain::Arbitrum), wallet).await;
+        let provider = get_provider(Chain::from_named(CHAIN), wallet).await;
 
         // Token addresses
-        let weth = Address::from_str(WETH_ARBITRUM).expect("Invalid WETH address");
-        let usdc = Address::from_str(USDC_ARBITRUM).expect("Invalid USDC address");
         let amount_in = U256::from(100000000000000u64); // few cents
 
         println!("Starting swap of {} ETH for USDC", amount_in);
 
-        let result = swap_v3_pool(provider, wallet_address, weth, usdc, amount_in).await?;
+        let result = swap_v3_pool(
+            provider,
+            CHAIN,
+            EXCHANGE_NAME,
+            wallet_address,
+            weth,
+            usdc,
+            amount_in,
+        )
+        .await?;
 
         println!(
             "Swap completed. Minimum USDC output amount: {} (6 decimals)",

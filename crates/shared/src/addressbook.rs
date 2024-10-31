@@ -89,12 +89,6 @@ pub struct UniV3Addresses {
     #[serde(
         default,
         deserialize_with = "deserialize_address_option",
-        rename = "swapRouter01"
-    )]
-    pub swap_router_01: Option<Address>,
-    #[serde(
-        default,
-        deserialize_with = "deserialize_address_option",
         rename = "swapRouter02"
     )]
     pub swap_router_02: Option<Address>,
@@ -137,12 +131,15 @@ pub struct ChainAddressBook {
     pub multicall: Address,
     #[serde(deserialize_with = "deserialize_address")]
     pub weth: Address,
+    #[serde(deserialize_with = "deserialize_address")]
+    pub usdc: Address,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Addressbook {
     pub arbitrum: ChainAddressBook,
     pub optimism: ChainAddressBook,
+    pub base: ChainAddressBook,
     pub mainnet: ChainAddressBook,
 }
 
@@ -161,7 +158,7 @@ pub fn get_exchange_type(exchange_name: ExchangeName) -> ExchangeType {
 
 impl Addressbook {
     pub fn load(filepath: Option<&str>) -> Result<Self, Box<dyn std::error::Error>> {
-        let mut file = File::open(filepath.unwrap_or("./addressbook.json"))?;
+        let mut file = File::open(filepath.unwrap_or("./src/addressbook.json"))?;
         let mut contents = String::new();
         file.read_to_string(&mut contents)?;
         let addressbook: Addressbook = serde_json::from_str(&contents)?;
@@ -215,9 +212,78 @@ impl Addressbook {
         self.get_chain_address_book(chain).map(|config| config.weth)
     }
 
+    pub fn get_usdc(&self, chain: &NamedChain) -> Option<Address> {
+        self.get_chain_address_book(chain).map(|config| config.usdc)
+    }
+
+    pub fn get_token(&self, chain: &NamedChain, token_name: &str) -> Option<Address> {
+        let config = self.get_chain_address_book(chain).unwrap();
+        match token_name {
+            "usdc" => Some(config.usdc),
+            "weth" => Some(config.weth),
+            _ => None,
+        }
+    }
+
     pub fn get_multicall(&self, chain: &NamedChain) -> Option<Address> {
         self.get_chain_address_book(chain)
             .map(|config| config.multicall)
+    }
+
+    pub fn get_uni_v3_quoter(
+        &self,
+        chain: &NamedChain,
+        exchange_name: ExchangeName,
+    ) -> Option<Address> {
+        let chain_config = self.get_chain_address_book(chain).unwrap();
+        let quoter_address = match exchange_name {
+            ExchangeName::UniswapV3 => chain_config.exchanges.univ3.uniswapv3.quoter,
+            _ => None,
+        };
+
+        return quoter_address;
+    }
+
+    pub fn get_uni_v3_universal_router(
+        &self,
+        chain: &NamedChain,
+        exchange_name: ExchangeName,
+    ) -> Option<Address> {
+        let chain_config = self.get_chain_address_book(chain).unwrap();
+        let universal_router_address = match exchange_name {
+            ExchangeName::UniswapV3 => chain_config.exchanges.univ3.uniswapv3.universal_router,
+            _ => None,
+        };
+
+        return universal_router_address;
+    }
+
+    pub fn get_uni_v3_swap_router(
+        &self,
+        chain: &NamedChain,
+        exchange_name: ExchangeName,
+    ) -> Option<Address> {
+        let chain_config = self.get_chain_address_book(chain).unwrap();
+        let swap_router_address = match exchange_name {
+            ExchangeName::UniswapV3 => chain_config.exchanges.univ3.uniswapv3.swap_router_02,
+            _ => None,
+        };
+
+        return swap_router_address;
+    }
+
+    pub fn get_uni_v2_swap_router(
+        &self,
+        chain: &NamedChain,
+        exchange_name: ExchangeName,
+    ) -> Option<Address> {
+        let chain_config = self.get_chain_address_book(chain).unwrap();
+        let swap_router_address: Option<Address> = match exchange_name {
+            ExchangeName::UniswapV2 => Some(chain_config.exchanges.univ2.uniswapv2.router),
+            _ => None,
+        };
+
+        return swap_router_address;
     }
 
     pub fn get_pools_by_chain(&self, chain: &NamedChain) -> Vec<Address> {
@@ -244,6 +310,15 @@ impl Addressbook {
             chain_config.exchanges.univ3.ramsesv2.factory,
             chain_config.exchanges.univ3.pancakeswapv3.factory,
         ]
+    }
+
+    pub fn get_factory(&self, chain: &NamedChain, exchange_name: ExchangeName) -> Option<Address> {
+        let chain_config = self.get_chain_address_book(chain).unwrap();
+        match exchange_name {
+            ExchangeName::UniswapV2 => Some(chain_config.exchanges.univ2.uniswapv2.factory),
+            ExchangeName::UniswapV3 => Some(chain_config.exchanges.univ3.uniswapv3.factory),
+            _ => None,
+        }
     }
 
     pub fn get_v2_factories(&self, chain: &NamedChain) -> Vec<Address> {
@@ -361,9 +436,6 @@ mod tests {
         assert!(!univ3_config.factory.is_zero());
 
         // Check router addresses
-        if let Some(router01) = univ3_config.swap_router_01 {
-            assert!(!router01.is_zero());
-        }
         if let Some(router02) = univ3_config.swap_router_02 {
             assert!(!router02.is_zero());
         }

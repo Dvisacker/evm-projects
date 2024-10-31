@@ -7,6 +7,7 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 tokio = { workspace = true }
+eyre = { workspace = true }
 alloy-chains = { workspace = true }
 alloy-provider = { workspace = true }
 alloy-rpc-types = { workspace = true }

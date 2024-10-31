@@ -6,7 +6,7 @@ use alloy::{
     sol_types::SolEvent,
 };
 use alloy_chains::Chain;
-use anyhow::Result;
+use eyre::Result;
 use artemis_core::{
     collectors::multi_log_collector::MultiLogCollector,
     engine::Engine,

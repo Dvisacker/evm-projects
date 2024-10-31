@@ -7,6 +7,7 @@ license = "MIT OR Apache-2.0"
 
 [dependencies]
 tokio = { workspace = true }
+eyre = { workspace = true }
 dotenv = "0.15.0"
 async-trait = "0.1.64"
 artemis-core = { path = "../../crates/artemis-core" }

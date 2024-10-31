@@ -1,7 +1,7 @@
 use crate::types::{Collector, CollectorStream};
 use alloy::{primitives::Log, providers::Provider, rpc::types::Filter, sol_types::SolEvent};
-use anyhow::Result;
 use async_trait::async_trait;
+use eyre::Result;
 use std::sync::Arc;
 use tokio_stream::StreamExt;
 

@@ -6,9 +6,9 @@ use alloy::{
     sol_types::SolEvent,
 };
 use alloy_chains::{Chain, NamedChain};
-use anyhow::Result;
 use clap::Parser;
 use dotenv::dotenv;
+use eyre::Result;
 use shared::{config::get_chain_config, provider::get_provider, swap::swap_v2_pool};
 use std::str::FromStr;
 
@@ -41,14 +41,14 @@ async fn main() -> Result<()> {
 
     println!("wallet_address: {:?}", wallet_address);
 
-    let tx = swap_v2_pool(
-        provider,
-        wallet_address,
-        weth_usdc_v2,
-        token_in,
-        amount_in, // amount_out_min,
-    )
-    .await?;
+    // let tx = swap_v2_pool(
+    //     provider,
+    //     wallet_address,
+    //     weth_usdc_v2,
+    //     token_in,
+    //     amount_in, // amount_out_min,
+    // )
+    // .await?;
 
     Ok(())
 }

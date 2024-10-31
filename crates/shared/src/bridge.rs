@@ -9,6 +9,7 @@ use reqwest;
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use std::sync::Arc;
+use types::bridge::BridgeName;
 
 pub const ARBITRUM_CHAIN_ID: u64 = 42161;
 pub const BASE_CHAIN_ID: u64 = 8453;
@@ -21,6 +22,7 @@ sol! {
     #[sol(rpc)]
     contract IERC20 {
         function approve(address spender, uint256 amount) external returns (bool);
+        function balanceOf(address owner) external view returns (uint256);
     }
 }
 
@@ -193,14 +195,16 @@ pub struct LiFiIncludedStep {
 }
 
 pub async fn bridge_lifi<T, P>(
-    provider: Arc<P>,
+    origin_chain_provider: Arc<P>,
+    destination_chain_provider: Arc<P>,
     from_chain_id: u64,
     to_chain_id: u64,
     from_token_address: Address,
     to_token_address: Address,
-    amount: U256,
+    amonut_in: U256,
     from_address: Address,
     to_address: Address,
+    bridge_name: BridgeName,
 ) -> Result<U256>
 where
     T: Transport + Clone,
@@ -208,19 +212,20 @@ where
 {
     // 1. Get quote from Li.Fi API
     let client = reqwest::Client::new();
-    let from_token = IERC20::new(from_token_address, provider.clone());
+    let from_token = IERC20::new(from_token_address, origin_chain_provider.clone());
+    let to_token = IERC20::new(to_token_address, destination_chain_provider.clone());
 
     let quote_request = LiFiQuoteRequest {
         fromChain: from_chain_id.to_string(),
         toChain: to_chain_id.to_string(),
         fromToken: from_token_address.to_string(),
         toToken: to_token_address.to_string(),
-        fromAmount: amount.to_string(),
+        fromAmount: amonut_in.to_string(),
         fromAddress: from_address.to_string(),
         toAddress: to_address.to_string(),
         slippage: "0.10".to_string(),
         order: "FASTEST".to_string(),
-        allowBridges: "across".to_string(),
+        allowBridges: bridge_name.to_string(),
     };
 
     let response = client
@@ -234,7 +239,7 @@ where
     let bridge_address = Address::from_str(&quote_response.transaction_request.to)?;
 
     // 2. Approve tokens to bridge
-    let approve_tx = from_token.approve(bridge_address, amount).send().await?;
+    let approve_tx = from_token.approve(bridge_address, amonut_in).send().await?;
     let _approve_receipt = approve_tx.get_receipt().await.unwrap();
 
     // 3. Execute the bridge transaction
@@ -249,6 +254,11 @@ where
     let gas_price = U256::from_str(&quote_response.transaction_request.gas_price)
         .wrap_err("Failed to parse gas price")?;
 
+    let to_token_balance_before = match to_token.balanceOf(to_address).call().await {
+        Ok(balance) => balance._0,
+        Err(e) => return Err(eyre!("Error getting balance before: {:?}", e)),
+    };
+
     let tx_request = TransactionRequest::default()
         .to(to_address)
         .input(data.into())
@@ -259,7 +269,7 @@ where
 
     // println!("Tx request: {:?}", tx_request);
 
-    let pending_tx = provider.send_transaction(tx_request).await?;
+    let pending_tx = origin_chain_provider.send_transaction(tx_request).await?;
     let receipt = pending_tx.get_receipt().await?;
 
     println!("Receipt: {:?}", receipt);
@@ -296,10 +306,16 @@ where
         }
     }
 
-    let final_amount = U256::from_str(&quote_response.estimate.to_amount)
-        .wrap_err("Failed to parse estimated amount")?;
+    let to_token_balance_after = match to_token.balanceOf(to_address).call().await {
+        Ok(balance) => balance._0,
+        Err(e) => return Err(eyre!("Error getting balance after: {:?}", e)),
+    };
+    let amount_out = to_token_balance_after - to_token_balance_before;
 
-    Ok(final_amount)
+    // let final_amount = U256::from_str(&quote_response.estimate.to_amount)
+    //     .wrap_err("Failed to parse estimated amount")?;
+
+    Ok(amount_out)
 }
 
 #[cfg(test)]
@@ -322,17 +338,22 @@ mod tests {
 
         let wallet_address = signer.address();
         let wallet = EthereumWallet::new(signer);
-        let provider = get_provider(Chain::from_named(NamedChain::Arbitrum), wallet).await;
+        let origin_provider =
+            get_provider(Chain::from_named(NamedChain::Arbitrum), wallet.clone()).await;
+        let destination_provider =
+            get_provider(Chain::from_named(NamedChain::Base), wallet.clone()).await;
         let from_address = wallet_address;
         let to_address = wallet_address;
         let usdc_arb = Address::from_str(USDC_ARBITRUM).expect("Invalid USDC Arbitrum address");
         let usdc_base = Address::from_str(USDC_BASE).expect("Invalid USDC Base address");
+        let bridge_name = BridgeName::Accross;
 
         // Amount to bridge (e.g., 1 USDC = 1_000_000 because USDC has 6 decimals)
         let amount = U256::from(1_000_000u64);
 
         let result = bridge_lifi(
-            provider,
+            origin_provider,
+            destination_provider,
             ARBITRUM_CHAIN_ID,
             BASE_CHAIN_ID,
             usdc_arb,
@@ -340,6 +361,7 @@ mod tests {
             amount,
             from_address,
             to_address,
+            bridge_name,
         )
         .await?;
 

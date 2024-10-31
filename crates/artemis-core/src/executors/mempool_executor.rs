@@ -5,8 +5,8 @@ use std::{
 
 use crate::types::Executor;
 use alloy::{primitives::U256, providers::Provider, rpc::types::TransactionRequest};
-use anyhow::{Context, Result};
 use async_trait::async_trait;
+use eyre::{Context, Result};
 
 /// An executor that sends transactions to the mempool.
 pub struct MempoolExecutor<M> {

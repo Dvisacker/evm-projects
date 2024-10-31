@@ -3,6 +3,10 @@ use alloy::providers::Provider;
 use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
 use alloy_chains::{Chain, ChainKind, NamedChain};
 use alloy_primitives::U256;
+use artemis_core::executors::crosschain_executor::{
+    Bridge, CrossChainSwap, CrossChainSwapExecutor, Swap,
+};
+use artemis_core::types::Executor;
 use eyre::{eyre, Error, Result};
 use shared::{
     bridge::{bridge_lifi, ARBITRUM_CHAIN_ID, BASE_CHAIN_ID, USDC_ARBITRUM, USDC_BASE},
@@ -12,7 +16,8 @@ use shared::{
 };
 use std::{str::FromStr, sync::Arc};
 use tracing::info;
-// use anyhow::{Error};
+use types::bridge::BridgeName;
+// use eyre::{Error};
 use shared::addressbook::Addressbook;
 use shared::amm_utils::{store_uniswap_v2_pools, store_uniswap_v3_pools};
 use types::exchange::ExchangeName;
@@ -24,7 +29,7 @@ pub async fn get_uniswap_v2_pools_command(
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
     let chain_config = get_chain_config(chain).await;
     let provider = Arc::new(chain_config.ws);
-    let addressbook = Addressbook::load().unwrap();
+    let addressbook = Addressbook::load(None).unwrap();
 
     let factory_address = match chain.kind() {
         ChainKind::Named(NamedChain::Arbitrum) => match exchange {
@@ -56,7 +61,7 @@ pub async fn get_uniswap_v3_pools_command(
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
     let chain_config = get_chain_config(chain).await;
     let provider = Arc::new(chain_config.ws);
-    let addressbook = Addressbook::load().unwrap();
+    let addressbook = Addressbook::load(None).unwrap();
 
     // todo: refactor this
     let factory_address = match chain.kind() {
@@ -151,14 +156,11 @@ pub async fn bridge_command(from_chain: &str, to_chain: &str, amount: &str) -> R
         _ => return Err(eyre::eyre!("Unsupported chain combination")),
     };
 
-    // Get provider for source chain
-    let source_chain = match from_chain {
-        "arbitrum" => Chain::from_named(NamedChain::Arbitrum),
-        "base" => Chain::from_named(NamedChain::Base),
-        _ => return Err(eyre::eyre!("Unsupported source chain")),
-    };
+    let origin_chain = Chain::from_named(NamedChain::from_str(from_chain).unwrap());
+    let destination_chain = Chain::from_named(NamedChain::from_str(to_chain).unwrap());
 
-    let provider = get_provider(source_chain, wallet).await;
+    let origin_provider = get_provider(origin_chain, wallet.clone()).await;
+    let destination_provider = get_provider(destination_chain, wallet.clone()).await;
 
     // Parse amount
     let amount = U256::from_str(amount).map_err(|_| eyre::eyre!("Invalid amount"))?;
@@ -167,7 +169,8 @@ pub async fn bridge_command(from_chain: &str, to_chain: &str, amount: &str) -> R
     println!("Amount: {}", amount);
 
     let result = bridge_lifi(
-        provider,
+        origin_provider,
+        destination_provider,
         from_chain_id,
         to_chain_id,
         from_token,
@@ -175,11 +178,76 @@ pub async fn bridge_command(from_chain: &str, to_chain: &str, amount: &str) -> R
         amount,
         wallet_address,
         wallet_address,
+        BridgeName::Accross,
     )
     .await?;
 
     println!("Bridge initiated successfully!");
     println!("Expected output amount: {}", result);
+
+    Ok(())
+}
+
+pub async fn cross_chain_swap_command(
+    origin_chain: &str,
+    destination_chain: &str,
+    origin_token_in_address: &str,
+    bridge_token: &str, //name of the token to bridge (USDC or WETH)
+    destination_token_out_address: &str,
+    amount_in: &str,
+) -> Result<(), Error> {
+    let signer: PrivateKeySigner = std::env::var("DEV_PRIVATE_KEY")
+        .expect("PRIVATE_KEY must be set")
+        .parse()
+        .expect("should parse private key");
+    let wallet = EthereumWallet::new(signer.clone());
+    let wallet_address = signer.address();
+
+    let origin_chain_name = NamedChain::from_str(origin_chain).unwrap();
+    let origin_chain = Chain::from_named(origin_chain_name);
+    let destination_chain_name = NamedChain::from_str(destination_chain).unwrap();
+    let destination_chain = Chain::from_named(destination_chain_name);
+    let origin_token_in = Address::from_str(origin_token_in_address).unwrap();
+    let destination_token_out = Address::from_str(destination_token_out_address).unwrap();
+    let amount_in = U256::from_str(amount_in).unwrap();
+    let origin_provider = get_provider(origin_chain, wallet.clone()).await;
+    let destination_provider = get_provider(destination_chain, wallet.clone()).await;
+    let addressbook = Addressbook::load(None).unwrap();
+    let origin_bridge_token = addressbook
+        .get_token(&origin_chain_name, bridge_token)
+        .unwrap();
+    let destination_bridge_token = addressbook
+        .get_token(&destination_chain_name, bridge_token)
+        .unwrap();
+
+    let swap_executor =
+        CrossChainSwapExecutor::new(origin_provider, destination_provider, wallet_address);
+
+    let cc_swap = CrossChainSwap {
+        swap1: Swap {
+            chain: origin_chain_name,
+            exchange_name: ExchangeName::UniswapV3,
+            token_in: origin_token_in,
+            token_out: origin_bridge_token,
+            amount_in,
+        },
+        bridge: Bridge {
+            origin_chain: origin_chain_name,
+            origin_token: origin_bridge_token,
+            destination_chain: destination_chain_name,
+            destination_token: destination_bridge_token,
+            bridge_name: BridgeName::Accross,
+        },
+        swap2: Swap {
+            chain: destination_chain_name,
+            exchange_name: ExchangeName::UniswapV3,
+            token_in: destination_bridge_token,
+            token_out: destination_token_out,
+            amount_in: U256::from(0),
+        },
+    };
+
+    swap_executor.execute(cc_swap).await?;
 
     Ok(())
 }

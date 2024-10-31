@@ -36,7 +36,21 @@ enum Commands {
         to_chain: String,
 
         #[arg(short, long)]
-        amount: String,
+        amount_in: String,
+    },
+    CrossChainSwap {
+        #[arg(short, long)]
+        origin_chain: String,
+        #[arg(short, long)]
+        destination_chain: String,
+        #[arg(short, long)]
+        origin_token_in_address: String,
+        #[arg(short, long)]
+        bridge_token: String,
+        #[arg(short, long)]
+        destination_token_out_address: String,
+        #[arg(short, long)]
+        amount_in: String,
     },
 }
 
@@ -177,9 +191,27 @@ async fn main() -> Result<(), Error> {
         Commands::Bridge {
             from_chain,
             to_chain,
-            amount,
+            amount_in,
         } => {
-            cmd::bridge_command(from_chain, to_chain, amount).await?;
+            cmd::bridge_command(from_chain, to_chain, amount_in).await?;
+        }
+        Commands::CrossChainSwap {
+            origin_chain,
+            destination_chain,
+            origin_token_in_address,
+            bridge_token,
+            destination_token_out_address,
+            amount_in,
+        } => {
+            cmd::cross_chain_swap_command(
+                origin_chain,
+                destination_chain,
+                origin_token_in_address,
+                bridge_token,
+                destination_token_out_address,
+                amount_in,
+            )
+            .await?;
         }
     }
 

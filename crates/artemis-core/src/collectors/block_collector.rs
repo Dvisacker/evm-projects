@@ -3,8 +3,8 @@ use alloy::{
     primitives::{U256, U64},
     providers::Provider,
 };
-use anyhow::Result;
 use async_trait::async_trait;
+use eyre::Result;
 use std::sync::Arc;
 use tokio_stream::StreamExt;
 

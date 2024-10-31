@@ -23,7 +23,6 @@ use amms::{
     },
     sync::{self},
 };
-use anyhow::Result;
 use artemis_core::types::Strategy;
 use async_trait::async_trait;
 use bindings::iuniswapv2pair::IUniswapV2Pair;
@@ -37,6 +36,7 @@ use db::{
 };
 use db::{models::NewDbUniV3Pool, queries::exchange::get_exchanges_by_chain};
 use diesel::PgConnection;
+use eyre::Result;
 use shared::{addressbook::Addressbook, amm_utils::db_pools_to_amms};
 use std::sync::Arc;
 use tracing::{debug, info, warn};
@@ -208,7 +208,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> Strategy<Event, A
         self.state
             .update_pools()
             .await
-            .map_err(|e| anyhow::anyhow!("Failed to sync pools: {}", e))?;
+            .map_err(|e| eyre::eyre!("Failed to sync pools: {}", e))?;
 
         Ok(())
     }
@@ -317,7 +317,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
         let result = fetch_v2_pool_data_batch_request(&[pool_address], provider).await;
 
         let pool_data =
-            result.map_err(|e| anyhow::anyhow!("Failed to parse pool batch request: {:?}", e))?;
+            result.map_err(|e| eyre::eyre!("Failed to parse pool batch request: {:?}", e))?;
 
         let new_pool = self.parse_univ2_pool_data(pool_data, &mut conn, pool_address)?;
 
@@ -365,7 +365,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
             fetch_v3_pool_data_batch_request(&[pool_address], None, self.client.clone()).await;
 
         let uniswap_v3_log =
-            result.map_err(|e| anyhow::anyhow!("Failed to pool batch request: {:?}", e))?;
+            result.map_err(|e| eyre::eyre!("Failed to pool batch request: {:?}", e))?;
 
         let new_pool = self.parse_univ3_pool_data(uniswap_v3_log, &mut conn, pool_address)?;
         batch_upsert_uni_v3_pools(&mut conn, &vec![new_pool]).unwrap();
@@ -380,16 +380,16 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
     ) -> Result<NewDbUniV2Pool> {
         let pool_data = pool_data
             .as_array()
-            .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
+            .ok_or_else(|| eyre::eyre!("Failed to parse pool data"))?;
 
         for token in pool_data {
             let pool_data = token
                 .as_tuple()
-                .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
+                .ok_or_else(|| eyre::eyre!("Failed to parse pool data"))?;
 
             let address = pool_data[0]
                 .as_address()
-                .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
+                .ok_or_else(|| eyre::eyre!("Failed to parse pool data"))?;
 
             if !address.is_zero() {
                 let mut pool = UniswapV2Pool::default();
@@ -416,7 +416,7 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
                 break;
             };
         }
-        return Err(anyhow::anyhow!("Failed to parse pool data"));
+        return Err(eyre::eyre!("Failed to parse pool data"));
     }
 
     fn parse_univ3_pool_data(
@@ -427,16 +427,16 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
     ) -> Result<NewDbUniV3Pool> {
         let data = data
             .as_array()
-            .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
+            .ok_or_else(|| eyre::eyre!("Failed to parse pool data"))?;
 
         for token in data {
             let pool_data = token
                 .as_tuple()
-                .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
+                .ok_or_else(|| eyre::eyre!("Failed to parse pool data"))?;
 
             let address = pool_data[0]
                 .as_address()
-                .ok_or_else(|| anyhow::anyhow!("Failed to parse pool data"))?;
+                .ok_or_else(|| eyre::eyre!("Failed to parse pool data"))?;
 
             // If the pool token A is not zero, signaling that the pool data was populated
             if !address.is_zero() {
@@ -470,6 +470,6 @@ impl<P: Provider + 'static, S: Signer + Send + Sync + 'static> UniTriArb<P, S> {
                 break;
             }
         }
-        return Err(anyhow::anyhow!("Failed to parse pool data"));
+        return Err(eyre::eyre!("Failed to parse pool data"));
     }
 }

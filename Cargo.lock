@@ -1208,12 +1208,16 @@ name = "artemis-core"
 version = "0.1.0"
 dependencies = [
  "alloy",
+ "alloy-chains",
  "anyhow",
  "async-trait",
+ "eyre",
  "futures",
+ "shared",
  "tokio",
  "tokio-stream",
  "tracing",
+ "types",
 ]
 
 [[package]]
@@ -1729,6 +1733,7 @@ dependencies = [
  "clap",
  "dotenv",
  "env_logger",
+ "eyre",
  "futures",
  "log",
  "shared",
@@ -1969,6 +1974,7 @@ dependencies = [
  "alloy-chains",
  "alloy-primitives 0.8.9",
  "anyhow",
+ "artemis-core",
  "clap",
  "dotenv",
  "eyre",
@@ -6965,7 +6971,6 @@ dependencies = [
  "alloy-sol-types",
  "amms",
  "anyhow",
- "artemis-core",
  "async-trait",
  "bindings",
  "clap",
@@ -7266,6 +7271,7 @@ dependencies = [
  "clap",
  "dotenv",
  "env_logger",
+ "eyre",
  "futures",
  "log",
  "shared",
@@ -7899,6 +7905,7 @@ dependencies = [
  "dashmap",
  "db",
  "diesel",
+ "eyre",
  "indicatif",
  "mev-share",
  "serde",

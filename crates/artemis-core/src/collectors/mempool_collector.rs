@@ -5,7 +5,7 @@ use futures::StreamExt;
 use std::sync::Arc;
 
 use crate::types::{Collector, CollectorStream};
-use anyhow::Result;
+use eyre::Result;
 
 /// A collector that listens for new transactions in the mempool, and generates a stream of
 /// [events](Transaction) which contain the transaction.

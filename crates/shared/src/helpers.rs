@@ -1,7 +1,7 @@
 use alloy::{network::Network, providers::Provider, transports::Transport};
 use alloy_primitives::{Address, Bytes};
 use alloy_rpc_types::{BlockId, BlockNumberOrTag};
-use anyhow::{anyhow, Result};
+use eyre::{anyhow, Result};
 use std::sync::Arc;
 
 pub async fn get_contract_creation_block<P, T, N>(

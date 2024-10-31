@@ -10,7 +10,7 @@ pub fn generate_strategy(name: &str) -> TokenStream {
         use async_trait::async_trait;
         use std::sync::Arc;
 
-        use anyhow::Result;
+        use eyre::Result;
         use artemis_core::types::Strategy;
         use ethers::providers::Middleware;
 

@@ -9,6 +9,11 @@ edition = "2021"
 
 alloy = { workspace = true }
 tokio = { workspace = true }
+eyre = { workspace = true }
+types = { path = "../types" }
+alloy-chains = { workspace = true }
+shared = { path = "../shared" }
+
 
 ## async
 async-trait = "0.1.64"
