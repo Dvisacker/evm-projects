@@ -12,10 +12,7 @@ use alloy::{
 use alloy_primitives::{aliases::U24, Address, U160, U256};
 use alloy_rpc_types::TransactionReceipt;
 use amms::{
-    amm::{
-        uniswap_v2::UniswapV2Pool,
-        uniswap_v3::{factory::IUniswapV3Factory, IUniswapV3Pool, UniswapV3Pool},
-    },
+    amm::{uniswap_v2::UniswapV2Pool, uniswap_v3::UniswapV3Pool},
     errors::AMMError,
 };
 use eyre::Error;
@@ -117,7 +114,6 @@ sol! {
             address tokenOut;
             uint24 fee;
             address recipient;
-            uint256 deadline;
             uint256 amountIn;
             uint256 amountOutMinimum;
             uint160 sqrtPriceLimitX96;
@@ -133,8 +129,20 @@ sol! {
 sol! {
     #[derive(Debug, PartialEq, Eq)]
     #[sol(rpc)]
+    struct QuoteExactInputSingleParams {
+        address tokenIn;
+        address tokenOut;
+        uint256 amountIn;
+        uint24 fee;
+        uint160 sqrtPriceLimitX96;
+    }
+
+    #[derive(Debug, PartialEq, Eq)]
+    #[sol(rpc)]
     contract IQuoter {
-        function quoteExactInputSingle(address tokenIn, address tokenOut, uint24 fee, uint256 amountIn) external view returns (uint256 amountOut);
+        function quoteExactInputSingle(
+            QuoteExactInputSingleParams calldata params
+        ) external view returns (uint256 amountOut, uint160 sqrtPriceLimitX96, uint32 initializedTicksCrossed, uint256 gasEstimate);
     }
 }
 
@@ -253,105 +261,104 @@ where
     Ok(U256::ZERO)
 }
 
-/* This function makes extra calls to get not only the best fee tier but also the corresponding pool address
-When calling the router/quoter, the pool address is not needed so in that case, the find_best_v3_fee_tier function is preferred
-because it uses less calls. */
-pub async fn find_best_v3_pool<T, N, P>(
-    provider: Arc<P>,
-    token_in: Address,
-    token_out: Address,
-    amount_in: U256,
-) -> Result<(Address, u32, U256), Error>
-where
-    T: Transport + Clone,
-    N: Network,
-    P: Provider<T, N>,
-{
-    let factory_address = Address::from_str("0x1F98431c8aD98523631AE4a59f267346ea31F984")
-        .expect("Invalid factory address");
+// /* This function makes extra calls to get not only the best fee tier but also the corresponding pool address
+// When calling the router/quoter, the pool address is not needed so in that case, the find_best_v3_fee_tier function is preferred
+// because it uses less calls. */
+// pub async fn find_best_v3_pool<T, N, P>(
+//     provider: Arc<P>,
+//     token_in: Address,
+//     token_out: Address,
+//     amount_in: U256,
+// ) -> Result<(Address, u32, U256), Error>
+// where
+//     T: Transport + Clone,
+//     N: Network,
+//     P: Provider<T, N>,
+// {
+//     let factory_address = Address::from_str("0x1F98431c8aD98523631AE4a59f267346ea31F984")
+//         .expect("Invalid factory address");
 
-    let factory = IUniswapV3Factory::new(factory_address, provider.clone());
+//     let factory = IUniswapV3Factory::new(factory_address, provider.clone());
 
-    // Standard fee tiers
-    let fee_tiers = vec![100, 500, 3000, 10000];
-    let mut best_pool = None;
-    let mut best_fee = 0u32;
-    let mut best_quote = U256::ZERO;
+//     // Standard fee tiers
+//     let fee_tiers = vec![100, 500, 3000, 10000];
+//     let mut best_pool = None;
+//     let mut best_fee = 0u32;
+//     let mut best_quote = U256::ZERO;
 
-    // Get quote for this pool
-    let quoter = IQuoter::new(
-        Address::from_str("0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6").unwrap(),
-        provider.clone(),
-    );
+//     // Get quote for this pool
+//     let quoter = IQuoter::new(
+//         Address::from_str("0x61fFE014bA17989E743c5F6cB21bF9697530B21e").unwrap(),
+//         provider.clone(),
+//     );
 
-    for fee in fee_tiers {
-        // Get pool address for this fee tier
-        let pool_address = match factory
-            .getPool(token_in, token_out, U24::from(fee))
-            .call()
-            .await
-        {
-            Ok(result) => result.pool,
-            Err(_) => continue,
-        };
+//     for fee in fee_tiers {
+//         // Get pool address for this fee tier
+//         let pool_address = match factory
+//             .getPool(token_in, token_out, U24::from(fee))
+//             .call()
+//             .await
+//         {
+//             Ok(result) => result.pool,
+//             Err(_) => continue,
+//         };
 
-        // Check if pool exists by checking its liquidity
-        let pool = IUniswapV3Pool::new(pool_address, provider.clone());
+//         // Check if pool exists by checking its liquidity
+//         let pool = IUniswapV3Pool::new(pool_address, provider.clone());
 
-        // let sqrt_price_x96 = match pool.slot0().call().await {
-        //     Ok(slot0) => slot0._0,
-        //     Err(_) => continue,
-        // };
+//         // let sqrt_price_x96 = match pool.slot0().call().await {
+//         //     Ok(slot0) => slot0._0,
+//         //     Err(_) => continue,
+//         // };
 
-        // Try to get pool liquidity - if it fails, pool doesn't exist
-        let liquidity = match pool.liquidity().call().await {
-            Ok(liq) => liq._0,
-            Err(_) => continue,
-        };
+//         // Try to get pool liquidity - if it fails, pool doesn't exist
+//         let liquidity = match pool.liquidity().call().await {
+//             Ok(liq) => liq._0,
+//             Err(_) => continue,
+//         };
 
-        // Skip pools with no liquidity
-        if liquidity == 0 {
-            continue;
-        }
+//         // Skip pools with no liquidity
+//         if liquidity == 0 {
+//             continue;
+//         }
 
-        let quote = match quoter
-            .quoteExactInputSingle(
-                token_in,
-                token_out,
-                alloy_primitives::Uint::from(fee),
-                amount_in,
-            )
-            .call()
-            .await
-        {
-            Ok(q) => q.amountOut,
-            Err(_) => continue,
-        };
+//         let calldata = QuoteExactInputSingleParams {
+//             tokenIn: token_in,
+//             tokenOut: token_out,
+//             amountIn: amount_in,
+//             fee: U24::from(fee),
+//             sqrtPriceLimitX96: U160::ZERO,
+//         };
 
-        // let current_price: U160 = (sqrt_price_x96 * sqrt_price_x96) >> 192;
-        // let current_price = U256::from(current_price);
-        // let execution_price: U256 = (quote << 256) / amount_in;
-        // let price_impact: f64 = current_price.try_into().unwrap();
-        // let price_impact = (current_price * U256::from(100) / execution_price) - U256::from(100);
+//         let quote = match quoter.quoteExactInputSingle(calldata).call().await {
+//             Ok(q) => q.amountOut,
+//             Err(_) => continue,
+//         };
 
-        println!("Pool with fee {}bps:", fee as f64 / 100.0);
-        println!("Address: {}", pool_address);
-        println!("Liquidity: {}", liquidity);
-        println!("Quote for {}: {}", amount_in, quote);
+//         // let current_price: U160 = (sqrt_price_x96 * sqrt_price_x96) >> 192;
+//         // let current_price = U256::from(current_price);
+//         // let execution_price: U256 = (quote << 256) / amount_in;
+//         // let price_impact: f64 = current_price.try_into().unwrap();
+//         // let price_impact = (current_price * U256::from(100) / execution_price) - U256::from(100);
 
-        // Update best pool if this quote is better
-        if quote > best_quote {
-            best_quote = quote;
-            best_pool = Some(pool_address);
-            best_fee = fee;
-        }
-    }
+//         println!("Pool with fee {}bps:", fee as f64 / 100.0);
+//         println!("Address: {}", pool_address);
+//         println!("Liquidity: {}", liquidity);
+//         println!("Quote for {}: {}", amount_in, quote);
 
-    match best_pool {
-        Some(pool) => Ok((pool, best_fee, best_quote)),
-        None => Err(eyre::eyre!("No viable pool found")),
-    }
-}
+//         // Update best pool if this quote is better
+//         if quote > best_quote {
+//             best_quote = quote;
+//             best_pool = Some(pool_address);
+//             best_fee = fee;
+//         }
+//     }
+
+//     match best_pool {
+//         Some(pool) => Ok((pool, best_fee, best_quote)),
+//         None => Err(eyre::eyre!("No viable pool found")),
+//     }
+// }
 
 /* This function makes extra calls to get not only the best fee tier but also the corresponding pool address
 When calling the router/quoter, the pool address is not needed so in that case, the find_best_v3_fee_tier function is preferred
@@ -374,24 +381,31 @@ where
 
     // Get quote for this pool
     let quoter = IQuoter::new(
-        Address::from_str("0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6").unwrap(),
+        Address::from_str("0x61fFE014bA17989E743c5F6cB21bF9697530B21e").unwrap(),
         provider.clone(),
     );
 
     for fee in fee_tiers {
+        println!(
+            "Checking: {:?},{:?}:{:?}. Fee: {}",
+            token_in, token_out, amount_in, fee
+        );
+
+        let calldata = QuoteExactInputSingleParams {
+            tokenIn: token_in,
+            tokenOut: token_out,
+            amountIn: amount_in,
+            fee: U24::from(fee),
+            sqrtPriceLimitX96: U160::ZERO,
+        };
+
         // Get pool address for this fee tier
-        let quote = match quoter
-            .quoteExactInputSingle(
-                token_in,
-                token_out,
-                alloy_primitives::Uint::from(fee),
-                amount_in,
-            )
-            .call()
-            .await
-        {
+        let quote = match quoter.quoteExactInputSingle(calldata).call().await {
             Ok(q) => q.amountOut,
-            Err(_) => continue,
+            Err(e) => {
+                println!("Error getting quote for fee tier {}: {:?}", fee, e);
+                continue;
+            }
         };
 
         println!("Pool with fee {}bps:", fee as f64 / 100.0);
@@ -417,13 +431,13 @@ pub async fn swap_v3_pool<T, P>(
     token_in_address: Address,
     token_out_address: Address,
     amount_in: U256,
-) -> Result<U256, AMMError>
+) -> Result<U256, Error>
 where
     T: Transport + Clone,
     P: Provider<T, Ethereum>,
 {
     // Uniswap V3 Router address
-    let router_address = Address::from_str("0xE592427A0AEce92De3Edee1F18E0157C05861564")
+    let router_address = Address::from_str("0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45")
         .expect("Invalid router address");
 
     let router = ISwapRouter::new(router_address, provider.clone());
@@ -443,30 +457,66 @@ where
     println!("Amount in: {}", amount_in);
     println!("Minimum amount out: {}", amount_out_min);
 
-    // 3. Deadline to 20 minutes
-    let deadline = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .unwrap()
-        .as_secs()
-        + 1200;
-
     let params = ISwapRouter::ExactInputSingleParams {
         tokenIn: token_in_address,
         tokenOut: token_out_address,
-        fee: alloy_primitives::Uint::from(fee),
+        fee: U24::from(fee),
         recipient,
-        deadline: U256::from(deadline),
         amountIn: amount_in,
         amountOutMinimum: amount_out_min,
         sqrtPriceLimitX96: U160::ZERO, // No price limit
     };
 
-    // 5. Execute the swap
+    // // 5. Execute the swap
     let swap_tx = router.exactInputSingle(params).send().await?;
     let receipt: TransactionReceipt = swap_tx.get_receipt().await.unwrap();
 
     println!("Swap transaction hash: {:?}", receipt);
 
     // Return the actual amount out
-    Ok(amount_out_min)
+    Ok(quote)
+    // Ok(quote)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::provider::get_provider;
+    use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
+    use alloy_chains::{Chain, NamedChain};
+    use std::str::FromStr;
+
+    const WETH_ARBITRUM: &str = "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1";
+    const USDC_ARBITRUM: &str = "0xaf88d065e77c8cc2239327c5edb3a432268e5831";
+
+    #[tokio::test]
+    async fn test_swap_eth_to_usdc_arbitrum() -> Result<(), Error> {
+        dotenv::dotenv().ok();
+
+        // Setup wallet and provider
+        let signer: PrivateKeySigner = std::env::var("DEV_PRIVATE_KEY")
+            .expect("PRIVATE_KEY must be set")
+            .parse()
+            .expect("should parse private key");
+
+        let wallet_address = signer.address();
+        let wallet = EthereumWallet::new(signer);
+        let provider = get_provider(Chain::from_named(NamedChain::Arbitrum), wallet).await;
+
+        // Token addresses
+        let weth = Address::from_str(WETH_ARBITRUM).expect("Invalid WETH address");
+        let usdc = Address::from_str(USDC_ARBITRUM).expect("Invalid USDC address");
+        let amount_in = U256::from(100000000000000u64); // few cents
+
+        println!("Starting swap of {} ETH for USDC", amount_in);
+
+        let result = swap_v3_pool(provider, wallet_address, weth, usdc, amount_in).await?;
+
+        println!(
+            "Swap completed. Minimum USDC output amount: {} (6 decimals)",
+            result
+        );
+
+        Ok(())
+    }
 }
