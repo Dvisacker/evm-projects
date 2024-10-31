@@ -52,7 +52,7 @@ pub struct UniTriArb<P: Provider + 'static, S: Signer> {
 
 impl<P: Provider + 'static, S: Signer> UniTriArb<P, S> {
     pub fn new(chain: Chain, client: Arc<P>, signer: S, db_url: String) -> Self {
-        let addressbook = Addressbook::load().unwrap();
+        let addressbook = Addressbook::load(None).unwrap();
         let weth = addressbook.get_weth(&chain.named().unwrap()).unwrap();
         Self {
             chain,
