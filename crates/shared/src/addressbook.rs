@@ -15,6 +15,21 @@ where
     Address::from_str(&s).map_err(serde::de::Error::custom)
 }
 
+fn deserialize_address_option<'de, D>(deserializer: D) -> Result<Option<Address>, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let s: String = Deserialize::deserialize(deserializer)?;
+
+    if s.is_empty() {
+        Ok(None)
+    } else {
+        Address::from_str(&s)
+            .map_err(serde::de::Error::custom)
+            .map(Some)
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct AddressMap(#[serde(with = "address_map")] pub HashMap<String, Address>);
 
@@ -71,6 +86,26 @@ pub struct UniV2Addresses {
 pub struct UniV3Addresses {
     #[serde(deserialize_with = "deserialize_address")]
     pub factory: Address,
+    #[serde(
+        default,
+        deserialize_with = "deserialize_address_option",
+        rename = "swapRouter01"
+    )]
+    pub swap_router_01: Option<Address>,
+    #[serde(
+        default,
+        deserialize_with = "deserialize_address_option",
+        rename = "swapRouter02"
+    )]
+    pub swap_router_02: Option<Address>,
+    #[serde(
+        default,
+        deserialize_with = "deserialize_address_option",
+        rename = "universalRouter"
+    )]
+    pub universal_router: Option<Address>,
+    #[serde(default, deserialize_with = "deserialize_address_option")]
+    pub quoter: Option<Address>,
     pub pools: AddressMap,
 }
 
@@ -125,8 +160,8 @@ pub fn get_exchange_type(exchange_name: ExchangeName) -> ExchangeType {
 }
 
 impl Addressbook {
-    pub fn load() -> Result<Self, Box<dyn std::error::Error>> {
-        let mut file = File::open("addressbook.json")?;
+    pub fn load(filepath: Option<&str>) -> Result<Self, Box<dyn std::error::Error>> {
+        let mut file = File::open(filepath.unwrap_or("./addressbook.json"))?;
         let mut contents = String::new();
         file.read_to_string(&mut contents)?;
         let addressbook: Addressbook = serde_json::from_str(&contents)?;
@@ -258,6 +293,157 @@ impl Addressbook {
             NamedChain::Optimism => Some(&self.optimism),
             NamedChain::Mainnet => Some(&self.mainnet),
             _ => None,
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use alloy_chains::NamedChain;
+
+    #[test]
+    fn test_load_addressbook() {
+        let current_dir = std::env::current_dir().unwrap();
+        println!("Current directory: {:?}", current_dir);
+        let addressbook =
+            Addressbook::load(Some("./src/addressbook.json")).expect("Failed to load addressbook");
+
+        // Test that we can load basic chain configs
+        assert!(addressbook
+            .get_chain_address_book(&NamedChain::Arbitrum)
+            .is_some());
+        assert!(addressbook
+            .get_chain_address_book(&NamedChain::Optimism)
+            .is_some());
+        assert!(addressbook
+            .get_chain_address_book(&NamedChain::Mainnet)
+            .is_some());
+        assert!(addressbook
+            .get_chain_address_book(&NamedChain::Base)
+            .is_none());
+    }
+
+    #[test]
+    fn test_get_weth_addresses() {
+        let addressbook =
+            Addressbook::load(Some("./src/addressbook.json")).expect("Failed to load addressbook");
+
+        // Get WETH addresses for each chain
+        let arb_weth = addressbook
+            .get_weth(&NamedChain::Arbitrum)
+            .expect("Failed to get Arbitrum WETH");
+        let op_weth = addressbook
+            .get_weth(&NamedChain::Optimism)
+            .expect("Failed to get Optimism WETH");
+        let mainnet_weth = addressbook
+            .get_weth(&NamedChain::Mainnet)
+            .expect("Failed to get Mainnet WETH");
+
+        // Verify they're not zero addresses
+        assert!(!arb_weth.is_zero());
+        assert!(!op_weth.is_zero());
+        assert!(!mainnet_weth.is_zero());
+    }
+
+    #[test]
+    fn test_get_uniswap_v3_config() {
+        let addressbook =
+            Addressbook::load(Some("./src/addressbook.json")).expect("Failed to load addressbook");
+
+        let arb_config = addressbook
+            .get_chain_address_book(&NamedChain::Arbitrum)
+            .expect("Failed to get Arbitrum config");
+
+        let univ3_config = &arb_config.exchanges.univ3.uniswapv3;
+
+        // Check factory address
+        assert!(!univ3_config.factory.is_zero());
+
+        // Check router addresses
+        if let Some(router01) = univ3_config.swap_router_01 {
+            assert!(!router01.is_zero());
+        }
+        if let Some(router02) = univ3_config.swap_router_02 {
+            assert!(!router02.is_zero());
+        }
+    }
+
+    #[test]
+    fn test_get_pool_by_name() {
+        let addressbook =
+            Addressbook::load(Some("./src/addressbook.json")).expect("Failed to load addressbook");
+
+        // Test getting a known pool
+        let pool = addressbook.get_pool_by_name(
+            &NamedChain::Arbitrum,
+            ExchangeName::UniswapV3,
+            "USDC/WETH",
+        );
+
+        // The pool should exist and not be a zero address
+        assert!(pool.is_some());
+        if let Some(addr) = pool {
+            assert!(!addr.is_zero());
+        }
+    }
+
+    #[test]
+    fn test_get_factories() {
+        let addressbook =
+            Addressbook::load(Some("./src/addressbook.json")).expect("Failed to load addressbook");
+
+        // Get V2 and V3 factories for Arbitrum
+        let v2_factories = addressbook.get_v2_factories(&NamedChain::Arbitrum);
+        let v3_factories = addressbook.get_v3_factories(&NamedChain::Arbitrum);
+
+        // Check that we got some factories
+        assert!(!v2_factories.is_empty());
+        assert!(!v3_factories.is_empty());
+
+        // Verify none are zero addresses
+        for factory in v2_factories {
+            assert!(!factory.is_zero());
+        }
+        for factory in v3_factories {
+            assert!(!factory.is_zero());
+        }
+    }
+
+    #[test]
+    fn test_get_multicall() {
+        let addressbook =
+            Addressbook::load(Some("./src/addressbook.json")).expect("Failed to load addressbook");
+
+        // Test multicall addresses for each chain
+        let chains = vec![
+            NamedChain::Arbitrum,
+            NamedChain::Optimism,
+            NamedChain::Mainnet,
+        ];
+
+        for chain in chains {
+            let multicall = addressbook
+                .get_multicall(&chain)
+                .expect(&format!("Failed to get multicall for {:?}", chain));
+            assert!(!multicall.is_zero());
+        }
+    }
+
+    #[test]
+    fn test_get_pools_by_chain() {
+        let addressbook =
+            Addressbook::load(Some("./src/addressbook.json")).expect("Failed to load addressbook");
+
+        // Get pools for Arbitrum
+        let pools = addressbook.get_pools_by_chain(&NamedChain::Arbitrum);
+
+        // Verify we got some pools
+        assert!(!pools.is_empty());
+
+        // Check that none are zero addresses
+        for pool in pools {
+            assert!(!pool.is_zero());
         }
     }
 }
