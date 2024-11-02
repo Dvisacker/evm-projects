@@ -181,33 +181,11 @@ fn get_manifest_path() -> PathBuf {
 
 impl Addressbook {
     pub fn load(filepath: Option<&str>) -> Result<Self, Box<dyn std::error::Error>> {
+        // TODO: Figure out how to get the path to the addressbook.json file
         let filepath = "/Users/david/programming/mev/artemis/crates/shared/src/addressbook.json";
-        // let current_dir = std::env::current_dir().unwrap();
-        // let json_file_path = PathBuf::from(current_dir).join("addressbook.json");
-        // let manifest_path = get_manifest_path();
-        // println!("Current directory: {:?}", current_dir);
-        // println!("Manifest path: {:?}", manifest_path);
-        // // let canonical_path = get_canonical_path()?;
-        // // println!("Canonical path: {:?}", canonical_path);
-        // let current_file_path = file!();
-        // println!("Current file path: {:?}", current_file_path);
-        // let filepath = PathBuf::from(current_file_path)
-        //     .parent()
-        //     .expect("Failed to get parent directory")
-        //     .to_path_buf()
-        //     .join("addressbook.json");
-
-        // let filepath = filepath.unwrap_or(manifest_path.join("addressbook.json").to_str().unwrap());
-
-        // let filepath = filepath.as_path();
-        // let addressbook_path = path_buf.join("addressbook.json").as_path
-        // let file_path = filepath.unwrap_or(addressbook_path.to_str().unwrap());
-
-        println!("Loading addressbook from: {:?}", filepath);
         let mut file = File::open(filepath)?;
         let mut contents = String::new();
         file.read_to_string(&mut contents)?;
-        // println!("Contents: {:?}", contents);
         let addressbook: Addressbook = serde_json::from_str(&contents)?;
         Ok(addressbook)
     }
