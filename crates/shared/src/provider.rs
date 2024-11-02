@@ -60,6 +60,16 @@ pub async fn get_provider(chain: Chain, wallet: EthereumWallet) -> Arc<SignerPro
                 .unwrap();
             return Arc::new(provider);
         }
+        Ok(NamedChain::Base) => {
+            let url = env::var("BASE_WS_URL").expect("BASE_WS_URL is not set");
+            let provider = ProviderBuilder::new()
+                .with_recommended_fillers()
+                .wallet(wallet)
+                .on_builtin(url.as_str())
+                .await
+                .unwrap();
+            return Arc::new(provider);
+        }
         _ => panic!("Chain not supported"),
     }
 }

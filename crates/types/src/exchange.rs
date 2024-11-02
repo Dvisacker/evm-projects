@@ -3,7 +3,8 @@ use std::fmt;
 use clap::ValueEnum;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize, Clone, Copy, ValueEnum)]
+#[derive(Debug, Serialize, Deserialize, Clone, Copy, ValueEnum, Eq, PartialEq, Hash)]
+#[serde(rename_all = "lowercase")]
 pub enum ExchangeName {
     UniswapV2,
     SushiswapV2,
@@ -12,6 +13,7 @@ pub enum ExchangeName {
     CamelotV3,
     RamsesV2,
     PancakeswapV3,
+    SolidlyV3,
     Curve,
     Unknown,
 }
@@ -33,6 +35,7 @@ impl ExchangeName {
             "camelotv3" => Ok(ExchangeName::CamelotV3),
             "ramsesv2" => Ok(ExchangeName::RamsesV2),
             "pancakeswapv3" => Ok(ExchangeName::PancakeswapV3),
+            "solidlyv3" => Ok(ExchangeName::SolidlyV3),
             _ => Err(format!("Invalid exchange name: {}", s)),
         }
     }
@@ -46,6 +49,7 @@ impl ExchangeName {
             ExchangeName::CamelotV3 => "camelotv3",
             ExchangeName::RamsesV2 => "ramsesv2",
             ExchangeName::PancakeswapV3 => "pancakeswapv3",
+            ExchangeName::SolidlyV3 => "solidlyv3",
             ExchangeName::Curve => "curve",
             ExchangeName::Unknown => "unknown",
         }

@@ -42,9 +42,9 @@ struct LiFiQuoteRequest {
 
 #[derive(Debug, Deserialize)]
 pub struct LiFiQuoteResponse {
-    pub id: String,
-    #[serde(rename = "type")]
-    pub quote_type: String,
+    // pub id: String,
+    // #[serde(rename = "type")]
+    // pub quote_type: String,
     pub tool: String,
     // #[serde(rename = "toolDetails")]
     // pub tool_details: LiFiToolDetails,
@@ -235,6 +235,8 @@ where
         .await
         .wrap_err("Failed to get quote from Li.Fi API")?;
 
+    println!("Response: {:?}", response);
+
     let quote_response: LiFiQuoteResponse = response.json().await?;
     let bridge_address = Address::from_str(&quote_response.transaction_request.to)?;
 
@@ -245,7 +247,7 @@ where
     // 3. Execute the bridge transaction
     let data = hex::decode(&quote_response.transaction_request.data[2..])
         .wrap_err("Failed to decode transaction data")?;
-    let to_address = Address::from_str(&quote_response.transaction_request.to)
+    let contract_address = Address::from_str(&quote_response.transaction_request.to)
         .wrap_err("Failed to parse 'to' address")?;
     let value = U256::from_str(&quote_response.transaction_request.value)
         .wrap_err("Failed to parse transaction value")?;
@@ -259,8 +261,10 @@ where
         Err(e) => return Err(eyre!("Error getting balance before: {:?}", e)),
     };
 
+    println!("To token balance before: {:?}", to_token_balance_before);
+
     let tx_request = TransactionRequest::default()
-        .to(to_address)
+        .to(contract_address)
         .input(data.into())
         .value(value)
         .gas_limit(gas_limit.try_into().unwrap())
@@ -272,11 +276,13 @@ where
     let pending_tx = origin_chain_provider.send_transaction(tx_request).await?;
     let receipt = pending_tx.get_receipt().await?;
 
-    println!("Receipt: {:?}", receipt);
+    println!("Receipt: {:?}", receipt.transaction_hash);
+
+    tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
 
     // 4. Monitor bridge status
-    let status = "PENDING".to_string();
-    while status == "PENDING" {
+    let mut status = "PENDING".to_string();
+    while status == "PENDING" || status == "UNKNOWN" {
         let status_response = client
             .get("https://li.quest/v1/status")
             .query(&[
@@ -292,25 +298,38 @@ where
             .await
             .wrap_err("Failed to parse status response")?;
 
-        let status = status_response["status"]
+        println!("Status response: {:?}", status_response);
+
+        status = status_response["status"]
             .as_str()
             .unwrap_or("UNKNOWN")
             .to_string();
+
+        println!("Status: {:?}", status);
 
         if status == "FAILED" {
             return Err(eyre!("Bridge transaction failed"));
         }
 
-        if status == "PENDING" {
-            tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
+        if status == "PENDING" || status == "UNKNOWN" {
+            tokio::time::sleep(tokio::time::Duration::from_secs(10)).await;
         }
     }
+
+    println!("Sleeping for 5 seconds");
+    tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
+
+    println!("To token: {:?}", to_token);
+    println!("To address: {:?}", to_address);
 
     let to_token_balance_after = match to_token.balanceOf(to_address).call().await {
         Ok(balance) => balance._0,
         Err(e) => return Err(eyre!("Error getting balance after: {:?}", e)),
     };
+    println!("To token balance after: {:?}", to_token_balance_after);
     let amount_out = to_token_balance_after - to_token_balance_before;
+
+    println!("Amount out of bridge: {:?}", amount_out);
 
     // let final_amount = U256::from_str(&quote_response.estimate.to_amount)
     //     .wrap_err("Failed to parse estimated amount")?;
@@ -320,7 +339,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::provider::get_provider;
+    use crate::{addressbook::Addressbook, provider::get_provider};
 
     use super::*;
     use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
@@ -358,6 +377,52 @@ mod tests {
             BASE_CHAIN_ID,
             usdc_arb,
             usdc_base,
+            amount,
+            from_address,
+            to_address,
+            bridge_name,
+        )
+        .await?;
+
+        println!(
+            "Bridge transaction completed. Expected output amount: {}",
+            result
+        );
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_bridge_weth_arbitrum_to_base() -> Result<()> {
+        dotenv::dotenv().ok();
+
+        let addressbook = Addressbook::load(None).unwrap();
+        let signer: PrivateKeySigner = std::env::var("DEV_PRIVATE_KEY")
+            .expect("PRIVATE_KEY must be set")
+            .parse()
+            .expect("should parse private key");
+
+        let wallet_address = signer.address();
+        let wallet = EthereumWallet::new(signer);
+        let origin_provider =
+            get_provider(Chain::from_named(NamedChain::Arbitrum), wallet.clone()).await;
+        let destination_provider =
+            get_provider(Chain::from_named(NamedChain::Base), wallet.clone()).await;
+        let from_address = wallet_address;
+        let to_address = wallet_address;
+        let weth_arb = addressbook.get_weth(&NamedChain::Arbitrum).unwrap();
+        let weth_base = addressbook.get_weth(&NamedChain::Base).unwrap();
+        let bridge_name = BridgeName::StargateV2;
+
+        // Amount to bridge (e.g., 0.0004 WETH = 400_000_000)
+        let amount = U256::from(400000000000000u128);
+
+        let result = bridge_lifi(
+            origin_provider,
+            destination_provider,
+            ARBITRUM_CHAIN_ID,
+            BASE_CHAIN_ID,
+            weth_arb,
+            weth_base,
             amount,
             from_address,
             to_address,

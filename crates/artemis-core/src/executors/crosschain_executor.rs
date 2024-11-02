@@ -1,13 +1,7 @@
-use std::{
-    ops::{Div, Mul},
-    sync::Arc,
-};
+use std::sync::Arc;
 
 use crate::types::Executor;
-use alloy::{
-    primitives::{Address, U256},
-    providers::Provider,
-};
+use alloy::primitives::{Address, U256};
 use alloy_chains::NamedChain;
 use async_trait::async_trait;
 use eyre::{Context, Result};

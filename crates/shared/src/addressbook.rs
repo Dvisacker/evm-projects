@@ -1,10 +1,11 @@
 use alloy::primitives::Address;
 use alloy_chains::NamedChain;
 use serde::{Deserialize, Deserializer, Serialize};
-use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
+use std::path::PathBuf;
 use std::str::FromStr;
+use std::{collections::HashMap, env};
 use types::exchange::{ExchangeName, ExchangeType};
 
 fn deserialize_address<'de, D>(deserializer: D) -> Result<Address, D::Error>
@@ -103,20 +104,23 @@ pub struct UniV3Addresses {
     pub pools: AddressMap,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct UniV3Exchanges {
-    pub uniswapv3: UniV3Addresses,
-    pub sushiswapv3: UniV3Addresses,
-    pub camelotv3: UniV3Addresses,
-    pub ramsesv2: UniV3Addresses,
-    pub pancakeswapv3: UniV3Addresses,
-}
+// #[derive(Debug, Serialize, Deserialize, Clone)]
+// pub struct UniV3Exchanges {
+//     pub uniswapv3: UniV3Addresses,
+//     pub sushiswapv3: Option<UniV3Addresses>,
+//     pub camelotv3: Option<UniV3Addresses>,
+//     pub ramsesv2: Option<UniV3Addresses>,
+//     pub pancakeswapv3: Option<UniV3Addresses>,
+// }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct UniV2Exchanges {
-    pub uniswapv2: UniV2Addresses,
-    pub sushiswapv2: UniV2Addresses,
-}
+pub type UniV3Exchanges = HashMap<ExchangeName, UniV3Addresses>;
+pub type UniV2Exchanges = HashMap<ExchangeName, UniV2Addresses>;
+
+// #[derive(Debug, Serialize, Deserialize, Clone)]
+// pub struct UniV2Exchanges {
+//     pub uniswapv2: UniV2Addresses,
+//     pub sushiswapv2: UniV2Addresses,
+// }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Exchanges {
@@ -133,6 +137,8 @@ pub struct ChainAddressBook {
     pub weth: Address,
     #[serde(deserialize_with = "deserialize_address")]
     pub usdc: Address,
+    #[serde(deserialize_with = "deserialize_address")]
+    pub usdt: Address,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -156,11 +162,52 @@ pub fn get_exchange_type(exchange_name: ExchangeName) -> ExchangeType {
     }
 }
 
+fn get_absolute_path() -> std::io::Result<PathBuf> {
+    let current_dir = std::env::current_dir()?;
+    let relative_path = file!();
+    Ok(current_dir.join(relative_path))
+}
+
+// 2. Using std::fs::canonicalize() to resolve all symlinks
+fn get_canonical_path() -> std::io::Result<PathBuf> {
+    let path = std::env::current_dir()?.join(file!());
+    std::fs::canonicalize(path)
+}
+
+fn get_manifest_path() -> PathBuf {
+    let manifest_dir = std::env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR not set");
+    PathBuf::from(manifest_dir)
+}
+
 impl Addressbook {
     pub fn load(filepath: Option<&str>) -> Result<Self, Box<dyn std::error::Error>> {
-        let mut file = File::open(filepath.unwrap_or("./src/addressbook.json"))?;
+        let filepath = "/Users/david/programming/mev/artemis/crates/shared/src/addressbook.json";
+        // let current_dir = std::env::current_dir().unwrap();
+        // let json_file_path = PathBuf::from(current_dir).join("addressbook.json");
+        // let manifest_path = get_manifest_path();
+        // println!("Current directory: {:?}", current_dir);
+        // println!("Manifest path: {:?}", manifest_path);
+        // // let canonical_path = get_canonical_path()?;
+        // // println!("Canonical path: {:?}", canonical_path);
+        // let current_file_path = file!();
+        // println!("Current file path: {:?}", current_file_path);
+        // let filepath = PathBuf::from(current_file_path)
+        //     .parent()
+        //     .expect("Failed to get parent directory")
+        //     .to_path_buf()
+        //     .join("addressbook.json");
+
+        // let filepath = filepath.unwrap_or(manifest_path.join("addressbook.json").to_str().unwrap());
+
+        // let filepath = filepath.as_path();
+        // let addressbook_path = path_buf.join("addressbook.json").as_path
+        // let file_path = filepath.unwrap_or(addressbook_path.to_str().unwrap());
+
+        println!("Loading addressbook from: {:?}", filepath);
+        let mut file = File::open(filepath)?;
         let mut contents = String::new();
         file.read_to_string(&mut contents)?;
+        // println!("Contents: {:?}", contents);
         let addressbook: Addressbook = serde_json::from_str(&contents)?;
         Ok(addressbook)
     }
@@ -178,7 +225,8 @@ impl Addressbook {
                 ExchangeName::UniswapV2 => book
                     .exchanges
                     .univ2
-                    .uniswapv2
+                    .get(&exchange_name)
+                    .unwrap()
                     .pools
                     .0
                     .get(pool_name)
@@ -186,7 +234,8 @@ impl Addressbook {
                 ExchangeName::SushiswapV2 => book
                     .exchanges
                     .univ2
-                    .sushiswapv2
+                    .get(&exchange_name)
+                    .unwrap()
                     .pools
                     .0
                     .get(pool_name)
@@ -197,7 +246,8 @@ impl Addressbook {
                 ExchangeName::UniswapV3 => book
                     .exchanges
                     .univ3
-                    .uniswapv3
+                    .get(&exchange_name)
+                    .unwrap()
                     .pools
                     .0
                     .get(pool_name)
@@ -217,10 +267,12 @@ impl Addressbook {
     }
 
     pub fn get_token(&self, chain: &NamedChain, token_name: &str) -> Option<Address> {
+        println!("Getting token: {:?} for chain: {:?}", token_name, chain);
         let config = self.get_chain_address_book(chain).unwrap();
         match token_name {
             "usdc" => Some(config.usdc),
             "weth" => Some(config.weth),
+            "usdt" => Some(config.usdt),
             _ => None,
         }
     }
@@ -237,7 +289,14 @@ impl Addressbook {
     ) -> Option<Address> {
         let chain_config = self.get_chain_address_book(chain).unwrap();
         let quoter_address = match exchange_name {
-            ExchangeName::UniswapV3 => chain_config.exchanges.univ3.uniswapv3.quoter,
+            ExchangeName::UniswapV3 => {
+                chain_config
+                    .exchanges
+                    .univ3
+                    .get(&exchange_name)
+                    .unwrap()
+                    .quoter
+            }
             _ => None,
         };
 
@@ -251,7 +310,14 @@ impl Addressbook {
     ) -> Option<Address> {
         let chain_config = self.get_chain_address_book(chain).unwrap();
         let universal_router_address = match exchange_name {
-            ExchangeName::UniswapV3 => chain_config.exchanges.univ3.uniswapv3.universal_router,
+            ExchangeName::UniswapV3 => {
+                chain_config
+                    .exchanges
+                    .univ3
+                    .get(&exchange_name)
+                    .unwrap()
+                    .universal_router
+            }
             _ => None,
         };
 
@@ -265,7 +331,14 @@ impl Addressbook {
     ) -> Option<Address> {
         let chain_config = self.get_chain_address_book(chain).unwrap();
         let swap_router_address = match exchange_name {
-            ExchangeName::UniswapV3 => chain_config.exchanges.univ3.uniswapv3.swap_router_02,
+            ExchangeName::UniswapV3 => {
+                chain_config
+                    .exchanges
+                    .univ3
+                    .get(&exchange_name)
+                    .unwrap()
+                    .swap_router_02
+            }
             _ => None,
         };
 
@@ -279,44 +352,39 @@ impl Addressbook {
     ) -> Option<Address> {
         let chain_config = self.get_chain_address_book(chain).unwrap();
         let swap_router_address: Option<Address> = match exchange_name {
-            ExchangeName::UniswapV2 => Some(chain_config.exchanges.univ2.uniswapv2.router),
+            ExchangeName::UniswapV2 => Some(
+                chain_config
+                    .exchanges
+                    .univ2
+                    .get(&exchange_name)
+                    .unwrap()
+                    .router,
+            ),
             _ => None,
         };
 
         return swap_router_address;
     }
 
-    pub fn get_pools_by_chain(&self, chain: &NamedChain) -> Vec<Address> {
-        let chain_config = self.get_chain_address_book(chain).unwrap();
-        chain_config
-            .exchanges
-            .univ2
-            .uniswapv2
-            .pools
-            .0
-            .values()
-            .cloned()
-            .collect()
-    }
-
-    pub fn get_factories_by_chain(&self, chain: &NamedChain) -> Vec<Address> {
-        let chain_config = self.get_chain_address_book(chain).unwrap();
-        vec![
-            chain_config.exchanges.univ2.uniswapv2.factory,
-            chain_config.exchanges.univ2.sushiswapv2.factory,
-            chain_config.exchanges.univ3.uniswapv3.factory,
-            chain_config.exchanges.univ3.sushiswapv3.factory,
-            chain_config.exchanges.univ3.camelotv3.factory,
-            chain_config.exchanges.univ3.ramsesv2.factory,
-            chain_config.exchanges.univ3.pancakeswapv3.factory,
-        ]
-    }
-
     pub fn get_factory(&self, chain: &NamedChain, exchange_name: ExchangeName) -> Option<Address> {
         let chain_config = self.get_chain_address_book(chain).unwrap();
         match exchange_name {
-            ExchangeName::UniswapV2 => Some(chain_config.exchanges.univ2.uniswapv2.factory),
-            ExchangeName::UniswapV3 => Some(chain_config.exchanges.univ3.uniswapv3.factory),
+            ExchangeName::UniswapV2 => Some(
+                chain_config
+                    .exchanges
+                    .univ2
+                    .get(&exchange_name)
+                    .unwrap()
+                    .factory,
+            ),
+            ExchangeName::UniswapV3 => Some(
+                chain_config
+                    .exchanges
+                    .univ3
+                    .get(&exchange_name)
+                    .unwrap()
+                    .factory,
+            ),
             _ => None,
         }
     }
@@ -324,26 +392,32 @@ impl Addressbook {
     pub fn get_v2_factories(&self, chain: &NamedChain) -> Vec<Address> {
         let chain_config = self.get_chain_address_book(chain).unwrap();
         vec![
-            chain_config.exchanges.univ2.uniswapv2.factory,
-            chain_config.exchanges.univ2.sushiswapv2.factory,
+            chain_config
+                .exchanges
+                .univ2
+                .get(&ExchangeName::UniswapV2)
+                .unwrap()
+                .factory,
+            chain_config
+                .exchanges
+                .univ2
+                .get(&ExchangeName::SushiswapV2)
+                .unwrap()
+                .factory,
         ]
     }
 
     pub fn get_v3_factories(&self, chain: &NamedChain) -> Vec<Address> {
         let chain_config = self.get_chain_address_book(chain).unwrap();
-        let factories = vec![
-            chain_config.exchanges.univ3.uniswapv3.factory,
-            chain_config.exchanges.univ3.sushiswapv3.factory,
-            chain_config.exchanges.univ3.camelotv3.factory,
-            chain_config.exchanges.univ3.ramsesv2.factory,
-            chain_config.exchanges.univ3.pancakeswapv3.factory,
-        ];
+        let exchanges = chain_config.exchanges.univ3.clone();
 
-        // Filter out empty addresses
-        factories
+        let factories: Vec<Address> = exchanges
             .into_iter()
+            .map(|e| e.1.factory)
             .filter(|addr| !addr.is_zero())
-            .collect()
+            .collect();
+
+        factories
     }
 
     // pub fn get_exchange_name(&self, chain: &NamedChain, factory: Address) -> Option<ExchangeName> {
@@ -367,6 +441,7 @@ impl Addressbook {
             NamedChain::Arbitrum => Some(&self.arbitrum),
             NamedChain::Optimism => Some(&self.optimism),
             NamedChain::Mainnet => Some(&self.mainnet),
+            NamedChain::Base => Some(&self.base),
             _ => None,
         }
     }
@@ -430,7 +505,11 @@ mod tests {
             .get_chain_address_book(&NamedChain::Arbitrum)
             .expect("Failed to get Arbitrum config");
 
-        let univ3_config = &arb_config.exchanges.univ3.uniswapv3;
+        let univ3_config = arb_config
+            .exchanges
+            .univ3
+            .get(&ExchangeName::UniswapV3)
+            .unwrap();
 
         // Check factory address
         assert!(!univ3_config.factory.is_zero());
@@ -499,23 +578,6 @@ mod tests {
                 .get_multicall(&chain)
                 .expect(&format!("Failed to get multicall for {:?}", chain));
             assert!(!multicall.is_zero());
-        }
-    }
-
-    #[test]
-    fn test_get_pools_by_chain() {
-        let addressbook =
-            Addressbook::load(Some("./src/addressbook.json")).expect("Failed to load addressbook");
-
-        // Get pools for Arbitrum
-        let pools = addressbook.get_pools_by_chain(&NamedChain::Arbitrum);
-
-        // Verify we got some pools
-        assert!(!pools.is_empty());
-
-        // Check that none are zero addresses
-        for pool in pools {
-            assert!(!pool.is_zero());
         }
     }
 }

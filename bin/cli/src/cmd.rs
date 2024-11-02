@@ -7,7 +7,7 @@ use artemis_core::executors::crosschain_executor::{
     Bridge, CrossChainSwap, CrossChainSwapExecutor, Swap,
 };
 use artemis_core::types::Executor;
-use eyre::{eyre, Error, Result};
+use eyre::{Error, Result};
 use shared::{
     bridge::{bridge_lifi, ARBITRUM_CHAIN_ID, BASE_CHAIN_ID, USDC_ARBITRUM, USDC_BASE},
     config::get_chain_config,
@@ -30,20 +30,22 @@ pub async fn get_uniswap_v2_pools_command(
     let chain_config = get_chain_config(chain).await;
     let provider = Arc::new(chain_config.ws);
     let addressbook = Addressbook::load(None).unwrap();
+    let named_chain = chain.named().unwrap();
+    let factory_address = addressbook.get_factory(&named_chain, exchange).unwrap();
 
-    let factory_address = match chain.kind() {
-        ChainKind::Named(NamedChain::Arbitrum) => match exchange {
-            ExchangeName::UniswapV2 => addressbook.arbitrum.exchanges.univ2.uniswapv2.factory,
-            ExchangeName::SushiswapV2 => addressbook.arbitrum.exchanges.univ2.sushiswapv2.factory,
-            _ => panic!("Choose a uniswap v2 type exchange"),
-        },
-        ChainKind::Named(NamedChain::Mainnet) => match exchange {
-            ExchangeName::UniswapV2 => addressbook.mainnet.exchanges.univ2.uniswapv2.factory,
-            ExchangeName::SushiswapV2 => addressbook.mainnet.exchanges.univ2.sushiswapv2.factory,
-            _ => panic!("Choose a uniswap v2 type exchange"),
-        },
-        _ => panic!("Unsupported chain"),
-    };
+    // let factory_address = match chain.kind() {
+    //     ChainKind::Named(NamedChain::Arbitrum) => match exchange {
+    //         ExchangeName::UniswapV2 => addressbook.arbitrum.exchanges.univ2.uniswapv2.factory,
+    //         ExchangeName::SushiswapV2 => addressbook.arbitrum.exchanges.univ2.sushiswapv2.factory,
+    //         _ => panic!("Choose a uniswap v2 type exchange"),
+    //     },
+    //     ChainKind::Named(NamedChain::Mainnet) => match exchange {
+    //         ExchangeName::UniswapV2 => addressbook.mainnet.exchanges.univ2.uniswapv2.factory,
+    //         ExchangeName::SushiswapV2 => addressbook.mainnet.exchanges.univ2.sushiswapv2.factory,
+    //         _ => panic!("Choose a uniswap v2 type exchange"),
+    //     },
+    //     _ => panic!("Unsupported chain"),
+    // };
 
     info!("Downloading pools from {:?}", factory_address);
     let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
@@ -62,29 +64,8 @@ pub async fn get_uniswap_v3_pools_command(
     let chain_config = get_chain_config(chain).await;
     let provider = Arc::new(chain_config.ws);
     let addressbook = Addressbook::load(None).unwrap();
-
-    // todo: refactor this
-    let factory_address = match chain.kind() {
-        ChainKind::Named(NamedChain::Arbitrum) => match exchange {
-            ExchangeName::UniswapV3 => addressbook.arbitrum.exchanges.univ3.uniswapv3.factory,
-            ExchangeName::SushiswapV3 => addressbook.arbitrum.exchanges.univ3.sushiswapv3.factory,
-            ExchangeName::CamelotV3 => addressbook.arbitrum.exchanges.univ3.camelotv3.factory,
-            ExchangeName::RamsesV2 => addressbook.arbitrum.exchanges.univ3.ramsesv2.factory,
-            ExchangeName::PancakeswapV3 => {
-                addressbook.arbitrum.exchanges.univ3.pancakeswapv3.factory
-            }
-            _ => panic!("Choose a uniswap v3 exchange"),
-        },
-        ChainKind::Named(NamedChain::Mainnet) => match exchange {
-            ExchangeName::UniswapV3 => addressbook.mainnet.exchanges.univ3.uniswapv3.factory,
-            ExchangeName::SushiswapV3 => addressbook.mainnet.exchanges.univ3.sushiswapv3.factory,
-            ExchangeName::PancakeswapV3 => {
-                addressbook.mainnet.exchanges.univ3.pancakeswapv3.factory
-            }
-            _ => panic!("Choose a uniswap v3 exchange"),
-        },
-        _ => panic!("Unsupported chain"),
-    };
+    let named_chain = chain.named().unwrap();
+    let factory_address = addressbook.get_factory(&named_chain, exchange).unwrap();
 
     let from_block = from_block;
     let step = step;
@@ -236,7 +217,7 @@ pub async fn cross_chain_swap_command(
             origin_token: origin_bridge_token,
             destination_chain: destination_chain_name,
             destination_token: destination_bridge_token,
-            bridge_name: BridgeName::Accross,
+            bridge_name: BridgeName::StargateV2,
         },
         swap2: Swap {
             chain: destination_chain_name,
@@ -250,4 +231,41 @@ pub async fn cross_chain_swap_command(
     swap_executor.execute(cc_swap).await?;
 
     Ok(())
+}
+
+mod cmd_test {
+    use crate::cmd::cross_chain_swap_command;
+    use alloy::network::EthereumWallet;
+    use alloy::primitives::{Address, U256};
+    use alloy::signers::local::PrivateKeySigner;
+    use alloy_chains::{Chain, NamedChain};
+    use shared::addressbook::Addressbook;
+    use shared::provider::get_provider;
+    use std::ptr::eq;
+    use std::str::FromStr;
+    use std::sync::Arc;
+
+    const ORIGIN_CHAIN: NamedChain = NamedChain::Arbitrum;
+    const DESTINATION_CHAIN: NamedChain = NamedChain::Base;
+
+    #[tokio::test]
+    async fn test_cross_chain_swap_command() {
+        // Set up environment variable for private key
+        dotenv::dotenv().ok();
+
+        let addressbook = Addressbook::load(None).unwrap();
+        let origin_usdc = addressbook.get_token(&ORIGIN_CHAIN, "usdc").unwrap();
+        let destination_usdt = addressbook.get_token(&DESTINATION_CHAIN, "usdt").unwrap();
+
+        cross_chain_swap_command(
+            "arbitrum",
+            "base",
+            origin_usdc.to_string().as_str(),
+            "weth",
+            destination_usdt.to_string().as_str(),
+            "1000000",
+        )
+        .await
+        .unwrap();
+    }
 }
