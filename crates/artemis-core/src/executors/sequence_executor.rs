@@ -1,6 +1,7 @@
 use std::{collections::HashMap, sync::Arc};
 
 use crate::types::Executor;
+use alloy::providers::WalletProvider;
 use alloy::{
     primitives::{Address, U256},
     signers::k256::elliptic_curve::generic_array::sequence,
@@ -52,6 +53,10 @@ impl TxSequence {
             token_in,
             txs: vec![],
         }
+    }
+
+    pub fn set_sequence(&mut self, sequence: Vec<Tx>) {
+        self.txs = sequence;
     }
 
     pub fn add_swap(&mut self, swap: SwapBlock) {
@@ -122,5 +127,62 @@ impl Executor<TxSequence> for SequenceExecutor {
         }
 
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
+    use shared::{
+        addressbook::Addressbook, provider::get_provider_map, token_manager::TokenManager,
+    };
+    use types::{bridge::BridgeName, exchange::ExchangeName};
+
+    #[tokio::test]
+    async fn test_sequence_executor() {
+        dotenv::dotenv().ok();
+
+        let addressbook = Addressbook::load(None).unwrap();
+        let signer: PrivateKeySigner = std::env::var("DEV_PRIVATE_KEY")
+            .expect("PRIVATE_KEY must be set")
+            .parse()
+            .expect("should parse private key");
+
+        let wallet = EthereumWallet::new(signer);
+        let token_manager = TokenManager::new(wallet).await;
+        let providers = get_provider_map(wallet.clone()).await;
+        let default_wallet_address = providers[&NamedChain::Mainnet].default_signer_address();
+        let executor = SequenceExecutor::new(providers, default_wallet_address);
+
+        let usdc_arbitrum = addressbook.get_usdc(&NamedChain::Arbitrum).unwrap();
+        let weth_arbitrum = addressbook.get_weth(&NamedChain::Arbitrum).unwrap();
+        let usdt_base = addressbook.get_usdt(&NamedChain::Base).unwrap();
+        let weth_base = addressbook.get_weth(&NamedChain::Base).unwrap();
+        let mut txsequence = TxSequence::new(
+            NamedChain::Arbitrum,
+            U256::from(1000000000000000000u128),
+            usdc_arbitrum,
+        );
+
+        txsequence.set_sequence(vec![
+            Tx::Swap(SwapBlock {
+                chain: NamedChain::Arbitrum,
+                exchange_name: ExchangeName::UniswapV3,
+                token_out: weth_arbitrum,
+            }),
+            Tx::Bridge(BridgeBlock {
+                destination_chain: NamedChain::Base,
+                destination_token: weth_base,
+                bridge_name: BridgeName::StargateV2,
+            }),
+            Tx::Swap(SwapBlock {
+                chain: NamedChain::Base,
+                exchange_name: ExchangeName::UniswapV3,
+                token_out: usdt_base,
+            }),
+        ]);
+
+        executor.execute(txsequence).await.unwrap();
     }
 }
