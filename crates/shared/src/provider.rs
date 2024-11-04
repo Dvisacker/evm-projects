@@ -10,8 +10,9 @@ use alloy::{
     transports::BoxTransport,
 };
 use alloy_chains::{Chain, NamedChain};
-use std::env;
-use std::sync::Arc;
+use once_cell::sync::Lazy;
+use std::sync::{Arc, Mutex};
+use std::{collections::HashMap, env};
 
 pub type SignerProvider = FillProvider<
     JoinFill<
@@ -25,6 +26,8 @@ pub type SignerProvider = FillProvider<
     BoxTransport,
     Ethereum,
 >;
+
+static PROVIDER_MAP: Lazy<Mutex<Option<ProviderMap>>> = Lazy::new(|| Mutex::new(None));
 
 pub async fn get_provider(chain: Chain, wallet: EthereumWallet) -> Arc<SignerProvider> {
     let chain = NamedChain::try_from(chain.id());
@@ -72,4 +75,34 @@ pub async fn get_provider(chain: Chain, wallet: EthereumWallet) -> Arc<SignerPro
         }
         _ => panic!("Chain not supported"),
     }
+}
+
+pub type ProviderMap = HashMap<NamedChain, Arc<SignerProvider>>;
+
+pub async fn get_provider_map(wallet: EthereumWallet) -> Arc<ProviderMap> {
+    let mut provider_guard = PROVIDER_MAP.lock().unwrap();
+
+    if provider_guard.is_none() {
+        let mut providers = ProviderMap::new();
+
+        for provider in [
+            NamedChain::Mainnet,
+            NamedChain::Arbitrum,
+            NamedChain::Optimism,
+            NamedChain::Base,
+        ] {
+            providers.insert(
+                provider,
+                get_provider(Chain::from_named(provider), wallet.clone()).await,
+            );
+        }
+
+        *provider_guard = Some(providers);
+    }
+
+    Arc::new(provider_guard.as_ref().unwrap().clone())
+}
+
+pub fn is_provider_map_initialized() -> bool {
+    PROVIDER_MAP.lock().unwrap().is_some()
 }

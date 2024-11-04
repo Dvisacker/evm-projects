@@ -1211,6 +1211,7 @@ dependencies = [
  "alloy-chains",
  "anyhow",
  "async-trait",
+ "dotenv",
  "eyre",
  "futures",
  "shared",

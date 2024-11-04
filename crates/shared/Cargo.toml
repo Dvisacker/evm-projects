@@ -11,20 +11,20 @@ alloy-sol-types = { workspace = true }
 alloy-primitives = { workspace = true }
 alloy-chains = { workspace = true }
 tokio = { workspace = true }
+eyre = { workspace = true }
+tracing = { workspace = true }
+dotenv = { workspace = true }
+once_cell = { workspace = true }
 
 bindings = { path = "../bindings" }
 types = { path = "../types" }
 db = { path = "../db" }
 amms = { path = "../../crates/amms-rs" }
-# artemis-core = { path = "../../crates/artemis-core" }
 diesel = { version = "2.0.0", features = ["postgres", "serde_json", "chrono"] }
-dotenv = "0.15.0"
-once_cell = "1.18.0"
 reqwest = "0.12.9"
 async-trait = "0.1.64"
 futures = "0.3.27"
 anyhow = "1.0.70"
-tracing = { workspace = true }
 tracing-subscriber = "0.3.16"
 foundry-evm = { git = "https://github.com/foundry-rs/foundry.git", branch = "master" }
 revm = { version = "14.0.1", features = [
@@ -33,4 +33,3 @@ revm = { version = "14.0.1", features = [
 clap = { version = "4.2.5", features = ["derive"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1.0"
-eyre = "0.6.10"
