@@ -129,8 +129,19 @@ pub struct Exchanges {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct AaveV3Addresses {
+    pub pool: Address,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Lending {
+    pub aave_v3: AaveV3Addresses,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct ChainAddressBook {
     pub exchanges: Exchanges,
+    pub lending: Lending,
     #[serde(deserialize_with = "deserialize_address")]
     pub multicall: Address,
     #[serde(deserialize_with = "deserialize_address")]
@@ -242,6 +253,10 @@ impl Addressbook {
 
     pub fn get_usdc(&self, chain: &NamedChain) -> Option<Address> {
         self.get_chain_address_book(chain).map(|config| config.usdc)
+    }
+
+    pub fn get_usdt(&self, chain: &NamedChain) -> Option<Address> {
+        self.get_chain_address_book(chain).map(|config| config.usdt)
     }
 
     pub fn get_token(&self, chain: &NamedChain, token_name: &str) -> Option<Address> {
@@ -420,6 +435,32 @@ impl Addressbook {
             NamedChain::Mainnet => Some(&self.mainnet),
             NamedChain::Base => Some(&self.base),
             _ => None,
+        }
+    }
+
+    pub fn get_lending_pool(
+        &self,
+        chain: &NamedChain,
+        protocol: &str,
+    ) -> Result<Address, eyre::Error> {
+        match chain {
+            NamedChain::Mainnet => match protocol {
+                "aave_v3" => Ok(self.mainnet.lending.aave_v3.pool),
+                _ => Err(eyre::eyre!("Unsupported lending protocol")),
+            },
+            NamedChain::Optimism => match protocol {
+                "aave_v3" => Ok(self.optimism.lending.aave_v3.pool),
+                _ => Err(eyre::eyre!("Unsupported lending protocol")),
+            },
+            NamedChain::Base => match protocol {
+                "aave_v3" => Ok(self.base.lending.aave_v3.pool),
+                _ => Err(eyre::eyre!("Unsupported lending protocol")),
+            },
+            NamedChain::Arbitrum => match protocol {
+                "aave_v3" => Ok(self.arbitrum.lending.aave_v3.pool),
+                _ => Err(eyre::eyre!("Unsupported lending protocol")),
+            },
+            _ => Err(eyre::eyre!("Unsupported chain for lending")),
         }
     }
 }

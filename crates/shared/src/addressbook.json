@@ -57,6 +57,11 @@
                 }
             }
         },
+        "lending": {
+            "aave_v3": {
+                "pool": "0x794a61358D68455De9021ca13466193cB1b1d71c"
+            }
+        },
         "multicall": "0x842eC2c7D803033Edf55E478F461FC547Bc54EB2",
         "weth": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
         "usdt": "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9",
@@ -81,6 +86,11 @@
         "usdt": "0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2"
     },
     "optimism": {
+        "lending": {
+            "aave_v3": {
+                "pool": "0x794a61358D68455De9021ca13466193cB1b1d71c"
+            }
+        },
         "exchanges": {
             "univ2": {
                 "uniswapv2": {
@@ -128,6 +138,11 @@
         "usdt": "0x94b008aa00579c1307b0ef2c499ad98a8ce58e58"
     },
     "mainnet": {
+        "lending": {
+            "aave_v3": {
+                "pool": "0x794a61358D68455De9021ca13466193cB1b1d71c"
+            }
+        },
         "exchanges": {
             "univ2": {
                 "uniswapv2": {
