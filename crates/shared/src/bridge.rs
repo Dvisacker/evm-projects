@@ -261,8 +261,6 @@ where
         Err(e) => return Err(eyre!("Error getting balance before: {:?}", e)),
     };
 
-    println!("To token balance before: {:?}", to_token_balance_before);
-
     let tx_request = TransactionRequest::default()
         .to(contract_address)
         .input(data.into())
@@ -270,8 +268,6 @@ where
         .gas_limit(gas_limit.try_into().unwrap())
         .max_fee_per_gas(gas_price.try_into().unwrap())
         .max_priority_fee_per_gas(gas_price.try_into().unwrap());
-
-    // println!("Tx request: {:?}", tx_request);
 
     let pending_tx = origin_chain_provider.send_transaction(tx_request).await?;
     let receipt = pending_tx.get_receipt().await?;
@@ -319,20 +315,11 @@ where
     println!("Sleeping for 5 seconds");
     tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
 
-    println!("To token: {:?}", to_token);
-    println!("To address: {:?}", to_address);
-
     let to_token_balance_after = match to_token.balanceOf(to_address).call().await {
         Ok(balance) => balance._0,
         Err(e) => return Err(eyre!("Error getting balance after: {:?}", e)),
     };
-    println!("To token balance after: {:?}", to_token_balance_after);
     let amount_out = to_token_balance_after - to_token_balance_before;
-
-    println!("Amount out of bridge: {:?}", amount_out);
-
-    // let final_amount = U256::from_str(&quote_response.estimate.to_amount)
-    //     .wrap_err("Failed to parse estimated amount")?;
 
     Ok(amount_out)
 }

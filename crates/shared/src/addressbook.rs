@@ -245,7 +245,6 @@ impl Addressbook {
     }
 
     pub fn get_token(&self, chain: &NamedChain, token_name: &str) -> Option<Address> {
-        println!("Getting token: {:?} for chain: {:?}", token_name, chain);
         let config = self.get_chain_address_book(chain).unwrap();
         match token_name {
             "usdc" => Some(config.usdc),

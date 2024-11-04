@@ -32,21 +32,6 @@ pub async fn get_uniswap_v2_pools_command(
     let addressbook = Addressbook::load(None).unwrap();
     let named_chain = chain.named().unwrap();
     let factory_address = addressbook.get_factory(&named_chain, exchange).unwrap();
-
-    // let factory_address = match chain.kind() {
-    //     ChainKind::Named(NamedChain::Arbitrum) => match exchange {
-    //         ExchangeName::UniswapV2 => addressbook.arbitrum.exchanges.univ2.uniswapv2.factory,
-    //         ExchangeName::SushiswapV2 => addressbook.arbitrum.exchanges.univ2.sushiswapv2.factory,
-    //         _ => panic!("Choose a uniswap v2 type exchange"),
-    //     },
-    //     ChainKind::Named(NamedChain::Mainnet) => match exchange {
-    //         ExchangeName::UniswapV2 => addressbook.mainnet.exchanges.univ2.uniswapv2.factory,
-    //         ExchangeName::SushiswapV2 => addressbook.mainnet.exchanges.univ2.sushiswapv2.factory,
-    //         _ => panic!("Choose a uniswap v2 type exchange"),
-    //     },
-    //     _ => panic!("Unsupported chain"),
-    // };
-
     info!("Downloading pools from {:?}", factory_address);
     let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
     store_uniswap_v2_pools(provider.clone(), chain, exchange, factory_address, &db_url).await?;
