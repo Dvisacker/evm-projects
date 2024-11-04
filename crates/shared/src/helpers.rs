@@ -1,8 +1,15 @@
-use alloy::{network::Network, providers::Provider, transports::Transport};
-use alloy_primitives::{Address, Bytes};
+use alloy::{
+    network::Network,
+    providers::{Provider, WalletProvider},
+    transports::Transport,
+};
+use alloy_primitives::{Address, Bytes, U256};
 use alloy_rpc_types::{BlockId, BlockNumberOrTag};
-use eyre::{anyhow, Result};
+use bindings::ierc20::IERC20;
+use eyre::{eyre, Error, Result};
 use std::sync::Arc;
+
+use crate::provider::SignerProvider;
 
 pub async fn get_contract_creation_block<P, T, N>(
     provider: Arc<P>,
@@ -36,7 +43,7 @@ where
         }
     }
 
-    Err(anyhow!("Contract creation block not found"))
+    Err(eyre!("Contract creation block not found"))
 }
 
 async fn get_code_at_block<P, T, N>(provider: Arc<P>, address: Address, block: u64) -> Result<Bytes>
@@ -50,6 +57,31 @@ where
     let block_id = BlockId::Number(block_number);
     let result = provider.get_code_at(address).block_id(block_id).await?;
     Ok(result)
+}
+
+pub async fn approve_token_if_needed(
+    provider: Arc<SignerProvider>,
+    token: Address,
+    spender: Address,
+    amount: U256,
+) -> Result<(), Error> {
+    let token = IERC20::new(token, provider.clone());
+    let wallet_address = provider.default_signer_address();
+
+    // Check current allowance
+    let allowance: U256 = match token.allowance(wallet_address, spender).call().await {
+        Ok(allowance) => allowance._0,
+        Err(e) => {
+            return Err(eyre!("Failed to get allowance: {}", e));
+        }
+    };
+
+    if allowance < amount {
+        // Approve if needed
+        token.approve(spender, amount).send().await?;
+    }
+
+    Ok(())
 }
 
 #[cfg(test)]
