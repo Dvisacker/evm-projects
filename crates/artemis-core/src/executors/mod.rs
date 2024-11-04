@@ -3,5 +3,6 @@
 //! `SubmitTx` action and submit it to the mempool.
 
 pub mod crosschain_executor;
-/// This executor submits transactions to the public mempool.
 pub mod mempool_executor;
+/// This executor submits transactions to the public mempool.
+pub mod sequence_executor;

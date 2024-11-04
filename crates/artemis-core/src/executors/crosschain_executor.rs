@@ -65,7 +65,7 @@ impl CrossChainSwapExecutor {
 #[async_trait]
 impl Executor<CrossChainSwap> for CrossChainSwapExecutor {
     async fn execute(&self, action: CrossChainSwap) -> Result<()> {
-        let amount_out = shared::swap::swap(
+        let mut amount_out = shared::swap::swap(
             self.origin_chain_provider.clone(),
             action.swap1.chain,
             action.swap1.exchange_name,
@@ -77,7 +77,7 @@ impl Executor<CrossChainSwap> for CrossChainSwapExecutor {
         .await
         .context("Error making swap on origin chain")?;
 
-        let amount_out = shared::bridge::bridge_lifi(
+        amount_out = shared::bridge::bridge_lifi(
             self.origin_chain_provider.clone(),
             self.destination_chain_provider.clone(),
             action.bridge.origin_chain.into(),
@@ -91,6 +91,11 @@ impl Executor<CrossChainSwap> for CrossChainSwapExecutor {
         )
         .await
         .context("Error bridging tokens")?;
+
+        println!(
+            "Swapping amount out: {:?} of {:?} for {:?}",
+            amount_out, action.swap2.token_in, action.swap2.token_out
+        );
 
         shared::swap::swap(
             self.destination_chain_provider.clone(),
