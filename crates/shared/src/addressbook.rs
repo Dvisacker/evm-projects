@@ -7,6 +7,7 @@ use std::path::PathBuf;
 use std::str::FromStr;
 use std::{collections::HashMap, env};
 use types::exchange::{ExchangeName, ExchangeType};
+use types::token::NamedToken;
 
 fn deserialize_address<'de, D>(deserializer: D) -> Result<Address, D::Error>
 where
@@ -139,17 +140,22 @@ pub struct Lending {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct ChainAddressBook {
-    pub exchanges: Exchanges,
-    pub lending: Lending,
-    #[serde(deserialize_with = "deserialize_address")]
-    pub multicall: Address,
+pub struct Tokens {
     #[serde(deserialize_with = "deserialize_address")]
     pub weth: Address,
     #[serde(deserialize_with = "deserialize_address")]
     pub usdc: Address,
     #[serde(deserialize_with = "deserialize_address")]
     pub usdt: Address,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct ChainAddressBook {
+    pub exchanges: Exchanges,
+    pub lending: Lending,
+    pub tokens: Tokens,
+    #[serde(deserialize_with = "deserialize_address")]
+    pub multicall: Address,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -248,23 +254,26 @@ impl Addressbook {
     }
 
     pub fn get_weth(&self, chain: &NamedChain) -> Option<Address> {
-        self.get_chain_address_book(chain).map(|config| config.weth)
+        self.get_chain_address_book(chain)
+            .map(|config| config.tokens.weth)
     }
 
     pub fn get_usdc(&self, chain: &NamedChain) -> Option<Address> {
-        self.get_chain_address_book(chain).map(|config| config.usdc)
+        self.get_chain_address_book(chain)
+            .map(|config| config.tokens.usdc)
     }
 
     pub fn get_usdt(&self, chain: &NamedChain) -> Option<Address> {
-        self.get_chain_address_book(chain).map(|config| config.usdt)
+        self.get_chain_address_book(chain)
+            .map(|config| config.tokens.usdt)
     }
 
-    pub fn get_token(&self, chain: &NamedChain, token_name: &str) -> Option<Address> {
+    pub fn get_token(&self, chain: &NamedChain, token_name: &NamedToken) -> Option<Address> {
         let config = self.get_chain_address_book(chain).unwrap();
         match token_name {
-            "usdc" => Some(config.usdc),
-            "weth" => Some(config.weth),
-            "usdt" => Some(config.usdt),
+            NamedToken::USDC => Some(config.tokens.usdc),
+            NamedToken::WETH => Some(config.tokens.weth),
+            NamedToken::USDT => Some(config.tokens.usdt),
             _ => None,
         }
     }
