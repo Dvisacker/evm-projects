@@ -6982,6 +6982,7 @@ dependencies = [
  "foundry-config 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "foundry-evm",
  "futures",
+ "lazy_static",
  "once_cell",
  "reqwest 0.12.9",
  "revm 14.0.3",
@@ -7849,7 +7850,9 @@ version = "0.1.0"
 dependencies = [
  "alloy",
  "alloy-chains",
+ "alloy-primitives 0.8.9",
  "alloy-rpc-types",
+ "bindings",
  "chrono",
  "clap",
  "db",

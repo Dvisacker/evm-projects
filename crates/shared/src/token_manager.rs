@@ -1,14 +1,13 @@
 use crate::addressbook::Addressbook;
-use crate::provider::{get_provider_map, ProviderMap, SignerProvider};
-use alloy::network::EthereumWallet;
+use crate::provider::{get_provider_map, ProviderMap};
 use alloy::sol;
-use alloy::transports::BoxTransport;
 use alloy_chains::NamedChain;
 use alloy_primitives::Address;
+use lazy_static::lazy_static;
 use std::collections::HashMap;
 use std::error::Error;
 use std::sync::{Arc, Mutex};
-use IERC20::IERC20Instance;
+use types::token::{NamedToken, Token, TokenIsh};
 
 sol! {
     #[derive(Debug, PartialEq, Eq)]
@@ -22,7 +21,9 @@ sol! {
     }
 }
 
-type Token = IERC20Instance<BoxTransport, Arc<SignerProvider>>;
+lazy_static! {
+    static ref TOKEN_MANAGER: Mutex<Option<TokenManager>> = Mutex::new(None);
+}
 
 pub struct TokenManager {
     tokens: Mutex<HashMap<Address, Token>>,
@@ -31,18 +32,47 @@ pub struct TokenManager {
 }
 
 impl TokenManager {
-    pub async fn new(wallet: EthereumWallet) -> Self {
-        let providers = get_provider_map(wallet).await;
+    pub async fn instance() -> Arc<TokenManager> {
+        if let Ok(manager) = TOKEN_MANAGER.lock() {
+            if let Some(manager) = manager.as_ref() {
+                return Arc::new(manager.clone());
+            }
+        }
+
+        let new_instance = Self::new().await;
+
+        if let Ok(mut manager) = TOKEN_MANAGER.lock() {
+            *manager = Some(new_instance);
+            return Arc::new(manager.as_ref().unwrap().clone());
+        }
+
+        panic!("Failed to initialize TokenManager");
+    }
+
+    async fn new() -> Self {
+        let providers = get_provider_map().await;
         let addressbook = Addressbook::load(None).unwrap();
 
         TokenManager {
             tokens: Mutex::new(HashMap::new()),
             addressbook: Arc::new(addressbook),
-            providers: providers,
+            providers,
         }
     }
 
-    pub fn get(&self, address: Address, chain: &NamedChain) -> Result<Token, Box<dyn Error>> {
+    pub fn clone(&self) -> Self {
+        TokenManager {
+            tokens: Mutex::new(HashMap::new()),
+            addressbook: self.addressbook.clone(),
+            providers: self.providers.clone(),
+        }
+    }
+
+    pub fn get_by_address(
+        &self,
+        address: Address,
+        chain: &NamedChain,
+    ) -> Result<Token, Box<dyn Error>> {
         let mut tokens = self
             .tokens
             .lock()
@@ -52,14 +82,20 @@ impl TokenManager {
             Ok(token.clone())
         } else {
             let provider = self.providers.get(chain).unwrap();
-            let new_token = IERC20::new(address, provider.clone());
+            let new_token = Token::new(address, provider.clone());
             tokens.insert(address, new_token.clone());
             Ok(new_token)
         }
     }
 
-    pub fn get_by_name(&self, chain: &NamedChain, name: &str) -> Result<Token, Box<dyn Error>> {
-        let address = self.addressbook.get_token(chain, name).unwrap();
-        self.get(address, chain)
+    pub fn get(&self, chain: &NamedChain, token: &TokenIsh) -> Result<Token, Box<dyn Error>> {
+        match token {
+            TokenIsh::Named(named) => {
+                let address = self.addressbook.get_token(chain, named).unwrap();
+                self.get_by_address(address, chain)
+            }
+            TokenIsh::Address(address) => self.get_by_address(*address, chain),
+            TokenIsh::Token(contract) => Ok(contract.clone()),
+        }
     }
 }
