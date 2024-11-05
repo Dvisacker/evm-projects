@@ -4,11 +4,13 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-serde = { version = "1", features = ["derive"] }
-serde_json = "1.0"
+alloy-primitives = { workspace = true }
 alloy-chains = { workspace = true }
-db = { path = "../db" }
 alloy = { workspace = true }
 alloy-rpc-types = { workspace = true }
+bindings = { path = "../bindings" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1.0"
+db = { path = "../db" }
 clap = { version = "4.2.5", features = ["derive"] }
 chrono = { version = "0.4", features = ["serde"] }
