@@ -3,11 +3,12 @@ use alloy::providers::Provider;
 use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
 use alloy_chains::{Chain, NamedChain};
 use alloy_primitives::U256;
-use artemis_core::executors::crosschain_executor::{
-    Bridge, CrossChainSwap, CrossChainSwapExecutor, Swap,
+use artemis_core::executors::sequence_executor::{
+    BridgeBlock, SequenceExecutor, SwapBlock, TxBlock, TxSequence,
 };
 use artemis_core::types::Executor;
 use eyre::{Error, Result};
+use shared::provider::{get_default_wallet, get_provider_map};
 use shared::token_manager::TokenManager;
 use shared::{
     bridge::{bridge_lifi, ARBITRUM_CHAIN_ID, BASE_CHAIN_ID, USDC_ARBITRUM, USDC_BASE},
@@ -184,34 +185,32 @@ pub async fn cross_chain_swap_command(
     let destination_bridge_token = token_manager
         .get(&destination_chain_name, &bridge_token)
         .unwrap();
+    let providers = get_provider_map().await;
+    let default_wallet: EthereumWallet = get_default_wallet();
+    let default_wallet_address = default_wallet.default_signer().address();
 
-    let swap_executor = CrossChainSwapExecutor::new(wallet_address).await;
+    let swap_executor = SequenceExecutor::new(providers, default_wallet_address);
 
-    let cc_swap = CrossChainSwap {
-        swap1: Swap {
-            chain: origin_chain_name,
+    let mut seq = TxSequence::new(origin_chain_name, amount_in, *origin_token_in.address());
+
+    seq.set_sequence(vec![
+        TxBlock::Swap(SwapBlock {
+            chain: NamedChain::Arbitrum,
             exchange_name: ExchangeName::UniswapV3,
-            token_in: *origin_token_in.address(),
             token_out: *origin_bridge_token.address(),
-            amount_in,
-        },
-        bridge: Bridge {
-            origin_chain: origin_chain_name,
-            origin_token: *origin_bridge_token.address(),
+        }),
+        TxBlock::Bridge(BridgeBlock {
             destination_chain: destination_chain_name,
             destination_token: *destination_bridge_token.address(),
             bridge_name: BridgeName::StargateV2,
-        },
-        swap2: Swap {
+        }),
+        TxBlock::Swap(SwapBlock {
             chain: destination_chain_name,
             exchange_name: ExchangeName::UniswapV3,
-            token_in: *destination_bridge_token.address(),
             token_out: *destination_token_out.address(),
-            amount_in: U256::from(0),
-        },
-    };
-
-    swap_executor.execute(cc_swap).await?;
+        }),
+    ]);
+    swap_executor.execute(seq).await?;
 
     Ok(())
 }

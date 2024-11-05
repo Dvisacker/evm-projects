@@ -31,7 +31,7 @@ pub struct BridgeBlock {
     pub bridge_name: types::bridge::BridgeName,
 }
 
-enum Tx {
+pub enum TxBlock {
     Swap(SwapBlock),
     Bridge(BridgeBlock),
 }
@@ -40,7 +40,7 @@ pub struct TxSequence {
     origin_chain: NamedChain,
     amount_in: U256,
     token_in: Address,
-    txs: Vec<Tx>,
+    txs: Vec<TxBlock>,
 }
 
 impl TxSequence {
@@ -53,16 +53,16 @@ impl TxSequence {
         }
     }
 
-    pub fn set_sequence(&mut self, sequence: Vec<Tx>) {
+    pub fn set_sequence(&mut self, sequence: Vec<TxBlock>) {
         self.txs = sequence;
     }
 
     pub fn add_swap(&mut self, swap: SwapBlock) {
-        self.txs.push(Tx::Swap(swap));
+        self.txs.push(TxBlock::Swap(swap));
     }
 
     pub fn add_bridge(&mut self, bridge: BridgeBlock) {
-        self.txs.push(Tx::Bridge(bridge));
+        self.txs.push(TxBlock::Bridge(bridge));
     }
 }
 
@@ -83,7 +83,7 @@ impl Executor<TxSequence> for SequenceExecutor {
         let mut token_in = sequence.token_in;
         for block in sequence.txs {
             match block {
-                Tx::Swap(swap) => {
+                TxBlock::Swap(swap) => {
                     amount_in = shared::swap::swap(
                         self.providers[&swap.chain].clone(),
                         current_chain,
@@ -99,7 +99,7 @@ impl Executor<TxSequence> for SequenceExecutor {
                     current_chain = swap.chain;
                     token_in = swap.token_out;
                 }
-                Tx::Bridge(bridge) => {
+                TxBlock::Bridge(bridge) => {
                     amount_in = shared::bridge::bridge_lifi(
                         self.providers[&current_chain].clone(),
                         self.providers[&bridge.destination_chain].clone(),
@@ -175,17 +175,17 @@ mod tests {
             TxSequence::new(NamedChain::Arbitrum, amount_usdc, *usdc_arbitrum.address());
 
         txsequence.set_sequence(vec![
-            Tx::Swap(SwapBlock {
+            TxBlock::Swap(SwapBlock {
                 chain: NamedChain::Arbitrum,
                 exchange_name: ExchangeName::UniswapV3,
                 token_out: *weth_arbitrum.address(),
             }),
-            Tx::Bridge(BridgeBlock {
+            TxBlock::Bridge(BridgeBlock {
                 destination_chain: NamedChain::Base,
                 destination_token: *weth_base.address(),
                 bridge_name: BridgeName::StargateV2,
             }),
-            Tx::Swap(SwapBlock {
+            TxBlock::Swap(SwapBlock {
                 chain: NamedChain::Base,
                 exchange_name: ExchangeName::UniswapV3,
                 token_out: *usdt_base.address(),
