@@ -77,7 +77,6 @@ pub async fn approve_token_if_needed(
     };
 
     if allowance < amount {
-        // Approve if needed
         token.approve(spender, amount).send().await?;
     }
 

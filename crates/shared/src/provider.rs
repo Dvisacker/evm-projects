@@ -7,6 +7,7 @@ use alloy::{
         },
         Identity, ProviderBuilder, RootProvider,
     },
+    signers::local::PrivateKeySigner,
     transports::BoxTransport,
 };
 use alloy_chains::{Chain, NamedChain};
@@ -28,6 +29,19 @@ pub type SignerProvider = FillProvider<
 >;
 
 static PROVIDER_MAP: Lazy<Mutex<Option<ProviderMap>>> = Lazy::new(|| Mutex::new(None));
+
+pub fn get_default_signer() -> PrivateKeySigner {
+    std::env::var("DEV_PRIVATE_KEY")
+        .expect("PRIVATE_KEY must be set")
+        .parse()
+        .expect("should parse private key")
+}
+
+pub fn get_default_wallet() -> EthereumWallet {
+    let signer: PrivateKeySigner = get_default_signer();
+    let wallet = EthereumWallet::new(signer);
+    wallet
+}
 
 pub async fn get_provider(chain: Chain, wallet: EthereumWallet) -> Arc<SignerProvider> {
     let chain = NamedChain::try_from(chain.id());
@@ -79,10 +93,11 @@ pub async fn get_provider(chain: Chain, wallet: EthereumWallet) -> Arc<SignerPro
 
 pub type ProviderMap = HashMap<NamedChain, Arc<SignerProvider>>;
 
-pub async fn get_provider_map(wallet: EthereumWallet) -> Arc<ProviderMap> {
+pub async fn get_provider_map() -> Arc<ProviderMap> {
     let mut provider_guard = PROVIDER_MAP.lock().unwrap();
 
     if provider_guard.is_none() {
+        let wallet = get_default_wallet();
         let mut providers = ProviderMap::new();
 
         for provider in [
