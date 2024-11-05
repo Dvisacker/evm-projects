@@ -1,6 +1,6 @@
 pub mod cmd;
 use alloy::primitives::Address;
-use alloy_chains::Chain;
+use alloy_chains::{Chain, NamedChain};
 use clap::{Args, Parser, Subcommand};
 use eyre::Error;
 use shared::amm_utils::{activate_pools, get_amm_value};
@@ -11,6 +11,7 @@ use std::sync::Arc;
 use tracing::info;
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 use types::exchange::ExchangeName;
+use types::token::TokenIsh;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -38,20 +39,23 @@ enum Commands {
         #[arg(short, long)]
         amount_in: String,
     },
-    CrossChainSwap {
-        #[arg(short, long)]
-        origin_chain: String,
-        #[arg(short, long)]
-        destination_chain: String,
-        #[arg(short, long)]
-        origin_token_in_address: String,
-        #[arg(short, long)]
-        bridge_token: String,
-        #[arg(short, long)]
-        destination_token_out_address: String,
-        #[arg(short, long)]
-        amount_in: String,
-    },
+    CrossChainSwap(CrossChainSwapArgs),
+}
+
+#[derive(Args)]
+struct CrossChainSwapArgs {
+    #[arg(short, long)]
+    origin_chain: NamedChain,
+    #[arg(short, long)]
+    destination_chain: NamedChain,
+    #[arg(short, long)]
+    origin_token: TokenIsh,
+    #[arg(short, long)]
+    bridge_token: TokenIsh,
+    #[arg(short, long)]
+    destination_token: TokenIsh,
+    #[arg(short, long)]
+    amount_in: String,
 }
 
 #[derive(Args)]
@@ -195,21 +199,14 @@ async fn main() -> Result<(), Error> {
         } => {
             cmd::bridge_command(from_chain, to_chain, amount_in).await?;
         }
-        Commands::CrossChainSwap {
-            origin_chain,
-            destination_chain,
-            origin_token_in_address,
-            bridge_token,
-            destination_token_out_address,
-            amount_in,
-        } => {
+        Commands::CrossChainSwap(args) => {
             cmd::cross_chain_swap_command(
-                origin_chain,
-                destination_chain,
-                origin_token_in_address,
-                bridge_token,
-                destination_token_out_address,
-                amount_in,
+                args.origin_chain,
+                args.destination_chain,
+                args.origin_token.clone(),
+                args.bridge_token.clone(),
+                args.destination_token.clone(),
+                &args.amount_in,
             )
             .await?;
         }

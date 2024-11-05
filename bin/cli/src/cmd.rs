@@ -1,13 +1,14 @@
 use alloy::primitives::Address;
 use alloy::providers::Provider;
 use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
-use alloy_chains::{Chain, ChainKind, NamedChain};
+use alloy_chains::{Chain, NamedChain};
 use alloy_primitives::U256;
 use artemis_core::executors::crosschain_executor::{
     Bridge, CrossChainSwap, CrossChainSwapExecutor, Swap,
 };
 use artemis_core::types::Executor;
 use eyre::{Error, Result};
+use shared::token_manager::TokenManager;
 use shared::{
     bridge::{bridge_lifi, ARBITRUM_CHAIN_ID, BASE_CHAIN_ID, USDC_ARBITRUM, USDC_BASE},
     config::get_chain_config,
@@ -17,6 +18,7 @@ use shared::{
 use std::{str::FromStr, sync::Arc};
 use tracing::info;
 use types::bridge::BridgeName;
+use types::token::{NamedToken, TokenIsh};
 // use eyre::{Error};
 use shared::addressbook::Addressbook;
 use shared::amm_utils::{store_uniswap_v2_pools, store_uniswap_v3_pools};
@@ -155,60 +157,56 @@ pub async fn bridge_command(from_chain: &str, to_chain: &str, amount: &str) -> R
 }
 
 pub async fn cross_chain_swap_command(
-    origin_chain: &str,
-    destination_chain: &str,
-    origin_token_in_address: &str,
-    bridge_token: &str, //name of the token to bridge (USDC or WETH)
-    destination_token_out_address: &str,
+    origin_chain_name: NamedChain,
+    destination_chain_name: NamedChain,
+    origin_token_in: TokenIsh,
+    bridge_token: TokenIsh, //name of the token to bridge (USDC or WETH)
+    destination_token_out: TokenIsh,
     amount_in: &str,
 ) -> Result<(), Error> {
     let signer: PrivateKeySigner = std::env::var("DEV_PRIVATE_KEY")
         .expect("PRIVATE_KEY must be set")
         .parse()
         .expect("should parse private key");
-    let wallet = EthereumWallet::new(signer.clone());
     let wallet_address = signer.address();
+    let token_manager = TokenManager::instance().await;
 
-    let origin_chain_name = NamedChain::from_str(origin_chain).unwrap();
-    let origin_chain = Chain::from_named(origin_chain_name);
-    let destination_chain_name = NamedChain::from_str(destination_chain).unwrap();
-    let destination_chain = Chain::from_named(destination_chain_name);
-    let origin_token_in = Address::from_str(origin_token_in_address).unwrap();
-    let destination_token_out = Address::from_str(destination_token_out_address).unwrap();
+    let origin_token_in = token_manager
+        .get(&origin_chain_name, &origin_token_in)
+        .unwrap();
+    let destination_token_out = token_manager
+        .get(&destination_chain_name, &destination_token_out)
+        .unwrap();
     let amount_in = U256::from_str(amount_in).unwrap();
-    let origin_provider = get_provider(origin_chain, wallet.clone()).await;
-    let destination_provider = get_provider(destination_chain, wallet.clone()).await;
-    let addressbook = Addressbook::load(None).unwrap();
-    let origin_bridge_token = addressbook
-        .get_token(&origin_chain_name, bridge_token)
+    let origin_bridge_token = token_manager
+        .get(&origin_chain_name, &bridge_token)
         .unwrap();
-    let destination_bridge_token = addressbook
-        .get_token(&destination_chain_name, bridge_token)
+    let destination_bridge_token = token_manager
+        .get(&destination_chain_name, &bridge_token)
         .unwrap();
 
-    let swap_executor =
-        CrossChainSwapExecutor::new(origin_provider, destination_provider, wallet_address);
+    let swap_executor = CrossChainSwapExecutor::new(wallet_address).await;
 
     let cc_swap = CrossChainSwap {
         swap1: Swap {
             chain: origin_chain_name,
             exchange_name: ExchangeName::UniswapV3,
-            token_in: origin_token_in,
-            token_out: origin_bridge_token,
+            token_in: *origin_token_in.address(),
+            token_out: *origin_bridge_token.address(),
             amount_in,
         },
         bridge: Bridge {
             origin_chain: origin_chain_name,
-            origin_token: origin_bridge_token,
+            origin_token: *origin_bridge_token.address(),
             destination_chain: destination_chain_name,
-            destination_token: destination_bridge_token,
+            destination_token: *destination_bridge_token.address(),
             bridge_name: BridgeName::StargateV2,
         },
         swap2: Swap {
             chain: destination_chain_name,
             exchange_name: ExchangeName::UniswapV3,
-            token_in: destination_bridge_token,
-            token_out: destination_token_out,
+            token_in: *destination_bridge_token.address(),
+            token_out: *destination_token_out.address(),
             amount_in: U256::from(0),
         },
     };
@@ -229,25 +227,21 @@ mod cmd_test {
     use std::ptr::eq;
     use std::str::FromStr;
     use std::sync::Arc;
+    use types::token::{NamedToken, TokenIsh};
 
     const ORIGIN_CHAIN: NamedChain = NamedChain::Arbitrum;
     const DESTINATION_CHAIN: NamedChain = NamedChain::Base;
 
     #[tokio::test]
     async fn test_cross_chain_swap_command() {
-        // Set up environment variable for private key
         dotenv::dotenv().ok();
 
-        let addressbook = Addressbook::load(None).unwrap();
-        let origin_usdc = addressbook.get_token(&ORIGIN_CHAIN, "usdc").unwrap();
-        let destination_usdt = addressbook.get_token(&DESTINATION_CHAIN, "usdt").unwrap();
-
         cross_chain_swap_command(
-            "arbitrum",
-            "base",
-            origin_usdc.to_string().as_str(),
-            "weth",
-            destination_usdt.to_string().as_str(),
+            ORIGIN_CHAIN,
+            DESTINATION_CHAIN,
+            TokenIsh::Named(NamedToken::USDC),
+            TokenIsh::Named(NamedToken::WETH),
+            TokenIsh::Named(NamedToken::USDT),
             "1000000",
         )
         .await

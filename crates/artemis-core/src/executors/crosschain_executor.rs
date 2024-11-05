@@ -5,12 +5,11 @@ use alloy::primitives::{Address, U256};
 use alloy_chains::NamedChain;
 use async_trait::async_trait;
 use eyre::{Context, Result};
-use shared::provider::SignerProvider;
+use shared::provider::{get_provider_map, ProviderMap, SignerProvider};
 
 /// An executor that sends transactions to the mempool.
 pub struct CrossChainSwapExecutor {
-    origin_chain_provider: Arc<SignerProvider>,
-    destination_chain_provider: Arc<SignerProvider>,
+    provider_map: Arc<ProviderMap>,
     wallet_address: Address,
 }
 
@@ -49,15 +48,11 @@ pub struct Bridge {
 }
 
 impl CrossChainSwapExecutor {
-    pub fn new(
-        origin_chain_provider: Arc<SignerProvider>,
-        destination_chain_provider: Arc<SignerProvider>,
-        wallet_address: Address,
-    ) -> Self {
+    pub async fn new(wallet_address: Address) -> Self {
+        let provider_map = get_provider_map().await;
         Self {
-            origin_chain_provider,
-            destination_chain_provider,
             wallet_address,
+            provider_map,
         }
     }
 }
@@ -65,8 +60,10 @@ impl CrossChainSwapExecutor {
 #[async_trait]
 impl Executor<CrossChainSwap> for CrossChainSwapExecutor {
     async fn execute(&self, action: CrossChainSwap) -> Result<()> {
+        let origin_chain_provider = self.provider_map.get(&action.swap1.chain).unwrap();
+        let destination_chain_provider = self.provider_map.get(&action.swap2.chain).unwrap();
         let mut amount_out = shared::swap::swap(
-            self.origin_chain_provider.clone(),
+            origin_chain_provider.clone(),
             action.swap1.chain,
             action.swap1.exchange_name,
             self.wallet_address,
@@ -78,8 +75,8 @@ impl Executor<CrossChainSwap> for CrossChainSwapExecutor {
         .context("Error making swap on origin chain")?;
 
         amount_out = shared::bridge::bridge_lifi(
-            self.origin_chain_provider.clone(),
-            self.destination_chain_provider.clone(),
+            origin_chain_provider.clone(),
+            destination_chain_provider.clone(),
             action.bridge.origin_chain.into(),
             action.bridge.destination_chain.into(),
             action.bridge.origin_token,
@@ -98,7 +95,7 @@ impl Executor<CrossChainSwap> for CrossChainSwapExecutor {
         );
 
         shared::swap::swap(
-            self.destination_chain_provider.clone(),
+            destination_chain_provider.clone(),
             action.swap2.chain,
             action.swap2.exchange_name,
             self.wallet_address,
