@@ -1,6 +1,7 @@
 use alloy::network::Ethereum;
 use alloy::{hex, sol};
 use alloy::{providers::Provider, transports::Transport};
+use alloy_chains::NamedChain;
 use alloy_primitives::{Address, U256};
 use alloy_rpc_types::TransactionRequest;
 use eyre::{eyre, Context, Result};
@@ -197,8 +198,8 @@ pub struct LiFiIncludedStep {
 pub async fn bridge_lifi<T, P>(
     origin_chain_provider: Arc<P>,
     destination_chain_provider: Arc<P>,
-    from_chain_id: u64,
-    to_chain_id: u64,
+    from_chain: NamedChain,
+    to_chain: NamedChain,
     from_token_address: Address,
     to_token_address: Address,
     amonut_in: U256,
@@ -214,6 +215,8 @@ where
     let client = reqwest::Client::new();
     let from_token = IERC20::new(from_token_address, origin_chain_provider.clone());
     let to_token = IERC20::new(to_token_address, destination_chain_provider.clone());
+    let from_chain_id: u64 = from_chain.into();
+    let to_chain_id: u64 = to_chain.into();
 
     let quote_request = LiFiQuoteRequest {
         fromChain: from_chain_id.to_string(),
@@ -326,42 +329,49 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::{addressbook::Addressbook, provider::get_provider};
+    use crate::{
+        addressbook::Addressbook,
+        helpers::parse_token_units,
+        provider::{get_default_signer, get_provider, get_provider_map},
+        token_manager::TokenManager,
+    };
 
     use super::*;
     use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
     use alloy_chains::{Chain, NamedChain};
     use std::str::FromStr;
+    use types::token::{NamedToken, TokenIsh};
 
     #[tokio::test]
     async fn test_bridge_usdc_arbitrum_to_base() -> Result<()> {
         dotenv::dotenv().ok();
 
-        let signer: PrivateKeySigner = std::env::var("DEV_PRIVATE_KEY")
-            .expect("PRIVATE_KEY must be set")
-            .parse()
-            .expect("should parse private key");
-
+        let addressbook = Addressbook::load(None).unwrap();
+        let signer: PrivateKeySigner = get_default_signer();
         let wallet_address = signer.address();
-        let wallet = EthereumWallet::new(signer);
-        let origin_provider =
-            get_provider(Chain::from_named(NamedChain::Arbitrum), wallet.clone()).await;
-        let destination_provider =
-            get_provider(Chain::from_named(NamedChain::Base), wallet.clone()).await;
+        let provider_map = get_provider_map().await;
+        let origin_provider = provider_map.get(&NamedChain::Arbitrum).unwrap();
+        let destination_provider = provider_map.get(&NamedChain::Base).unwrap();
         let from_address = wallet_address;
         let to_address = wallet_address;
-        let usdc_arb = Address::from_str(USDC_ARBITRUM).expect("Invalid USDC Arbitrum address");
-        let usdc_base = Address::from_str(USDC_BASE).expect("Invalid USDC Base address");
+        let usdc_arb = addressbook
+            .get_token(&NamedChain::Arbitrum, &NamedToken::USDC)
+            .unwrap();
+        let usdc_base = addressbook
+            .get_token(&NamedChain::Base, &NamedToken::USDC)
+            .unwrap();
+        let from_chain = NamedChain::Arbitrum;
+        let to_chain = NamedChain::Base;
         let bridge_name = BridgeName::Accross;
 
         // Amount to bridge (e.g., 1 USDC = 1_000_000 because USDC has 6 decimals)
         let amount = U256::from(1_000_000u64);
 
         let result = bridge_lifi(
-            origin_provider,
-            destination_provider,
-            ARBITRUM_CHAIN_ID,
-            BASE_CHAIN_ID,
+            origin_provider.clone(),
+            destination_provider.clone(),
+            from_chain,
+            to_chain,
             usdc_arb,
             usdc_base,
             amount,
@@ -381,13 +391,8 @@ mod tests {
     #[tokio::test]
     async fn test_bridge_weth_arbitrum_to_base() -> Result<()> {
         dotenv::dotenv().ok();
-
         let addressbook = Addressbook::load(None).unwrap();
-        let signer: PrivateKeySigner = std::env::var("DEV_PRIVATE_KEY")
-            .expect("PRIVATE_KEY must be set")
-            .parse()
-            .expect("should parse private key");
-
+        let signer: PrivateKeySigner = get_default_signer();
         let wallet_address = signer.address();
         let wallet = EthereumWallet::new(signer);
         let origin_provider =
@@ -398,16 +403,16 @@ mod tests {
         let to_address = wallet_address;
         let weth_arb = addressbook.get_weth(&NamedChain::Arbitrum).unwrap();
         let weth_base = addressbook.get_weth(&NamedChain::Base).unwrap();
+        let from_chain = NamedChain::Arbitrum;
+        let to_chain = NamedChain::Base;
         let bridge_name = BridgeName::StargateV2;
-
-        // Amount to bridge (e.g., 0.0004 WETH = 400_000_000)
-        let amount = U256::from(400000000000000u128);
+        let amount = parse_token_units(&from_chain, &TokenIsh::Address(weth_arb), "0.0004").await?;
 
         let result = bridge_lifi(
             origin_provider,
             destination_provider,
-            ARBITRUM_CHAIN_ID,
-            BASE_CHAIN_ID,
+            from_chain,
+            to_chain,
             weth_arb,
             weth_base,
             amount,
