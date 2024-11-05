@@ -134,12 +134,12 @@ mod tests {
         providers::WalletProvider,
         signers::local::PrivateKeySigner,
     };
-    use shared::provider::SignerProvider;
     use shared::{
         addressbook::Addressbook,
         provider::{get_default_wallet, get_provider_map},
         token_manager::TokenManager,
     };
+    use shared::{helpers::parse_token_units, provider::SignerProvider};
     use types::{
         bridge::BridgeName,
         exchange::ExchangeName,
@@ -168,8 +168,13 @@ mod tests {
             .get(&NamedChain::Base, &TokenIsh::Named(NamedToken::USDT))
             .unwrap();
 
-        let amount_usdc = parse_units("1", 6).unwrap().into();
-        println!("amount_usdc: {}", amount_usdc);
+        let amount_usdc = parse_token_units(
+            &NamedChain::Arbitrum,
+            &TokenIsh::Address(*usdc_arbitrum.address()),
+            "1",
+        )
+        .await
+        .unwrap();
 
         let mut txsequence =
             TxSequence::new(NamedChain::Arbitrum, amount_usdc, *usdc_arbitrum.address());

@@ -3,13 +3,15 @@ use alloy::{
     providers::{Provider, WalletProvider},
     transports::Transport,
 };
-use alloy_primitives::{Address, Bytes, U256};
+use alloy_chains::NamedChain;
+use alloy_primitives::{utils::parse_units, Address, Bytes, U256};
 use alloy_rpc_types::{BlockId, BlockNumberOrTag};
 use bindings::ierc20::IERC20;
 use eyre::{eyre, Error, Result};
 use std::sync::Arc;
+use types::token::TokenIsh;
 
-use crate::provider::SignerProvider;
+use crate::{provider::SignerProvider, token_manager::TokenManager};
 
 pub async fn get_contract_creation_block<P, T, N>(
     provider: Arc<P>,
@@ -81,6 +83,17 @@ pub async fn approve_token_if_needed(
     }
 
     Ok(())
+}
+
+pub async fn parse_token_units(chain: &NamedChain, token: &TokenIsh, amount: &str) -> Result<U256> {
+    let token_manager = TokenManager::instance().await;
+    let token = token_manager.get(chain, token).unwrap();
+    let decimals = match token.decimals().call().await {
+        Ok(decimals) => decimals._0,
+        Err(e) => return Err(eyre!("Failed to get decimals: {}", e)),
+    };
+    let amount = parse_units(amount, decimals).unwrap().into();
+    Ok(amount)
 }
 
 #[cfg(test)]
