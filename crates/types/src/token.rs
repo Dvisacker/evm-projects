@@ -88,6 +88,16 @@ impl FromStr for TokenIsh {
     }
 }
 
+impl From<TokenIsh> for NamedToken {
+    fn from(token: TokenIsh) -> Self {
+        match token {
+            TokenIsh::Named(named_token) => named_token,
+            TokenIsh::Address(_) => panic!("Cannot convert address to NamedToken"),
+            TokenIsh::Token(_) => panic!("Cannot convert token to NamedToken"),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

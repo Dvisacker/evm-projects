@@ -103,8 +103,8 @@ impl Executor<TxSequence> for SequenceExecutor {
                     amount_in = shared::bridge::bridge_lifi(
                         self.providers[&current_chain].clone(),
                         self.providers[&bridge.destination_chain].clone(),
-                        current_chain.into(),
-                        bridge.destination_chain.into(),
+                        &current_chain,
+                        &bridge.destination_chain,
                         token_in,
                         bridge.destination_token,
                         amount_in,

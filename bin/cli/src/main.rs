@@ -31,11 +31,11 @@ enum Commands {
     GetContractCreationBlock(GetContractCreationBlockArgs),
     Bridge {
         #[arg(short, long)]
-        from_chain: String,
-
+        from_chain: NamedChain,
         #[arg(short, long)]
-        to_chain: String,
-
+        to_chain: NamedChain,
+        #[arg(short, long)]
+        token: TokenIsh,
         #[arg(short, long)]
         amount_in: String,
     },
@@ -195,9 +195,10 @@ async fn main() -> Result<(), Error> {
         Commands::Bridge {
             from_chain,
             to_chain,
+            token,
             amount_in,
         } => {
-            cmd::bridge_command(from_chain, to_chain, amount_in).await?;
+            cmd::bridge_command(from_chain, to_chain, token, amount_in).await?;
         }
         Commands::CrossChainSwap(args) => {
             cmd::cross_chain_swap_command(

@@ -198,8 +198,8 @@ pub struct LiFiIncludedStep {
 pub async fn bridge_lifi<T, P>(
     origin_chain_provider: Arc<P>,
     destination_chain_provider: Arc<P>,
-    from_chain: NamedChain,
-    to_chain: NamedChain,
+    from_chain: &NamedChain,
+    to_chain: &NamedChain,
     from_token_address: Address,
     to_token_address: Address,
     amonut_in: U256,
@@ -215,8 +215,8 @@ where
     let client = reqwest::Client::new();
     let from_token = IERC20::new(from_token_address, origin_chain_provider.clone());
     let to_token = IERC20::new(to_token_address, destination_chain_provider.clone());
-    let from_chain_id: u64 = from_chain.into();
-    let to_chain_id: u64 = to_chain.into();
+    let from_chain_id: u64 = (*from_chain).into();
+    let to_chain_id: u64 = (*to_chain).into();
 
     let quote_request = LiFiQuoteRequest {
         fromChain: from_chain_id.to_string(),
@@ -370,8 +370,8 @@ mod tests {
         let result = bridge_lifi(
             origin_provider.clone(),
             destination_provider.clone(),
-            from_chain,
-            to_chain,
+            &from_chain,
+            &to_chain,
             usdc_arb,
             usdc_base,
             amount,
@@ -411,8 +411,8 @@ mod tests {
         let result = bridge_lifi(
             origin_provider,
             destination_provider,
-            from_chain,
-            to_chain,
+            &from_chain,
+            &to_chain,
             weth_arb,
             weth_base,
             amount,

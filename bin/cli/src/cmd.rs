@@ -8,7 +8,7 @@ use artemis_core::executors::sequence_executor::{
 };
 use artemis_core::types::Executor;
 use eyre::{Error, Result};
-use shared::provider::{get_default_wallet, get_provider_map};
+use shared::provider::{get_default_signer, get_default_wallet, get_provider_map};
 use shared::token_manager::TokenManager;
 use shared::{
     bridge::{bridge_lifi, ARBITRUM_CHAIN_ID, BASE_CHAIN_ID, USDC_ARBITRUM, USDC_BASE},
@@ -99,51 +99,43 @@ pub async fn get_contract_creation_block_command(
     Ok(())
 }
 
-pub async fn bridge_command(from_chain: &str, to_chain: &str, amount: &str) -> Result<(), Error> {
-    let signer: PrivateKeySigner = std::env::var("DEV_PRIVATE_KEY")
-        .expect("PRIVATE_KEY must be set")
-        .parse()
-        .expect("should parse private key");
-
+pub async fn bridge_command(
+    from_chain_name: &NamedChain,
+    to_chain_name: &NamedChain,
+    token: &TokenIsh,
+    amount: &str,
+) -> Result<(), Error> {
+    let signer = get_default_signer();
     let wallet_address = signer.address();
     let wallet = EthereumWallet::new(signer);
-
-    // Determine chain IDs and token addresses based on input
-    let (from_chain_id, to_chain_id, from_token, to_token) = match (from_chain, to_chain) {
-        ("arbitrum", "base") => (
-            ARBITRUM_CHAIN_ID,
-            BASE_CHAIN_ID,
-            Address::from_str(USDC_ARBITRUM).unwrap(),
-            Address::from_str(USDC_BASE).unwrap(),
-        ),
-        ("base", "arbitrum") => (
-            BASE_CHAIN_ID,
-            ARBITRUM_CHAIN_ID,
-            Address::from_str(USDC_BASE).unwrap(),
-            Address::from_str(USDC_ARBITRUM).unwrap(),
-        ),
-        _ => return Err(eyre::eyre!("Unsupported chain combination")),
-    };
-
-    let origin_chain = Chain::from_named(NamedChain::from_str(from_chain).unwrap());
-    let destination_chain = Chain::from_named(NamedChain::from_str(to_chain).unwrap());
+    let origin_chain = Chain::from_named(*from_chain_name);
+    let destination_chain = Chain::from_named(*to_chain_name);
 
     let origin_provider = get_provider(origin_chain, wallet.clone()).await;
     let destination_provider = get_provider(destination_chain, wallet.clone()).await;
+    let token_manager = TokenManager::instance().await;
+
+    // Convert TokenIsh to &TokenIsh for the token_manager.get() calls
+    let token_ref = &token;
+    let from_token = token_manager.get(&from_chain_name, token_ref).unwrap();
+    let to_token = token_manager.get(&to_chain_name, token_ref).unwrap();
 
     // Parse amount
     let amount = U256::from_str(amount).map_err(|_| eyre::eyre!("Invalid amount"))?;
 
-    println!("Starting bridge from {} to {}", from_chain, to_chain);
+    println!(
+        "Starting bridge from {} to {}",
+        from_chain_name, to_chain_name
+    );
     println!("Amount: {}", amount);
 
     let result = bridge_lifi(
         origin_provider,
         destination_provider,
-        from_chain_id,
-        to_chain_id,
-        from_token,
-        to_token,
+        from_chain_name,
+        to_chain_name,
+        *from_token.address(),
+        *to_token.address(),
         amount,
         wallet_address,
         wallet_address,
@@ -165,10 +157,7 @@ pub async fn cross_chain_swap_command(
     destination_token_out: TokenIsh,
     amount_in: &str,
 ) -> Result<(), Error> {
-    let signer: PrivateKeySigner = std::env::var("DEV_PRIVATE_KEY")
-        .expect("PRIVATE_KEY must be set")
-        .parse()
-        .expect("should parse private key");
+    let signer = get_default_signer();
     let wallet_address = signer.address();
     let token_manager = TokenManager::instance().await;
 

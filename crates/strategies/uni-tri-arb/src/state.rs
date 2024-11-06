@@ -4,7 +4,7 @@ use amms::amm::{AutomatedMarketMaker, AMM};
 use amms::errors::AMMError;
 use amms::sync;
 use dashmap::DashMap;
-use shared::types::Cycle;
+use shared::cycle::Cycle;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 use tracing::info;
