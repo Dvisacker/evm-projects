@@ -7,3 +7,6 @@
 [submodule "crates/strategies/uni-tri-arb/contracts/lib/v2-core"]
 	path = crates/strategies/uni-tri-arb/contracts/lib/v2-core
 	url = https://github.com/Uniswap/v2-core.git
+[submodule "crates/artemis-core/src/contracts/lib/solmate"]
+	path = crates/artemis-core/src/contracts/lib/solmate
+	url = https://github.com/transmissions11/solmate
