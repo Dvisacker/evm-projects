@@ -10,9 +10,10 @@ members = [
     "crates/bindings",
     "crates/shared", 
     "crates/types",
+    "crates/executor-binding",
 ]
 
-default-members = ["bin/bot", "bin/cli", "bin/swap", "crates/shared", "crates/db","crates/artemis-core", "crates/bindings"]
+default-members = ["bin/bot", "bin/cli", "bin/swap", "crates/shared", "crates/db","crates/artemis-core", "crates/bindings", "crates/executor-binding"]
 # default-members = ["crates/amms-rs"]
 resolver = "2"
 

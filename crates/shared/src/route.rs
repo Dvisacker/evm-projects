@@ -35,6 +35,14 @@ pub fn simulate_route(
     Ok(amount_out)
 }
 
+pub fn simulate_route_2(
+    mut token_in: Address,
+    mut amount_in: U256,
+    route: &[AMM],
+) -> Result<U256, AMMError> {
+    todo!()
+}
+
 // pub fn simulate_route_without_slippage(
 //     mut token_in: Address,
 //     mut amount_in: U256,
