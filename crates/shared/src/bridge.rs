@@ -12,11 +12,6 @@ use std::str::FromStr;
 use std::sync::Arc;
 use types::bridge::BridgeName;
 
-pub const ARBITRUM_CHAIN_ID: u64 = 42161;
-pub const BASE_CHAIN_ID: u64 = 8453;
-pub const USDC_ARBITRUM: &str = "0xaf88d065e77c8cc2239327c5edb3a432268e5831";
-pub const USDC_BASE: &str = "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913";
-
 sol! {
     /// Interface of the ERC20 token
     #[derive(Debug, PartialEq, Eq)]
