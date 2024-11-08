@@ -28,10 +28,11 @@ contract ExecutorTest is Test {
     address owner = address(this);
     address uniswapV3Router = address(0x2626664c2603336E57B271c5C0b26F421741e481);
     address uniswapV2Router = address(0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24);
+    address aerodromeRouter = address(0xcF77a3Ba9A5CA399B7c97c74d54e5b1Beb874E43);
 
     function setUp() public {
         vm.createSelectFork((vm.envString("BASE_RPC_URL")));
-        executor = new Executor(deployer, uniswapV3Router, uniswapV2Router);
+        executor = new Executor(deployer, uniswapV3Router, uniswapV2Router, aerodromeRouter);
 
         vm.deal(swapper, 10 ether);
         vm.prank(swapper);
@@ -42,7 +43,7 @@ contract ExecutorTest is Test {
         uint256 amountIn = 1 ether;
 
         Executor.Swap[] memory swaps = new Executor.Swap[](1);
-        swaps[0] = Executor.Swap(1, address(usdc), 500);
+        swaps[0] = Executor.Swap(1, address(usdc), 500, false);
 
         Executor.SwapData memory swapData =
             Executor.SwapData({tokenIn: address(weth), amountIn: amountIn, swaps: swaps});
@@ -59,7 +60,7 @@ contract ExecutorTest is Test {
         uint256 amountIn = 1 ether;
 
         Executor.Swap[] memory swaps = new Executor.Swap[](1);
-        swaps[0] = Executor.Swap(0, address(usdc), 0);
+        swaps[0] = Executor.Swap(0, address(usdc), 0, false);
 
         Executor.SwapData memory swapData =
             Executor.SwapData({tokenIn: address(weth), amountIn: amountIn, swaps: swaps});
@@ -76,8 +77,8 @@ contract ExecutorTest is Test {
         uint256 amountIn = 1 ether;
 
         Executor.Swap[] memory swaps = new Executor.Swap[](2);
-        swaps[0] = Executor.Swap(1, address(usdc), 500);
-        swaps[1] = Executor.Swap(0, address(weth), 0);
+        swaps[0] = Executor.Swap(1, address(usdc), 500, false);
+        swaps[1] = Executor.Swap(0, address(weth), 0, false);
 
         Executor.SwapData memory swapData =
             Executor.SwapData({tokenIn: address(weth), amountIn: amountIn, swaps: swaps});

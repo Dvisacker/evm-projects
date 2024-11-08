@@ -10,3 +10,6 @@
 [submodule "crates/artemis-core/src/contracts/lib/solmate"]
 	path = crates/artemis-core/src/contracts/lib/solmate
 	url = https://github.com/transmissions11/solmate
+[submodule "crates/artemis-core/src/contracts/lib/contracts"]
+	path = crates/artemis-core/src/contracts/lib/contracts
+	url = https://github.com/aerodrome-finance/contracts
