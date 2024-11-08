@@ -73,6 +73,22 @@ contract ExecutorTest is Test {
         assertGt(amountOut, 0, "Swap did not produce any output");
     }
 
+    function testSwapAerodromeVolatile() public {
+        uint256 amountIn = 1 ether;
+
+        Executor.Swap[] memory swaps = new Executor.Swap[](1);
+        swaps[0] = Executor.Swap(2, address(usdc), 0, false);
+
+        Executor.SwapData memory swapData =
+            Executor.SwapData({tokenIn: address(weth), amountIn: amountIn, swaps: swaps});
+
+        vm.startPrank(swapper);
+        weth.approve(address(executor), amountIn);
+        uint256 amountOut = executor.swap(abi.encode(swapData));
+        vm.stopPrank();
+        assertGt(amountOut, 0, "Swap did not produce any output");
+    }
+
     function testMultipleSwap() public {
         uint256 amountIn = 1 ether;
 
