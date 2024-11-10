@@ -41,9 +41,13 @@ contract Executor {
         Swap[] swaps;
     }
 
-    function swap(SwapData calldata data) public returns (uint256) {
-        // SwapData memory data = abi.decode(swapData, (SwapData));
+    struct Call {
+        address target;
+        uint256 value;
+        bytes data;
+    }
 
+    function swap(SwapData calldata data) public returns (uint256) {
         ERC20(data.tokenIn).transferFrom(msg.sender, address(this), data.amountIn);
 
         uint256 nextAmount = data.amountIn;
@@ -67,23 +71,22 @@ contract Executor {
         return nextAmount;
     }
 
-    function swapAll(bytes calldata swapData) public returns (uint256) {
-        SwapData memory data = abi.decode(swapData, (SwapData));
-        ERC20(data.tokenIn).transferFrom(msg.sender, address(this), data.amountIn);
+    function swapAll(SwapData calldata swapData) public returns (uint256) {
+        ERC20(swapData.tokenIn).transferFrom(msg.sender, address(this), swapData.amountIn);
 
-        uint256 nextAmount = data.amountIn;
-        address nextToken = data.tokenIn;
-        for (uint256 i; i < data.swaps.length; i++) {
-            if (data.swaps[i].swapType == 1) {
-                swapUniswapV3(nextAmount, nextToken, data.swaps[i].tokenOut, data.swaps[i].feeTier);
-            } else if (data.swaps[i].swapType == 0) {
-                swapUniswapV2(nextAmount, nextToken, data.swaps[i].tokenOut);
-            } else if (data.swaps[i].swapType == 2) {
-                swapAerodrome(nextAmount, nextToken, data.swaps[i].tokenOut, data.swaps[i].stable);
+        uint256 nextAmount = swapData.amountIn;
+        address nextToken = swapData.tokenIn;
+        for (uint256 i; i < swapData.swaps.length; i++) {
+            if (swapData.swaps[i].swapType == 1) {
+                swapUniswapV3(nextAmount, nextToken, swapData.swaps[i].tokenOut, swapData.swaps[i].feeTier);
+            } else if (swapData.swaps[i].swapType == 0) {
+                swapUniswapV2(nextAmount, nextToken, swapData.swaps[i].tokenOut);
+            } else if (swapData.swaps[i].swapType == 2) {
+                swapAerodrome(nextAmount, nextToken, swapData.swaps[i].tokenOut, swapData.swaps[i].stable);
             }
 
             nextAmount = ERC20(nextToken).balanceOf(address(this));
-            nextToken = data.swaps[i].tokenOut;
+            nextToken = swapData.swaps[i].tokenOut;
             console.log("output amount: ", nextAmount, " of", nextToken);
         }
 
@@ -134,32 +137,31 @@ contract Executor {
         return amountsOut[amountsOut.length - 1];
     }
 
-    // function swap(bytes[] memory data) external payable {
+    function multicall(Call[] memory calls) external payable {
+        require(msg.sender == OWNER);
+
+        for (uint256 i; i < calls.length; ++i) {
+            (bool success, bytes memory returnData) = calls[i].target.call{value: calls[i].value}(calls[i].data);
+            if (!success) _revert(returnData);
+        }
+    }
+
+    // /// @notice Executes a batch of calls.
+    // function multicall(bytes[] memory data) external payable {
     //     require(msg.sender == OWNER);
 
+    //     _multicall(data);
+    // }
+
+    // /// @notice Executes a series of calls.
+    // function _multicall(bytes[] memory data) internal {
     //     for (uint256 i; i < data.length; ++i) {
     //         (bool success, bytes memory returnData) = address(this).call(data[i]);
     //         if (!success) _revert(returnData);
     //     }
-
-    //     // (bool success, bytes memory returnData) = address(this).call(data);
-    //     // if (!success) _revert(returnData);
     // }
 
-    /// @notice Executes a batch of calls.
-    function multicall(bytes[] memory data) external payable {
-        require(msg.sender == OWNER);
-
-        _multicall(data);
-    }
-
-    /// @notice Executes a series of calls.
-    function _multicall(bytes[] memory data) internal {
-        for (uint256 i; i < data.length; ++i) {
-            (bool success, bytes memory returnData) = address(this).call(data[i]);
-            if (!success) _revert(returnData);
-        }
-    }
+    receive() external payable {}
 
     /// @dev Bubbles up the revert reason / custom error encoded in `returnData`.
     /// @dev Assumes `returnData` is the return data of any kind of failing CALL to a contract.

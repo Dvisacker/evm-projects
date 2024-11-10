@@ -24,7 +24,7 @@ generate-executor-binding:
     bindings_path="./crates/executor-binding"
     contract_root_path="./contracts"
     rm -rf $bindings_path
-    forge bind --bindings-path $bindings_path --root $contract_root_path --crate-name executor-binding --alloy --alloy-version v0.5.4 --select Executor
+    forge bind --bindings-path $bindings_path --root $contract_root_path --crate-name executor-binding --alloy --alloy-version v0.5.4
 
 fmt: 
     cargo +nightly fmt --all

@@ -36,6 +36,7 @@ pub mod geterc20tokendatabatchrequest;
 pub mod getuniswapv2pairsbatchrequest;
 pub mod ifactory;
 pub mod getuniswapv2pooldatabatchrequest;
+pub mod ipool;
 pub mod iaerodromerouter;
 pub mod ierc1363;
 pub mod ierc165;
