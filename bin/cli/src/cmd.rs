@@ -8,22 +8,19 @@ use artemis_core::executors::sequence_executor::{
 };
 use artemis_core::types::Executor;
 use eyre::{Error, Result};
+use shared::addressbook::Addressbook;
+use shared::amm_utils::{store_uniswap_v2_pools, store_uniswap_v3_pools};
 use shared::provider::{get_default_signer, get_default_wallet, get_provider_map};
 use shared::token_manager::TokenManager;
 use shared::{
-    bridge::{bridge_lifi, ARBITRUM_CHAIN_ID, BASE_CHAIN_ID, USDC_ARBITRUM, USDC_BASE},
-    config::get_chain_config,
-    helpers::get_contract_creation_block,
+    bridge::bridge_lifi, config::get_chain_config, helpers::get_contract_creation_block,
     provider::get_provider,
 };
 use std::{str::FromStr, sync::Arc};
 use tracing::info;
 use types::bridge::BridgeName;
-use types::token::{NamedToken, TokenIsh};
-// use eyre::{Error};
-use shared::addressbook::Addressbook;
-use shared::amm_utils::{store_uniswap_v2_pools, store_uniswap_v3_pools};
 use types::exchange::ExchangeName;
+use types::token::TokenIsh;
 
 pub async fn get_uniswap_v2_pools_command(
     chain_id: u64,

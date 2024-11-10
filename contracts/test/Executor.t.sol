@@ -48,10 +48,9 @@ contract ExecutorTest is Test {
         Executor.SwapData memory swapData =
             Executor.SwapData({tokenIn: address(weth), amountIn: amountIn, swaps: swaps});
 
-        bytes memory data = abi.encode(swapData);
         vm.startPrank(swapper);
         weth.approve(address(executor), amountIn);
-        uint256 amountOut = executor.swap(data);
+        uint256 amountOut = executor.swap(swapData);
         vm.stopPrank();
         assertGt(amountOut, 0, "Swap did not produce any output");
     }
@@ -66,9 +65,8 @@ contract ExecutorTest is Test {
             Executor.SwapData({tokenIn: address(weth), amountIn: amountIn, swaps: swaps});
 
         vm.startPrank(swapper);
-        bytes memory data = abi.encode(swapData);
         weth.approve(address(executor), amountIn);
-        uint256 amountOut = executor.swap(data);
+        uint256 amountOut = executor.swap(swapData);
         vm.stopPrank();
         assertGt(amountOut, 0, "Swap did not produce any output");
     }
@@ -84,7 +82,7 @@ contract ExecutorTest is Test {
 
         vm.startPrank(swapper);
         weth.approve(address(executor), amountIn);
-        uint256 amountOut = executor.swap(abi.encode(swapData));
+        uint256 amountOut = executor.swap(swapData);
         vm.stopPrank();
         assertGt(amountOut, 0, "Swap did not produce any output");
     }
@@ -99,10 +97,9 @@ contract ExecutorTest is Test {
         Executor.SwapData memory swapData =
             Executor.SwapData({tokenIn: address(weth), amountIn: amountIn, swaps: swaps});
 
-        bytes memory data = abi.encode(swapData);
         vm.startPrank(swapper);
         weth.approve(address(executor), amountIn);
-        uint256 amountOut = executor.swap(data);
+        uint256 amountOut = executor.swap(swapData);
         vm.stopPrank();
 
         assertGt(amountOut, 0, "Swap did not produce any output");

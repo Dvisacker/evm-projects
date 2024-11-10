@@ -41,8 +41,8 @@ contract Executor {
         Swap[] swaps;
     }
 
-    function swap(bytes calldata swapData) public returns (uint256) {
-        SwapData memory data = abi.decode(swapData, (SwapData));
+    function swap(SwapData calldata data) public returns (uint256) {
+        // SwapData memory data = abi.decode(swapData, (SwapData));
 
         ERC20(data.tokenIn).transferFrom(msg.sender, address(this), data.amountIn);
 
@@ -59,6 +59,30 @@ contract Executor {
             }
 
             nextAmount = amountOut;
+            nextToken = data.swaps[i].tokenOut;
+            console.log("output amount: ", nextAmount, " of", nextToken);
+        }
+
+        ERC20(nextToken).transfer(msg.sender, nextAmount);
+        return nextAmount;
+    }
+
+    function swapAll(bytes calldata swapData) public returns (uint256) {
+        SwapData memory data = abi.decode(swapData, (SwapData));
+        ERC20(data.tokenIn).transferFrom(msg.sender, address(this), data.amountIn);
+
+        uint256 nextAmount = data.amountIn;
+        address nextToken = data.tokenIn;
+        for (uint256 i; i < data.swaps.length; i++) {
+            if (data.swaps[i].swapType == 1) {
+                swapUniswapV3(nextAmount, nextToken, data.swaps[i].tokenOut, data.swaps[i].feeTier);
+            } else if (data.swaps[i].swapType == 0) {
+                swapUniswapV2(nextAmount, nextToken, data.swaps[i].tokenOut);
+            } else if (data.swaps[i].swapType == 2) {
+                swapAerodrome(nextAmount, nextToken, data.swaps[i].tokenOut, data.swaps[i].stable);
+            }
+
+            nextAmount = ERC20(nextToken).balanceOf(address(this));
             nextToken = data.swaps[i].tokenOut;
             console.log("output amount: ", nextAmount, " of", nextToken);
         }

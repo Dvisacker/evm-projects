@@ -18,6 +18,7 @@ once_cell = { workspace = true }
 lazy_static = "1.4.0"
 
 bindings = { path = "../bindings" }
+executor-binding = { path = "../executor-binding" }
 types = { path = "../types" }
 db = { path = "../db" }
 amms = { path = "../../crates/amms-rs" }
