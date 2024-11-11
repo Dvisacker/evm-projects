@@ -1,4 +1,5 @@
 pub mod amm_utils;
+pub mod batch_encoder;
 pub mod bridge;
 pub mod config;
 pub mod cycle;

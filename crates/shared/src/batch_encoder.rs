@@ -1,12 +1,11 @@
 use alloy::network::{Ethereum, Network};
 use alloy::providers::Provider;
 use alloy::transports::Transport;
-use alloy::{hex, sol};
 use alloy_chains::NamedChain;
-use alloy_primitives::{Address, Bytes, TxHash, U256};
-use alloy_sol_types::{abi, SolCall};
-use executor_binding::atomicexecutor::AtomicExecutor::{
-    multicallCall, AtomicExecutorCalls, AtomicExecutorInstance, Call, Swap, SwapData,
+use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
+use alloy_sol_types::SolCall;
+use executor_binding::batchexecutor::BatchExecutor::{
+    singlecallCall, BatchExecutorCalls, BatchExecutorInstance,
 };
 use executor_binding::erc20::ERC20;
 use executor_binding::ipool::IPool as IAaveV3Pool;
@@ -20,20 +19,10 @@ use types::exchange::ExchangeName;
 
 use crate::addressbook::Addressbook;
 
-// aave pool
-
-// sol! {
-//     #[allow(missing_docs)]
-//     #[sol(rpc)]
-//     interface AaveV3Pool {
-//         function flashLoan(address receiverAddress, address asset, uint256 amount, bytes params, uint256 referralCode) public {}
-//     }
-// }
-
 // a calldata enum that can be either a swap or a multicall
-pub enum CallData {
-    Swap(SwapData),
-    Multicall(Vec<Call>),
+pub struct CallbackContext {
+    sender: Address,
+    data_index: u64,
 }
 
 pub struct AaveV3FlashLoanParams {
@@ -50,23 +39,23 @@ pub struct ContractAddresses {
     pub uniswap_v2_router_address: Address,
 }
 
-pub struct ExecutorClient<T, P>
+pub struct BatchExecutorClient<T, P>
 where
     T: Transport + Clone,
     P: Provider<T, Ethereum>,
 {
-    executor: AtomicExecutorInstance<T, P>,
-    calldata: Option<CallData>,
+    executor: BatchExecutorInstance<T, P>,
+    calldata: Vec<Bytes>,
     addresses: ContractAddresses,
 }
 
-impl<T, P> ExecutorClient<T, P>
+impl<T, P> BatchExecutorClient<T, P>
 where
     T: Transport + Clone,
     P: Provider<T, Ethereum>,
 {
     pub fn new(address: Address, chain: NamedChain, provider: P) -> Self {
-        let executor = AtomicExecutorInstance::new(address, provider);
+        let executor = BatchExecutorInstance::new(address, provider);
         let addressbook = Addressbook::load(None).unwrap();
 
         let aave_v3_pool_address = addressbook
@@ -83,7 +72,7 @@ where
 
         Self {
             executor,
-            calldata: None,
+            calldata: Vec::new(),
             addresses: ContractAddresses {
                 aave_v3_pool_address,
                 uniswap_v3_router_address,
@@ -103,11 +92,7 @@ where
         let call = ERC20::approveCall { spender, value };
         let encoded = call.abi_encode();
 
-        self.push_multicall_call_data(vec![Call {
-            target: token,
-            data: encoded.into(),
-            value: U256::ZERO,
-        }]);
+        self.add_call(token, U256::ZERO, Bytes::from(encoded), None);
 
         Ok(())
     }
@@ -116,11 +101,7 @@ where
         let call = WETH::depositCall {};
         let encoded = call.abi_encode();
 
-        self.push_multicall_call_data(vec![Call {
-            target: weth,
-            data: encoded.into(),
-            value: amount,
-        }]);
+        self.add_call(weth, amount, Bytes::from(encoded), None);
 
         Ok(())
     }
@@ -129,11 +110,7 @@ where
         let call = WETH::withdrawCall { amount };
         let encoded = call.abi_encode();
 
-        self.push_multicall_call_data(vec![Call {
-            target: weth,
-            data: encoded.into(),
-            value: amount,
-        }]);
+        self.add_call(weth, amount, Bytes::from(encoded), None);
 
         Ok(())
     }
@@ -150,11 +127,7 @@ where
         };
         let encoded = call.abi_encode();
 
-        self.push_multicall_call_data(vec![Call {
-            target: token,
-            data: encoded.into(),
-            value: U256::ZERO,
-        }]);
+        self.add_call(token, U256::ZERO, Bytes::from(encoded), None);
 
         Ok(())
     }
@@ -173,11 +146,7 @@ where
         };
         let encoded = call.abi_encode();
 
-        self.push_multicall_call_data(vec![Call {
-            target: token,
-            data: encoded.into(),
-            value: U256::ZERO,
-        }]);
+        self.add_call(token, U256::ZERO, Bytes::from(encoded), None);
 
         Ok(())
     }
@@ -198,11 +167,12 @@ where
         };
         let encoded = call.abi_encode();
 
-        self.push_multicall_call_data(vec![Call {
-            target: self.addresses.aave_v3_pool_address,
-            data: encoded.into(),
-            value: U256::ZERO,
-        }]);
+        self.add_call(
+            self.addresses.aave_v3_pool_address,
+            U256::ZERO,
+            Bytes::from(encoded),
+            None,
+        );
 
         Ok(())
     }
@@ -222,11 +192,12 @@ where
         };
         let encoded = call.abi_encode();
 
-        self.push_multicall_call_data(vec![Call {
-            target: self.addresses.aave_v3_pool_address,
-            data: encoded.into(),
-            value: U256::ZERO,
-        }]);
+        self.add_call(
+            self.addresses.aave_v3_pool_address,
+            U256::ZERO,
+            Bytes::from(encoded),
+            None,
+        );
 
         Ok(())
     }
@@ -245,11 +216,12 @@ where
         };
         let encoded = call.abi_encode();
 
-        self.push_multicall_call_data(vec![Call {
-            target: self.addresses.aave_v3_pool_address,
-            data: encoded.into(),
-            value: U256::ZERO,
-        }]);
+        self.add_call(
+            self.addresses.aave_v3_pool_address,
+            U256::ZERO,
+            Bytes::from(encoded),
+            None,
+        );
 
         Ok(())
     }
@@ -263,11 +235,12 @@ where
         let call = IAaveV3Pool::withdrawCall { asset, amount, to };
         let encoded = call.abi_encode();
 
-        self.push_multicall_call_data(vec![Call {
-            target: self.addresses.aave_v3_pool_address,
-            data: encoded.into(),
-            value: U256::ZERO,
-        }]);
+        self.add_call(
+            self.addresses.aave_v3_pool_address,
+            U256::ZERO,
+            Bytes::from(encoded),
+            None,
+        );
 
         Ok(())
     }
@@ -288,11 +261,12 @@ where
         };
         let encoded = call.abi_encode();
 
-        self.push_multicall_call_data(vec![Call {
-            target: self.addresses.aave_v3_pool_address,
-            data: encoded.into(),
-            value: U256::ZERO,
-        }]);
+        self.add_call(
+            self.addresses.aave_v3_pool_address,
+            U256::ZERO,
+            Bytes::from(encoded),
+            None,
+        );
 
         Ok(())
     }
@@ -303,11 +277,12 @@ where
         let call = IUniswapV3Router::exactInputSingleCall { params: swap };
         let encoded = call.abi_encode();
 
-        self.push_multicall_call_data(vec![Call {
-            target: self.addresses.uniswap_v3_router_address,
-            data: encoded.into(),
-            value: U256::ZERO,
-        }]);
+        self.add_call(
+            self.addresses.uniswap_v3_router_address,
+            U256::ZERO,
+            Bytes::from(encoded),
+            None,
+        );
 
         Ok(())
     }
@@ -316,11 +291,12 @@ where
         let call = IUniswapV3Router::exactOutputSingleCall { params: swap };
         let encoded = call.abi_encode();
 
-        self.push_multicall_call_data(vec![Call {
-            target: self.addresses.uniswap_v3_router_address,
-            data: encoded.into(),
-            value: U256::ZERO,
-        }]);
+        self.add_call(
+            self.addresses.uniswap_v3_router_address,
+            U256::ZERO,
+            Bytes::from(encoded),
+            None,
+        );
 
         Ok(())
     }
@@ -343,11 +319,12 @@ where
         };
         let encoded = call.abi_encode();
 
-        self.push_multicall_call_data(vec![Call {
-            target: self.addresses.uniswap_v2_router_address,
-            data: encoded.into(),
-            value: U256::ZERO,
-        }]);
+        self.add_call(
+            self.addresses.uniswap_v2_router_address,
+            U256::ZERO,
+            Bytes::from(encoded),
+            None,
+        );
 
         Ok(())
     }
@@ -373,56 +350,50 @@ where
         };
         let encoded = flash_loan_call.abi_encode();
 
-        self.push_multicall_call_data(vec![Call {
-            target: self.addresses.aave_v3_pool_address,
-            data: encoded.into(),
-            value: U256::ZERO,
-        }]);
+        self.add_call(
+            self.addresses.aave_v3_pool_address,
+            U256::ZERO,
+            Bytes::from(encoded),
+            None,
+        );
 
         Ok(())
     }
 
     // INTERNAL
 
-    pub fn push_call_data(&mut self, call_data: CallData) {
-        match call_data {
-            CallData::Swap(calldata) => self.push_swap_call_data(calldata),
-            CallData::Multicall(calls) => self.push_multicall_call_data(calls),
-        }
+    pub fn encoded_context(&self, context: CallbackContext) -> Result<FixedBytes<32>> {
+        let data_index = context.data_index.to_be_bytes();
+        let padded_data_index = FixedBytes::<12>::left_padding_from(&data_index);
+        let sender = FixedBytes::<20>::from(context.sender);
+        let context = padded_data_index.concat_const(sender);
+
+        Ok(context)
     }
 
-    pub fn push_multicall_call_data(&mut self, calldata: Vec<Call>) {
-        if let Some(CallData::Multicall(existing)) = self.calldata.as_mut() {
-            existing.extend(calldata);
-        } else {
-            self.calldata = Some(CallData::Multicall(calldata));
-        }
-    }
+    pub fn add_call(
+        &mut self,
+        target: Address,
+        value: U256,
+        calldata: Bytes,
+        context: Option<CallbackContext>,
+    ) {
+        let context = self.encoded_context(context.unwrap()).unwrap();
 
-    pub fn push_swap_call_data(&mut self, calldata: SwapData) {
-        self.calldata = Some(CallData::Swap(calldata));
-    }
-
-    pub fn push_swap(&mut self, swap: Swap) {
-        if let Some(CallData::Swap(calldata)) = self.calldata.as_mut() {
-            calldata.swaps.push(swap);
-        }
-    }
-
-    pub async fn execute_tx(&self) -> Result<(bool, TxHash)> {
-        let calldata = self.calldata.as_ref().unwrap();
-        let pending_tx = match calldata {
-            CallData::Swap(calldata) => {
-                let call = self.executor.swap(calldata.clone());
-                let result = call.send().await?;
-                result
-            }
-            CallData::Multicall(calldata) => {
-                let call = self.executor.multicall(calldata.clone());
-                let result = call.send().await?;
-                result
-            }
+        let single_call = singlecallCall {
+            target,
+            value,
+            context,
+            callData: calldata,
         };
+
+        let encoded = Bytes::from(single_call.abi_encode());
+        self.calldata.push(encoded);
+    }
+
+    pub async fn exec(&self, calldata: Vec<Bytes>) -> Result<(bool, TxHash)> {
+        let call = self.executor.batchCall(calldata);
+        let pending_tx = call.send().await?;
         let receipt = pending_tx.get_receipt().await?;
         let status = receipt.status();
         let tx_hash = receipt.transaction_hash;
