@@ -9,9 +9,9 @@ import {IAerodromeRouter} from "./interfaces/IAerodromeRouter.sol";
 import {IUniswapV3Router} from "./interfaces/IUniswapV3Router.sol";
 import {IUniswapV2Router} from "./interfaces/IUniswapV2Router.sol";
 
-uint256 constant FALLBACK_CONTEXT_TLOC = 0;
+uint256 constant CONTEXT_TRANSIENT_STORAGE_LOCATION = 0;
 
-contract Executor {
+contract AtomicExecutor {
     address internal immutable OWNER;
     address internal immutable UNISWAP_V3_ROUTER;
     address internal immutable UNISWAP_V2_ROUTER;
@@ -46,6 +46,8 @@ contract Executor {
         uint256 value;
         bytes data;
     }
+
+    // ATOMIC SWAP FUNCTIONS
 
     function swap(SwapData calldata data) public returns (uint256) {
         ERC20(data.tokenIn).transferFrom(msg.sender, address(this), data.amountIn);
@@ -145,21 +147,6 @@ contract Executor {
             if (!success) _revert(returnData);
         }
     }
-
-    // /// @notice Executes a batch of calls.
-    // function multicall(bytes[] memory data) external payable {
-    //     require(msg.sender == OWNER);
-
-    //     _multicall(data);
-    // }
-
-    // /// @notice Executes a series of calls.
-    // function _multicall(bytes[] memory data) internal {
-    //     for (uint256 i; i < data.length; ++i) {
-    //         (bool success, bytes memory returnData) = address(this).call(data[i]);
-    //         if (!success) _revert(returnData);
-    //     }
-    // }
 
     receive() external payable {}
 
