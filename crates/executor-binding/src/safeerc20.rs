@@ -52,22 +52,22 @@ pub mod SafeERC20 {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x60566050600b82828239805160001a6073146043577f4e487b7100000000000000000000000000000000000000000000000000000000600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212200a5287bb83e09fd76ce3cf69c8bdad9313747a7f67bacade67fd22df5811c99564736f6c634300081a0033
+    ///0x6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f80fdfea2646970667358221220883415d6550ea1c892670bc2926795234607c8e86d1135966caf61513490b64e64736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`V`P`\x0B\x82\x82\x829\x80Q`\0\x1A`s\x14`CW\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0`\0R`\0`\x04R`$`\0\xFD[0`\0R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \nR\x87\xBB\x83\xE0\x9F\xD7l\xE3\xCFi\xC8\xBD\xAD\x93\x13tz\x7Fg\xBA\xCA\xDEg\xFD\"\xDFX\x11\xC9\x95dsolcC\0\x08\x1A\x003",
+        b"`U`K`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`?W\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \x884\x15\xD6U\x0E\xA1\xC8\x92g\x0B\xC2\x92g\x95#F\x07\xC8\xE8m\x115\x96l\xAFaQ4\x90\xB6NdsolcC\0\x08\x1A\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x73000000000000000000000000000000000000000030146080604052600080fdfea26469706673582212200a5287bb83e09fd76ce3cf69c8bdad9313747a7f67bacade67fd22df5811c99564736f6c634300081a0033
+    ///0x730000000000000000000000000000000000000000301460806040525f80fdfea2646970667358221220883415d6550ea1c892670bc2926795234607c8e86d1135966caf61513490b64e64736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \nR\x87\xBB\x83\xE0\x9F\xD7l\xE3\xCFi\xC8\xBD\xAD\x93\x13tz\x7Fg\xBA\xCA\xDEg\xFD\"\xDFX\x11\xC9\x95dsolcC\0\x08\x1A\x003",
+        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \x884\x15\xD6U\x0E\xA1\xC8\x92g\x0B\xC2\x92g\x95#F\x07\xC8\xE8m\x115\x96l\xAFaQ4\x90\xB6NdsolcC\0\x08\x1A\x003",
     );
     /**Custom error with signature `SafeERC20FailedDecreaseAllowance(address,uint256,uint256)` and selector `0xe570110f`.
 ```solidity
