@@ -1,9 +1,12 @@
 use alloy::network::{Ethereum, Network};
 use alloy::providers::Provider;
+use alloy::sol;
 use alloy::transports::Transport;
 use alloy_chains::NamedChain;
 use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
-use alloy_sol_types::SolCall;
+use alloy_sol_types::sol_data::Bytes as SolBytes;
+use alloy_sol_types::{SolCall, SolValue};
+use bindings::iuniswapv3pool::IUniswapV3Pool;
 use executor_binding::batchexecutor::BatchExecutor::{
     singlecallCall, BatchExecutorCalls, BatchExecutorInstance,
 };
@@ -18,6 +21,15 @@ use eyre::Result;
 use types::exchange::ExchangeName;
 
 use crate::addressbook::Addressbook;
+
+sol! {
+    #[allow(missing_docs)]
+    #[derive(Debug, PartialEq, Eq)]
+    struct FallbackData {
+        bytes[] callback_params;
+        bytes return_data;
+    }
+}
 
 // a calldata enum that can be either a swap or a multicall
 pub struct CallbackContext {
@@ -330,23 +342,34 @@ where
     }
 
     // FLASH LOANS
-
     pub fn add_aave_v3_flash_loan(
         &mut self,
         receiver_address: Address,
         asset: Address,
         amount: U256,
-        params: Bytes,
-        referral_code: u64,
+        premium: U256,
+        callbacks: Vec<Bytes>,
     ) -> Result<()> {
+        // This consists of 1) The array of callback calls calldata and 2) The callback return value (specific to each flashloan)
+        let approve_premium_call_data =
+            self.build_approve_erc20(asset, self.addresses.aave_v3_pool_address, premium);
+
+        let callback_params = [&callbacks[..], &[approve_premium_call_data]].concat();
+        let return_data = Bytes::from(FixedBytes::<32>::left_padding_from(&[1u8]));
+
+        let params = FallbackData {
+            callback_params,
+            return_data,
+        };
+
         let flash_loan_call = IAaveV3Pool::flashLoanCall {
             receiverAddress: receiver_address,
             assets: vec![asset],
             amounts: vec![amount],
             interestRateModes: vec![U256::from(1)],
             onBehalfOf: receiver_address,
-            params,
-            referralCode: referral_code.try_into()?,
+            params: Bytes::from(params.abi_encode()),
+            referralCode: 0,
         };
         let encoded = flash_loan_call.abi_encode();
 
@@ -355,6 +378,105 @@ where
             U256::ZERO,
             Bytes::from(encoded),
             None,
+        );
+
+        Ok(())
+    }
+
+    pub fn add_uniswap_v2_flash_swap(
+        &mut self,
+        pool: Address,
+        assets: [Address; 2],
+        amounts: [U256; 2],
+        callbacks: Vec<Bytes>,
+    ) -> Result<()> {
+        // Unpack assets and amounts
+        let [asset0, asset1] = assets;
+        let [amount0, amount1] = amounts;
+
+        // This consists of callback calls and the callback return value
+        let approve0 = self.build_approve_erc20(asset0, pool, amount0);
+        let approve1 = self.build_approve_erc20(asset1, pool, amount1);
+
+        let callback_params = [&callbacks[..], &[approve0, approve1]].concat();
+        let return_data = Bytes::default(); // Empty bytes - "0x"
+
+        let params = FallbackData {
+            callback_params,
+            return_data,
+        };
+
+        // Create the flash call
+        let flash_call = IUniswapV3Pool::flashCall {
+            recipient: *self.executor.address(),
+            amount0: amount0,
+            amount1: amount1,
+            data: Bytes::from(params.abi_encode()),
+        };
+        let encoded = flash_call.abi_encode();
+
+        // Add the call with the appropriate context
+        self.add_call(
+            pool,
+            U256::ZERO,
+            Bytes::from(encoded),
+            Some(CallbackContext {
+                sender: pool,
+                data_index: 3, // uniswapV2Call(address,uint256,uint256,bytes)
+            }),
+        );
+
+        Ok(())
+    }
+
+    pub fn add_uniswap_v3_flash_loan(
+        &mut self,
+        pool: Address,
+        assets: [Address; 2],
+        amounts: [U256; 2],
+        fee: U256,
+        callbacks: Vec<Bytes>,
+    ) -> Result<()> {
+        // Unpack assets and amounts
+        let [asset0, asset1] = assets;
+        let [amount0, amount1] = amounts;
+
+        // (fee in basis points, e.g. 3000 = 0.3%)
+        // TODO
+        let fee0 = U256::from(0);
+        let fee1 = U256::from(0);
+        // let fee0 = amount0.mul(fee).div(U256::from(1_000_000));
+        // let fee1 = amount1.mul(fee).div(U256::from(1_000_000));
+
+        // Transfer calls for repayment
+        let transfer0 = self.build_transfer_erc20(asset0, pool, amount0 + fee0);
+        let transfer1 = self.build_transfer_erc20(asset1, pool, amount1 + fee1);
+
+        let callback_params = [&callbacks[..], &[transfer0, transfer1]].concat();
+        let return_data = Bytes::default();
+
+        let params = FallbackData {
+            callback_params,
+            return_data,
+        };
+
+        let flash_call = IUniswapV3Pool::flashCall {
+            recipient: *self.executor.address(),
+            amount0: amount0,
+            amount1: amount1,
+            data: Bytes::from(params.abi_encode()),
+        };
+        let encoded = flash_call.abi_encode();
+
+        // Add the call with the appropriate context
+        self.add_call(
+            pool,
+            U256::ZERO,
+            Bytes::from(encoded),
+            Some(CallbackContext {
+                sender: pool,
+                data_index: 2, // uniswapV3FlashCallback(uint256,uint256,bytes)
+            }),
         );
 
         Ok(())
@@ -369,6 +491,50 @@ where
         let context = padded_data_index.concat_const(sender);
 
         Ok(context)
+    }
+
+    pub fn build_call(
+        &mut self,
+        target: Address,
+        value: U256,
+        calldata: Bytes,
+        context: Option<CallbackContext>,
+    ) -> Bytes {
+        let context = self.encoded_context(context.unwrap()).unwrap();
+        let single_call = singlecallCall {
+            target,
+            value,
+            context,
+            callData: calldata,
+        };
+
+        return Bytes::from(single_call.abi_encode());
+    }
+
+    pub fn build_approve_erc20(
+        &mut self,
+        asset: Address,
+        recipient: Address,
+        amount: U256,
+    ) -> Bytes {
+        let call = ERC20::approveCall {
+            spender: recipient,
+            value: amount,
+        };
+        return self.build_call(asset, U256::ZERO, Bytes::from(call.abi_encode()), None);
+    }
+
+    pub fn build_transfer_erc20(
+        &mut self,
+        asset: Address,
+        recipient: Address,
+        amount: U256,
+    ) -> Bytes {
+        let call = ERC20::transferCall {
+            to: recipient,
+            value: amount,
+        };
+        return self.build_call(asset, U256::ZERO, Bytes::from(call.abi_encode()), None);
     }
 
     pub fn add_call(
@@ -391,7 +557,14 @@ where
         self.calldata.push(encoded);
     }
 
-    pub async fn exec(&self, calldata: Vec<Bytes>) -> Result<(bool, TxHash)> {
+    pub fn get(&mut self) -> Vec<Bytes> {
+        let calldata = self.calldata.clone();
+        self.calldata.clear();
+        calldata
+    }
+
+    pub async fn exec(&mut self) -> Result<(bool, TxHash)> {
+        let calldata = self.get();
         let call = self.executor.batchCall(calldata);
         let pending_tx = call.send().await?;
         let receipt = pending_tx.get_receipt().await?;

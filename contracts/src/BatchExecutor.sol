@@ -12,6 +12,11 @@ contract BatchExecutor {
         OWNER = _owner;
     }
 
+    struct FallbackData {
+        bytes[] multicallData;
+        bytes returnData;
+    }
+
     // BATCH CALL FUNCTIONS
 
     function batchCall(bytes[] memory data) external payable {
