@@ -563,39 +563,42 @@ where
 mod tests {
     use crate::{
         helpers::{compute_v2_pool_address, compute_v3_pool_address, parse_token_units},
-        provider::{get_default_signer, get_provider},
+        provider::{
+            get_default_anvil_provider, get_default_anvil_signer, get_default_signer, get_provider,
+        },
     };
 
     use super::*;
     use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
     use alloy_chains::Chain;
     use alloy_primitives::{aliases::U24, U160, U256};
-    use std::str::FromStr;
+    use std::{env, str::FromStr};
     use types::token::TokenIsh;
     use IUniswapV3Router::{exactInputSingleCall, IUniswapV3RouterCalls};
 
-    const CHAIN: NamedChain = NamedChain::Arbitrum;
+    const CHAIN: NamedChain = NamedChain::Base;
 
     #[tokio::test]
     async fn test_swap_usdc_for_dai_via_uniswap_v3() -> Result<()> {
+        dotenv::dotenv().ok();
         let addressbook = Addressbook::load(None).unwrap();
         let weth = addressbook.get_weth(&CHAIN).unwrap();
         let usdc = addressbook.get_usdc(&CHAIN).unwrap();
         let uni_v3_router = addressbook
             .get_uni_v3_universal_router(&CHAIN, ExchangeName::UniswapV3)
             .unwrap();
-        let signer: PrivateKeySigner = get_default_signer();
-        let wallet = EthereumWallet::new(signer);
-        let provider = get_provider(Chain::from_named(CHAIN), wallet.clone()).await;
+        let provider = get_default_anvil_provider().await;
 
-        // Create provider and client (you'll need to modify this based on your setup)
-        let executor_address = Address::from_str("YOUR_EXECUTOR_ADDRESS").unwrap();
-        let mut client = BatchExecutorClient::new(executor_address, CHAIN, provider);
+        let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider);
+        println!("HERE");
 
         // Amount of USDC to swap (1,000 USDC = 1_000_000_000 considering 6 decimals)
-        let amount = U256::from(1_000_000_000u64);
+        let amount = parse_token_units(&CHAIN, &TokenIsh::Address(usdc), "1")
+            .await
+            .unwrap();
 
-        client
+        encoder
             .add_approve_erc20(usdc, uni_v3_router, U256::MAX)
             .add_uniswap_v3_exact_input(ExactInputSingleParams {
                 tokenIn: usdc,
@@ -609,7 +612,7 @@ mod tests {
             .exec()
             .await?;
 
-        let (success, _tx_hash) = client.exec().await?;
+        let (success, _tx_hash) = encoder.exec().await?;
         assert!(success, "Transaction failed");
 
         Ok(())
@@ -617,14 +620,13 @@ mod tests {
 
     #[tokio::test]
     async fn test_aave_v3_flash_loan() -> Result<()> {
+        dotenv::dotenv().ok();
         let addressbook = Addressbook::load(None).unwrap();
         let aave_v3_pool = addressbook.get_lending_pool(&CHAIN, "aave_v3").unwrap();
-        let signer: PrivateKeySigner = get_default_signer();
-        let wallet = EthereumWallet::new(signer);
-        let provider = get_provider(Chain::from_named(CHAIN), wallet.clone()).await;
+        let provider = get_default_anvil_provider().await;
 
-        let executor_address = Address::from_str("YOUR_EXECUTOR_ADDRESS").unwrap();
-        let mut client = BatchExecutorClient::new(executor_address, CHAIN, provider.clone());
+        let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone());
 
         let usdc = addressbook.get_usdc(&CHAIN).unwrap();
         let aave_pool_address = addressbook.get_lending_pool(&CHAIN, "aave_v3").unwrap();
@@ -636,7 +638,7 @@ mod tests {
 
         let callbacks = vec![];
 
-        client
+        encoder
             .add_aave_v3_flash_loan(
                 executor_address,
                 aave_v3_pool,
@@ -652,13 +654,12 @@ mod tests {
 
     #[tokio::test]
     async fn test_uniswap_v3_flash_loan() -> Result<()> {
+        dotenv::dotenv().ok();
         let addressbook = Addressbook::load(None).unwrap();
-        let signer: PrivateKeySigner = get_default_signer();
-        let wallet = EthereumWallet::new(signer);
-        let provider = get_provider(Chain::from_named(CHAIN), wallet.clone()).await;
+        let provider = get_default_anvil_provider().await;
 
-        let executor_address = Address::from_str("YOUR_EXECUTOR_ADDRESS").unwrap();
-        let mut client = BatchExecutorClient::new(executor_address, CHAIN, provider.clone());
+        let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone());
 
         let usdc = addressbook.get_usdc(&CHAIN).unwrap();
         let weth = addressbook.get_weth(&CHAIN).unwrap();
@@ -674,7 +675,7 @@ mod tests {
         let fee = U256::from(500u32);
         let callbacks = vec![];
 
-        client
+        encoder
             .add_uniswap_v3_flash_loan(pool_address, assets, amounts, fee, callbacks)
             .exec()
             .await?;
@@ -690,7 +691,7 @@ mod tests {
         let wallet = EthereumWallet::new(signer);
         let provider = get_provider(Chain::from_named(CHAIN), wallet.clone()).await;
 
-        let executor_address = Address::from_str("YOUR_EXECUTOR_ADDRESS").unwrap();
+        let executor_address = Address::from_str("EXECUTOR_ADDRESS").unwrap();
         let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone());
 
         let usdc = addressbook.get_usdc(&CHAIN).unwrap();

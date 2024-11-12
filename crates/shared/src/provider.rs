@@ -43,6 +43,25 @@ pub fn get_default_wallet() -> EthereumWallet {
     wallet
 }
 
+pub fn get_default_anvil_signer() -> PrivateKeySigner {
+    String::from("0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80")
+        .parse()
+        .unwrap()
+}
+
+pub async fn get_default_anvil_provider() -> Arc<SignerProvider> {
+    let private_key: PrivateKeySigner = get_default_anvil_signer();
+    let wallet = EthereumWallet::new(private_key);
+    let url = "http://localhost:8545";
+    let provider = ProviderBuilder::new()
+        .with_recommended_fillers()
+        .wallet(wallet)
+        .on_builtin(url)
+        .await
+        .unwrap();
+    return Arc::new(provider);
+}
+
 pub async fn get_provider(chain: Chain, wallet: EthereumWallet) -> Arc<SignerProvider> {
     let chain = NamedChain::try_from(chain.id());
 
