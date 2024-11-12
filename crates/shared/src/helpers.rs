@@ -170,14 +170,15 @@ sol! {
 }
 
 pub fn compute_v3_pool_address(
-    addressbook: &Addressbook,
     chain: &NamedChain,
+    exchange_name: ExchangeName,
     token_a: Address,
     token_b: Address,
     fee: u16,
 ) -> Result<Address> {
+    let addressbook = Addressbook::load(None).unwrap();
     let factory_address = addressbook
-        .get_factory(chain, ExchangeName::UniswapV3)
+        .get_factory(chain, exchange_name)
         .ok_or_else(|| eyre!("Factory address not found"))?;
 
     let (token0, token1) =

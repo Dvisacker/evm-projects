@@ -165,16 +165,11 @@ where
 
     // AAVE V3
 
-    pub fn add_aave_v3_supply(
-        &mut self,
-        asset: Address,
-        amount: U256,
-        on_behalf_of: Address,
-    ) -> &mut Self {
+    pub fn add_aave_v3_supply(&mut self, asset: Address, amount: U256) -> &mut Self {
         let call = IAaveV3Pool::supplyCall {
             asset,
             amount,
-            onBehalfOf: on_behalf_of,
+            onBehalfOf: *self.executor.address(),
             referralCode: 0,
         };
         let encoded = call.abi_encode();
@@ -189,16 +184,11 @@ where
         self
     }
 
-    pub fn add_aave_v3_borrow(
-        &mut self,
-        asset: Address,
-        amount: U256,
-        on_behalf_of: Address,
-    ) -> &mut Self {
+    pub fn add_aave_v3_borrow(&mut self, asset: Address, amount: U256) -> &mut Self {
         let call = IAaveV3Pool::borrowCall {
             asset,
             amount,
-            onBehalfOf: on_behalf_of,
+            onBehalfOf: *self.executor.address(),
             interestRateMode: U256::from(1),
             referralCode: 0,
         };
@@ -214,17 +204,12 @@ where
         self
     }
 
-    pub fn add_aave_v3_repay(
-        &mut self,
-        asset: Address,
-        amount: U256,
-        on_behalf_of: Address,
-    ) -> &mut Self {
+    pub fn add_aave_v3_repay(&mut self, asset: Address, amount: U256) -> &mut Self {
         let call = IAaveV3Pool::repayCall {
             asset,
             amount,
             interestRateMode: U256::from(1),
-            onBehalfOf: on_behalf_of,
+            onBehalfOf: *self.executor.address(),
         };
         let encoded = call.abi_encode();
 
@@ -238,8 +223,12 @@ where
         self
     }
 
-    pub fn add_aave_v3_withdraw(&mut self, asset: Address, amount: U256, to: Address) -> &mut Self {
-        let call = IAaveV3Pool::withdrawCall { asset, amount, to };
+    pub fn add_aave_v3_withdraw(&mut self, asset: Address, amount: U256) -> &mut Self {
+        let call = IAaveV3Pool::withdrawCall {
+            asset,
+            amount,
+            to: *self.executor.address(),
+        };
         let encoded = call.abi_encode();
 
         self.add_call(
@@ -567,5 +556,178 @@ where
         let tx_hash = receipt.transaction_hash;
 
         Ok((status, tx_hash))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use crate::{
+        helpers::{compute_v2_pool_address, compute_v3_pool_address, parse_token_units},
+        provider::{get_default_signer, get_provider},
+    };
+
+    use super::*;
+    use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
+    use alloy_chains::Chain;
+    use alloy_primitives::{aliases::U24, U160, U256};
+    use std::str::FromStr;
+    use types::token::TokenIsh;
+    use IUniswapV3Router::{exactInputSingleCall, IUniswapV3RouterCalls};
+
+    const CHAIN: NamedChain = NamedChain::Arbitrum;
+
+    #[tokio::test]
+    async fn test_swap_usdc_for_dai_via_uniswap_v3() -> Result<()> {
+        let addressbook = Addressbook::load(None).unwrap();
+        let weth = addressbook.get_weth(&CHAIN).unwrap();
+        let usdc = addressbook.get_usdc(&CHAIN).unwrap();
+        let uni_v3_router = addressbook
+            .get_uni_v3_universal_router(&CHAIN, ExchangeName::UniswapV3)
+            .unwrap();
+        let signer: PrivateKeySigner = get_default_signer();
+        let wallet = EthereumWallet::new(signer);
+        let provider = get_provider(Chain::from_named(CHAIN), wallet.clone()).await;
+
+        // Create provider and client (you'll need to modify this based on your setup)
+        let executor_address = Address::from_str("YOUR_EXECUTOR_ADDRESS").unwrap();
+        let mut client = BatchExecutorClient::new(executor_address, CHAIN, provider);
+
+        // Amount of USDC to swap (1,000 USDC = 1_000_000_000 considering 6 decimals)
+        let amount = U256::from(1_000_000_000u64);
+
+        client
+            .add_approve_erc20(usdc, uni_v3_router, U256::MAX)
+            .add_uniswap_v3_exact_input(ExactInputSingleParams {
+                tokenIn: usdc,
+                tokenOut: weth,
+                fee: U24::from(500u32),
+                recipient: executor_address,
+                amountIn: amount,
+                amountOutMinimum: U256::ZERO,
+                sqrtPriceLimitX96: U160::ZERO,
+            })
+            .exec()
+            .await?;
+
+        let (success, _tx_hash) = client.exec().await?;
+        assert!(success, "Transaction failed");
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_aave_v3_flash_loan() -> Result<()> {
+        let addressbook = Addressbook::load(None).unwrap();
+        let aave_v3_pool = addressbook.get_lending_pool(&CHAIN, "aave_v3").unwrap();
+        let signer: PrivateKeySigner = get_default_signer();
+        let wallet = EthereumWallet::new(signer);
+        let provider = get_provider(Chain::from_named(CHAIN), wallet.clone()).await;
+
+        let executor_address = Address::from_str("YOUR_EXECUTOR_ADDRESS").unwrap();
+        let mut client = BatchExecutorClient::new(executor_address, CHAIN, provider.clone());
+
+        let usdc = addressbook.get_usdc(&CHAIN).unwrap();
+        let aave_pool_address = addressbook.get_lending_pool(&CHAIN, "aave_v3").unwrap();
+        let amount = parse_token_units(&CHAIN, &TokenIsh::Address(usdc), "1")
+            .await
+            .unwrap();
+        let aave_pool = IAaveV3Pool::new(aave_pool_address, provider.clone());
+        let premium = aave_pool.FLASHLOAN_PREMIUM_TOTAL().call().await.unwrap()._0;
+
+        let callbacks = vec![];
+
+        client
+            .add_aave_v3_flash_loan(
+                executor_address,
+                aave_v3_pool,
+                amount,
+                U256::from(premium),
+                callbacks,
+            )
+            .exec()
+            .await?;
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_uniswap_v3_flash_loan() -> Result<()> {
+        let addressbook = Addressbook::load(None).unwrap();
+        let signer: PrivateKeySigner = get_default_signer();
+        let wallet = EthereumWallet::new(signer);
+        let provider = get_provider(Chain::from_named(CHAIN), wallet.clone()).await;
+
+        let executor_address = Address::from_str("YOUR_EXECUTOR_ADDRESS").unwrap();
+        let mut client = BatchExecutorClient::new(executor_address, CHAIN, provider.clone());
+
+        let usdc = addressbook.get_usdc(&CHAIN).unwrap();
+        let weth = addressbook.get_weth(&CHAIN).unwrap();
+        let amount = parse_token_units(&CHAIN, &TokenIsh::Address(usdc), "1")
+            .await
+            .unwrap();
+
+        let pool_address =
+            compute_v3_pool_address(&CHAIN, ExchangeName::UniswapV3, usdc, weth, 500)?;
+
+        let assets = [usdc, weth];
+        let amounts = [amount, U256::ZERO];
+        let fee = U256::from(500u32);
+        let callbacks = vec![];
+
+        client
+            .add_uniswap_v3_flash_loan(pool_address, assets, amounts, fee, callbacks)
+            .exec()
+            .await?;
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_aave_v3_flashloan_with_callbacks() -> Result<()> {
+        let addressbook = Addressbook::load(None).unwrap();
+        let aave_v3_pool = addressbook.get_lending_pool(&CHAIN, "aave_v3").unwrap();
+        let signer: PrivateKeySigner = get_default_signer();
+        let wallet = EthereumWallet::new(signer);
+        let provider = get_provider(Chain::from_named(CHAIN), wallet.clone()).await;
+
+        let executor_address = Address::from_str("YOUR_EXECUTOR_ADDRESS").unwrap();
+        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone());
+
+        let usdc = addressbook.get_usdc(&CHAIN).unwrap();
+        let weth = addressbook.get_weth(&CHAIN).unwrap();
+        let aave_pool_address = addressbook.get_lending_pool(&CHAIN, "aave_v3").unwrap();
+        let usdc_amount = parse_token_units(&CHAIN, &TokenIsh::Address(usdc), "1000")
+            .await
+            .unwrap();
+
+        let borrowed_weth_amount = parse_token_units(&CHAIN, &TokenIsh::Address(weth), "0.01")
+            .await
+            .unwrap();
+        let aave_pool = IAaveV3Pool::new(aave_pool_address, provider.clone());
+        let premium = aave_pool.FLASHLOAN_PREMIUM_TOTAL().call().await.unwrap()._0;
+
+        let callbacks = encoder
+            .add_approve_erc20(usdc, executor_address, usdc_amount)
+            .add_aave_v3_supply(usdc, usdc_amount)
+            .add_aave_v3_borrow(weth, borrowed_weth_amount)
+            .add_unwrap_eth(weth, borrowed_weth_amount)
+            .add_wrap_eth(weth, borrowed_weth_amount)
+            .add_approve_erc20(weth, aave_pool_address, borrowed_weth_amount)
+            .add_aave_v3_repay(weth, borrowed_weth_amount)
+            .add_aave_v3_withdraw(usdc, usdc_amount)
+            .get();
+
+        encoder
+            .add_aave_v3_flash_loan(
+                executor_address,
+                aave_v3_pool,
+                usdc_amount,
+                U256::from(premium),
+                callbacks,
+            )
+            .exec()
+            .await?;
+
+        Ok(())
     }
 }
