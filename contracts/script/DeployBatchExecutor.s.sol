@@ -6,7 +6,7 @@ import {BatchExecutor} from "../src/BatchExecutor.sol";
 import {HelperConfig} from "./HelperConfig.s.sol";
 import {console2} from "forge-std/console2.sol";
 
-contract DeployAaveLooper is Script {
+contract DeployBatchExecutor is Script {
     address owner;
 
     function run() external {

@@ -22,7 +22,7 @@ contract HelperConfig is Script {
 
     constructor() {
         if (block.chainid == 42161 || block.chainid == 31337) {
-            uint256 deployerKey = vm.envUint("PRIVATE_KEY");
+            uint256 deployerKey = vm.envUint("DEV_PRIVATE_KEY");
             activeNetworkConfig = NetworkConfig({
                 deployerKey: deployerKey,
                 deployerAddress: vm.addr(deployerKey),
@@ -36,7 +36,7 @@ contract HelperConfig is Script {
                 weth: 0x82aF49447D8a07e3bd95BD0d56f35241523fBab1
             });
         } else if (block.chainid == 8453) {
-            uint256 deployerKey = vm.envUint("PRIVATE_KEY");
+            uint256 deployerKey = vm.envUint("DEV_PRIVATE_KEY");
             activeNetworkConfig = NetworkConfig({
                 deployerKey: deployerKey,
                 deployerAddress: vm.addr(deployerKey),
@@ -51,7 +51,7 @@ contract HelperConfig is Script {
             });
             // sepolia
         } else if (block.chainid == 11155111) {
-            uint256 deployerKey = vm.envUint("PRIVATE_KEY");
+            uint256 deployerKey = vm.envUint("DEV_PRIVATE_KEY");
             activeNetworkConfig = NetworkConfig({
                 deployerKey: deployerKey,
                 deployerAddress: vm.addr(deployerKey),
