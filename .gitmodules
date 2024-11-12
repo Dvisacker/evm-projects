@@ -19,3 +19,6 @@
 [submodule "contracts/lib/aave-v3-core"]
 	path = contracts/lib/aave-v3-core
 	url = https://github.com/aave/aave-v3-core
+[submodule "contracts/lib/foundry-devops"]
+	path = contracts/lib/foundry-devops
+	url = https://github.com/Cyfrin/foundry-devops
