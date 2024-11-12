@@ -1,9 +1,9 @@
 pub mod amm_utils;
+pub mod atomic_encoder;
 pub mod batch_encoder;
 pub mod bridge;
 pub mod config;
 pub mod cycle;
-pub mod encoder;
 pub mod helpers;
 pub mod lend;
 pub mod provider;

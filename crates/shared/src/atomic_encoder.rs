@@ -20,17 +20,6 @@ use types::exchange::ExchangeName;
 
 use crate::addressbook::Addressbook;
 
-// aave pool
-
-// sol! {
-//     #[allow(missing_docs)]
-//     #[sol(rpc)]
-//     interface AaveV3Pool {
-//         function flashLoan(address receiverAddress, address asset, uint256 amount, bytes params, uint256 referralCode) public {}
-//     }
-// }
-
-// a calldata enum that can be either a swap or a multicall
 pub enum CallData {
     Swap(SwapData),
     Multicall(Vec<Call>),
