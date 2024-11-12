@@ -83,3 +83,24 @@ get-amm-value CHAIN_ID POOL_ADDRESS:
 
 activate-pools CHAIN_ID EXCHANGE_NAME:
     cargo run --bin cli -- activate-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}} --min-usd 20000
+
+start-anvil-base:
+    anvil --chain-id 8453 --fork-url https://base-mainnet.g.alchemy.com/v2/fVddI-_ivqrBOeXVNVF2uqSvzZfSgwrw
+
+start-anvil-arbitrum:
+    anvil --chain-id 42161 --fork-url https://arb-mainnet.g.alchemy.com/v2/-FDfJ1GYdKyvmVXVfQLTbr_7i04YGMKU
+
+start-anvil-optimism:
+    anvil --chain-id 10 --fork-url https://opt-mainnet.g.alchemy.com/v2/fVddI-_ivqrBOeXVNVF2uqSvzZfSgwrw
+
+start-anvil-ethereum:
+    anvil --chain-id 1 --fork-url https://eth-mainnet.alchemyapi.io/v2/fVddI-_ivqrBOeXVNVF2uqSvzZfSgwrw
+
+deploy-executor-local:
+    cd contracts && forge script ./script/DeployBatchExecutor.s.sol:DeployBatchExecutor --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --broadcast -vv
+
+deploy-executor-arbitrum:
+    cd contracts && forge script ./script/DeployBatchExecutor.s.sol:DeployBatchExecutor --rpc-url https://arb-mainnet.g.alchemy.com/v2/-FDfJ1GYdKyvmVXVfQLTbr_7i04YGMKU --private-key $DEV_PRIVATE_KEY --broadcast -vv
+
+deploy-executor-mainnet:
+    cd contracts && forge script ./script/DeployBatchExecutor.s.sol:DeployBatchExecutor --rpc-url https://eth-mainnet.alchemyapi.io/v2/fVddI-_ivqrBOeXVNVF2uqSvzZfSgwrw --private-key $DEV_PRIVATE_KEY --broadcast -vv
