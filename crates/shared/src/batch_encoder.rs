@@ -100,31 +100,31 @@ where
         token: Address,
         spender: Address,
         value: U256,
-    ) -> Result<()> {
+    ) -> &mut Self {
         let call = ERC20::approveCall { spender, value };
         let encoded = call.abi_encode();
 
         self.add_call(token, U256::ZERO, Bytes::from(encoded), None);
 
-        Ok(())
+        self
     }
 
-    pub fn add_wrap_eth(&mut self, weth: Address, amount: U256) -> Result<()> {
+    pub fn add_wrap_eth(&mut self, weth: Address, amount: U256) -> &mut Self {
         let call = WETH::depositCall {};
         let encoded = call.abi_encode();
 
         self.add_call(weth, amount, Bytes::from(encoded), None);
 
-        Ok(())
+        self
     }
 
-    pub fn add_unwrap_eth(&mut self, weth: Address, amount: U256) -> Result<()> {
+    pub fn add_unwrap_eth(&mut self, weth: Address, amount: U256) -> &mut Self {
         let call = WETH::withdrawCall { amount };
         let encoded = call.abi_encode();
 
         self.add_call(weth, amount, Bytes::from(encoded), None);
 
-        Ok(())
+        self
     }
 
     pub fn add_transfer_erc20(
@@ -132,7 +132,7 @@ where
         token: Address,
         recipient: Address,
         value: U256,
-    ) -> Result<()> {
+    ) -> &mut Self {
         let call = ERC20::transferCall {
             to: recipient,
             value,
@@ -141,7 +141,7 @@ where
 
         self.add_call(token, U256::ZERO, Bytes::from(encoded), None);
 
-        Ok(())
+        self
     }
 
     pub fn add_transfer_from_erc20(
@@ -150,7 +150,7 @@ where
         owner: Address,
         recipient: Address,
         value: U256,
-    ) -> Result<()> {
+    ) -> &mut Self {
         let call = ERC20::transferFromCall {
             from: owner,
             to: recipient,
@@ -160,7 +160,7 @@ where
 
         self.add_call(token, U256::ZERO, Bytes::from(encoded), None);
 
-        Ok(())
+        self
     }
 
     // AAVE V3
@@ -170,7 +170,7 @@ where
         asset: Address,
         amount: U256,
         on_behalf_of: Address,
-    ) -> Result<()> {
+    ) -> &mut Self {
         let call = IAaveV3Pool::supplyCall {
             asset,
             amount,
@@ -186,7 +186,7 @@ where
             None,
         );
 
-        Ok(())
+        self
     }
 
     pub fn add_aave_v3_borrow(
@@ -194,7 +194,7 @@ where
         asset: Address,
         amount: U256,
         on_behalf_of: Address,
-    ) -> Result<()> {
+    ) -> &mut Self {
         let call = IAaveV3Pool::borrowCall {
             asset,
             amount,
@@ -211,7 +211,7 @@ where
             None,
         );
 
-        Ok(())
+        self
     }
 
     pub fn add_aave_v3_repay(
@@ -219,7 +219,7 @@ where
         asset: Address,
         amount: U256,
         on_behalf_of: Address,
-    ) -> Result<()> {
+    ) -> &mut Self {
         let call = IAaveV3Pool::repayCall {
             asset,
             amount,
@@ -235,15 +235,10 @@ where
             None,
         );
 
-        Ok(())
+        self
     }
 
-    pub fn add_aave_v3_withdraw(
-        &mut self,
-        asset: Address,
-        amount: U256,
-        to: Address,
-    ) -> Result<()> {
+    pub fn add_aave_v3_withdraw(&mut self, asset: Address, amount: U256, to: Address) -> &mut Self {
         let call = IAaveV3Pool::withdrawCall { asset, amount, to };
         let encoded = call.abi_encode();
 
@@ -254,7 +249,7 @@ where
             None,
         );
 
-        Ok(())
+        self
     }
 
     pub fn add_aave_v3_liquidate(
@@ -263,7 +258,7 @@ where
         debt: Address,
         user: Address,
         amount: U256,
-    ) -> Result<()> {
+    ) -> &mut Self {
         let call = IAaveV3Pool::liquidationCallCall {
             collateralAsset: collateral,
             debtAsset: debt,
@@ -280,12 +275,12 @@ where
             None,
         );
 
-        Ok(())
+        self
     }
 
     // UNISWAP V3
 
-    pub fn add_uniswap_v3_exact_input(&mut self, swap: ExactInputSingleParams) -> Result<()> {
+    pub fn add_uniswap_v3_exact_input(&mut self, swap: ExactInputSingleParams) -> &mut Self {
         let call = IUniswapV3Router::exactInputSingleCall { params: swap };
         let encoded = call.abi_encode();
 
@@ -296,10 +291,10 @@ where
             None,
         );
 
-        Ok(())
+        self
     }
 
-    pub fn add_uniswap_v3_exact_output(&mut self, swap: ExactOutputSingleParams) -> Result<()> {
+    pub fn add_uniswap_v3_exact_output(&mut self, swap: ExactOutputSingleParams) -> &mut Self {
         let call = IUniswapV3Router::exactOutputSingleCall { params: swap };
         let encoded = call.abi_encode();
 
@@ -310,7 +305,7 @@ where
             None,
         );
 
-        Ok(())
+        self
     }
 
     // UNISWAP V2
@@ -321,7 +316,7 @@ where
         token_in: Address,
         token_out: Address,
         deadline: U256,
-    ) -> Result<()> {
+    ) -> &mut Self {
         let call = IUniswapV2Router::swapExactTokensForTokensCall {
             amountIn: amount_in,
             amountOutMin: U256::ZERO,
@@ -338,7 +333,7 @@ where
             None,
         );
 
-        Ok(())
+        self
     }
 
     // FLASH LOANS
@@ -349,7 +344,7 @@ where
         amount: U256,
         premium: U256,
         callbacks: Vec<Bytes>,
-    ) -> Result<()> {
+    ) -> &mut Self {
         // This consists of 1) The array of callback calls calldata and 2) The callback return value (specific to each flashloan)
         let approve_premium_call_data =
             self.build_approve_erc20(asset, self.addresses.aave_v3_pool_address, premium);
@@ -380,7 +375,7 @@ where
             None,
         );
 
-        Ok(())
+        self
     }
 
     pub fn add_uniswap_v2_flash_swap(
@@ -389,7 +384,7 @@ where
         assets: [Address; 2],
         amounts: [U256; 2],
         callbacks: Vec<Bytes>,
-    ) -> Result<()> {
+    ) -> &mut Self {
         // Unpack assets and amounts
         let [asset0, asset1] = assets;
         let [amount0, amount1] = amounts;
@@ -426,7 +421,7 @@ where
             }),
         );
 
-        Ok(())
+        self
     }
 
     pub fn add_uniswap_v3_flash_loan(
@@ -436,7 +431,7 @@ where
         amounts: [U256; 2],
         fee: U256,
         callbacks: Vec<Bytes>,
-    ) -> Result<()> {
+    ) -> &mut Self {
         // Unpack assets and amounts
         let [asset0, asset1] = assets;
         let [amount0, amount1] = amounts;
@@ -479,7 +474,7 @@ where
             }),
         );
 
-        Ok(())
+        self
     }
 
     // INTERNAL
