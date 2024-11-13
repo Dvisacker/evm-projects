@@ -77,4 +77,27 @@ contract BatchExecutorTest is Test {
         executor.batchCall{value: amountIn}(callDataArray);
         vm.stopPrank();
     }
+
+    function testWrapUnwrapEth() public {
+        uint256 amountIn = 1 ether;
+        bytes memory depositWethCallData = buildCall(
+            address(weth),
+            amountIn,
+            abi.encodeWithSelector(weth.deposit.selector),
+            CallbackContext({dataIndex: 0, sender: address(this)})
+        );
+        bytes memory withdrawWethCallData = buildCall(
+            address(weth),
+            0,
+            abi.encodeWithSelector(weth.withdraw.selector, amountIn),
+            CallbackContext({dataIndex: 0, sender: address(this)})
+        );
+        bytes[] memory callDataArray = new bytes[](2);
+        callDataArray[0] = depositWethCallData;
+        callDataArray[1] = withdrawWethCallData;
+
+        vm.startPrank(deployer);
+        executor.batchCall{value: amountIn}(callDataArray);
+        vm.stopPrank();
+    }
 }
