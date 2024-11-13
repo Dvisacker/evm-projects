@@ -204,6 +204,16 @@ pub fn compute_v3_pool_address(
     ))
 }
 
+pub async fn get_token_balance(
+    provider: Arc<SignerProvider>,
+    token: Address,
+    holder: Address,
+) -> Result<U256> {
+    let token = IERC20::new(token, provider.clone());
+    let balance = token.balanceOf(holder).call().await?;
+    Ok(balance._0)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
