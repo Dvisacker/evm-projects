@@ -6,6 +6,9 @@ import {WETH} from "../lib/solmate/src/tokens/WETH.sol";
 import "../src/BatchExecutor.sol";
 import "forge-std/console.sol";
 import "../lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
+import "../src/interfaces/IUniswapV3Router.sol";
+import "../src/interfaces/IUniswapV2Router.sol";
+import "../src/interfaces/IAerodromeRouter.sol";
 
 contract BatchExecutorTest is Test {
     address deployer = makeAddr("deployer");
@@ -17,9 +20,9 @@ contract BatchExecutorTest is Test {
 
     BatchExecutor public executor;
     address owner = address(this);
-    address uniswapV3Router = address(0x2626664c2603336E57B271c5C0b26F421741e481);
-    address uniswapV2Router = address(0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24);
-    address aerodromeRouter = address(0xcF77a3Ba9A5CA399B7c97c74d54e5b1Beb874E43);
+    IUniswapV3Router public uniswapV3Router = IUniswapV3Router(0x2626664c2603336E57B271c5C0b26F421741e481);
+    IUniswapV2Router public uniswapV2Router = IUniswapV2Router(0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24);
+    IAerodromeRouter aerodromeRouter = IAerodromeRouter(0xcF77a3Ba9A5CA399B7c97c74d54e5b1Beb874E43);
 
     function setUp() public {
         vm.createSelectFork((vm.envString("BASE_RPC_URL")));
@@ -56,19 +59,26 @@ contract BatchExecutorTest is Test {
         return finalResult;
     }
 
-    function buildCall(address target, uint256 value, bytes memory callData, CallbackContext memory context)
-        public
-        returns (bytes memory)
-    {
+    function buildCall(
+        address target,
+        uint256 value,
+        bytes memory callData,
+        CallbackContext memory context,
+        BatchExecutor.DynamicCall[] memory dynamicCalls
+    ) public returns (bytes memory) {
         bytes32 contextBytes = encodedContext(context);
-        return abi.encodeWithSelector(executor.singlecall.selector, target, value, contextBytes, callData);
+        return abi.encodeWithSelector(executor.singlecall.selector, target, value, contextBytes, callData, dynamicCalls);
     }
 
     function testWrapEth() public {
         uint256 amountIn = 1 ether;
         bytes memory depositWethCallData = abi.encodeWithSelector(weth.deposit.selector);
         bytes memory callData = buildCall(
-            address(weth), amountIn, depositWethCallData, CallbackContext({dataIndex: 0, sender: address(this)})
+            address(weth),
+            amountIn,
+            depositWethCallData,
+            CallbackContext({dataIndex: 0, sender: address(this)}),
+            new BatchExecutor.DynamicCall[](0)
         );
         bytes[] memory callDataArray = new bytes[](1);
         callDataArray[0] = callData;
@@ -84,17 +94,123 @@ contract BatchExecutorTest is Test {
             address(weth),
             amountIn,
             abi.encodeWithSelector(weth.deposit.selector),
-            CallbackContext({dataIndex: 0, sender: address(this)})
+            CallbackContext({dataIndex: 0, sender: address(this)}),
+            new BatchExecutor.DynamicCall[](0)
         );
         bytes memory withdrawWethCallData = buildCall(
             address(weth),
             0,
             abi.encodeWithSelector(weth.withdraw.selector, amountIn),
-            CallbackContext({dataIndex: 0, sender: address(this)})
+            CallbackContext({dataIndex: 0, sender: address(this)}),
+            new BatchExecutor.DynamicCall[](0)
         );
         bytes[] memory callDataArray = new bytes[](2);
         callDataArray[0] = depositWethCallData;
         callDataArray[1] = withdrawWethCallData;
+
+        vm.startPrank(deployer);
+        executor.batchCall{value: amountIn}(callDataArray);
+        vm.stopPrank();
+    }
+
+    function testUniswapV3SwapExact() public {
+        uint256 amountIn = 1 ether;
+        bytes memory depositWethCallData = buildCall(
+            address(weth),
+            amountIn,
+            abi.encodeWithSelector(weth.deposit.selector),
+            CallbackContext({dataIndex: 0, sender: address(this)}),
+            new BatchExecutor.DynamicCall[](0)
+        );
+        bytes memory approveErc20CallData = buildCall(
+            address(weth),
+            0,
+            abi.encodeWithSelector(weth.approve.selector, uniswapV3Router, amountIn),
+            CallbackContext({dataIndex: 0, sender: address(this)}),
+            new BatchExecutor.DynamicCall[](0)
+        );
+
+        bytes memory swapCallData = buildCall(
+            address(uniswapV3Router),
+            0,
+            abi.encodeWithSelector(
+                uniswapV3Router.exactInputSingle.selector,
+                IUniswapV3Router.ExactInputSingleParams({
+                    tokenIn: address(weth),
+                    tokenOut: address(usdc),
+                    fee: 3000,
+                    recipient: address(executor),
+                    amountIn: amountIn,
+                    amountOutMinimum: 0,
+                    sqrtPriceLimitX96: 0
+                })
+            ),
+            CallbackContext({dataIndex: 0, sender: address(this)}),
+            new BatchExecutor.DynamicCall[](0)
+        );
+
+        bytes[] memory callDataArray = new bytes[](3);
+        callDataArray[0] = depositWethCallData;
+        callDataArray[1] = approveErc20CallData;
+        callDataArray[2] = swapCallData;
+
+        vm.startPrank(deployer);
+        executor.batchCall{value: amountIn}(callDataArray);
+        vm.stopPrank();
+    }
+
+    function testUniswapV3SwapAll() public {
+        uint256 amountIn = 1 ether;
+
+        bytes memory depositWethCallData = buildCall(
+            address(weth),
+            amountIn,
+            abi.encodeWithSelector(weth.deposit.selector),
+            CallbackContext({dataIndex: 0, sender: address(this)}),
+            new BatchExecutor.DynamicCall[](0)
+        );
+        bytes memory approveErc20CallData = buildCall(
+            address(weth),
+            0,
+            abi.encodeWithSelector(weth.approve.selector, uniswapV3Router, amountIn),
+            CallbackContext({dataIndex: 0, sender: address(this)}),
+            new BatchExecutor.DynamicCall[](0)
+        );
+
+        BatchExecutor.DynamicCall memory balanceOf = BatchExecutor.DynamicCall({
+            to: address(weth),
+            data: abi.encodeWithSelector(weth.balanceOf.selector, address(executor)),
+            offset: 4 + 32 * 4,
+            length: 32,
+            resOffset: 0
+        });
+
+        BatchExecutor.DynamicCall[] memory dynamicCalls = new BatchExecutor.DynamicCall[](1);
+        dynamicCalls[0] = balanceOf;
+
+        bytes memory swapCallData = buildCall(
+            address(uniswapV3Router),
+            0,
+            abi.encodeWithSelector(
+                uniswapV3Router.exactInputSingle.selector,
+                IUniswapV3Router.ExactInputSingleParams({
+                    tokenIn: address(weth),
+                    tokenOut: address(usdc),
+                    fee: 3000,
+                    recipient: address(executor),
+                    amountIn: 0, // replaced by dynamic call
+                    amountOutMinimum: 0,
+                    sqrtPriceLimitX96: 0
+                })
+            ),
+            CallbackContext({dataIndex: 0, sender: address(this)}),
+            dynamicCalls
+        );
+
+        bytes[] memory callDataArray = new bytes[](3);
+        callDataArray[0] = depositWethCallData;
+        callDataArray[1] = approveErc20CallData;
+        callDataArray[2] = swapCallData;
 
         vm.startPrank(deployer);
         executor.batchCall{value: amountIn}(callDataArray);

@@ -6,10 +6,19 @@ import "forge-std/console.sol";
 uint256 constant CONTEXT_TRANSIENT_STORAGE_LOCATION = 0;
 
 contract BatchExecutor {
-    address internal immutable OWNER;
+    address public immutable OWNER;
 
     constructor(address _owner) {
         OWNER = _owner;
+    }
+
+    // Struct used to call a contract dynamically and insert the result into the callData of another contract call.
+    struct DynamicCall {
+        address to;
+        bytes data;
+        uint64 offset;
+        uint64 length;
+        uint64 resOffset;
     }
 
     struct FallbackData {
@@ -52,8 +61,30 @@ contract BatchExecutor {
     └─> Restore Initial Context        
 
     */
-    function singlecall(address target, uint256 value, bytes32 context, bytes memory callData) external payable {
+    function singlecall(
+        address target,
+        uint256 value,
+        bytes32 context,
+        bytes memory callData,
+        DynamicCall[] calldata dynamicCalls
+    ) external payable {
         require(msg.sender == address(this));
+
+        for (uint256 i; i < dynamicCalls.length; ++i) {
+            DynamicCall calldata dynamicCall = dynamicCalls[i];
+
+            (bool success, bytes memory resData) = dynamicCall.to.staticcall(dynamicCall.data);
+            if (!success) _revert(resData);
+
+            uint64 offset = dynamicCall.offset;
+            uint64 length = dynamicCall.length;
+            uint64 resOffset = dynamicCall.resOffset;
+
+            assembly ("memory-safe") {
+                mcopy(add(callData, add(32, offset)), add(resData, add(32, resOffset)), length)
+            }
+        }
+
         bytes32 prevContext = _tload(CONTEXT_TRANSIENT_STORAGE_LOCATION);
 
         _tstore(CONTEXT_TRANSIENT_STORAGE_LOCATION, context);
