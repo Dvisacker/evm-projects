@@ -5,7 +5,7 @@ use alloy::{
 };
 use async_trait::async_trait;
 use eyre::Result;
-use std::sync::Arc;
+use std::{hash::Hash, sync::Arc};
 use tokio_stream::StreamExt;
 
 /// A collector that listens for new blocks, and generates a stream of
@@ -39,10 +39,10 @@ where
     async fn get_event_stream(&self) -> Result<CollectorStream<'_, NewBlock>> {
         let sub = self.provider.subscribe_blocks().await?;
         let stream = sub.into_stream().take(256);
-        let stream = stream.filter_map(|block| {
+        let stream = stream.filter_map(|header| {
             Some(NewBlock {
-                hash: block.header.hash.into(),
-                number: U64::from(block.header.number),
+                hash: header.hash.into(),
+                number: U64::from(header.number),
             })
         });
         Ok(Box::pin(stream))
