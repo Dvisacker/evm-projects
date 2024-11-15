@@ -15,6 +15,7 @@ contract DeployBatchExecutor is Script {
 
         owner = networkConfig.deployerAddress;
         require(owner != address(0), "Owner address not set");
+        console2.log("Owner:", owner);
 
         vm.startBroadcast();
         BatchExecutor executor = new BatchExecutor(owner);

@@ -16,22 +16,22 @@ pub mod SafeTransferLib {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f80fdfea264697066735822122001ceea7c9a6079f21f1f738b46267cdafc5748c6a90eaf1929ee9771586f6f4c64736f6c634300081a0033
+    ///0x608060405234601d57600e6021565b603e602c823930815050603e90f35b6027565b60405190565b5f80fdfe60806040525f80fdfea264697066735822122044a2c7ace29c7b04697b690340defae7251971bf2a68c32706e4e571fa5fa21264736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`U`K`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`?W\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \x01\xCE\xEA|\x9A`y\xF2\x1F\x1Fs\x8BF&|\xDA\xFCWH\xC6\xA9\x0E\xAF\x19)\xEE\x97qXooLdsolcC\0\x08\x1A\x003",
+        b"`\x80`@R4`\x1DW`\x0E`!V[`>`,\x8290\x81PP`>\x90\xF3[`'V[`@Q\x90V[_\x80\xFD\xFE`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 D\xA2\xC7\xAC\xE2\x9C{\x04i{i\x03@\xDE\xFA\xE7%\x19q\xBF*h\xC3'\x06\xE4\xE5q\xFA_\xA2\x12dsolcC\0\x08\x1A\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x730000000000000000000000000000000000000000301460806040525f80fdfea264697066735822122001ceea7c9a6079f21f1f738b46267cdafc5748c6a90eaf1929ee9771586f6f4c64736f6c634300081a0033
+    ///0x60806040525f80fdfea264697066735822122044a2c7ace29c7b04697b690340defae7251971bf2a68c32706e4e571fa5fa21264736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \x01\xCE\xEA|\x9A`y\xF2\x1F\x1Fs\x8BF&|\xDA\xFCWH\xC6\xA9\x0E\xAF\x19)\xEE\x97qXooLdsolcC\0\x08\x1A\x003",
+        b"`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 D\xA2\xC7\xAC\xE2\x9C{\x04i{i\x03@\xDE\xFA\xE7%\x19q\xBF*h\xC3'\x06\xE4\xE5q\xFA_\xA2\x12dsolcC\0\x08\x1A\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`SafeTransferLib`](self) contract instance.

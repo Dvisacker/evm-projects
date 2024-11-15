@@ -52,22 +52,22 @@ pub mod SafeERC20 {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f80fdfea2646970667358221220883415d6550ea1c892670bc2926795234607c8e86d1135966caf61513490b64e64736f6c634300081a0033
+    ///0x608060405234601d57600e6021565b603e602c823930815050603e90f35b6027565b60405190565b5f80fdfe60806040525f80fdfea2646970667358221220cccac735f201565143201ff43b490e4c5f140878798a564656214f6054fcb00c64736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`U`K`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`?W\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \x884\x15\xD6U\x0E\xA1\xC8\x92g\x0B\xC2\x92g\x95#F\x07\xC8\xE8m\x115\x96l\xAFaQ4\x90\xB6NdsolcC\0\x08\x1A\x003",
+        b"`\x80`@R4`\x1DW`\x0E`!V[`>`,\x8290\x81PP`>\x90\xF3[`'V[`@Q\x90V[_\x80\xFD\xFE`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \xCC\xCA\xC75\xF2\x01VQC \x1F\xF4;I\x0EL_\x14\x08xy\x8AVFV!O`T\xFC\xB0\x0CdsolcC\0\x08\x1A\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x730000000000000000000000000000000000000000301460806040525f80fdfea2646970667358221220883415d6550ea1c892670bc2926795234607c8e86d1135966caf61513490b64e64736f6c634300081a0033
+    ///0x60806040525f80fdfea2646970667358221220cccac735f201565143201ff43b490e4c5f140878798a564656214f6054fcb00c64736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \x884\x15\xD6U\x0E\xA1\xC8\x92g\x0B\xC2\x92g\x95#F\x07\xC8\xE8m\x115\x96l\xAFaQ4\x90\xB6NdsolcC\0\x08\x1A\x003",
+        b"`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \xCC\xCA\xC75\xF2\x01VQC \x1F\xF4;I\x0EL_\x14\x08xy\x8AVFV!O`T\xFC\xB0\x0CdsolcC\0\x08\x1A\x003",
     );
     /**Custom error with signature `SafeERC20FailedDecreaseAllowance(address,uint256,uint256)` and selector `0xe570110f`.
 ```solidity

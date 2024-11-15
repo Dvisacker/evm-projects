@@ -24,7 +24,7 @@ generate-executor-binding:
     bindings_path="./crates/executor-binding"
     contract_root_path="./contracts"
     rm -rf $bindings_path
-    forge bind --bindings-path $bindings_path --root $contract_root_path --crate-name executor-binding --alloy --alloy-version v0.5.4
+    forge bind --bindings-path $bindings_path --root $contract_root_path --crate-name executor-binding --alloy --alloy-version v0.5.4 --via-ir
 
 fmt: 
     cargo +nightly fmt --all
@@ -85,16 +85,16 @@ activate-pools CHAIN_ID EXCHANGE_NAME:
     cargo run --bin cli -- activate-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}} --min-usd 20000
 
 start-anvil-base:
-    anvil --chain-id 8453 --fork-url https://base-mainnet.g.alchemy.com/v2/fVddI-_ivqrBOeXVNVF2uqSvzZfSgwrw
+    anvil --chain-id 8453 --fork-url https://base-mainnet.g.alchemy.com/v2/fVddI-_ivqrBOeXVNVF2uqSvzZfSgwrw --steps-tracing
 
 start-anvil-arbitrum:
-    anvil --chain-id 42161 --fork-url https://arb-mainnet.g.alchemy.com/v2/-FDfJ1GYdKyvmVXVfQLTbr_7i04YGMKU
+    anvil --chain-id 42161 --fork-url https://arb-mainnet.g.alchemy.com/v2/-FDfJ1GYdKyvmVXVfQLTbr_7i04YGMKU --steps-tracing
 
 start-anvil-optimism:
-    anvil --chain-id 10 --fork-url https://opt-mainnet.g.alchemy.com/v2/fVddI-_ivqrBOeXVNVF2uqSvzZfSgwrw
+    anvil --chain-id 10 --fork-url https://opt-mainnet.g.alchemy.com/v2/fVddI-_ivqrBOeXVNVF2uqSvzZfSgwrw --steps-tracing
 
 start-anvil-ethereum:
-    anvil --chain-id 1 --fork-url https://eth-mainnet.alchemyapi.io/v2/fVddI-_ivqrBOeXVNVF2uqSvzZfSgwrw
+    anvil --chain-id 1 --fork-url https://eth-mainnet.alchemyapi.io/v2/fVddI-_ivqrBOeXVNVF2uqSvzZfSgwrw --steps-tracing
 
 deploy-executor-local:
     cd contracts && forge script ./script/DeployBatchExecutor.s.sol:DeployBatchExecutor --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --broadcast -vv

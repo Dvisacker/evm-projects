@@ -59,22 +59,22 @@ pub mod Errors {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f80fdfea264697066735822122029466108ebf405110f359739803c169cc7933b3ade65cbe6e2ef2ba12e7512a164736f6c634300081a0033
+    ///0x608060405234601d57600e6021565b603e602c823930815050603e90f35b6027565b60405190565b5f80fdfe60806040525f80fdfea26469706673582212200bfe9db9f13c0e82845ae6e40e52e3d5bb7609f23d5a865a552b9577e20d589c64736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`U`K`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`?W\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 )Fa\x08\xEB\xF4\x05\x11\x0F5\x979\x80<\x16\x9C\xC7\x93;:\xDEe\xCB\xE6\xE2\xEF+\xA1.u\x12\xA1dsolcC\0\x08\x1A\x003",
+        b"`\x80`@R4`\x1DW`\x0E`!V[`>`,\x8290\x81PP`>\x90\xF3[`'V[`@Q\x90V[_\x80\xFD\xFE`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \x0B\xFE\x9D\xB9\xF1<\x0E\x82\x84Z\xE6\xE4\x0ER\xE3\xD5\xBBv\t\xF2=Z\x86ZU+\x95w\xE2\rX\x9CdsolcC\0\x08\x1A\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x730000000000000000000000000000000000000000301460806040525f80fdfea264697066735822122029466108ebf405110f359739803c169cc7933b3ade65cbe6e2ef2ba12e7512a164736f6c634300081a0033
+    ///0x60806040525f80fdfea26469706673582212200bfe9db9f13c0e82845ae6e40e52e3d5bb7609f23d5a865a552b9577e20d589c64736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 )Fa\x08\xEB\xF4\x05\x11\x0F5\x979\x80<\x16\x9C\xC7\x93;:\xDEe\xCB\xE6\xE2\xEF+\xA1.u\x12\xA1dsolcC\0\x08\x1A\x003",
+        b"`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \x0B\xFE\x9D\xB9\xF1<\x0E\x82\x84Z\xE6\xE4\x0ER\xE3\xD5\xBBv\t\xF2=Z\x86ZU+\x95w\xE2\rX\x9CdsolcC\0\x08\x1A\x003",
     );
     /**Custom error with signature `FailedCall()` and selector `0xd6bda275`.
 ```solidity

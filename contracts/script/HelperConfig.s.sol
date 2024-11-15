@@ -21,8 +21,20 @@ contract HelperConfig is Script {
     }
 
     constructor() {
+        console2.log(block.chainid);
+        uint256 deployerKey;
+        address deployerAddress;
+
+        bool isAnvil = vm.envBool("USE_ANVIL");
+        if (isAnvil) {
+            console2.log("Anvil detected");
+            deployerKey = vm.envUint("ANVIL_DEV_PRIVATE_KEY");
+            deployerAddress = vm.envAddress("ANVIL_DEV_ADDRESS");
+        } else {
+            deployerKey = vm.envUint("DEV_PRIVATE_KEY");
+            deployerAddress = vm.envAddress("DEV_ADDRESS");
+        }
         if (block.chainid == 42161 || block.chainid == 31337) {
-            uint256 deployerKey = vm.envUint("DEV_PRIVATE_KEY");
             activeNetworkConfig = NetworkConfig({
                 deployerKey: deployerKey,
                 deployerAddress: vm.addr(deployerKey),
@@ -36,7 +48,6 @@ contract HelperConfig is Script {
                 weth: 0x82aF49447D8a07e3bd95BD0d56f35241523fBab1
             });
         } else if (block.chainid == 8453) {
-            uint256 deployerKey = vm.envUint("DEV_PRIVATE_KEY");
             activeNetworkConfig = NetworkConfig({
                 deployerKey: deployerKey,
                 deployerAddress: vm.addr(deployerKey),
@@ -51,7 +62,6 @@ contract HelperConfig is Script {
             });
             // sepolia
         } else if (block.chainid == 11155111) {
-            uint256 deployerKey = vm.envUint("DEV_PRIVATE_KEY");
             activeNetworkConfig = NetworkConfig({
                 deployerKey: deployerKey,
                 deployerAddress: vm.addr(deployerKey),

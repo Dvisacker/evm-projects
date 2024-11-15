@@ -30,22 +30,22 @@ pub mod Address {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x6055604b600b8282823980515f1a607314603f577f4e487b71000000000000000000000000000000000000000000000000000000005f525f60045260245ffd5b305f52607381538281f3fe730000000000000000000000000000000000000000301460806040525f80fdfea2646970667358221220cfbc3dfefbdc138904629d45b6fd11aff764c973acdddc4d6612a0abc217d45f64736f6c634300081a0033
+    ///0x608060405234601d57600e6021565b603e602c823930815050603e90f35b6027565b60405190565b5f80fdfe60806040525f80fdfea26469706673582212205ef4155c9c981595c18b5767119b726b2905985ddd9a71c6fc9242ee6b94f54d64736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`U`K`\x0B\x82\x82\x829\x80Q_\x1A`s\x14`?W\x7FNH{q\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0_R_`\x04R`$_\xFD[0_R`s\x81S\x82\x81\xF3\xFEs\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \xCF\xBC=\xFE\xFB\xDC\x13\x89\x04b\x9DE\xB6\xFD\x11\xAF\xF7d\xC9s\xAC\xDD\xDCMf\x12\xA0\xAB\xC2\x17\xD4_dsolcC\0\x08\x1A\x003",
+        b"`\x80`@R4`\x1DW`\x0E`!V[`>`,\x8290\x81PP`>\x90\xF3[`'V[`@Q\x90V[_\x80\xFD\xFE`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 ^\xF4\x15\\\x9C\x98\x15\x95\xC1\x8BWg\x11\x9Brk)\x05\x98]\xDD\x9Aq\xC6\xFC\x92B\xEEk\x94\xF5MdsolcC\0\x08\x1A\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x730000000000000000000000000000000000000000301460806040525f80fdfea2646970667358221220cfbc3dfefbdc138904629d45b6fd11aff764c973acdddc4d6612a0abc217d45f64736f6c634300081a0033
+    ///0x60806040525f80fdfea26469706673582212205ef4155c9c981595c18b5767119b726b2905985ddd9a71c6fc9242ee6b94f54d64736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"s\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\x000\x14`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \xCF\xBC=\xFE\xFB\xDC\x13\x89\x04b\x9DE\xB6\xFD\x11\xAF\xF7d\xC9s\xAC\xDD\xDCMf\x12\xA0\xAB\xC2\x17\xD4_dsolcC\0\x08\x1A\x003",
+        b"`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 ^\xF4\x15\\\x9C\x98\x15\x95\xC1\x8BWg\x11\x9Brk)\x05\x98]\xDD\x9Aq\xC6\xFC\x92B\xEEk\x94\xF5MdsolcC\0\x08\x1A\x003",
     );
     /**Custom error with signature `AddressEmptyCode(address)` and selector `0x9996b315`.
 ```solidity

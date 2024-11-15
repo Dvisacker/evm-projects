@@ -29,6 +29,8 @@ contract BatchExecutor {
     // BATCH CALL FUNCTIONS
 
     function batchCall(bytes[] memory data) external payable {
+        console.log(msg.sender);
+        console.log(OWNER);
         require(msg.sender == OWNER);
         _multicall(data);
     }
