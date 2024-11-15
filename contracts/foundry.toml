@@ -4,6 +4,7 @@ out = "out"
 evm_version = "cancun"
 libs = ["lib"]
 optimizer = false
+gas_limit = "18446744073709551615"  # Maximum uint64 value
 fs_permissions = [
     { access = "read", path = "broadcast" },
     { access = "read", path = "reports" }
