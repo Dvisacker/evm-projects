@@ -9,6 +9,7 @@ import "../lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
 import "../src/interfaces/IUniswapV3Router.sol";
 import "../src/interfaces/IUniswapV2Router.sol";
 import "../src/interfaces/IAerodromeRouter.sol";
+import "../lib/v3-core/contracts/interfaces/IUniswapV3Pool.sol";
 
 contract BatchExecutorTest is Test {
     address deployer = makeAddr("deployer");
@@ -24,6 +25,11 @@ contract BatchExecutorTest is Test {
     IUniswapV2Router public uniswapV2Router = IUniswapV2Router(0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24);
     IAerodromeRouter aerodromeRouter = IAerodromeRouter(0xcF77a3Ba9A5CA399B7c97c74d54e5b1Beb874E43);
 
+    // V3 factory address
+    address factory = 0x33128a8fC17869897dcE68Ed026d694621f6FDfD;
+    // V3 init code hash
+    bytes32 initCodeHash = 0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54;
+
     function setUp() public {
         vm.createSelectFork((vm.envString("BASE_RPC_URL")));
         executor = new BatchExecutor(deployer);
@@ -36,27 +42,53 @@ contract BatchExecutorTest is Test {
     }
 
     function encodedContext(CallbackContext memory context) public pure returns (bytes32) {
-        // Convert dataIndex to bytes and left pad to 12 bytes
-        bytes memory paddedDataIndex = new bytes(12);
+        // Convert uint32 to bytes32, right-aligned
+        bytes32 dataIndexBytes32 = bytes32(uint256(context.dataIndex));
 
-        // Convert uint32 to big-endian bytes
-        bytes4 dataIndexBytes = bytes4(uint32(context.dataIndex));
+        // Convert address to bytes32, right-aligned
+        bytes32 senderBytes32 = bytes32(uint256(uint160(context.sender)));
 
-        // Copy the 4 bytes to the end of the 12 byte array (left padding with zeros)
-        assembly {
-            mstore(add(paddedDataIndex, 12), dataIndexBytes)
-        }
+        bytes32 shiftedDataIndexBytes32 = dataIndexBytes32 << 160;
+        // Shift dataIndex left by 160 bits (20 bytes) and combine with sender
+        bytes32 result = (shiftedDataIndexBytes32 & 0xffffffffffffffffffffffff0000000000000000000000000000000000000000)
+            | (senderBytes32 & 0x000000000000000000000000ffffffffffffffffffffffffffffffffffffffff);
 
-        // Concatenate with the address (20 bytes)
-        bytes memory result = bytes.concat(paddedDataIndex, abi.encodePacked(context.sender));
+        return result;
+    }
 
-        // Convert to bytes32
-        bytes32 finalResult;
-        assembly {
-            finalResult := mload(add(result, 32))
-        }
+    function getCreate2Address(address from, bytes32 salt, bytes32 initCodeHash) public pure returns (address addr) {
+        /// @notice Compute CREATE2 address
+        /// @dev Follows the same logic as the typescript version but in Solidity
+        /// @param from The address deploying the contract
+        /// @param salt The salt used in the CREATE2 deployment
+        /// @param initCodeHash The hash of the contract's init code
 
-        return finalResult;
+        // Pack and hash according to CREATE2 specification
+        bytes32 hash = keccak256(
+            abi.encodePacked(
+                bytes1(0xff), // Fixed prefix
+                from, // Creator address
+                salt, // Randomizing salt
+                initCodeHash // Init code hash
+            )
+        );
+
+        // Convert last 20 bytes of hash to address
+        addr = address(uint160(uint256(hash)));
+    }
+
+    function computeV3PoolAddress(bytes32 initCodeHash, address factory, address tokenA, address tokenB, uint24 fee)
+        public
+        pure
+        returns (address)
+    {
+        // Sort tokens
+        (address token0, address token1) = tokenA < tokenB ? (tokenA, tokenB) : (tokenB, tokenA);
+
+        // Compute the salt from packed tokens and fee
+        bytes32 salt = keccak256(abi.encode(token0, token1, fee));
+
+        return getCreate2Address(factory, salt, initCodeHash);
     }
 
     function buildCall(
