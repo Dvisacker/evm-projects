@@ -248,4 +248,55 @@ contract BatchExecutorTest is Test {
         executor.batchCall{value: amountIn}(callDataArray);
         vm.stopPrank();
     }
+
+    function testUniswapV3FlashLoan() public {
+        address pool_address = computeV3PoolAddress(initCodeHash, factory, address(weth), address(usdc), 3000);
+
+        uint256 amountUsdc = 3000 * 10 ** 6;
+        uint256 amountWeth = 1 ether;
+        IUniswapV3Pool pool = IUniswapV3Pool(pool_address);
+
+        deal(address(usdc), address(executor), 100000 * 1e6);
+        deal(address(weth), address(executor), 100 ether);
+
+        uint256 amountWethWithPremium = amountWeth + (300 * amountWeth / 100000);
+        uint256 amountUsdcWithPremium = amountUsdc + (300 * amountUsdc / 100000);
+
+        bytes memory transfer0Calldata = buildCall(
+            address(weth),
+            0,
+            abi.encodeWithSelector(weth.transfer.selector, address(pool), amountWethWithPremium),
+            CallbackContext({dataIndex: 0, sender: address(this)}),
+            new BatchExecutor.DynamicCall[](0)
+        );
+        bytes memory transfer1Calldata = buildCall(
+            address(usdc),
+            0,
+            abi.encodeWithSelector(usdc.transfer.selector, address(pool), amountUsdcWithPremium),
+            CallbackContext({dataIndex: 0, sender: address(this)}),
+            new BatchExecutor.DynamicCall[](0)
+        );
+
+        bytes[] memory callbackCalls = new bytes[](2);
+        callbackCalls[0] = transfer0Calldata;
+        callbackCalls[1] = transfer1Calldata;
+        bytes memory callbackData = abi.encode(callbackCalls, "0x");
+
+        CallbackContext memory context = CallbackContext({dataIndex: 2, sender: address(pool)});
+
+        bytes memory flashCallData = buildCall(
+            address(pool),
+            0,
+            abi.encodeWithSelector(pool.flash.selector, address(executor), amountWeth, amountUsdc, callbackData),
+            context,
+            new BatchExecutor.DynamicCall[](0)
+        );
+
+        bytes[] memory callDataArray = new bytes[](1);
+        callDataArray[0] = flashCallData;
+
+        vm.startPrank(deployer);
+        executor.batchCall(callDataArray);
+        vm.stopPrank();
+    }
 }
