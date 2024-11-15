@@ -3,18 +3,19 @@ use alloy::providers::Provider;
 use alloy::sol;
 use alloy::transports::Transport;
 use alloy_chains::NamedChain;
-use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U256};
+use alloy_primitives::aliases::U24;
+use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U160, U256};
 use alloy_sol_types::sol_data::Bytes as SolBytes;
 use alloy_sol_types::{SolCall, SolValue};
 use bindings::iuniswapv3pool::IUniswapV3Pool;
 use executor_binding::batchexecutor::BatchExecutor::{
-    singlecallCall, BatchExecutorCalls, BatchExecutorInstance,
+    singlecallCall, BatchExecutorCalls, BatchExecutorInstance, DynamicCall,
 };
 use executor_binding::erc20::ERC20;
 use executor_binding::ipool::IPool as IAaveV3Pool;
 use executor_binding::iuniswapv2router::IUniswapV2Router;
 use executor_binding::iuniswapv3router::IUniswapV3Router::{
-    self, ExactInputSingleParams, ExactOutputSingleParams,
+    self, exactInputCall, ExactInputParams, ExactInputSingleParams, ExactOutputSingleParams,
 };
 use executor_binding::weth::WETH;
 use eyre::Result;
@@ -32,6 +33,7 @@ sol! {
 }
 
 // a calldata enum that can be either a swap or a multicall
+#[derive(Debug, Clone, Default)]
 pub struct CallbackContext {
     sender: Address,
     data_index: u64,
@@ -57,6 +59,8 @@ where
     P: Provider<T, Ethereum>,
 {
     executor: BatchExecutorInstance<T, P>,
+    owner: Address,
+    total_value: U256,
     calldata: Vec<Bytes>,
     addresses: ContractAddresses,
 }
@@ -66,9 +70,11 @@ where
     T: Transport + Clone,
     P: Provider<T, Ethereum>,
 {
-    pub fn new(address: Address, chain: NamedChain, provider: P) -> Self {
+    pub async fn new(address: Address, chain: NamedChain, provider: P) -> Self {
         let executor = BatchExecutorInstance::new(address, provider);
         let addressbook = Addressbook::load(None).unwrap();
+        let total_value = U256::ZERO;
+        let owner = executor.OWNER().call().await.unwrap()._0;
 
         let aave_v3_pool_address = addressbook
             .get_lending_pool(&chain, "aave_v3")
@@ -84,7 +90,9 @@ where
 
         Self {
             executor,
+            owner,
             calldata: Vec::new(),
+            total_value,
             addresses: ContractAddresses {
                 aave_v3_pool_address,
                 uniswap_v3_router_address,
@@ -104,7 +112,26 @@ where
         let call = ERC20::approveCall { spender, value };
         let encoded = call.abi_encode();
 
-        self.add_call(token, U256::ZERO, Bytes::from(encoded), None);
+        self.add_call(token, U256::ZERO, Bytes::from(encoded), None, None);
+
+        self
+    }
+
+    pub fn add_approve_all_erc20(&mut self, token: Address, spender: Address) -> &mut Self {
+        let call = ERC20::approveCall {
+            spender,
+            value: U256::ZERO,
+        };
+        let encoded = call.abi_encode();
+        let dynamic_call = self.erc20_balance_of(token, self.owner, 4 + 32);
+
+        self.add_call(
+            token,
+            U256::ZERO,
+            Bytes::from(encoded),
+            None,
+            Some(vec![dynamic_call]),
+        );
 
         self
     }
@@ -113,7 +140,7 @@ where
         let call = WETH::depositCall {};
         let encoded = call.abi_encode();
 
-        self.add_call(weth, amount, Bytes::from(encoded), None);
+        self.add_call(weth, amount, Bytes::from(encoded), None, None);
 
         self
     }
@@ -122,7 +149,7 @@ where
         let call = WETH::withdrawCall { amount };
         let encoded = call.abi_encode();
 
-        self.add_call(weth, amount, Bytes::from(encoded), None);
+        self.add_call(weth, U256::ZERO, Bytes::from(encoded), None, None);
 
         self
     }
@@ -139,7 +166,7 @@ where
         };
         let encoded = call.abi_encode();
 
-        self.add_call(token, U256::ZERO, Bytes::from(encoded), None);
+        self.add_call(token, U256::ZERO, Bytes::from(encoded), None, None);
 
         self
     }
@@ -158,9 +185,44 @@ where
         };
         let encoded = call.abi_encode();
 
-        self.add_call(token, U256::ZERO, Bytes::from(encoded), None);
+        self.add_call(token, U256::ZERO, Bytes::from(encoded), None, None);
 
         self
+    }
+
+    pub fn withdraw_funds(&mut self, token: Address, recipient: Address) -> &mut Self {
+        let call = ERC20::transferCall {
+            to: recipient,
+            value: U256::ZERO,
+        };
+        let dynamic_call = self.erc20_balance_of(token, self.owner, 4 + 32);
+        let encoded = call.abi_encode();
+        self.add_call(
+            token,
+            U256::ZERO,
+            Bytes::from(encoded),
+            None,
+            Some(vec![dynamic_call]),
+        );
+
+        self
+    }
+
+    // DYNAMIC CALLS
+
+    pub fn erc20_balance_of(&mut self, asset: Address, owner: Address, offset: u64) -> DynamicCall {
+        let call = ERC20::balanceOfCall { account: owner };
+        let calldata = call.abi_encode();
+
+        let dynamic_call = DynamicCall {
+            to: asset,
+            data: Bytes::from(calldata),
+            offset,
+            length: 32,
+            resOffset: 0,
+        };
+
+        return dynamic_call;
     }
 
     // AAVE V3
@@ -178,6 +240,7 @@ where
             self.addresses.aave_v3_pool_address,
             U256::ZERO,
             Bytes::from(encoded),
+            None,
             None,
         );
 
@@ -199,6 +262,7 @@ where
             U256::ZERO,
             Bytes::from(encoded),
             None,
+            None,
         );
 
         self
@@ -218,6 +282,7 @@ where
             U256::ZERO,
             Bytes::from(encoded),
             None,
+            None,
         );
 
         self
@@ -235,6 +300,7 @@ where
             self.addresses.aave_v3_pool_address,
             U256::ZERO,
             Bytes::from(encoded),
+            None,
             None,
         );
 
@@ -262,6 +328,7 @@ where
             U256::ZERO,
             Bytes::from(encoded),
             None,
+            None,
         );
 
         self
@@ -278,6 +345,34 @@ where
             U256::ZERO,
             Bytes::from(encoded),
             None,
+            None,
+        );
+
+        self
+    }
+
+    pub fn add_uniswap_v3_exact_input_all(
+        &mut self,
+        path: Vec<Address>,
+        amount_out_minimum: U256,
+        recipient: Address,
+    ) -> &mut Self {
+        let params = ExactInputParams {
+            path: Bytes::from(path.concat()),
+            recipient,
+            amountIn: U256::ZERO,
+            amountOutMinimum: amount_out_minimum,
+        };
+        let dynamic_call = self.erc20_balance_of(path[0], self.owner, 4 + 32 * 3);
+        let call = exactInputCall { params };
+        let encoded = call.abi_encode();
+
+        self.add_call(
+            self.addresses.uniswap_v3_router_address,
+            U256::ZERO,
+            Bytes::from(encoded),
+            None,
+            Some(vec![dynamic_call]),
         );
 
         self
@@ -291,6 +386,7 @@ where
             self.addresses.uniswap_v3_router_address,
             U256::ZERO,
             Bytes::from(encoded),
+            None,
             None,
         );
 
@@ -319,6 +415,7 @@ where
             self.addresses.uniswap_v2_router_address,
             U256::ZERO,
             Bytes::from(encoded),
+            None,
             None,
         );
 
@@ -361,6 +458,7 @@ where
             self.addresses.aave_v3_pool_address,
             U256::ZERO,
             Bytes::from(encoded),
+            None,
             None,
         );
 
@@ -408,6 +506,7 @@ where
                 sender: pool,
                 data_index: 3, // uniswapV2Call(address,uint256,uint256,bytes)
             }),
+            None,
         );
 
         self
@@ -426,7 +525,6 @@ where
         let [amount0, amount1] = amounts;
 
         // (fee in basis points, e.g. 3000 = 0.3%)
-        // TODO
         let fee0 = U256::from(0);
         let fee1 = U256::from(0);
         // let fee0 = amount0.mul(fee).div(U256::from(1_000_000));
@@ -461,6 +559,7 @@ where
                 sender: pool,
                 data_index: 2, // uniswapV3FlashCallback(uint256,uint256,bytes)
             }),
+            None,
         );
 
         self
@@ -483,6 +582,7 @@ where
         value: U256,
         calldata: Bytes,
         context: Option<CallbackContext>,
+        dynamic_calls: Option<Vec<DynamicCall>>,
     ) -> Bytes {
         let context = self.encoded_context(context.unwrap()).unwrap();
         let single_call = singlecallCall {
@@ -490,6 +590,27 @@ where
             value,
             context,
             callData: calldata,
+            dynamicCalls: dynamic_calls.unwrap_or_default(),
+        };
+
+        return Bytes::from(single_call.abi_encode());
+    }
+
+    pub fn build_call_with_dynamic_call(
+        &mut self,
+        target: Address,
+        value: U256,
+        calldata: Bytes,
+        context: Option<CallbackContext>,
+        dynamic_call: DynamicCall,
+    ) -> Bytes {
+        let context = self.encoded_context(context.unwrap()).unwrap();
+        let single_call = singlecallCall {
+            target,
+            value,
+            context,
+            callData: calldata,
+            dynamicCalls: vec![dynamic_call],
         };
 
         return Bytes::from(single_call.abi_encode());
@@ -505,7 +626,13 @@ where
             spender: recipient,
             value: amount,
         };
-        return self.build_call(asset, U256::ZERO, Bytes::from(call.abi_encode()), None);
+        return self.build_call(
+            asset,
+            U256::ZERO,
+            Bytes::from(call.abi_encode()),
+            None,
+            None,
+        );
     }
 
     pub fn build_transfer_erc20(
@@ -518,7 +645,13 @@ where
             to: recipient,
             value: amount,
         };
-        return self.build_call(asset, U256::ZERO, Bytes::from(call.abi_encode()), None);
+        return self.build_call(
+            asset,
+            U256::ZERO,
+            Bytes::from(call.abi_encode()),
+            None,
+            None,
+        );
     }
 
     pub fn add_call(
@@ -527,49 +660,55 @@ where
         value: U256,
         calldata: Bytes,
         context: Option<CallbackContext>,
+        dynamic_calls: Option<Vec<DynamicCall>>,
     ) {
-        let context = self.encoded_context(context.unwrap()).unwrap();
+        let context = self.encoded_context(context.unwrap_or_default()).unwrap();
 
         let single_call = singlecallCall {
             target,
             value,
             context,
             callData: calldata,
+            dynamicCalls: dynamic_calls.unwrap_or_default(),
         };
 
         let encoded = Bytes::from(single_call.abi_encode());
         self.calldata.push(encoded);
+        self.total_value += value;
     }
 
-    pub fn get(&mut self) -> Vec<Bytes> {
+    pub fn get(&mut self) -> (Vec<Bytes>, U256) {
         let calldata = self.calldata.clone();
+        let total_value = self.total_value;
         self.calldata.clear();
-        calldata
+        self.total_value = U256::ZERO;
+        (calldata, total_value)
     }
 
     pub async fn exec(&mut self) -> Result<(bool, TxHash)> {
-        let calldata = self.get();
-        let call = self.executor.batchCall(calldata);
+        let (calldata, total_value) = self.get();
+        let call = self.executor.batchCall(calldata).value(total_value);
         let pending_tx = call.send().await?;
-        let receipt = pending_tx.get_receipt().await?;
-        let status = receipt.status();
-        let tx_hash = receipt.transaction_hash;
-
-        Ok((status, tx_hash))
+        let tx_hash = pending_tx.watch().await?;
+        Ok((true, tx_hash))
     }
 }
 
 #[cfg(test)]
 mod tests {
     use crate::{
-        helpers::{compute_v2_pool_address, compute_v3_pool_address, parse_token_units},
+        helpers::{
+            compute_v2_pool_address, compute_v3_pool_address, get_token_balance, parse_token_units,
+        },
         provider::{
             get_default_anvil_provider, get_default_anvil_signer, get_default_signer, get_provider,
         },
     };
 
     use super::*;
-    use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
+    use alloy::{
+        network::EthereumWallet, providers::WalletProvider, signers::local::PrivateKeySigner,
+    };
     use alloy_chains::Chain;
     use alloy_primitives::{aliases::U24, U160, U256};
     use std::{env, str::FromStr};
@@ -590,19 +729,18 @@ mod tests {
         let provider = get_default_anvil_provider().await;
 
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
-        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider);
-        println!("HERE");
+        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
 
-        // Amount of USDC to swap (1,000 USDC = 1_000_000_000 considering 6 decimals)
-        let amount = parse_token_units(&CHAIN, &TokenIsh::Address(usdc), "1")
+        let amount = parse_token_units(&CHAIN, &TokenIsh::Address(weth), "1")
             .await
             .unwrap();
 
-        encoder
-            .add_approve_erc20(usdc, uni_v3_router, U256::MAX)
+        let (success, _tx_hash) = encoder
+            .add_wrap_eth(weth, amount)
+            .add_approve_erc20(weth, uni_v3_router, U256::MAX)
             .add_uniswap_v3_exact_input(ExactInputSingleParams {
-                tokenIn: usdc,
-                tokenOut: weth,
+                tokenIn: weth,
+                tokenOut: usdc,
                 fee: U24::from(500u32),
                 recipient: executor_address,
                 amountIn: amount,
@@ -612,8 +750,23 @@ mod tests {
             .exec()
             .await?;
 
-        let (success, _tx_hash) = encoder.exec().await?;
+        let balance_weth = get_token_balance(provider.clone(), weth, executor_address)
+            .await
+            .unwrap();
+        let balance_usdc = get_token_balance(provider.clone(), usdc, executor_address)
+            .await
+            .unwrap();
+
         assert!(success, "Transaction failed");
+
+        let balance_weth =
+            get_token_balance(provider.clone(), weth, provider.default_signer_address())
+                .await
+                .unwrap();
+        let balance_usdc =
+            get_token_balance(provider.clone(), usdc, provider.default_signer_address())
+                .await
+                .unwrap();
 
         Ok(())
     }
@@ -626,7 +779,7 @@ mod tests {
         let provider = get_default_anvil_provider().await;
 
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
-        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone());
+        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
 
         let usdc = addressbook.get_usdc(&CHAIN).unwrap();
         let aave_pool_address = addressbook.get_lending_pool(&CHAIN, "aave_v3").unwrap();
@@ -659,7 +812,7 @@ mod tests {
         let provider = get_default_anvil_provider().await;
 
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
-        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone());
+        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
 
         let usdc = addressbook.get_usdc(&CHAIN).unwrap();
         let weth = addressbook.get_weth(&CHAIN).unwrap();
@@ -692,7 +845,7 @@ mod tests {
         let provider = get_provider(Chain::from_named(CHAIN), wallet.clone()).await;
 
         let executor_address = Address::from_str("EXECUTOR_ADDRESS").unwrap();
-        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone());
+        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
 
         let usdc = addressbook.get_usdc(&CHAIN).unwrap();
         let weth = addressbook.get_weth(&CHAIN).unwrap();
@@ -707,7 +860,7 @@ mod tests {
         let aave_pool = IAaveV3Pool::new(aave_pool_address, provider.clone());
         let premium = aave_pool.FLASHLOAN_PREMIUM_TOTAL().call().await.unwrap()._0;
 
-        let callbacks = encoder
+        let (callbacks, total_value) = encoder
             .add_approve_erc20(usdc, executor_address, usdc_amount)
             .add_aave_v3_supply(usdc, usdc_amount)
             .add_aave_v3_borrow(weth, borrowed_weth_amount)
