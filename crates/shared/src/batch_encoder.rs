@@ -1,7 +1,8 @@
 use alloy::network::{Ethereum, Network};
 use alloy::providers::Provider;
-use alloy::sol;
+use alloy::sol_types::SolType;
 use alloy::transports::Transport;
+use alloy::{hex, sol};
 use alloy_chains::NamedChain;
 use alloy_primitives::aliases::U24;
 use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U160, U256};
@@ -12,6 +13,7 @@ use executor_binding::batchexecutor::BatchExecutor::{
     singlecallCall, BatchExecutorCalls, BatchExecutorInstance, DynamicCall,
 };
 use executor_binding::erc20::ERC20;
+use executor_binding::imorpho::IMorpho;
 use executor_binding::ipool::IPool as IAaveV3Pool;
 use executor_binding::iuniswapv2router::IUniswapV2Router;
 use executor_binding::iuniswapv3router::IUniswapV3Router::{
@@ -32,25 +34,30 @@ sol! {
     }
 }
 
+sol! {
+    #[allow(missing_docs)]
+    #[derive(Debug, PartialEq, Eq)]
+    struct MarketParams {
+        address loanToken;
+        address collateralToken;
+        address oracle;
+        address irm;
+        uint256 lltv;
+    }
+}
+
 // a calldata enum that can be either a swap or a multicall
 #[derive(Debug, Clone, Default)]
 pub struct CallbackContext {
-    sender: Address,
     data_index: u64,
-}
-
-pub struct AaveV3FlashLoanParams {
-    pub receiver_address: Address,
-    pub asset: Address,
-    pub amount: U256,
-    pub params: Bytes,
-    pub referral_code: u64,
+    sender: Address,
 }
 
 pub struct ContractAddresses {
     pub aave_v3_pool_address: Address,
     pub uniswap_v3_router_address: Address,
     pub uniswap_v2_router_address: Address,
+    pub morpho_pool_address: Address,
 }
 
 pub struct BatchExecutorClient<T, P>
@@ -75,7 +82,6 @@ where
         let addressbook = Addressbook::load(None).unwrap();
         let total_value = U256::ZERO;
         let owner = executor.OWNER().call().await.unwrap()._0;
-        println!("Owner: {:?}", owner);
 
         let aave_v3_pool_address = addressbook
             .get_lending_pool(&chain, "aave_v3")
@@ -89,6 +95,8 @@ where
             .get_uni_v2_swap_router(&chain, ExchangeName::UniswapV2)
             .expect("Uniswap v2 router not found");
 
+        let morpho_pool_address = addressbook.get_lending_pool(&chain, "morpho").unwrap();
+
         Self {
             executor,
             owner,
@@ -98,6 +106,7 @@ where
                 aave_v3_pool_address,
                 uniswap_v3_router_address,
                 uniswap_v2_router_address,
+                morpho_pool_address,
             },
         }
     }
@@ -248,12 +257,17 @@ where
         self
     }
 
-    pub fn add_aave_v3_borrow(&mut self, asset: Address, amount: U256) -> &mut Self {
+    pub fn add_aave_v3_borrow(
+        &mut self,
+        asset: Address,
+        amount: U256,
+        interest_rate_mode: U256,
+    ) -> &mut Self {
         let call = IAaveV3Pool::borrowCall {
             asset,
             amount,
             onBehalfOf: *self.executor.address(),
-            interestRateMode: U256::from(1),
+            interestRateMode: interest_rate_mode,
             referralCode: 0,
         };
         let encoded = call.abi_encode();
@@ -269,11 +283,16 @@ where
         self
     }
 
-    pub fn add_aave_v3_repay(&mut self, asset: Address, amount: U256) -> &mut Self {
+    pub fn add_aave_v3_repay(
+        &mut self,
+        asset: Address,
+        amount: U256,
+        interest_rate_mode: U256,
+    ) -> &mut Self {
         let call = IAaveV3Pool::repayCall {
             asset,
             amount,
-            interestRateMode: U256::from(1),
+            interestRateMode: interest_rate_mode,
             onBehalfOf: *self.executor.address(),
         };
         let encoded = call.abi_encode();
@@ -334,6 +353,26 @@ where
 
         self
     }
+
+    // MORPHO
+
+    // pub fn add_morpho_supply(
+    //     &mut self,
+    //     market: MarketParamsStruct,
+    //     assets: U256,
+    //     shares: U256,
+    // ) -> &mut Self {
+    //     let call = IMorpho::supplyCall {
+    //         marketParams: market,
+    //         assets,
+    //         shares,
+    //         onBehalf: *self.executor.address(),
+    //         data: Bytes::default(),
+    //     };
+    //     let encoded = call.abi_encode();
+
+    //     self
+    // }
 
     // UNISWAP V3
 
@@ -423,21 +462,134 @@ where
         self
     }
 
+    pub fn add_uniswap_v3_flash_loan(
+        &mut self,
+        pool: Address,
+        assets: [Address; 2],
+        amounts: [U256; 2],
+        fee: U256,
+        callbacks: Vec<Bytes>,
+    ) -> &mut Self {
+        // Unpack assets and amounts
+        let [asset0, asset1] = assets;
+        let [amount0, amount1] = amounts;
+
+        // (fee in basis points, e.g. 3000 = 0.3%)
+        let fee0 = amount0
+            .checked_mul(fee)
+            .and_then(|x| x.checked_div(U256::from(1_000_000)))
+            .unwrap();
+        let fee1 = amount1
+            .checked_mul(fee)
+            .and_then(|x| x.checked_div(U256::from(1_000_000)))
+            .unwrap();
+        let amount0 = amount0 + fee0;
+        let amount1 = amount1 + fee1;
+
+        // Transfer calls for repayment
+        let transfer0 = self.build_transfer_erc20(asset0, pool, amount0 + fee0);
+        let transfer1 = self.build_transfer_erc20(asset1, pool, amount1 + fee1);
+
+        let callback_params = [&callbacks[..], &[transfer0, transfer1]].concat();
+        let return_data = Bytes::from(FixedBytes::<32>::from([
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 1,
+        ]));
+
+        let params = FallbackData {
+            callback_params,
+            return_data,
+        };
+
+        let flash_call = IUniswapV3Pool::flashCall {
+            recipient: *self.executor.address(),
+            amount0: amount0,
+            amount1: amount1,
+            data: Bytes::from(params.abi_encode()),
+        };
+        let encoded = flash_call.abi_encode();
+
+        self.add_call(
+            pool,
+            U256::ZERO,
+            Bytes::from(encoded),
+            Some(CallbackContext {
+                sender: pool,
+                data_index: 2, // uniswapV3FlashCallback(uint256,uint256,bytes)
+            }),
+            None,
+        );
+
+        self
+    }
+
+    pub fn add_morpho_flash_loan(
+        &mut self,
+        morpho_pool_address: Address,
+        asset: Address,
+        amount: U256,
+        callbacks: Vec<Bytes>,
+    ) -> &mut Self {
+        // (fee in basis points, e.g. 3000 = 0.3%)
+        let approve = self.build_approve_erc20(asset, morpho_pool_address, amount);
+        let callback_params = [&callbacks[..], &[approve]].concat();
+        let return_data = Bytes::from(FixedBytes::<32>::from([
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 1,
+        ]));
+
+        let params = FallbackData {
+            callback_params,
+            return_data,
+        };
+
+        let flash_call = IMorpho::flashLoanCall {
+            token: asset,
+            assets: amount, // wrong variable name ?
+            data: Bytes::from(params.abi_encode()),
+        };
+        let encoded = flash_call.abi_encode();
+
+        // Add the call with the appropriate context
+        self.add_call(
+            morpho_pool_address,
+            U256::ZERO,
+            Bytes::from(encoded),
+            Some(CallbackContext {
+                sender: morpho_pool_address,
+                data_index: 1, // onMorphoFlashLoan(uint256 assets, bytes calldata data)
+            }),
+            None,
+        );
+
+        self
+    }
+
     // FLASH LOANS
     pub fn add_aave_v3_flash_loan(
         &mut self,
-        receiver_address: Address,
         asset: Address,
         amount: U256,
         premium: U256,
         callbacks: Vec<Bytes>,
     ) -> &mut Self {
         // This consists of 1) The array of callback calls calldata and 2) The callback return value (specific to each flashloan)
-        let approve_premium_call_data =
-            self.build_approve_erc20(asset, self.addresses.aave_v3_pool_address, premium);
+        let fee = amount
+            .checked_mul(premium)
+            .and_then(|x| x.checked_div(U256::from(10_000)))
+            .unwrap();
+        let amount_with_premium = amount + fee;
+        let approve_premium_call_data = self.build_approve_erc20(
+            asset,
+            self.addresses.aave_v3_pool_address,
+            amount_with_premium,
+        );
 
         let callback_params = [&callbacks[..], &[approve_premium_call_data]].concat();
-        let return_data = Bytes::from(FixedBytes::<32>::left_padding_from(&[1u8]));
+        let return_data = Bytes::from(FixedBytes::<32>::from([
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 1,
+        ]));
 
         let params = FallbackData {
             callback_params,
@@ -445,21 +597,26 @@ where
         };
 
         let flash_loan_call = IAaveV3Pool::flashLoanCall {
-            receiverAddress: receiver_address,
+            receiverAddress: *self.executor.address(),
             assets: vec![asset],
             amounts: vec![amount],
-            interestRateModes: vec![U256::from(1)],
-            onBehalfOf: receiver_address,
+            interestRateModes: vec![U256::from(0)],
+            onBehalfOf: *self.executor.address(),
             params: Bytes::from(params.abi_encode()),
             referralCode: 0,
         };
         let encoded = flash_loan_call.abi_encode();
 
+        let context = Some(CallbackContext {
+            sender: self.addresses.aave_v3_pool_address,
+            data_index: 4, // executeOperation(address[],uint256[],uint256[],address,bytes)
+        });
+
         self.add_call(
             self.addresses.aave_v3_pool_address,
             U256::ZERO,
             Bytes::from(encoded),
-            None,
+            context,
             None,
         );
 
@@ -513,59 +670,6 @@ where
         self
     }
 
-    pub fn add_uniswap_v3_flash_loan(
-        &mut self,
-        pool: Address,
-        assets: [Address; 2],
-        amounts: [U256; 2],
-        fee: U256,
-        callbacks: Vec<Bytes>,
-    ) -> &mut Self {
-        // Unpack assets and amounts
-        let [asset0, asset1] = assets;
-        let [amount0, amount1] = amounts;
-
-        // (fee in basis points, e.g. 3000 = 0.3%)
-        let fee0 = U256::from(0);
-        let fee1 = U256::from(0);
-        // let fee0 = amount0.mul(fee).div(U256::from(1_000_000));
-        // let fee1 = amount1.mul(fee).div(U256::from(1_000_000));
-
-        // Transfer calls for repayment
-        let transfer0 = self.build_transfer_erc20(asset0, pool, amount0 + fee0);
-        let transfer1 = self.build_transfer_erc20(asset1, pool, amount1 + fee1);
-
-        let callback_params = [&callbacks[..], &[transfer0, transfer1]].concat();
-        let return_data = Bytes::default();
-
-        let params = FallbackData {
-            callback_params,
-            return_data,
-        };
-
-        let flash_call = IUniswapV3Pool::flashCall {
-            recipient: *self.executor.address(),
-            amount0: amount0,
-            amount1: amount1,
-            data: Bytes::from(params.abi_encode()),
-        };
-        let encoded = flash_call.abi_encode();
-
-        // Add the call with the appropriate context
-        self.add_call(
-            pool,
-            U256::ZERO,
-            Bytes::from(encoded),
-            Some(CallbackContext {
-                sender: pool,
-                data_index: 2, // uniswapV3FlashCallback(uint256,uint256,bytes)
-            }),
-            None,
-        );
-
-        self
-    }
-
     // INTERNAL
 
     pub fn encoded_context(&self, context: CallbackContext) -> Result<FixedBytes<32>> {
@@ -585,7 +689,7 @@ where
         context: Option<CallbackContext>,
         dynamic_calls: Option<Vec<DynamicCall>>,
     ) -> Bytes {
-        let context = self.encoded_context(context.unwrap()).unwrap();
+        let context = self.encoded_context(context.unwrap_or_default()).unwrap();
         let single_call = singlecallCall {
             target,
             value,
@@ -627,6 +731,7 @@ where
             spender: recipient,
             value: amount,
         };
+
         return self.build_call(
             asset,
             U256::ZERO,
@@ -665,8 +770,6 @@ where
     ) {
         let context = self.encoded_context(context.unwrap_or_default()).unwrap();
 
-        println!("Calldata: {:?}", calldata);
-
         let single_call = singlecallCall {
             target,
             value,
@@ -676,8 +779,6 @@ where
         };
 
         let encoded = Bytes::from(single_call.abi_encode());
-
-        println!("Single call data: {:?}", encoded);
 
         self.calldata.push(encoded);
         self.total_value += value;
@@ -798,40 +899,6 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_aave_v3_flash_loan() -> Result<()> {
-        dotenv::dotenv().ok();
-        let addressbook = Addressbook::load(None).unwrap();
-        let aave_v3_pool = addressbook.get_lending_pool(&CHAIN, "aave_v3").unwrap();
-        let provider = get_default_anvil_provider().await;
-
-        let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
-        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
-
-        let usdc = addressbook.get_usdc(&CHAIN).unwrap();
-        let aave_pool_address = addressbook.get_lending_pool(&CHAIN, "aave_v3").unwrap();
-        let amount = parse_token_units(&CHAIN, &TokenIsh::Address(usdc), "1")
-            .await
-            .unwrap();
-        let aave_pool = IAaveV3Pool::new(aave_pool_address, provider.clone());
-        let premium = aave_pool.FLASHLOAN_PREMIUM_TOTAL().call().await.unwrap()._0;
-
-        let callbacks = vec![];
-
-        encoder
-            .add_aave_v3_flash_loan(
-                executor_address,
-                aave_v3_pool,
-                amount,
-                U256::from(premium),
-                callbacks,
-            )
-            .exec()
-            .await?;
-
-        Ok(())
-    }
-
-    #[tokio::test]
     async fn test_uniswap_v3_flash_loan() -> Result<()> {
         dotenv::dotenv().ok();
         let addressbook = Addressbook::load(None).unwrap();
@@ -863,14 +930,166 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_morpho_flash_loan() -> Result<()> {
+        dotenv::dotenv().ok();
+        let addressbook = Addressbook::load(None).unwrap();
+        let provider = get_default_anvil_provider().await;
+
+        let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+        let pool_address = addressbook.get_lending_pool(&CHAIN, "morpho").unwrap();
+        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
+
+        let weth = addressbook.get_weth(&CHAIN).unwrap();
+        let amount = parse_token_units(&CHAIN, &TokenIsh::Address(weth), "1")
+            .await
+            .unwrap();
+
+        let callbacks = vec![];
+
+        encoder
+            .add_approve_erc20(weth, pool_address, amount)
+            .add_morpho_flash_loan(pool_address, weth, amount, callbacks)
+            .exec()
+            .await?;
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_aave_v3_supply() -> Result<()> {
+        dotenv::dotenv().ok();
+        let addressbook = Addressbook::load(None).unwrap();
+        let provider = get_default_anvil_provider().await;
+
+        let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
+
+        let weth = addressbook.get_weth(&CHAIN).unwrap();
+        let amount = parse_token_units(&CHAIN, &TokenIsh::Address(weth), "1")
+            .await
+            .unwrap();
+
+        let pool_address = addressbook.get_lending_pool(&CHAIN, "aave_v3").unwrap();
+
+        encoder
+            .add_wrap_eth(weth, amount)
+            .add_transfer_erc20(weth, executor_address, amount)
+            .add_approve_erc20(weth, pool_address, amount)
+            .add_aave_v3_supply(weth, amount)
+            .exec()
+            .await?;
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_aave_v3_borrow() -> Result<()> {
+        dotenv::dotenv().ok();
+        let addressbook = Addressbook::load(None).unwrap();
+        let provider = get_default_anvil_provider().await;
+
+        let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
+
+        let weth = addressbook.get_weth(&CHAIN).unwrap();
+        let usdc = addressbook.get_usdc(&CHAIN).unwrap();
+        let amount_weth = parse_token_units(&CHAIN, &TokenIsh::Address(weth), "1")
+            .await
+            .unwrap();
+        let amount_usdc = parse_token_units(&CHAIN, &TokenIsh::Address(usdc), "10")
+            .await
+            .unwrap();
+
+        let pool_address = addressbook.get_lending_pool(&CHAIN, "aave_v3").unwrap();
+
+        encoder
+            .add_wrap_eth(weth, amount_weth)
+            .add_transfer_erc20(weth, executor_address, amount_weth)
+            .add_approve_erc20(weth, pool_address, amount_weth)
+            .add_aave_v3_supply(weth, amount_weth)
+            .add_aave_v3_borrow(usdc, amount_usdc, U256::from(2))
+            .exec()
+            .await?;
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_aave_v3_repay() -> Result<()> {
+        dotenv::dotenv().ok();
+        let addressbook = Addressbook::load(None).unwrap();
+        let provider = get_default_anvil_provider().await;
+
+        let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
+
+        let weth = addressbook.get_weth(&CHAIN).unwrap();
+        let usdc = addressbook.get_usdc(&CHAIN).unwrap();
+        let amount_weth = parse_token_units(&CHAIN, &TokenIsh::Address(weth), "1")
+            .await
+            .unwrap();
+        let amount_usdc = parse_token_units(&CHAIN, &TokenIsh::Address(usdc), "1000")
+            .await
+            .unwrap();
+
+        let pool_address = addressbook.get_lending_pool(&CHAIN, "aave_v3").unwrap();
+
+        encoder
+            .add_wrap_eth(weth, amount_weth)
+            .add_transfer_erc20(weth, executor_address, amount_weth)
+            .add_approve_erc20(weth, pool_address, amount_weth)
+            .add_aave_v3_supply(weth, amount_weth)
+            .add_aave_v3_borrow(usdc, amount_usdc, U256::from(2))
+            .exec()
+            .await?;
+
+        encoder
+            .add_approve_erc20(usdc, pool_address, amount_usdc)
+            .add_aave_v3_repay(usdc, amount_usdc, U256::from(2))
+            .add_aave_v3_withdraw(weth, amount_weth)
+            .exec()
+            .await?;
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_aave_v3_flashloan() -> Result<()> {
+        dotenv::dotenv().ok();
+        let addressbook = Addressbook::load(None).unwrap();
+        let provider = get_default_anvil_provider().await;
+
+        let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
+
+        let weth = addressbook.get_weth(&CHAIN).unwrap();
+        let aave_pool_address = addressbook.get_lending_pool(&CHAIN, "aave_v3").unwrap();
+        let amount_weth = parse_token_units(&CHAIN, &TokenIsh::Address(weth), "1")
+            .await
+            .unwrap();
+
+        let aave_pool = IAaveV3Pool::new(aave_pool_address, provider.clone());
+
+        let premium = aave_pool.FLASHLOAN_PREMIUM_TOTAL().call().await.unwrap()._0;
+        let callbacks = vec![];
+
+        encoder
+            .add_wrap_eth(weth, amount_weth)
+            .add_transfer_erc20(weth, executor_address, amount_weth)
+            .add_aave_v3_flash_loan(weth, amount_weth, U256::from(premium), callbacks)
+            .exec()
+            .await?;
+        Ok(())
+    }
+
+    #[tokio::test]
     async fn test_aave_v3_flashloan_with_callbacks() -> Result<()> {
+        dotenv::dotenv().ok();
         let addressbook = Addressbook::load(None).unwrap();
         let aave_v3_pool = addressbook.get_lending_pool(&CHAIN, "aave_v3").unwrap();
-        let signer: PrivateKeySigner = get_default_signer();
-        let wallet = EthereumWallet::new(signer);
-        let provider = get_provider(Chain::from_named(CHAIN), wallet.clone()).await;
+        let provider = get_default_anvil_provider().await;
 
-        let executor_address = Address::from_str("EXECUTOR_ADDRESS").unwrap();
+        let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
         let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
 
         let usdc = addressbook.get_usdc(&CHAIN).unwrap();
@@ -887,24 +1106,17 @@ mod tests {
         let premium = aave_pool.FLASHLOAN_PREMIUM_TOTAL().call().await.unwrap()._0;
 
         let (callbacks, total_value) = encoder
-            .add_approve_erc20(usdc, executor_address, usdc_amount)
             .add_aave_v3_supply(usdc, usdc_amount)
-            .add_aave_v3_borrow(weth, borrowed_weth_amount)
+            .add_aave_v3_borrow(weth, borrowed_weth_amount, U256::from(2))
             .add_unwrap_eth(weth, borrowed_weth_amount)
             .add_wrap_eth(weth, borrowed_weth_amount)
             .add_approve_erc20(weth, aave_pool_address, borrowed_weth_amount)
-            .add_aave_v3_repay(weth, borrowed_weth_amount)
+            .add_aave_v3_repay(weth, borrowed_weth_amount, U256::from(2))
             .add_aave_v3_withdraw(usdc, usdc_amount)
             .get();
 
         encoder
-            .add_aave_v3_flash_loan(
-                executor_address,
-                aave_v3_pool,
-                usdc_amount,
-                U256::from(premium),
-                callbacks,
-            )
+            .add_aave_v3_flash_loan(aave_v3_pool, usdc_amount, U256::from(premium), callbacks)
             .exec()
             .await?;
 
