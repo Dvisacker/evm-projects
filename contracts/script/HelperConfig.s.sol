@@ -52,10 +52,10 @@ contract HelperConfig is Script {
                 deployerKey: deployerKey,
                 deployerAddress: vm.addr(deployerKey),
                 aaveLendingPool: 0x794a61358D6845594F94dc1DB02A252b5b4814aD,
-                uniswapV2Router: 0x0000000000000000000000000000000000000000,
+                uniswapV2Router: 0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24,
                 uniswapV3Factory: 0x33128a8fC17869897dcE68Ed026d694621f6FDfD,
                 uniswapV3Router: 0x2626664c2603336E57B271c5C0b26F421741e481,
-                aerodromeRouter: 0x0000000000000000000000000000000000000000,
+                aerodromeRouter: 0xcF77a3Ba9A5CA399B7c97c74d54e5b1Beb874E43,
                 usdc: 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913,
                 usdt: 0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2,
                 weth: 0x4200000000000000000000000000000000000006
