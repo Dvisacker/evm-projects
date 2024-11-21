@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use alloy::network::{Ethereum, Network};
 use alloy::providers::Provider;
 use alloy::sol_types::SolType;
@@ -66,6 +68,7 @@ where
     P: Provider<T, Ethereum>,
 {
     executor: BatchExecutorInstance<T, P>,
+    provider: P,
     owner: Address,
     total_value: U256,
     calldata: Vec<Bytes>,
@@ -75,10 +78,10 @@ where
 impl<T, P> BatchExecutorClient<T, P>
 where
     T: Transport + Clone,
-    P: Provider<T, Ethereum>,
+    P: Provider<T, Ethereum> + Clone,
 {
     pub async fn new(address: Address, chain: NamedChain, provider: P) -> Self {
-        let executor = BatchExecutorInstance::new(address, provider);
+        let executor = BatchExecutorInstance::new(address, provider.clone());
         let addressbook = Addressbook::load(None).unwrap();
         let total_value = U256::ZERO;
         let owner = executor.OWNER().call().await.unwrap()._0;
@@ -99,6 +102,7 @@ where
 
         Self {
             executor,
+            provider,
             owner,
             calldata: Vec::new(),
             total_value,
@@ -356,23 +360,32 @@ where
 
     // MORPHO
 
-    // pub fn add_morpho_supply(
-    //     &mut self,
-    //     market: MarketParamsStruct,
-    //     assets: U256,
-    //     shares: U256,
-    // ) -> &mut Self {
-    //     let call = IMorpho::supplyCall {
-    //         marketParams: market,
-    //         assets,
-    //         shares,
-    //         onBehalf: *self.executor.address(),
-    //         data: Bytes::default(),
-    //     };
-    //     let encoded = call.abi_encode();
+    pub fn add_morpho_supply(
+        &mut self,
+        market: IMorpho::MarketParams,
+        assets: U256,
+        shares: U256,
+        callbacks: Option<Bytes>,
+    ) -> &mut Self {
+        let call = IMorpho::supplyCall {
+            marketParams: market,
+            assets,
+            shares,
+            onBehalf: *self.executor.address(),
+            data: callbacks.unwrap_or(Bytes::default()),
+        };
+        let encoded = call.abi_encode();
 
-    //     self
-    // }
+        self.add_call(
+            self.addresses.morpho_pool_address,
+            U256::ZERO,
+            Bytes::from(encoded),
+            None,
+            None,
+        );
+
+        self
+    }
 
     // UNISWAP V3
 
@@ -545,7 +558,7 @@ where
 
         let flash_call = IMorpho::flashLoanCall {
             token: asset,
-            assets: amount, // wrong variable name ?
+            assets: amount, // morpho chose a weird variable name for the amount
             data: Bytes::from(params.abi_encode()),
         };
         let encoded = flash_call.abi_encode();
