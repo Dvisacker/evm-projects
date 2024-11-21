@@ -52,22 +52,22 @@ pub mod SafeERC20 {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x608060405234601d57600e6021565b603e602c823930815050603e90f35b6027565b60405190565b5f80fdfe60806040525f80fdfea2646970667358221220cccac735f201565143201ff43b490e4c5f140878798a564656214f6054fcb00c64736f6c634300081a0033
+    ///0x608060405234601d57600e6021565b603e602c823930815050603e90f35b6027565b60405190565b5f80fdfe60806040525f80fdfea26469706673582212205b7807773497d33ab242cbc2b1f1cbe68aaeeeca8c9f59c6a84bef7ca5e3762c64736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R4`\x1DW`\x0E`!V[`>`,\x8290\x81PP`>\x90\xF3[`'V[`@Q\x90V[_\x80\xFD\xFE`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \xCC\xCA\xC75\xF2\x01VQC \x1F\xF4;I\x0EL_\x14\x08xy\x8AVFV!O`T\xFC\xB0\x0CdsolcC\0\x08\x1A\x003",
+        b"`\x80`@R4`\x1DW`\x0E`!V[`>`,\x8290\x81PP`>\x90\xF3[`'V[`@Q\x90V[_\x80\xFD\xFE`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 [x\x07w4\x97\xD3:\xB2B\xCB\xC2\xB1\xF1\xCB\xE6\x8A\xAE\xEE\xCA\x8C\x9FY\xC6\xA8K\xEF|\xA5\xE3v,dsolcC\0\x08\x1A\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x60806040525f80fdfea2646970667358221220cccac735f201565143201ff43b490e4c5f140878798a564656214f6054fcb00c64736f6c634300081a0033
+    ///0x60806040525f80fdfea26469706673582212205b7807773497d33ab242cbc2b1f1cbe68aaeeeca8c9f59c6a84bef7ca5e3762c64736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \xCC\xCA\xC75\xF2\x01VQC \x1F\xF4;I\x0EL_\x14\x08xy\x8AVFV!O`T\xFC\xB0\x0CdsolcC\0\x08\x1A\x003",
+        b"`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 [x\x07w4\x97\xD3:\xB2B\xCB\xC2\xB1\xF1\xCB\xE6\x8A\xAE\xEE\xCA\x8C\x9FY\xC6\xA8K\xEF|\xA5\xE3v,dsolcC\0\x08\x1A\x003",
     );
     /**Custom error with signature `SafeERC20FailedDecreaseAllowance(address,uint256,uint256)` and selector `0xe570110f`.
 ```solidity

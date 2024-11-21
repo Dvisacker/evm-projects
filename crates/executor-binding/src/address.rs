@@ -30,22 +30,22 @@ pub mod Address {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x608060405234601d57600e6021565b603e602c823930815050603e90f35b6027565b60405190565b5f80fdfe60806040525f80fdfea26469706673582212205ef4155c9c981595c18b5767119b726b2905985ddd9a71c6fc9242ee6b94f54d64736f6c634300081a0033
+    ///0x608060405234601d57600e6021565b603e602c823930815050603e90f35b6027565b60405190565b5f80fdfe60806040525f80fdfea2646970667358221220715fadbd01f3744d50cca8780c4d929ad58a0821b008fbc473dac35ae7f5d5d564736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R4`\x1DW`\x0E`!V[`>`,\x8290\x81PP`>\x90\xF3[`'V[`@Q\x90V[_\x80\xFD\xFE`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 ^\xF4\x15\\\x9C\x98\x15\x95\xC1\x8BWg\x11\x9Brk)\x05\x98]\xDD\x9Aq\xC6\xFC\x92B\xEEk\x94\xF5MdsolcC\0\x08\x1A\x003",
+        b"`\x80`@R4`\x1DW`\x0E`!V[`>`,\x8290\x81PP`>\x90\xF3[`'V[`@Q\x90V[_\x80\xFD\xFE`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 q_\xAD\xBD\x01\xF3tMP\xCC\xA8x\x0CM\x92\x9A\xD5\x8A\x08!\xB0\x08\xFB\xC4s\xDA\xC3Z\xE7\xF5\xD5\xD5dsolcC\0\x08\x1A\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x60806040525f80fdfea26469706673582212205ef4155c9c981595c18b5767119b726b2905985ddd9a71c6fc9242ee6b94f54d64736f6c634300081a0033
+    ///0x60806040525f80fdfea2646970667358221220715fadbd01f3744d50cca8780c4d929ad58a0821b008fbc473dac35ae7f5d5d564736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 ^\xF4\x15\\\x9C\x98\x15\x95\xC1\x8BWg\x11\x9Brk)\x05\x98]\xDD\x9Aq\xC6\xFC\x92B\xEEk\x94\xF5MdsolcC\0\x08\x1A\x003",
+        b"`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 q_\xAD\xBD\x01\xF3tMP\xCC\xA8x\x0CM\x92\x9A\xD5\x8A\x08!\xB0\x08\xFB\xC4s\xDA\xC3Z\xE7\xF5\xD5\xD5dsolcC\0\x08\x1A\x003",
     );
     /**Custom error with signature `AddressEmptyCode(address)` and selector `0x9996b315`.
 ```solidity
