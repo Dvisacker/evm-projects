@@ -15,6 +15,7 @@ pub enum ExchangeName {
     PancakeswapV3,
     SolidlyV3,
     Curve,
+    Aerodrome,
     Unknown,
 }
 
@@ -35,6 +36,7 @@ impl ExchangeName {
             "camelotv3" => Ok(ExchangeName::CamelotV3),
             "ramsesv2" => Ok(ExchangeName::RamsesV2),
             "pancakeswapv3" => Ok(ExchangeName::PancakeswapV3),
+            "aerodrome" => Ok(ExchangeName::Aerodrome),
             "solidlyv3" => Ok(ExchangeName::SolidlyV3),
             _ => Err(format!("Invalid exchange name: {}", s)),
         }
@@ -51,6 +53,7 @@ impl ExchangeName {
             ExchangeName::PancakeswapV3 => "pancakeswapv3",
             ExchangeName::SolidlyV3 => "solidlyv3",
             ExchangeName::Curve => "curve",
+            ExchangeName::Aerodrome => "aerodrome",
             ExchangeName::Unknown => "unknown",
         }
     }
@@ -66,6 +69,7 @@ impl Default for ExchangeName {
 pub enum ExchangeType {
     UniV2,
     UniV3,
+    Ve33,
     CamelotV3,
     Curve,
     ERC4626,
@@ -77,6 +81,7 @@ impl ExchangeType {
         match s {
             "univ2" => Ok(ExchangeType::UniV2),
             "univ3" => Ok(ExchangeType::UniV3),
+            "ve33" => Ok(ExchangeType::Ve33),
             "camelotv3" => Ok(ExchangeType::CamelotV3),
             "erc4626" => Ok(ExchangeType::ERC4626),
             "curve" => Ok(ExchangeType::Curve),
@@ -88,6 +93,7 @@ impl ExchangeType {
         match self {
             ExchangeType::UniV2 => "univ2",
             ExchangeType::UniV3 => "univ3",
+            ExchangeType::Ve33 => "ve33",
             ExchangeType::CamelotV3 => "camelotv3",
             ExchangeType::ERC4626 => "erc4626",
             ExchangeType::Curve => "curve",

@@ -25,3 +25,6 @@
 [submodule "contracts/lib/v3-periphery"]
 	path = contracts/lib/v3-periphery
 	url = https://github.com/Uniswap/v3-periphery
+[submodule "contracts/lib/morpho-blue"]
+	path = contracts/lib/morpho-blue
+	url = https://github.com/morpho-org/morpho-blue

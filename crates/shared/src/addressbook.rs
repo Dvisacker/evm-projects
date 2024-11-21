@@ -85,6 +85,14 @@ pub struct UniV2Addresses {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct Ve33Addresses {
+    #[serde(deserialize_with = "deserialize_address")]
+    pub factory: Address,
+    #[serde(deserialize_with = "deserialize_address")]
+    pub router: Address,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct UniV3Addresses {
     #[serde(deserialize_with = "deserialize_address")]
     pub factory: Address,
@@ -116,7 +124,7 @@ pub struct UniV3Addresses {
 
 pub type UniV3Exchanges = HashMap<ExchangeName, UniV3Addresses>;
 pub type UniV2Exchanges = HashMap<ExchangeName, UniV2Addresses>;
-
+pub type Ve33Exchanges = HashMap<ExchangeName, Ve33Addresses>;
 // #[derive(Debug, Serialize, Deserialize, Clone)]
 // pub struct UniV2Exchanges {
 //     pub uniswapv2: UniV2Addresses,
@@ -127,6 +135,7 @@ pub type UniV2Exchanges = HashMap<ExchangeName, UniV2Addresses>;
 pub struct Exchanges {
     pub univ2: UniV2Exchanges,
     pub univ3: UniV3Exchanges,
+    pub ve33: Option<Ve33Exchanges>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -135,8 +144,14 @@ pub struct AaveV3Addresses {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct MorphoAddresses {
+    pub pool: Address,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Lending {
     pub aave_v3: AaveV3Addresses,
+    pub morpho: Option<MorphoAddresses>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -367,6 +382,36 @@ impl Addressbook {
         return swap_router_address;
     }
 
+    pub fn get_ve33_router(
+        &self,
+        chain: &NamedChain,
+        exchange_name: ExchangeName,
+    ) -> Option<Address> {
+        let chain_config = self.get_chain_address_book(chain).unwrap();
+        chain_config
+            .exchanges
+            .ve33
+            .as_ref()
+            .unwrap()
+            .get(&exchange_name)
+            .map(|config| config.router)
+    }
+
+    pub fn get_ve33_factory(
+        &self,
+        chain: &NamedChain,
+        exchange_name: ExchangeName,
+    ) -> Option<Address> {
+        let chain_config = self.get_chain_address_book(chain).unwrap();
+        chain_config
+            .exchanges
+            .ve33
+            .as_ref()
+            .unwrap()
+            .get(&exchange_name)
+            .map(|config| config.factory)
+    }
+
     pub fn get_factory(&self, chain: &NamedChain, exchange_name: ExchangeName) -> Option<Address> {
         let chain_config = self.get_chain_address_book(chain).unwrap();
         match exchange_name {
@@ -439,6 +484,7 @@ impl Addressbook {
         match chain {
             NamedChain::Mainnet => match protocol {
                 "aave_v3" => Ok(self.mainnet.lending.aave_v3.pool),
+                "morpho" => Ok(self.mainnet.lending.morpho.as_ref().unwrap().pool),
                 _ => Err(eyre::eyre!("Unsupported lending protocol")),
             },
             NamedChain::Optimism => match protocol {
@@ -447,6 +493,7 @@ impl Addressbook {
             },
             NamedChain::Base => match protocol {
                 "aave_v3" => Ok(self.base.lending.aave_v3.pool),
+                "morpho" => Ok(self.base.lending.morpho.as_ref().unwrap().pool),
                 _ => Err(eyre::eyre!("Unsupported lending protocol")),
             },
             NamedChain::Arbitrum => match protocol {
