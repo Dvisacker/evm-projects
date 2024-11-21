@@ -2,6 +2,7 @@
 pragma solidity 0.8.26;
 
 import "forge-std/console.sol";
+import {IERC20} from "../lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 
 uint256 constant CONTEXT_TRANSIENT_STORAGE_LOCATION = 0;
 
@@ -161,9 +162,9 @@ contract BatchExecutor {
             mstore(0x40, add(fallbackData, add(32, length)))
         }
 
-        bytes[] memory multicallData;
-        (multicallData, returnData) = abi.decode(fallbackData, (bytes[], bytes));
-
+        FallbackData memory decoded = abi.decode(fallbackData, (FallbackData));
+        bytes[] memory multicallData = decoded.multicallData;
+        returnData = decoded.returnData;
         _multicall(multicallData);
     }
 
