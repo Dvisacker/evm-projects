@@ -168,18 +168,13 @@ pub async fn get_odos_quote(
         user_addr: user_address.to_string(),
     };
 
-    println!("{:?}", request);
-
     let response = client
         .post("https://api.odos.xyz/sor/quote/v2")
         .json(&request)
         .send()
         .await?;
 
-    // Get the raw response text
     let response_text = response.text().await?;
-
-    // Try to parse the response, if it fails print the raw response
     match serde_json::from_str::<OdosQuoteResponse>(&response_text) {
         Ok(parsed) => Ok(parsed),
         Err(e) => {
@@ -197,7 +192,7 @@ pub async fn assemble_odos_swap(
     let client = reqwest::Client::new();
 
     let request = OdosAssembleRequest {
-        user_addr: format!("0x{:x}", user_address),
+        user_addr: user_address.to_string(),
         path_id: quote.path_id.clone(),
         simulate: false,
     };
