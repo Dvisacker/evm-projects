@@ -16,5 +16,6 @@ pub mod swap;
 pub mod token_manager;
 pub mod token_utils;
 pub mod utils;
+pub mod zero_x;
 
 pub mod addressbook;
