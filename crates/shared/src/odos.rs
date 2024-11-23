@@ -221,3 +221,65 @@ pub async fn assemble_odos_swap(
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use alloy_chains::{Chain, NamedChain};
+
+    use crate::{
+        addressbook::Addressbook,
+        provider::{get_default_anvil_provider, get_default_anvil_signer},
+    };
+
+    use super::*;
+
+    #[tokio::test]
+    async fn test_get_odos_quote() {
+        let chain = NamedChain::Arbitrum;
+        let addressbook = Addressbook::load(None).unwrap();
+        let anvil_signer = get_default_anvil_signer();
+        let user_address = anvil_signer.address();
+        let weth = addressbook.get_weth(&chain).unwrap();
+        let usdc = addressbook.get_usdc(&chain).unwrap();
+        let input_amount = U256::from(1000000000000000000u128); // 1 WETH
+        let slippage = 0.5;
+
+        let response = get_odos_quote(chain, weth, input_amount, usdc, user_address, slippage)
+            .await
+            .unwrap();
+
+        assert!(!response.in_tokens.is_empty());
+        assert!(!response.out_tokens.is_empty());
+        assert!(!response.in_amounts.is_empty());
+        assert!(!response.out_amounts.is_empty());
+
+        // Verify output amount is non-zero (should be ~$2000-3000 worth of USDC)
+        let output_amount =
+            U256::from_str_radix(&response.out_amounts[0].replace("0x", ""), 16).unwrap();
+        assert!(output_amount > U256::ZERO);
+    }
+
+    #[tokio::test]
+    async fn test_assemble_odos_swap() {
+        // First get a quote
+        let chain = NamedChain::Arbitrum;
+        let addressbook = Addressbook::load(None).unwrap();
+        let anvil_signer = get_default_anvil_signer();
+        let user_address = anvil_signer.address();
+        let weth = addressbook.get_weth(&chain).unwrap();
+        let usdc = addressbook.get_usdc(&chain).unwrap();
+        let input_amount = U256::from(1000000000000000000u128); // 1 WETH
+        let slippage = 0.5;
+
+        let quote = get_odos_quote(chain, weth, input_amount, usdc, user_address, slippage)
+            .await
+            .unwrap();
+
+        let response = assemble_odos_swap(&quote, user_address).await.unwrap();
+        println!("{:?}", response);
+        assert!(!response.transaction.data.is_empty());
+        assert!(!response.transaction.to.is_empty());
+        assert!(response.transaction.value.starts_with("0x"));
+        assert!(response.transaction.gas > 1000000);
+    }
+}
