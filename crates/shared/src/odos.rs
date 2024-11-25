@@ -1,5 +1,8 @@
+use alloy::sol_types::SolType;
 use alloy_chains::{Chain, NamedChain};
 use alloy_primitives::{Address, U256};
+use alloy_sol_types::sol_data::Bytes as SolBytes;
+use alloy_sol_types::{SolCall, SolValue};
 use eyre::Result;
 use reqwest;
 use serde::{Deserialize, Serialize};
@@ -27,9 +30,10 @@ struct OdosQuoteRequest {
     input_tokens: Vec<OdosInputToken>,
     #[serde(rename = "outputTokens")]
     output_tokens: Vec<OdosOutputToken>,
-    slippage: f64,
     #[serde(rename = "userAddr")]
     user_addr: String,
+    #[serde(rename = "slippageLimitPercent")]
+    slippage_limit_percent: f64,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -164,7 +168,7 @@ pub async fn get_odos_quote(
             proportion: "1".to_string(),
             token_address: output_token.to_string(),
         }],
-        slippage,
+        slippage_limit_percent: slippage,
         user_addr: user_address.to_string(),
     };
 
@@ -188,13 +192,14 @@ pub async fn get_odos_quote(
 pub async fn assemble_odos_swap(
     quote: &OdosQuoteResponse,
     user_address: Address,
+    simulate: bool,
 ) -> Result<OdosAssembleResponse> {
     let client = reqwest::Client::new();
 
     let request = OdosAssembleRequest {
         user_addr: user_address.to_string(),
         path_id: quote.path_id.clone(),
-        simulate: false,
+        simulate,
     };
 
     let response = client
@@ -219,12 +224,27 @@ pub async fn assemble_odos_swap(
 
 #[cfg(test)]
 mod tests {
-    use alloy_chains::{Chain, NamedChain};
+    use std::str::FromStr;
 
+    use crate::{addressbook::Addressbook, provider::get_provider};
     use crate::{
-        addressbook::Addressbook,
-        provider::{get_default_anvil_provider, get_default_anvil_signer},
+        helpers::{get_token_allowance, get_token_balance, parse_token_units},
+        provider::{
+            self, get_default_anvil_provider, get_default_anvil_signer, get_default_wallet,
+            get_provider_map,
+        },
     };
+    use alloy::hex::hex;
+    use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
+    use alloy::{
+        network::{NetworkWallet, TransactionBuilder},
+        providers::Provider,
+    };
+    use alloy_chains::{Chain, NamedChain};
+    use alloy_primitives::Bytes;
+    use alloy_rpc_types::TransactionRequest;
+    use executor_binding::{ierc20::IERC20, weth::WETH};
+    use types::token::TokenIsh;
 
     use super::*;
 
@@ -237,7 +257,7 @@ mod tests {
         let weth = addressbook.get_weth(&chain).unwrap();
         let usdc = addressbook.get_usdc(&chain).unwrap();
         let input_amount = U256::from(1000000000000000000u128); // 1 WETH
-        let slippage = 0.5;
+        let slippage = 1.0;
 
         let response = get_odos_quote(chain, weth, input_amount, usdc, user_address, slippage)
             .await
@@ -269,12 +289,86 @@ mod tests {
         let quote = get_odos_quote(chain, weth, input_amount, usdc, user_address, slippage)
             .await
             .unwrap();
-
-        let response = assemble_odos_swap(&quote, user_address).await.unwrap();
-        println!("{:?}", response);
+        let response = assemble_odos_swap(&quote, user_address, false)
+            .await
+            .unwrap();
         assert!(!response.transaction.data.is_empty());
         assert!(!response.transaction.to.is_empty());
-        assert!(response.transaction.value.starts_with("0x"));
         assert!(response.transaction.gas > 1000000);
+    }
+
+    #[tokio::test]
+    async fn send_odos_swap() {
+        dotenv::dotenv().ok();
+        let chain = NamedChain::Base;
+        let addressbook = Addressbook::load(None).unwrap();
+        let anvil_signer = get_default_anvil_signer();
+        let user_address = anvil_signer.address();
+        let anvil_provider = get_default_anvil_provider().await;
+        // let providers = get_provider_map().await;
+        // let anvil_provider: &std::sync::Arc<alloy::providers::fillers::FillProvider<alloy::providers::fillers::JoinFill<alloy::providers::fillers::JoinFill<alloy::providers::Identity, alloy::providers::fillers::JoinFill<alloy::providers::fillers::GasFiller, alloy::providers::fillers::JoinFill<alloy::providers::fillers::BlobGasFiller, alloy::providers::fillers::JoinFill<alloy::providers::fillers::NonceFiller, alloy::providers::fillers::ChainIdFiller>>>>, alloy::providers::fillers::WalletFiller<EthereumWallet>>, alloy::providers::RootProvider<alloy::transports::BoxTransport>, alloy::transports::BoxTransport, alloy::network::Ethereum>> = providers.get(&chain).unwrap();
+        // let signer = get_default_wallet().default_signer();
+        // let user_address = signer.address();
+        let weth = addressbook.get_weth(&chain).unwrap();
+        let usdc = addressbook.get_usdc(&chain).unwrap();
+        let input_amount = parse_token_units(&chain, &TokenIsh::Address(weth), "0.001")
+            .await
+            .unwrap();
+        let slippage = 2.0;
+        let router = Address::from_str("0x19cEeAd7105607Cd444F5ad10dd51356436095a1").unwrap();
+
+        let call = WETH::depositCall {};
+        let encoded = call.abi_encode();
+
+        let wrap_eth_tx = TransactionRequest::default()
+            .with_to(weth)
+            .with_input(Bytes::from(encoded))
+            .with_value(input_amount);
+
+        let pending_wrap_eth_tx = anvil_provider.send_transaction(wrap_eth_tx).await.unwrap();
+        pending_wrap_eth_tx.get_receipt().await.unwrap();
+
+        let approve_tx = IERC20::approveCall {
+            spender: router,
+            value: input_amount,
+        };
+        let encoded = approve_tx.abi_encode();
+        let approve_tx = TransactionRequest::default()
+            .with_to(weth)
+            .with_input(Bytes::from(encoded));
+
+        let pending_approve_tx = anvil_provider.send_transaction(approve_tx).await.unwrap();
+
+        pending_approve_tx.get_receipt().await.unwrap();
+
+        let quote = get_odos_quote(chain, weth, input_amount, usdc, user_address, slippage)
+            .await
+            .unwrap();
+
+        let assemble_response = assemble_odos_swap(&quote, user_address, false)
+            .await
+            .unwrap();
+
+        let input = hex::decode(
+            assemble_response
+                .transaction
+                .data
+                .strip_prefix("0x")
+                .unwrap(),
+        )
+        .unwrap();
+
+        let tx = TransactionRequest::default()
+            .with_from(user_address)
+            .with_to(Address::from_str(&assemble_response.transaction.to).unwrap())
+            .with_value(U256::from_str(&assemble_response.transaction.value).unwrap())
+            .with_gas_price(assemble_response.transaction.gas_price as u128)
+            .with_gas_limit(assemble_response.transaction.gas)
+            .with_input(input)
+            .with_chain_id(Chain::from_named(chain).id());
+
+        let pending_tx = anvil_provider.send_transaction(tx).await.unwrap();
+        let receipt = pending_tx.get_receipt().await.unwrap();
+        assert_eq!(receipt.status(), true);
     }
 }

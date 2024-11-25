@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use alloy::network::{Ethereum, Network};
 use alloy::providers::Provider;
 use alloy::sol_types::SolType;
@@ -23,9 +21,12 @@ use executor_binding::iuniswapv3router::IUniswapV3Router::{
 };
 use executor_binding::weth::WETH;
 use eyre::Result;
+use std::str::FromStr;
+use std::sync::Arc;
 use types::exchange::ExchangeName;
 
 use crate::addressbook::Addressbook;
+use crate::odos::{assemble_odos_swap, get_odos_quote};
 
 sol! {
     #[allow(missing_docs)]
@@ -67,6 +68,7 @@ where
     T: Transport + Clone,
     P: Provider<T, Ethereum>,
 {
+    chain: NamedChain,
     executor: BatchExecutorInstance<T, P>,
     provider: P,
     owner: Address,
@@ -101,6 +103,7 @@ where
         let morpho_pool_address = addressbook.get_lending_pool(&chain, "morpho").unwrap();
 
         Self {
+            chain,
             executor,
             provider,
             owner,
@@ -154,18 +157,14 @@ where
         let call = WETH::depositCall {};
         let encoded = call.abi_encode();
 
-        self.add_call(weth, amount, Bytes::from(encoded), None, None);
-
-        self
+        self.add_call(weth, amount, Bytes::from(encoded), None, None)
     }
 
     pub fn add_unwrap_eth(&mut self, weth: Address, amount: U256) -> &mut Self {
         let call = WETH::withdrawCall { amount };
         let encoded = call.abi_encode();
 
-        self.add_call(weth, U256::ZERO, Bytes::from(encoded), None, None);
-
-        self
+        self.add_call(weth, U256::ZERO, Bytes::from(encoded), None, None)
     }
 
     pub fn add_transfer_erc20(
@@ -180,9 +179,7 @@ where
         };
         let encoded = call.abi_encode();
 
-        self.add_call(token, U256::ZERO, Bytes::from(encoded), None, None);
-
-        self
+        self.add_call(token, U256::ZERO, Bytes::from(encoded), None, None)
     }
 
     pub fn add_transfer_from_erc20(
@@ -199,9 +196,7 @@ where
         };
         let encoded = call.abi_encode();
 
-        self.add_call(token, U256::ZERO, Bytes::from(encoded), None, None);
-
-        self
+        self.add_call(token, U256::ZERO, Bytes::from(encoded), None, None)
     }
 
     pub fn withdraw_funds(&mut self, token: Address, recipient: Address) -> &mut Self {
@@ -217,9 +212,7 @@ where
             Bytes::from(encoded),
             None,
             Some(vec![dynamic_call]),
-        );
-
-        self
+        )
     }
 
     // DYNAMIC CALLS
@@ -256,9 +249,7 @@ where
             Bytes::from(encoded),
             None,
             None,
-        );
-
-        self
+        )
     }
 
     pub fn add_aave_v3_borrow(
@@ -282,9 +273,7 @@ where
             Bytes::from(encoded),
             None,
             None,
-        );
-
-        self
+        )
     }
 
     pub fn add_aave_v3_repay(
@@ -307,9 +296,7 @@ where
             Bytes::from(encoded),
             None,
             None,
-        );
-
-        self
+        )
     }
 
     pub fn add_aave_v3_withdraw(&mut self, asset: Address, amount: U256) -> &mut Self {
@@ -326,9 +313,7 @@ where
             Bytes::from(encoded),
             None,
             None,
-        );
-
-        self
+        )
     }
 
     pub fn add_aave_v3_liquidate(
@@ -353,9 +338,7 @@ where
             Bytes::from(encoded),
             None,
             None,
-        );
-
-        self
+        )
     }
 
     // MORPHO
@@ -382,9 +365,7 @@ where
             Bytes::from(encoded),
             None,
             None,
-        );
-
-        self
+        )
     }
 
     // UNISWAP V3
@@ -399,9 +380,7 @@ where
             Bytes::from(encoded),
             None,
             None,
-        );
-
-        self
+        )
     }
 
     pub fn add_uniswap_v3_exact_input_all(
@@ -426,9 +405,7 @@ where
             Bytes::from(encoded),
             None,
             Some(vec![dynamic_call]),
-        );
-
-        self
+        )
     }
 
     pub fn add_uniswap_v3_exact_output(&mut self, swap: ExactOutputSingleParams) -> &mut Self {
@@ -441,13 +418,10 @@ where
             Bytes::from(encoded),
             None,
             None,
-        );
-
-        self
+        )
     }
 
     // UNISWAP V2
-
     pub fn add_uniswap_v2_swap(
         &mut self,
         amount_in: U256,
@@ -470,9 +444,7 @@ where
             Bytes::from(encoded),
             None,
             None,
-        );
-
-        self
+        )
     }
 
     pub fn add_uniswap_v3_flash_loan(
@@ -531,9 +503,7 @@ where
                 data_index: 2, // uniswapV3FlashCallback(uint256,uint256,bytes)
             }),
             None,
-        );
-
-        self
+        )
     }
 
     pub fn add_morpho_flash_loan(
@@ -573,9 +543,7 @@ where
                 data_index: 1, // onMorphoFlashLoan(uint256 assets, bytes calldata data)
             }),
             None,
-        );
-
-        self
+        )
     }
 
     // FLASH LOANS
@@ -631,9 +599,7 @@ where
             Bytes::from(encoded),
             context,
             None,
-        );
-
-        self
+        )
     }
 
     pub fn add_uniswap_v2_flash_swap(
@@ -678,9 +644,44 @@ where
                 data_index: 3, // uniswapV2Call(address,uint256,uint256,bytes)
             }),
             None,
-        );
+        )
+    }
 
-        self
+    pub async fn add_odos_swap(
+        &mut self,
+        input_amount: U256,
+        input_token: Address,
+        output_token: Address,
+        slippage: f64,
+    ) -> &mut Self {
+        let quote = get_odos_quote(
+            self.chain,
+            input_token,
+            input_amount,
+            output_token,
+            *self.executor.address(),
+            slippage,
+        )
+        .await
+        .unwrap();
+        let response = assemble_odos_swap(&quote, *self.executor.address(), false)
+            .await
+            .unwrap();
+
+        let tx_data = hex::decode(response.transaction.data.strip_prefix("0x").unwrap()).unwrap();
+
+        self.add_approve_erc20(
+            input_token,
+            Address::from_str(&response.transaction.to).unwrap(),
+            input_amount,
+        )
+        .add_call(
+            Address::from_str(&response.transaction.to).unwrap(),
+            U256::from_str(&response.transaction.value).unwrap(),
+            Bytes::from(tx_data),
+            None,
+            None,
+        )
     }
 
     // INTERNAL
@@ -780,7 +781,7 @@ where
         calldata: Bytes,
         context: Option<CallbackContext>,
         dynamic_calls: Option<Vec<DynamicCall>>,
-    ) {
+    ) -> &mut Self {
         let context = self.encoded_context(context.unwrap_or_default()).unwrap();
 
         let single_call = singlecallCall {
@@ -795,6 +796,8 @@ where
 
         self.calldata.push(encoded);
         self.total_value += value;
+
+        self
     }
 
     pub fn get(&mut self) -> (Vec<Bytes>, U256) {
@@ -821,9 +824,11 @@ mod tests {
         helpers::{
             compute_v2_pool_address, compute_v3_pool_address, get_token_balance, parse_token_units,
         },
+        odos::{assemble_odos_swap, get_odos_quote},
         provider::{
             get_default_anvil_provider, get_default_anvil_signer, get_default_signer, get_provider,
         },
+        utils::prettify_json,
     };
 
     use super::*;
@@ -1096,40 +1101,66 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_aave_v3_flashloan_with_callbacks() -> Result<()> {
+    async fn test_odos_swap() -> Result<()> {
         dotenv::dotenv().ok();
-        let addressbook = Addressbook::load(None).unwrap();
-        let aave_v3_pool = addressbook.get_lending_pool(&CHAIN, "aave_v3").unwrap();
         let provider = get_default_anvil_provider().await;
-
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+        let chain = NamedChain::Base;
+        let addressbook = Addressbook::load(None).unwrap();
+        let anvil_signer = get_default_anvil_signer();
+        let weth = addressbook.get_weth(&chain).unwrap();
+        let usdc = addressbook.get_usdc(&chain).unwrap();
+        let input_amount = U256::from(1000000000000000000u128); // 1 WETH
+        let slippage = 0.5;
+
+        let quote = get_odos_quote(chain, weth, input_amount, usdc, executor_address, slippage)
+            .await
+            .unwrap();
+        let response = assemble_odos_swap(&quote, executor_address, false)
+            .await
+            .unwrap();
+
         let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
 
-        let usdc = addressbook.get_usdc(&CHAIN).unwrap();
-        let weth = addressbook.get_weth(&CHAIN).unwrap();
-        let aave_pool_address = addressbook.get_lending_pool(&CHAIN, "aave_v3").unwrap();
-        let usdc_amount = parse_token_units(&CHAIN, &TokenIsh::Address(usdc), "1000")
-            .await
-            .unwrap();
-
-        let borrowed_weth_amount = parse_token_units(&CHAIN, &TokenIsh::Address(weth), "0.01")
-            .await
-            .unwrap();
-        let aave_pool = IAaveV3Pool::new(aave_pool_address, provider.clone());
-        let premium = aave_pool.FLASHLOAN_PREMIUM_TOTAL().call().await.unwrap()._0;
-
-        let (callbacks, total_value) = encoder
-            .add_aave_v3_supply(usdc, usdc_amount)
-            .add_aave_v3_borrow(weth, borrowed_weth_amount, U256::from(2))
-            .add_unwrap_eth(weth, borrowed_weth_amount)
-            .add_wrap_eth(weth, borrowed_weth_amount)
-            .add_approve_erc20(weth, aave_pool_address, borrowed_weth_amount)
-            .add_aave_v3_repay(weth, borrowed_weth_amount, U256::from(2))
-            .add_aave_v3_withdraw(usdc, usdc_amount)
-            .get();
+        let tx_data = hex::decode(response.transaction.data.strip_prefix("0x").unwrap()).unwrap();
 
         encoder
-            .add_aave_v3_flash_loan(aave_v3_pool, usdc_amount, U256::from(premium), callbacks)
+            .add_wrap_eth(weth, input_amount)
+            .add_call(
+                Address::from_str(&response.transaction.to).unwrap(),
+                U256::from_str(&response.transaction.value).unwrap(),
+                Bytes::from(tx_data),
+                None,
+                None,
+            )
+            .exec()
+            .await?;
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_odos_swap_2() -> Result<()> {
+        dotenv::dotenv().ok();
+        // let odos_call_data = "0x83bd37f900020004080de0b6b3a764000004cbad3abc00c49b00017882570840A97A490a37bd8Db9e1aE39165bfBd6000000010c626FC4A447b01554518550e30600136864640B000000000e04041001011cd48e340100010102017ffffe810104c206670a0100030201014d4fe0c70a01000402010117d21def0a0200050201010f2a459d0a020006020101496e06de0a0200070201016cfcef4f0a0200080201000a03000902010368ab6b7532020a0b0c010002340200010d0b007ffffff9060a02000e0f0004020cff00ff615535e281b96022f1423c89a83744fbf3dc2742000000000000000000000000000000000000067ddd5fc2588d58c0ebc7e8cfd3d94ee34cf85b23f6c0a374a483101e04ef5f7ac9bd15d9142bac95b4cb800910b228ed3d0834cf79d697127bbb00e5482fe995c4a52bc79271ab29a53591363ee30a8974cb6260be6f31965c239df6d6ef2ac2b5d4f02072ab388e2e2f6facef59e3c3fa2c4e29011c2d38c211e1f853a898bd1302385ccde55f33a8c4b3f3f6c5f01c7f3148891ad0e19df78743d31e390d1fd9aaec86b65d86f6a7b5b1b0c42ffa531710b6ca833589fcd6edb6e08f4c7c32d4f71b54bda02913616535324976f8dbcef19df0705b95ace86ebb48b94b22332abf5f89877a14cc88f2abc48c34b3dfcbb7c0000ab88b473b1f5afd9ef808440eed33bf0000000000000000000000000000000000000000"
+        let provider = get_default_anvil_provider().await;
+        let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+        let chain = NamedChain::Base;
+        let addressbook = Addressbook::load(None).unwrap();
+        let anvil_signer = get_default_anvil_signer();
+        let user_address = anvil_signer.address();
+        let weth = addressbook.get_weth(&chain).unwrap();
+        let usdc = addressbook.get_usdc(&chain).unwrap();
+        let input_amount = U256::from(1000000000000000000u128); // 1 WETH
+        let slippage = 0.5;
+
+        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
+
+        encoder
+            .add_wrap_eth(weth, input_amount)
+            .add_transfer_erc20(weth, executor_address, input_amount)
+            .add_odos_swap(input_amount, weth, usdc, slippage)
+            .await
             .exec()
             .await?;
 
