@@ -6,6 +6,7 @@ use alloy::{hex, sol};
 use alloy_chains::NamedChain;
 use alloy_primitives::aliases::U24;
 use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U160, U256};
+use alloy_rpc_types::TransactionReceipt;
 use alloy_sol_types::sol_data::Bytes as SolBytes;
 use alloy_sol_types::{SolCall, SolValue};
 use bindings::iuniswapv3pool::IUniswapV3Pool;
@@ -808,13 +809,12 @@ where
         (calldata, total_value)
     }
 
-    pub async fn exec(&mut self) -> Result<(bool, TxHash)> {
+    pub async fn exec(&mut self) -> Result<(bool, TransactionReceipt)> {
         let (calldata, total_value) = self.get();
         let call = self.executor.batchCall(calldata).value(total_value);
         let pending_tx = call.send().await?;
         let receipt = pending_tx.get_receipt().await?;
-        let tx_hash = receipt.transaction_hash;
-        Ok((true, tx_hash))
+        Ok((true, receipt))
     }
 }
 
@@ -1101,54 +1101,12 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_odos_swap() -> Result<()> {
-        dotenv::dotenv().ok();
-        let provider = get_default_anvil_provider().await;
-        let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
-        let chain = NamedChain::Base;
-        let addressbook = Addressbook::load(None).unwrap();
-        let anvil_signer = get_default_anvil_signer();
-        let weth = addressbook.get_weth(&chain).unwrap();
-        let usdc = addressbook.get_usdc(&chain).unwrap();
-        let input_amount = U256::from(1000000000000000000u128); // 1 WETH
-        let slippage = 0.5;
-
-        let quote = get_odos_quote(chain, weth, input_amount, usdc, executor_address, slippage)
-            .await
-            .unwrap();
-        let response = assemble_odos_swap(&quote, executor_address, false)
-            .await
-            .unwrap();
-
-        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
-
-        let tx_data = hex::decode(response.transaction.data.strip_prefix("0x").unwrap()).unwrap();
-
-        encoder
-            .add_wrap_eth(weth, input_amount)
-            .add_call(
-                Address::from_str(&response.transaction.to).unwrap(),
-                U256::from_str(&response.transaction.value).unwrap(),
-                Bytes::from(tx_data),
-                None,
-                None,
-            )
-            .exec()
-            .await?;
-
-        Ok(())
-    }
-
-    #[tokio::test]
     async fn test_odos_swap_2() -> Result<()> {
         dotenv::dotenv().ok();
-        // let odos_call_data = "0x83bd37f900020004080de0b6b3a764000004cbad3abc00c49b00017882570840A97A490a37bd8Db9e1aE39165bfBd6000000010c626FC4A447b01554518550e30600136864640B000000000e04041001011cd48e340100010102017ffffe810104c206670a0100030201014d4fe0c70a01000402010117d21def0a0200050201010f2a459d0a020006020101496e06de0a0200070201016cfcef4f0a0200080201000a03000902010368ab6b7532020a0b0c010002340200010d0b007ffffff9060a02000e0f0004020cff00ff615535e281b96022f1423c89a83744fbf3dc2742000000000000000000000000000000000000067ddd5fc2588d58c0ebc7e8cfd3d94ee34cf85b23f6c0a374a483101e04ef5f7ac9bd15d9142bac95b4cb800910b228ed3d0834cf79d697127bbb00e5482fe995c4a52bc79271ab29a53591363ee30a8974cb6260be6f31965c239df6d6ef2ac2b5d4f02072ab388e2e2f6facef59e3c3fa2c4e29011c2d38c211e1f853a898bd1302385ccde55f33a8c4b3f3f6c5f01c7f3148891ad0e19df78743d31e390d1fd9aaec86b65d86f6a7b5b1b0c42ffa531710b6ca833589fcd6edb6e08f4c7c32d4f71b54bda02913616535324976f8dbcef19df0705b95ace86ebb48b94b22332abf5f89877a14cc88f2abc48c34b3dfcbb7c0000ab88b473b1f5afd9ef808440eed33bf0000000000000000000000000000000000000000"
         let provider = get_default_anvil_provider().await;
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
         let chain = NamedChain::Base;
         let addressbook = Addressbook::load(None).unwrap();
-        let anvil_signer = get_default_anvil_signer();
-        let user_address = anvil_signer.address();
         let weth = addressbook.get_weth(&chain).unwrap();
         let usdc = addressbook.get_usdc(&chain).unwrap();
         let input_amount = U256::from(1000000000000000000u128); // 1 WETH
@@ -1156,13 +1114,15 @@ mod tests {
 
         let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
 
-        encoder
+        let (success, receipt) = encoder
             .add_wrap_eth(weth, input_amount)
             .add_transfer_erc20(weth, executor_address, input_amount)
             .add_odos_swap(input_amount, weth, usdc, slippage)
             .await
             .exec()
             .await?;
+
+        assert!(receipt.status(), "Transaction failed");
 
         Ok(())
     }
