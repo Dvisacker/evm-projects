@@ -63,6 +63,21 @@ where
     Ok(result)
 }
 
+pub async fn transfer_token_if_needed(
+    provider: Arc<SignerProvider>,
+    token: Address,
+    to: Address,
+    amount: U256,
+) -> Result<(), Error> {
+    let token = IERC20::new(token, provider.clone());
+    let wallet_address = provider.default_signer_address();
+    let balance = token.balanceOf(wallet_address).call().await?;
+    if balance._0 < amount {
+        token.transfer(to, amount).send().await?;
+    }
+    Ok(())
+}
+
 pub async fn approve_token_if_needed(
     provider: Arc<SignerProvider>,
     token: Address,
@@ -84,6 +99,17 @@ pub async fn approve_token_if_needed(
         token.approve(spender, amount).send().await?;
     }
 
+    Ok(())
+}
+
+pub async fn transfer_approve_token_if_needed(
+    provider: Arc<SignerProvider>,
+    token: Address,
+    to: Address,
+    amount: U256,
+) -> Result<(), Error> {
+    transfer_token_if_needed(provider.clone(), token, to, amount).await?;
+    approve_token_if_needed(provider.clone(), token, to, amount).await?;
     Ok(())
 }
 
@@ -212,6 +238,17 @@ pub async fn get_token_balance(
     let token = IERC20::new(token, provider.clone());
     let balance = token.balanceOf(holder).call().await?;
     Ok(balance._0)
+}
+
+pub async fn get_token_allowance(
+    provider: Arc<SignerProvider>,
+    token: Address,
+    holder: Address,
+    spender: Address,
+) -> Result<U256> {
+    let token = IERC20::new(token, provider.clone());
+    let allowance = token.allowance(holder, spender).call().await?;
+    Ok(allowance._0)
 }
 
 #[cfg(test)]
