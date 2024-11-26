@@ -18,7 +18,7 @@ use eyre::{Context, Result};
 /// # Example
 /// ```rust,no_run
 /// use std::sync::Arc;
-/// use artemis_core::executors::{MempoolExecutor, SubmitTxToMempool};
+/// use engine::executors::{MempoolExecutor, SubmitTxToMempool};
 ///
 /// async fn example(provider: Arc<impl Provider>) {
 ///     let executor = MempoolExecutor::new(provider);

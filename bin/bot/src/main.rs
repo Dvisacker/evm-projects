@@ -7,7 +7,7 @@ use alloy::{
 };
 use alloy_chains::Chain;
 use eyre::Result;
-use artemis_core::{
+use engine::{
     collectors::multi_log_collector::MultiLogCollector,
     engine::Engine,
     executors::mempool_executor::MempoolExecutor,
@@ -41,7 +41,7 @@ async fn main() -> Result<()> {
     let env_filter = EnvFilter::try_from_default_env()
         .unwrap_or_else(|_| EnvFilter::new("info"))
         .add_directive("uni_tri_arb_strategy=info".parse().unwrap())
-        .add_directive("artemis_core=info".parse().unwrap())
+        .add_directive("engine=info".parse().unwrap())
         .add_directive("shared=info".parse().unwrap())
         .add_directive("amms_rs=info".parse().unwrap());
 

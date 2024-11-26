@@ -18,7 +18,7 @@ use tokio_stream::StreamExt;
 /// # Example
 /// ```rust,no_run
 /// use std::sync::Arc;
-/// use artemis_core::collectors::BlockCollector;
+/// use engine::collectors::BlockCollector;
 ///
 /// async fn example(provider: Arc<impl Provider>) {
 ///     let collector = BlockCollector::new(provider);

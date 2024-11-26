@@ -1628,27 +1628,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7c02d123df017efcdfbd739ef81735b36c5ba83ec3c59c80a9d7ecc718f92e50"
 
 [[package]]
-name = "artemis-core"
-version = "0.1.0"
-dependencies = [
- "addressbook",
- "alloy 0.6.4",
- "alloy-chains",
- "anyhow",
- "async-trait",
- "dotenv",
- "executor-binding",
- "eyre",
- "futures",
- "provider",
- "shared",
- "tokio",
- "tokio-stream",
- "tracing",
- "types",
-]
-
-[[package]]
 name = "ascii-canvas"
 version = "3.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2155,11 +2134,11 @@ dependencies = [
  "alloy 0.6.4",
  "alloy-chains",
  "anyhow",
- "artemis-core",
  "async-trait",
  "bindings",
  "clap",
  "dotenv",
+ "engine",
  "env_logger",
  "eyre",
  "futures",
@@ -2403,9 +2382,9 @@ dependencies = [
  "alloy-chains",
  "alloy-primitives 0.8.12",
  "anyhow",
- "artemis-core",
  "clap",
  "dotenv",
+ "engine",
  "eyre",
  "provider",
  "shared",
@@ -3244,6 +3223,27 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "75030f3c4f45dafd7586dd6780965a8c7e8e285a5ecb86713e63a79c5b2766f3"
 dependencies = [
  "cfg-if",
+]
+
+[[package]]
+name = "engine"
+version = "0.1.0"
+dependencies = [
+ "addressbook",
+ "alloy 0.6.4",
+ "alloy-chains",
+ "anyhow",
+ "async-trait",
+ "dotenv",
+ "executor-binding",
+ "eyre",
+ "futures",
+ "provider",
+ "shared",
+ "tokio",
+ "tokio-stream",
+ "tracing",
+ "types",
 ]
 
 [[package]]
@@ -7804,11 +7804,11 @@ dependencies = [
  "alloy-provider 0.6.4",
  "alloy-rpc-types 0.6.4",
  "anyhow",
- "artemis-core",
  "async-trait",
  "bindings",
  "clap",
  "dotenv",
+ "engine",
  "env_logger",
  "eyre",
  "futures",
@@ -8441,13 +8441,13 @@ dependencies = [
  "alloy-sol-types",
  "amms",
  "anyhow",
- "artemis-core",
  "async-trait",
  "bindings",
  "csv",
  "dashmap",
  "db",
  "diesel",
+ "engine",
  "eyre",
  "indicatif",
  "mev-share",

@@ -24,7 +24,6 @@ use amms::{
     },
     sync::{self},
 };
-use artemis_core::types::Strategy;
 use async_trait::async_trait;
 use bindings::iuniswapv2pair::IUniswapV2Pair;
 use db::{
@@ -37,6 +36,7 @@ use db::{
 };
 use db::{models::NewDbUniV3Pool, queries::exchange::get_exchanges_by_chain};
 use diesel::PgConnection;
+use engine::types::Strategy;
 use eyre::Result;
 use shared::amm_utils::db_pools_to_amms;
 use std::sync::Arc;

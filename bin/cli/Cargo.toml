@@ -15,7 +15,7 @@ alloy-primitives = { workspace = true }
 shared = { path = "../../crates/shared" }
 uni-tri-arb-strategy = { path = "../../crates/strategies/uni-tri-arb" }
 types = { path = "../../crates/types" }
-artemis-core = { path = "../../crates/artemis-core" }
+engine = { path = "../../crates/engine" }
 addressbook = { path = "../../crates/addressbook" }
 provider = { path = "../../crates/provider" }
 

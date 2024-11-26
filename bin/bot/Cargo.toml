@@ -10,7 +10,7 @@ tokio = { workspace = true }
 eyre = { workspace = true }
 dotenv = "0.15.0"
 async-trait = "0.1.64"
-artemis-core = { path = "../../crates/artemis-core" }
+engine = { path = "../../crates/engine" }
 futures = "0.3.27"
 uni-tri-arb-strategy = { path = "../../crates/strategies/uni-tri-arb" }
 bindings = { path = "../../crates/bindings" }

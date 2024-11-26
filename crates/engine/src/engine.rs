@@ -11,7 +11,6 @@ use crate::types::{Collector, Executor, Strategy};
 /// Type Parameters:
 /// - E: The type of events that flow through the system
 /// - A: The type of actions that can be executed
-#[derive(Default)]
 pub struct Engine<E, A> {
     /// The set of collectors that the engine will use to collect events.
     collectors: Vec<Box<dyn Collector<E>>>,
@@ -53,6 +52,12 @@ impl<E, A> Engine<E, A> {
     pub fn with_action_channel_capacity(mut self, capacity: usize) -> Self {
         self.action_channel_capacity = capacity;
         self
+    }
+}
+
+impl<E, A> Default for Engine<E, A> {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

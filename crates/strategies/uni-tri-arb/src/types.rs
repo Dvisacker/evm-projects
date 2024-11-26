@@ -1,8 +1,8 @@
 use alloy::rpc::types::Log;
-use artemis_core::{
+use bindings::{iuniswapv2pair::IUniswapV2Pair, iuniswapv3pool::IUniswapV3Pool};
+use engine::{
     collectors::block_collector::NewBlock, executors::mempool_executor::SubmitTxToMempool,
 };
-use bindings::{iuniswapv2pair::IUniswapV2Pair, iuniswapv3pool::IUniswapV3Pool};
 
 /// Core Event enum for the current strategy.
 #[derive(Clone)]
