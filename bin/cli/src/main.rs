@@ -22,7 +22,6 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    GenerateStrategy,
     GetNamedPools(GetNamedPoolsArgs),
     GetUniswapV3Pools(GetUniswapV3PoolsArgs),
     GetUniswapV2Pools(GetUniswapV2PoolsArgs),
@@ -149,10 +148,6 @@ async fn main() -> Result<(), Error> {
         .init();
 
     match &cli.command {
-        Commands::GenerateStrategy => {
-            let strategy_parser = generator::parser::StrategyParser::parse();
-            strategy_parser.generate()?;
-        }
         Commands::GetNamedPools(args) => {
             let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
             let chain_config = get_chain_config(chain).await;

@@ -12,7 +12,6 @@ alloy-chains = { workspace = true }
 eyre = { workspace = true }
 alloy-primitives = { workspace = true }
 
-generator = { path = "../../crates/generator" }
 shared = { path = "../../crates/shared" }
 uni-tri-arb-strategy = { path = "../../crates/strategies/uni-tri-arb" }
 types = { path = "../../crates/types" }
@@ -23,5 +22,3 @@ clap = { version = "4.2.5", features = ["derive"] }
 dotenv = "0.15.0"
 tracing = { workspace = true }
 tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }
-
-
