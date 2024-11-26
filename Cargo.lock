@@ -1640,6 +1640,7 @@ dependencies = [
  "executor-binding",
  "eyre",
  "futures",
+ "provider",
  "shared",
  "tokio",
  "tokio-stream",
@@ -2406,6 +2407,7 @@ dependencies = [
  "clap",
  "dotenv",
  "eyre",
+ "provider",
  "shared",
  "tokio",
  "tracing",
@@ -3223,6 +3225,7 @@ dependencies = [
  "lazy_static",
  "odos-client",
  "once_cell",
+ "provider",
  "reqwest 0.12.9",
  "revm 14.0.3",
  "serde",
@@ -5662,6 +5665,7 @@ dependencies = [
  "futures",
  "lazy_static",
  "once_cell",
+ "provider",
  "reqwest 0.12.9",
  "revm 14.0.3",
  "serde",
@@ -6291,6 +6295,41 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6872f4d4f4b98303239a2b5838f5bbbb77b01ffc892d627957f37a22d7cfe69c"
 dependencies = [
  "thiserror",
+]
+
+[[package]]
+name = "provider"
+version = "0.1.0"
+dependencies = [
+ "addressbook",
+ "alloy 0.6.4",
+ "alloy-chains",
+ "alloy-primitives 0.8.12",
+ "alloy-rpc-types 0.6.4",
+ "alloy-sol-types",
+ "amms",
+ "anyhow",
+ "async-trait",
+ "bindings",
+ "clap",
+ "db",
+ "diesel",
+ "dotenv",
+ "executor-binding",
+ "eyre",
+ "foundry-config 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "foundry-evm",
+ "futures",
+ "lazy_static",
+ "once_cell",
+ "reqwest 0.12.9",
+ "revm 14.0.3",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "types",
 ]
 
 [[package]]
@@ -7481,6 +7520,7 @@ dependencies = [
  "futures",
  "lazy_static",
  "once_cell",
+ "provider",
  "reqwest 0.12.9",
  "revm 14.0.3",
  "serde",
@@ -7773,6 +7813,7 @@ dependencies = [
  "eyre",
  "futures",
  "log",
+ "provider",
  "shared",
  "tokio",
  "tracing",

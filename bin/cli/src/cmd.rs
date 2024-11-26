@@ -9,12 +9,11 @@ use artemis_core::executors::sequence_executor::{
 };
 use artemis_core::types::Executor;
 use eyre::{Error, Result};
+use provider::{get_default_signer, get_default_wallet, get_provider, get_provider_map};
 use shared::amm_utils::{store_uniswap_v2_pools, store_uniswap_v3_pools};
-use shared::provider::{get_default_signer, get_default_wallet, get_provider_map};
 use shared::token_manager::TokenManager;
 use shared::{
     bridge::bridge_lifi, config::get_chain_config, evm_helpers::get_contract_creation_block,
-    provider::get_provider,
 };
 use std::{str::FromStr, sync::Arc};
 use tracing::info;
@@ -208,7 +207,7 @@ mod cmd_test {
     use alloy::primitives::{Address, U256};
     use alloy::signers::local::PrivateKeySigner;
     use alloy_chains::{Chain, NamedChain};
-    use shared::provider::get_provider;
+    use provider::get_provider;
     use std::ptr::eq;
     use std::str::FromStr;
     use std::sync::Arc;

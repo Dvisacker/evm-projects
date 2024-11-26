@@ -1,5 +1,5 @@
 [package]
-name = "odos-client"
+name = "provider"
 version = "0.1.0"
 edition = "2021"
 
@@ -17,13 +17,11 @@ dotenv = { workspace = true }
 once_cell = { workspace = true }
 lazy_static = "1.4.0"
 
-addressbook = { path = "../addressbook" }
 bindings = { path = "../bindings" }
 executor-binding = { path = "../executor-binding" }
 types = { path = "../types" }
-provider = { path = "../provider" }
+addressbook = { path = "../addressbook" }
 db = { path = "../db" }
-shared = { path = "../shared" }
 amms = { path = "../amms" }
 diesel = { version = "2.0.0", features = ["postgres", "serde_json", "chrono"] }
 reqwest = { version = "0.12.9", features = ["json"] }

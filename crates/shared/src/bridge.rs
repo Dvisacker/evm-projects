@@ -324,16 +324,13 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::{
-        provider::{get_default_signer, get_provider, get_provider_map},
-        token_helpers::parse_token_units,
-        token_manager::TokenManager,
-    };
+    use crate::{token_helpers::parse_token_units, token_manager::TokenManager};
 
     use super::*;
     use addressbook::Addressbook;
     use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
     use alloy_chains::{Chain, NamedChain};
+    use provider::{get_default_signer, get_provider, get_provider_map};
     use std::str::FromStr;
     use types::token::{NamedToken, TokenIsh};
 

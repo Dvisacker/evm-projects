@@ -12,6 +12,7 @@ tokio = { workspace = true }
 eyre = { workspace = true }
 alloy-chains = { workspace = true }
 dotenv = { workspace = true }
+provider = { path = "../provider" }
 addressbook = { path = "../addressbook" }
 types = { path = "../types" }
 shared = { path = "../shared" }

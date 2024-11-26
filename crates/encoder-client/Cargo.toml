@@ -17,6 +17,7 @@ dotenv = { workspace = true }
 once_cell = { workspace = true }
 lazy_static = "1.4.0"
 
+provider = { path = "../provider" }
 bindings = { path = "../bindings" }
 shared = { path = "../shared" }
 addressbook = { path = "../addressbook" }

@@ -820,11 +820,11 @@ where
 
 #[cfg(test)]
 mod tests {
+    use provider::{
+        get_default_anvil_provider, get_default_anvil_signer, get_default_signer, get_provider,
+    };
     use shared::{
         evm_helpers::{compute_v2_pool_address, compute_v3_pool_address},
-        provider::{
-            get_default_anvil_provider, get_default_anvil_signer, get_default_signer, get_provider,
-        },
         token_helpers::{get_token_balance, parse_token_units},
         utils::prettify_json,
     };

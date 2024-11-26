@@ -7,7 +7,7 @@ use alloy::signers::local::PrivateKeySigner;
 use alloy_chains::NamedChain;
 use async_trait::async_trait;
 use eyre::{Context, Result};
-use shared::provider::ProviderMap;
+use provider::ProviderMap;
 
 /// An executor that sends transactions to the mempool.
 pub struct SequenceExecutor {
@@ -135,11 +135,9 @@ mod tests {
         providers::WalletProvider,
         signers::local::PrivateKeySigner,
     };
-    use shared::{provider::SignerProvider, token_helpers::parse_token_units};
-    use shared::{
-        provider::{get_default_wallet, get_provider_map},
-        token_manager::TokenManager,
-    };
+    use provider::{get_default_wallet, get_provider_map};
+    use shared::token_helpers::parse_token_units;
+    use shared::token_manager::TokenManager;
     use types::{
         bridge::BridgeName,
         exchange::ExchangeName,

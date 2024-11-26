@@ -586,7 +586,7 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::provider::get_provider;
+    use provider::get_provider;
     use addressbook::Addressbook;
     use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
     use alloy_chains::{Chain, NamedChain};

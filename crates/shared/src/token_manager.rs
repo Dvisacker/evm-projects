@@ -1,9 +1,9 @@
-use crate::provider::{get_provider_map, ProviderMap};
 use addressbook::Addressbook;
 use alloy::sol;
 use alloy_chains::NamedChain;
 use alloy_primitives::Address;
 use lazy_static::lazy_static;
+use provider::{get_provider_map, ProviderMap};
 use std::collections::HashMap;
 use std::error::Error;
 use std::sync::{Arc, Mutex};

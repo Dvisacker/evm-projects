@@ -9,7 +9,8 @@ use alloy_chains::{Chain, NamedChain};
 use clap::Parser;
 use dotenv::dotenv;
 use eyre::Result;
-use shared::{config::get_chain_config, provider::get_provider, swap::swap_v2_pool};
+use provider::get_provider;
+use shared::{config::get_chain_config, swap::swap_v2_pool};
 use std::str::FromStr;
 
 #[derive(Parser, Debug)]

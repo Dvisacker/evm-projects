@@ -237,13 +237,8 @@ mod tests {
     use alloy_primitives::Bytes;
     use alloy_rpc_types::TransactionRequest;
     use executor_binding::{ierc20::IERC20, weth::WETH};
-    use shared::{
-        provider::{
-            self, get_default_anvil_provider, get_default_anvil_signer, get_default_wallet,
-            get_provider_map,
-        },
-        token_helpers::{get_token_allowance, get_token_balance, parse_token_units},
-    };
+    use provider::{get_default_anvil_provider, get_default_anvil_signer};
+    use shared::token_helpers::{get_token_allowance, get_token_balance, parse_token_units};
     use types::token::TokenIsh;
 
     use super::*;

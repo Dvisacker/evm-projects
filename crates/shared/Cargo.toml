@@ -21,6 +21,7 @@ bindings = { path = "../bindings" }
 executor-binding = { path = "../executor-binding" }
 types = { path = "../types" }
 addressbook = { path = "../addressbook" }
+provider = { path = "../provider" }
 db = { path = "../db" }
 amms = { path = "../amms" }
 diesel = { version = "2.0.0", features = ["postgres", "serde_json", "chrono"] }

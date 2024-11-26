@@ -14,6 +14,7 @@ members = [
     "crates/odos-client",
     "crates/encoder-client",
     "crates/addressbook",
+    "crates/provider",
 ]
 
 default-members = [
@@ -29,6 +30,7 @@ default-members = [
     "crates/encoder-client",
     "crates/addressbook",
     "crates/amms",
+    "crates/provider",
 ]
 resolver = "2"
 

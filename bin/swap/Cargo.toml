@@ -17,11 +17,13 @@ dotenv = "0.15.0"
 async-trait = "0.1.64"
 artemis-core = { path = "../../crates/artemis-core" }
 futures = "0.3.27"
-uni-tri-arb-strategy = { path = "../../crates/strategies/uni-tri-arb" }
-bindings = { path = "../../crates/bindings" }
-shared = { path = "../../crates/shared" }
-anyhow = "1.0.70"
 tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }
 clap = { version = "4.2.5", features = ["derive"] }
 log = "0.4.22"
 env_logger = "0.11.4"
+
+uni-tri-arb-strategy = { path = "../../crates/strategies/uni-tri-arb" }
+provider = { path = "../../crates/provider" }
+bindings = { path = "../../crates/bindings" }
+shared = { path = "../../crates/shared" }
+anyhow = "1.0.70"

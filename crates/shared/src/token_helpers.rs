@@ -1,4 +1,3 @@
-use crate::provider::SignerProvider;
 use crate::token_manager::TokenManager;
 use alloy::providers::WalletProvider;
 use alloy::{
@@ -11,6 +10,7 @@ use alloy_primitives::U256;
 use amms::errors::AMMError;
 use bindings::ierc20::IERC20;
 use eyre::{eyre, Error, Result};
+use provider::SignerProvider;
 use serde_json::Value;
 use std::collections::HashSet;
 use std::fs;

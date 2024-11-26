@@ -17,6 +17,7 @@ uni-tri-arb-strategy = { path = "../../crates/strategies/uni-tri-arb" }
 types = { path = "../../crates/types" }
 artemis-core = { path = "../../crates/artemis-core" }
 addressbook = { path = "../../crates/addressbook" }
+provider = { path = "../../crates/provider" }
 
 anyhow = "1.0.70"
 clap = { version = "4.2.5", features = ["derive"] }
