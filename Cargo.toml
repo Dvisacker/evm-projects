@@ -2,7 +2,6 @@
 members = [
     "bin/bot",
     "bin/cli",
-    "bin/swap",
     "crates/engine",
     "crates/strategies/*",
     "crates/amms",
@@ -20,7 +19,6 @@ members = [
 default-members = [
     "bin/bot",
     "bin/cli",
-    "bin/swap",
     "crates/shared",
     "crates/db",
     "crates/engine",

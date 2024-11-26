@@ -40,7 +40,7 @@ WIP on a defi trading engine
 
 - Rust 1.70 or higher
 - Docker (optional)
-- Access to Ethereum node(s)
+- Access to Ethereum nodes or providers
 
 ### Installation
 
@@ -83,15 +83,6 @@ See `.env.example` for available configuration options.
 
 1. Create a new crate in `crates/strategies/`
 2. Implement the strategy traits from `engine`
-3. Add tests and documentation
-4. Register the strategy in the bot configuration
-
-### Testing
-
-Run the test suite:
-```bash
-cargo test --all
-```
 
 ## License
 

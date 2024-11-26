@@ -7796,32 +7796,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "swap"
-version = "0.1.0"
-dependencies = [
- "alloy 0.6.4",
- "alloy-chains",
- "alloy-provider 0.6.4",
- "alloy-rpc-types 0.6.4",
- "anyhow",
- "async-trait",
- "bindings",
- "clap",
- "dotenv",
- "engine",
- "env_logger",
- "eyre",
- "futures",
- "log",
- "provider",
- "shared",
- "tokio",
- "tracing",
- "tracing-subscriber",
- "uni-tri-arb-strategy",
-]
-
-[[package]]
 name = "syn"
 version = "1.0.109"
 source = "registry+https://github.com/rust-lang/crates.io-index"
