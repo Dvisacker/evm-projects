@@ -1101,7 +1101,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_odos_swap_2() -> Result<()> {
+    async fn test_odos_swap() -> Result<()> {
         dotenv::dotenv().ok();
         let provider = get_default_anvil_provider().await;
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
