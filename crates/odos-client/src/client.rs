@@ -226,14 +226,6 @@ pub async fn assemble_odos_swap(
 mod tests {
     use std::str::FromStr;
 
-    use crate::{addressbook::Addressbook, provider::get_provider};
-    use crate::{
-        helpers::{get_token_allowance, get_token_balance, parse_token_units},
-        provider::{
-            self, get_default_anvil_provider, get_default_anvil_signer, get_default_wallet,
-            get_provider_map,
-        },
-    };
     use alloy::hex::hex;
     use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
     use alloy::{
@@ -244,6 +236,14 @@ mod tests {
     use alloy_primitives::Bytes;
     use alloy_rpc_types::TransactionRequest;
     use executor_binding::{ierc20::IERC20, weth::WETH};
+    use shared::{addressbook::Addressbook, provider::get_provider};
+    use shared::{
+        helpers::{get_token_allowance, get_token_balance, parse_token_units},
+        provider::{
+            self, get_default_anvil_provider, get_default_anvil_signer, get_default_wallet,
+            get_provider_map,
+        },
+    };
     use types::token::TokenIsh;
 
     use super::*;

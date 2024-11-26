@@ -3163,6 +3163,42 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a357d28ed41a50f9c765dbfe56cbc04a64e53e5fc58ba79fbc34c10ef3df831f"
 
 [[package]]
+name = "encoder-client"
+version = "0.1.0"
+dependencies = [
+ "alloy 0.6.4",
+ "alloy-chains",
+ "alloy-primitives 0.8.12",
+ "alloy-rpc-types 0.6.4",
+ "alloy-sol-types",
+ "amms",
+ "anyhow",
+ "async-trait",
+ "bindings",
+ "clap",
+ "db",
+ "diesel",
+ "dotenv",
+ "executor-binding",
+ "eyre",
+ "foundry-config 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "foundry-evm",
+ "futures",
+ "lazy_static",
+ "odos-client",
+ "once_cell",
+ "reqwest 0.12.9",
+ "revm 14.0.3",
+ "serde",
+ "serde_json",
+ "shared",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "types",
+]
+
+[[package]]
 name = "encoding_rs"
 version = "0.8.35"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5574,6 +5610,41 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "aedf0a2d09c573ed1d8d85b30c119153926a2b36dce0ab28322c09a117a4683e"
 dependencies = [
  "memchr",
+]
+
+[[package]]
+name = "odos-client"
+version = "0.1.0"
+dependencies = [
+ "alloy 0.6.4",
+ "alloy-chains",
+ "alloy-primitives 0.8.12",
+ "alloy-rpc-types 0.6.4",
+ "alloy-sol-types",
+ "amms",
+ "anyhow",
+ "async-trait",
+ "bindings",
+ "clap",
+ "db",
+ "diesel",
+ "dotenv",
+ "executor-binding",
+ "eyre",
+ "foundry-config 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "foundry-evm",
+ "futures",
+ "lazy_static",
+ "once_cell",
+ "reqwest 0.12.9",
+ "revm 14.0.3",
+ "serde",
+ "serde_json",
+ "shared",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "types",
 ]
 
 [[package]]

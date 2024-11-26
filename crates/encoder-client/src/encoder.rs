@@ -26,8 +26,8 @@ use std::str::FromStr;
 use std::sync::Arc;
 use types::exchange::ExchangeName;
 
-use crate::addressbook::Addressbook;
-use crate::odos::{assemble_odos_swap, get_odos_quote};
+use odos_client::client::{assemble_odos_swap, get_odos_quote};
+use shared::addressbook::Addressbook;
 
 sol! {
     #[allow(missing_docs)]
@@ -820,11 +820,11 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::{
+    use odos_client::client::{assemble_odos_swap, get_odos_quote};
+    use shared::{
         helpers::{
             compute_v2_pool_address, compute_v3_pool_address, get_token_balance, parse_token_units,
         },
-        odos::{assemble_odos_swap, get_odos_quote},
         provider::{
             get_default_anvil_provider, get_default_anvil_signer, get_default_signer, get_provider,
         },
