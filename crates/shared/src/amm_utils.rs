@@ -40,7 +40,7 @@ use diesel::PgConnection;
 use types::exchange::{ExchangeName, ExchangeType};
 
 use crate::config::get_chain_config;
-use crate::helpers::get_contract_creation_block;
+use crate::evm_helpers::get_contract_creation_block;
 
 fn extract_v2_pools(amms: &[AMM]) -> Vec<UniswapV2Pool> {
     amms.iter()

@@ -1,13 +1,21 @@
+use crate::provider::SignerProvider;
+use crate::token_manager::TokenManager;
+use alloy::providers::WalletProvider;
 use alloy::{
     dyn_abi::DynSolType, network::Network, primitives::Address, providers::Provider, sol,
     transports::Transport,
 };
+use alloy_chains::NamedChain;
+use alloy_primitives::utils::parse_units;
+use alloy_primitives::U256;
 use amms::errors::AMMError;
-use eyre::Result;
+use bindings::ierc20::IERC20;
+use eyre::{eyre, Error, Result};
 use serde_json::Value;
 use std::collections::HashSet;
 use std::fs;
 use std::sync::Arc;
+use types::token::TokenIsh;
 
 sol! {
     #[allow(missing_docs)]
@@ -21,6 +29,87 @@ pub struct ERC20TokenData {
     pub symbol: String,
     pub decimals: u8,
     pub total_supply: u128,
+}
+
+pub async fn get_token_balance(
+    provider: Arc<SignerProvider>,
+    token: Address,
+    holder: Address,
+) -> Result<U256> {
+    let token = IERC20::new(token, provider.clone());
+    let balance = token.balanceOf(holder).call().await?;
+    Ok(balance._0)
+}
+
+pub async fn get_token_allowance(
+    provider: Arc<SignerProvider>,
+    token: Address,
+    holder: Address,
+    spender: Address,
+) -> Result<U256> {
+    let token = IERC20::new(token, provider.clone());
+    let allowance = token.allowance(holder, spender).call().await?;
+    Ok(allowance._0)
+}
+
+pub async fn approve_token_if_needed(
+    provider: Arc<SignerProvider>,
+    token: Address,
+    spender: Address,
+    amount: U256,
+) -> Result<(), Error> {
+    let token = IERC20::new(token, provider.clone());
+    let wallet_address = provider.default_signer_address();
+
+    let allowance: U256 = match token.allowance(wallet_address, spender).call().await {
+        Ok(allowance) => allowance._0,
+        Err(e) => {
+            return Err(eyre!("Failed to get allowance: {}", e));
+        }
+    };
+
+    if allowance < amount {
+        token.approve(spender, amount).send().await?;
+    }
+
+    Ok(())
+}
+
+pub async fn transfer_token_if_needed(
+    provider: Arc<SignerProvider>,
+    token: Address,
+    to: Address,
+    amount: U256,
+) -> Result<(), Error> {
+    let token = IERC20::new(token, provider.clone());
+    let wallet_address = provider.default_signer_address();
+    let balance = token.balanceOf(wallet_address).call().await?;
+    if balance._0 < amount {
+        token.transfer(to, amount).send().await?;
+    }
+    Ok(())
+}
+
+pub async fn transfer_approve_token_if_needed(
+    provider: Arc<SignerProvider>,
+    token: Address,
+    to: Address,
+    amount: U256,
+) -> Result<(), Error> {
+    transfer_token_if_needed(provider.clone(), token, to, amount).await?;
+    approve_token_if_needed(provider.clone(), token, to, amount).await?;
+    Ok(())
+}
+
+pub async fn parse_token_units(chain: &NamedChain, token: &TokenIsh, amount: &str) -> Result<U256> {
+    let token_manager = TokenManager::instance().await;
+    let token = token_manager.get(chain, token).unwrap();
+    let decimals = match token.decimals().call().await {
+        Ok(decimals) => decimals._0,
+        Err(e) => return Err(eyre!("Failed to get decimals: {}", e)),
+    };
+    let amount = parse_units(amount, decimals).unwrap().into();
+    Ok(amount)
 }
 
 pub async fn get_erc20_data_batch_request<T, N, P>(

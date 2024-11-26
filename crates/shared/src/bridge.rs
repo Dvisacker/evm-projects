@@ -325,8 +325,8 @@ where
 #[cfg(test)]
 mod tests {
     use crate::{
-        helpers::parse_token_units,
         provider::{get_default_signer, get_provider, get_provider_map},
+        token_helpers::parse_token_units,
         token_manager::TokenManager,
     };
 

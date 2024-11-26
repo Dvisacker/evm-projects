@@ -5,7 +5,7 @@ use clap::{Args, Parser, Subcommand};
 use eyre::Error;
 use shared::amm_utils::{activate_pools, get_amm_value};
 use shared::config::get_chain_config;
-use shared::token_utils::load_pools_and_fetch_token_data;
+use shared::token_helpers::load_pools_and_fetch_token_data;
 use std::str::FromStr;
 use std::sync::Arc;
 use tracing::info;

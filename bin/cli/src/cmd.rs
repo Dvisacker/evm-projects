@@ -13,7 +13,7 @@ use shared::amm_utils::{store_uniswap_v2_pools, store_uniswap_v3_pools};
 use shared::provider::{get_default_signer, get_default_wallet, get_provider_map};
 use shared::token_manager::TokenManager;
 use shared::{
-    bridge::bridge_lifi, config::get_chain_config, helpers::get_contract_creation_block,
+    bridge::bridge_lifi, config::get_chain_config, evm_helpers::get_contract_creation_block,
     provider::get_provider,
 };
 use std::{str::FromStr, sync::Arc};

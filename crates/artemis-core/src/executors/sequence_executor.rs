@@ -135,7 +135,7 @@ mod tests {
         providers::WalletProvider,
         signers::local::PrivateKeySigner,
     };
-    use shared::{helpers::parse_token_units, provider::SignerProvider};
+    use shared::{provider::SignerProvider, token_helpers::parse_token_units};
     use shared::{
         provider::{get_default_wallet, get_provider_map},
         token_manager::TokenManager,

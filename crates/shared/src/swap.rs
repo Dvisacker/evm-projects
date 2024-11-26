@@ -20,7 +20,7 @@ use amms::{
 use eyre::Error;
 use types::exchange::ExchangeName;
 
-use crate::helpers::get_contract_creation_block;
+use crate::evm_helpers::get_contract_creation_block;
 use alloy::sol;
 
 sol! {
