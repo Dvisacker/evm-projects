@@ -1,34 +1,33 @@
-# Artemis MEV Framework
+# Defi Trading Engine
 
-Artemis is a high-performance MEV (Maximal Extractable Value) bot framework written in Rust. It provides a modular and extensible architecture for building, testing, and deploying MEV strategies across different blockchain networks.
+WIP on a defi trading engine
 
 ## Features
 
-- 🚀 High-performance Rust implementation
 - 🔌 Modular architecture with pluggable components
 - 💱 Support for multiple AMMs and DEX protocols
-- 🔄 Customizable execution strategies
-- 📊 Database integration for transaction tracking
-- 🔐 Secure provider management
+- 🔄 Customizable strategies
+- 📊 Database persistence for liquidity pools
+- 🚀 High-performance Rust implementation
 - 🤖 CLI tools for bot management and testing
 
 ## Project Structure
 
 ```
-artemis/
+/
 ├── bin/                    # Binary crates (bot, cli, swap)
 ├── crates/                 # Core library crates
-│   ├── addressbook/       # Address management
+│   ├── addressbook/       # Blockchain address management
 │   ├── amms/              # AMM integrations
-│   ├── artemis-core/      # Core framework
-│   ├── bindings/          # Contract bindings
-│   ├── db/                # Database interactions
-│   ├── encoder-client/    # Transaction encoding
-│   ├── executor-binding/  # Execution handlers
-│   ├── odos-client/       # Odos protocol integration
+│   ├── engine/            # Core engine
+│   ├── bindings/          # Contract bindings (rust interfaces)
+│   ├── db/                # Database interface
+│   ├── encoder-client/    # Blockchain transaction encoding
+│   ├── executor-binding/  # Executor contract binding 
+│   ├── odos-client/       # Odos protocol client
 │   ├── provider/          # Blockchain provider
 │   ├── shared/            # Shared utilities
-│   ├── strategies/        # MEV strategies
+│   ├── strategies/        # Strategy folder
 │   └── types/             # Common types
 ├── contracts/             # Smart contracts
 └── docker/               # Docker configuration
@@ -43,12 +42,6 @@ artemis/
 - Access to Ethereum node(s)
 
 ### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/your-username/artemis.git
-cd artemis
-```
 
 2. Copy the example environment file:
 ```bash
@@ -88,7 +81,7 @@ See `.env.example` for available configuration options.
 ### Adding New Strategies
 
 1. Create a new crate in `crates/strategies/`
-2. Implement the strategy traits from `artemis-core`
+2. Implement the strategy traits from `engine`
 3. Add tests and documentation
 4. Register the strategy in the bot configuration
 
@@ -103,7 +96,6 @@ cargo test --all
 
 This project is dual-licensed under:
 - MIT License ([LICENSE-MIT](LICENSE-MIT))
-- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE))
 
 ## Contributing
 
