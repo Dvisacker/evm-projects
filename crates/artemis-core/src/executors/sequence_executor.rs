@@ -9,33 +9,58 @@ use async_trait::async_trait;
 use eyre::{Context, Result};
 use provider::ProviderMap;
 
-/// An executor that sends transactions to the mempool.
+/// SequenceExecutor is responsible for executing complex sequences of transactions
+/// across multiple chains and protocols. It can handle:
+/// - Cross-chain token transfers (bridges)
+/// - DEX swaps on various chains
+/// - Multi-step MEV opportunities
 pub struct SequenceExecutor {
+    /// Map of providers for different chains
     providers: Arc<ProviderMap>,
+    /// Address of the wallet executing transactions
     wallet_address: Address,
 }
 
-/// Information about the gas bid for a transaction.
-
+/// Represents a token swap operation on a specific chain and DEX.
+/// This is used as part of a transaction sequence to specify
+/// token swaps within a single chain.
 #[derive(Debug, Clone)]
 pub struct SwapBlock {
+    /// The chain where the swap will occur
     pub chain: NamedChain,
+    /// The DEX/AMM to use for the swap
     pub exchange_name: types::exchange::ExchangeName,
+    /// The address of the token to receive from the swap
     pub token_out: Address,
 }
 
+/// Represents a cross-chain bridge operation.
+/// This is used as part of a transaction sequence to move
+/// tokens between different chains.
 #[derive(Debug, Clone)]
 pub struct BridgeBlock {
+    /// The chain to bridge tokens to
     pub destination_chain: NamedChain,
+    /// The token address on the destination chain
     pub destination_token: Address,
+    /// The bridge protocol to use
     pub bridge_name: types::bridge::BridgeName,
 }
 
+/// Represents a single operation in a transaction sequence.
+/// Can be either a swap within a chain or a bridge between chains.
+#[derive(Debug, Clone)]
 pub enum TxBlock {
+    /// A token swap operation
     Swap(SwapBlock),
+    /// A cross-chain bridge operation
     Bridge(BridgeBlock),
 }
 
+/// Represents a complete sequence of transactions to be executed.
+/// This can include multiple swaps and bridges across different chains,
+/// forming a complete path for a complex MEV opportunity.
+#[derive(Debug, Clone)]
 pub struct TxSequence {
     origin_chain: NamedChain,
     amount_in: U256,
@@ -44,6 +69,12 @@ pub struct TxSequence {
 }
 
 impl TxSequence {
+    /// Creates a new transaction sequence.
+    ///
+    /// # Arguments
+    /// * `origin_chain` - The chain where the sequence starts
+    /// * `amount_in` - The amount of input tokens
+    /// * `token_in` - The address of the input token
     pub fn new(origin_chain: NamedChain, amount_in: U256, token_in: Address) -> Self {
         Self {
             origin_chain,
@@ -53,20 +84,29 @@ impl TxSequence {
         }
     }
 
+    /// Sets the complete sequence of operations.
+    /// This replaces any existing operations in the sequence.
     pub fn set_sequence(&mut self, sequence: Vec<TxBlock>) {
         self.txs = sequence;
     }
 
+    /// Adds a swap operation to the end of the sequence.
     pub fn add_swap(&mut self, swap: SwapBlock) {
         self.txs.push(TxBlock::Swap(swap));
     }
 
+    /// Adds a bridge operation to the end of the sequence.
     pub fn add_bridge(&mut self, bridge: BridgeBlock) {
         self.txs.push(TxBlock::Bridge(bridge));
     }
 }
 
 impl SequenceExecutor {
+    /// Creates a new SequenceExecutor instance.
+    ///
+    /// # Arguments
+    /// * `providers` - Map of providers for different chains
+    /// * `wallet_address` - Address of the wallet that will execute transactions
     pub fn new(providers: Arc<ProviderMap>, wallet_address: Address) -> Self {
         Self {
             providers,
@@ -75,8 +115,28 @@ impl SequenceExecutor {
     }
 }
 
+/// Implementation of the [Executor] trait for [SequenceExecutor].
+/// This implementation:
+/// 1. Executes each operation in the sequence in order
+/// 2. Tracks token amounts and addresses across operations
+/// 3. Handles errors and transaction confirmations
+/// 4. Updates state between operations
 #[async_trait]
 impl Executor<TxSequence> for SequenceExecutor {
+    /// Executes a complete transaction sequence.
+    ///
+    /// # Arguments
+    /// * `sequence` - The sequence of operations to execute
+    ///
+    /// # Returns
+    /// * `Result<()>` - Ok if all operations in the sequence succeeded
+    ///
+    /// # Errors
+    /// Returns an error if:
+    /// * Any swap operation fails
+    /// * Any bridge operation fails
+    /// * Provider communication fails
+    /// * Transaction confirmation fails
     async fn execute(&self, sequence: TxSequence) -> Result<()> {
         let mut current_chain = sequence.origin_chain;
         let mut amount_in = sequence.amount_in;

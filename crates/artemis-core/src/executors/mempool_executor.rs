@@ -8,24 +8,51 @@ use alloy::{primitives::U256, providers::Provider, rpc::types::TransactionReques
 use async_trait::async_trait;
 use eyre::{Context, Result};
 
-/// An executor that sends transactions to the mempool.
+/// MempoolExecutor is responsible for submitting transactions to the public mempool.
+/// It supports both basic transaction submission and gas price optimization based on
+/// expected profit from MEV opportunities.
+///
+/// Type Parameters:
+/// - M: The provider type that implements the Provider trait
+///
+/// # Example
+/// ```rust,no_run
+/// use std::sync::Arc;
+/// use artemis_core::executors::{MempoolExecutor, SubmitTxToMempool};
+///
+/// async fn example(provider: Arc<impl Provider>) {
+///     let executor = MempoolExecutor::new(provider);
+///     let tx = SubmitTxToMempool {
+///         tx: TransactionRequest::default(),
+///         gas_bid_info: None,
+///     };
+///     executor.execute(tx).await.unwrap();
+/// }
+/// ```
 pub struct MempoolExecutor<M> {
+    /// The blockchain provider used to submit transactions
     client: Arc<M>,
 }
 
 /// Information about the gas bid for a transaction.
 #[derive(Debug, Clone)]
 pub struct GasBidInfo {
-    /// Total profit expected from opportunity
+    /// Total profit expected from opportunity in wei
     pub total_profit: U256,
 
-    /// Percentage of bid profit to use for gas
+    /// Percentage of profit to use for gas (0-100)
+    /// For example, 50 means 50% of profit will be used for gas
     pub bid_percentage: u64,
 }
 
+/// Action to submit a transaction to the public mempool.
+/// Can optionally include gas bidding information for
+/// profit-based gas price optimization.
 #[derive(Debug, Clone)]
 pub struct SubmitTxToMempool {
+    /// The transaction to submit
     pub tx: TransactionRequest,
+    /// Optional gas bidding information
     pub gas_bid_info: Option<GasBidInfo>,
 }
 
@@ -35,12 +62,32 @@ impl<M: Provider> MempoolExecutor<M> {
     }
 }
 
+/// Implementation of the [Executor] trait for [MempoolExecutor].
+/// This implementation:
+/// 1. Estimates gas usage for the transaction
+/// 2. Calculates optimal gas price (either based on profit or current market price)
+/// 3. Submits the transaction to the mempool
+/// 4. Waits for and returns the transaction receipt
 #[async_trait]
 impl<M> Executor<SubmitTxToMempool> for MempoolExecutor<M>
 where
     M: Provider,
 {
-    /// Send a transaction to the mempool.
+    /// Executes a transaction submission to the mempool.
+    ///
+    /// # Arguments
+    /// * `action` - The transaction submission action containing the transaction
+    ///             and optional gas bidding information
+    ///
+    /// # Returns
+    /// * `Result<()>` - Ok if the transaction was successfully submitted and mined
+    ///
+    /// # Errors
+    /// Returns an error if:
+    /// * Gas estimation fails
+    /// * Gas price calculation fails
+    /// * Transaction submission fails
+    /// * Transaction receipt retrieval fails
     async fn execute(&self, mut action: SubmitTxToMempool) -> Result<()> {
         let gas_usage = self
             .client
