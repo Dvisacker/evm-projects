@@ -10,6 +10,7 @@ WIP on a defi trading engine
 - 📊 Database persistence for liquidity pools
 - 🚀 High-performance Rust implementation
 - 🤖 CLI tools for bot management and testing
+- 🦀 Written in Rust with engine forked from [Artemis](https://github.com/paradigmxyz/artemis)
 
 ## Project Structure
 
