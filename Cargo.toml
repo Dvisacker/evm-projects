@@ -11,7 +11,7 @@ members = [
     "crates/types",
     "crates/executor-binding",
     "crates/odos-client",
-    "crates/encoder-client",
+    "crates/tx-encoder",
     "crates/addressbook",
     "crates/provider",
 ]
@@ -25,7 +25,7 @@ default-members = [
     "crates/bindings",
     "crates/executor-binding",
     "crates/odos-client",
-    "crates/encoder-client",
+    "crates/tx-encoder",
     "crates/addressbook",
     "crates/amms",
     "crates/provider",

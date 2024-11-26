@@ -1,5 +1,5 @@
 [package]
-name = "uni-tri-arb-strategy"
+name = "generalized-arb-strategy"
 version = "0.1.0"
 edition = "2021"
 

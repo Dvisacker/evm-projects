@@ -6,23 +6,23 @@ use alloy::{
     sol_types::SolEvent,
 };
 use alloy_chains::Chain;
-use eyre::Result;
+use bindings::{iuniswapv2pair::IUniswapV2Pair, iuniswapv3pool::IUniswapV3Pool};
+use clap::Parser;
+use dotenv::dotenv;
 use engine::{
     collectors::multi_log_collector::MultiLogCollector,
     engine::Engine,
     executors::mempool_executor::MempoolExecutor,
     types::{CollectorMap, ExecutorMap},
 };
-use bindings::{iuniswapv2pair::IUniswapV2Pair, iuniswapv3pool::IUniswapV3Pool};
-use clap::Parser;
-use dotenv::dotenv;
-use shared::config::get_chain_config;
-use tracing::info;
-use tracing_subscriber::{fmt, prelude::*, EnvFilter};
-use uni_tri_arb_strategy::{
+use eyre::Result;
+use generalized_arb_strategy::{
     strategy::UniTriArb,
     types::{Action, Event},
 };
+use shared::config::get_chain_config;
+use tracing::info;
+use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 // use bindings::uniswap::UniswapV2Factory;
 
 #[derive(Parser, Debug)]
@@ -40,7 +40,7 @@ async fn main() -> Result<()> {
     // env_logger::init();
     let env_filter = EnvFilter::try_from_default_env()
         .unwrap_or_else(|_| EnvFilter::new("info"))
-        .add_directive("uni_tri_arb_strategy=info".parse().unwrap())
+        .add_directive("generalized_arb_strategy=info".parse().unwrap())
         .add_directive("engine=info".parse().unwrap())
         .add_directive("shared=info".parse().unwrap())
         .add_directive("amms_rs=info".parse().unwrap());

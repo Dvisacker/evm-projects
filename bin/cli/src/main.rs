@@ -137,7 +137,7 @@ async fn main() -> Result<(), Error> {
     // Updated tracing configuration
     let env_filter = EnvFilter::try_from_default_env()
         .unwrap_or_else(|_| EnvFilter::new("info"))
-        .add_directive("uni_tri_arb_strategy=info".parse().unwrap())
+        .add_directive("generalized_arb_strategy=info".parse().unwrap())
         .add_directive("engine=info".parse().unwrap())
         .add_directive("shared=info".parse().unwrap())
         .add_directive("amms_rs=info".parse().unwrap());

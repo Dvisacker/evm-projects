@@ -2142,12 +2142,12 @@ dependencies = [
  "env_logger",
  "eyre",
  "futures",
+ "generalized-arb-strategy",
  "log",
  "shared",
  "tokio",
  "tracing",
  "tracing-subscriber",
- "uni-tri-arb-strategy",
 ]
 
 [[package]]
@@ -2386,13 +2386,13 @@ dependencies = [
  "dotenv",
  "engine",
  "eyre",
+ "generalized-arb-strategy",
  "provider",
  "shared",
  "tokio",
  "tracing",
  "tracing-subscriber",
  "types",
- "uni-tri-arb-strategy",
 ]
 
 [[package]]
@@ -3177,44 +3177,6 @@ name = "encode_unicode"
 version = "0.3.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a357d28ed41a50f9c765dbfe56cbc04a64e53e5fc58ba79fbc34c10ef3df831f"
-
-[[package]]
-name = "encoder-client"
-version = "0.1.0"
-dependencies = [
- "addressbook",
- "alloy 0.6.4",
- "alloy-chains",
- "alloy-primitives 0.8.12",
- "alloy-rpc-types 0.6.4",
- "alloy-sol-types",
- "amms",
- "anyhow",
- "async-trait",
- "bindings",
- "clap",
- "db",
- "diesel",
- "dotenv",
- "executor-binding",
- "eyre",
- "foundry-config 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "foundry-evm",
- "futures",
- "lazy_static",
- "odos-client",
- "once_cell",
- "provider",
- "reqwest 0.12.9",
- "revm 14.0.3",
- "serde",
- "serde_json",
- "shared",
- "tokio",
- "tracing",
- "tracing-subscriber",
- "types",
-]
 
 [[package]]
 name = "encoding_rs"
@@ -4275,6 +4237,35 @@ name = "futures-utils-wasm"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "42012b0f064e01aa58b545fe3727f90f7dd4020f4a3ea735b50344965f5a57e9"
+
+[[package]]
+name = "generalized-arb-strategy"
+version = "0.1.0"
+dependencies = [
+ "addressbook",
+ "alloy 0.6.4",
+ "alloy-chains",
+ "alloy-sol-types",
+ "amms",
+ "anyhow",
+ "async-trait",
+ "bindings",
+ "csv",
+ "dashmap",
+ "db",
+ "diesel",
+ "engine",
+ "eyre",
+ "indicatif",
+ "mev-share",
+ "serde",
+ "serde_json",
+ "shared",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "types",
+]
 
 [[package]]
 name = "generic-array"
@@ -7569,6 +7560,35 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d66dc143e6b11c1eddc06d5c423cfc97062865baf299914ab64caa38182078fe"
 
 [[package]]
+name = "simple-arb-strategy"
+version = "0.1.0"
+dependencies = [
+ "addressbook",
+ "alloy 0.6.4",
+ "alloy-chains",
+ "alloy-sol-types",
+ "amms",
+ "anyhow",
+ "async-trait",
+ "bindings",
+ "csv",
+ "dashmap",
+ "db",
+ "diesel",
+ "engine",
+ "eyre",
+ "indicatif",
+ "mev-share",
+ "serde",
+ "serde_json",
+ "shared",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "types",
+]
+
+[[package]]
 name = "simple_asn1"
 version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -8351,6 +8371,44 @@ dependencies = [
 ]
 
 [[package]]
+name = "tx-encoder"
+version = "0.1.0"
+dependencies = [
+ "addressbook",
+ "alloy 0.6.4",
+ "alloy-chains",
+ "alloy-primitives 0.8.12",
+ "alloy-rpc-types 0.6.4",
+ "alloy-sol-types",
+ "amms",
+ "anyhow",
+ "async-trait",
+ "bindings",
+ "clap",
+ "db",
+ "diesel",
+ "dotenv",
+ "executor-binding",
+ "eyre",
+ "foundry-config 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "foundry-evm",
+ "futures",
+ "lazy_static",
+ "odos-client",
+ "once_cell",
+ "provider",
+ "reqwest 0.12.9",
+ "revm 14.0.3",
+ "serde",
+ "serde_json",
+ "shared",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "types",
+]
+
+[[package]]
 name = "typenum"
 version = "1.17.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -8403,35 +8461,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e1b88fcfe09e89d3866a5c11019378088af2d24c3fbd4f0543f96b479ec90697"
 dependencies = [
  "version_check",
-]
-
-[[package]]
-name = "uni-tri-arb-strategy"
-version = "0.1.0"
-dependencies = [
- "addressbook",
- "alloy 0.6.4",
- "alloy-chains",
- "alloy-sol-types",
- "amms",
- "anyhow",
- "async-trait",
- "bindings",
- "csv",
- "dashmap",
- "db",
- "diesel",
- "engine",
- "eyre",
- "indicatif",
- "mev-share",
- "serde",
- "serde_json",
- "shared",
- "tokio",
- "tracing",
- "tracing-subscriber",
- "types",
 ]
 
 [[package]]

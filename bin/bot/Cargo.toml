@@ -12,7 +12,7 @@ dotenv = "0.15.0"
 async-trait = "0.1.64"
 engine = { path = "../../crates/engine" }
 futures = "0.3.27"
-uni-tri-arb-strategy = { path = "../../crates/strategies/uni-tri-arb" }
+generalized-arb-strategy = { path = "../../crates/strategies/generalized-arb" }
 bindings = { path = "../../crates/bindings" }
 shared = { path = "../../crates/shared" }
 anyhow = "1.0.70"
