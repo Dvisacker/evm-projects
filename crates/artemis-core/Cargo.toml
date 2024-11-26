@@ -10,9 +10,10 @@ edition = "2021"
 alloy = { workspace = true }
 tokio = { workspace = true }
 eyre = { workspace = true }
-types = { path = "../types" }
 alloy-chains = { workspace = true }
 dotenv = { workspace = true }
+addressbook = { path = "../addressbook" }
+types = { path = "../types" }
 shared = { path = "../shared" }
 executor-binding = { path = "../executor-binding" }
 

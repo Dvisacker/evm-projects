@@ -325,13 +325,13 @@ where
 #[cfg(test)]
 mod tests {
     use crate::{
-        addressbook::Addressbook,
         helpers::parse_token_units,
         provider::{get_default_signer, get_provider, get_provider_map},
         token_manager::TokenManager,
     };
 
     use super::*;
+    use addressbook::Addressbook;
     use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
     use alloy_chains::{Chain, NamedChain};
     use std::str::FromStr;

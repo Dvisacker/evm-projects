@@ -13,6 +13,7 @@ members = [
     "crates/executor-binding",
     "crates/odos-client",
     "crates/encoder-client",
+    "crates/addressbook",
 ]
 
 default-members = [
@@ -26,6 +27,7 @@ default-members = [
     "crates/executor-binding",
     "crates/odos-client",
     "crates/encoder-client",
+    "crates/addressbook",
 ]
 # default-members = ["crates/amms-rs"]
 resolver = "2"

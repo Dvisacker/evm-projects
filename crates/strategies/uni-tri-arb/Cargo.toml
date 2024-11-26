@@ -22,6 +22,7 @@ indicatif = "0.17.8"
 # uni-tri-arb-bindings = { path = "./contracts/bindings" }
 bindings = { path = "../../bindings" }
 serde_json = "1.0"
+addressbook = { path = "../../addressbook" }
 amms = { path = "../../amms-rs" }
 dashmap = "6.0.1"
 shared = { path = "../../shared" }
@@ -31,5 +32,3 @@ alloy-sol-types = "0.8.1"
 diesel = { version = "2.0.0", features = ["postgres"] }
 [features]
 integration-tests = []
-
-

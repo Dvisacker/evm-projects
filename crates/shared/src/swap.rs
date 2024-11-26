@@ -4,6 +4,7 @@ use std::{
     time::{SystemTime, UNIX_EPOCH},
 };
 
+use addressbook::Addressbook;
 use alloy::{
     network::{Ethereum, Network},
     providers::Provider,
@@ -19,7 +20,7 @@ use amms::{
 use eyre::Error;
 use types::exchange::ExchangeName;
 
-use crate::{addressbook::Addressbook, helpers::get_contract_creation_block};
+use crate::helpers::get_contract_creation_block;
 use alloy::sol;
 
 sol! {
@@ -585,7 +586,8 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::{addressbook::Addressbook, provider::get_provider};
+    use crate::provider::get_provider;
+    use addressbook::Addressbook;
     use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
     use alloy_chains::{Chain, NamedChain};
     use std::str::FromStr;

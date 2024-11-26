@@ -22,6 +22,40 @@ dependencies = [
 ]
 
 [[package]]
+name = "addressbook"
+version = "0.1.0"
+dependencies = [
+ "alloy 0.6.4",
+ "alloy-chains",
+ "alloy-primitives 0.8.12",
+ "alloy-rpc-types 0.6.4",
+ "alloy-sol-types",
+ "amms",
+ "anyhow",
+ "async-trait",
+ "bindings",
+ "clap",
+ "db",
+ "diesel",
+ "dotenv",
+ "executor-binding",
+ "eyre",
+ "foundry-config 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "foundry-evm",
+ "futures",
+ "lazy_static",
+ "once_cell",
+ "reqwest 0.12.9",
+ "revm 14.0.3",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "types",
+]
+
+[[package]]
 name = "adler2"
 version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1597,6 +1631,7 @@ checksum = "7c02d123df017efcdfbd739ef81735b36c5ba83ec3c59c80a9d7ecc718f92e50"
 name = "artemis-core"
 version = "0.1.0"
 dependencies = [
+ "addressbook",
  "alloy 0.6.4",
  "alloy-chains",
  "anyhow",
@@ -2362,6 +2397,7 @@ checksum = "1462739cb27611015575c0c11df5df7601141071f07518d56fcc1be504cbec97"
 name = "cli"
 version = "0.1.0"
 dependencies = [
+ "addressbook",
  "alloy 0.6.4",
  "alloy-chains",
  "alloy-primitives 0.8.12",
@@ -3165,6 +3201,7 @@ checksum = "a357d28ed41a50f9c765dbfe56cbc04a64e53e5fc58ba79fbc34c10ef3df831f"
 name = "encoder-client"
 version = "0.1.0"
 dependencies = [
+ "addressbook",
  "alloy 0.6.4",
  "alloy-chains",
  "alloy-primitives 0.8.12",
@@ -5604,6 +5641,7 @@ dependencies = [
 name = "odos-client"
 version = "0.1.0"
 dependencies = [
+ "addressbook",
  "alloy 0.6.4",
  "alloy-chains",
  "alloy-primitives 0.8.12",
@@ -7422,6 +7460,7 @@ dependencies = [
 name = "shared"
 version = "0.1.0"
 dependencies = [
+ "addressbook",
  "alloy 0.6.4",
  "alloy-chains",
  "alloy-primitives 0.8.12",
@@ -8355,6 +8394,7 @@ dependencies = [
 name = "uni-tri-arb-strategy"
 version = "0.1.0"
 dependencies = [
+ "addressbook",
  "alloy 0.6.4",
  "alloy-chains",
  "alloy-sol-types",

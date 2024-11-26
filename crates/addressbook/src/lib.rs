@@ -113,23 +113,9 @@ pub struct UniV3Addresses {
     pub pools: AddressMap,
 }
 
-// #[derive(Debug, Serialize, Deserialize, Clone)]
-// pub struct UniV3Exchanges {
-//     pub uniswapv3: UniV3Addresses,
-//     pub sushiswapv3: Option<UniV3Addresses>,
-//     pub camelotv3: Option<UniV3Addresses>,
-//     pub ramsesv2: Option<UniV3Addresses>,
-//     pub pancakeswapv3: Option<UniV3Addresses>,
-// }
-
 pub type UniV3Exchanges = HashMap<ExchangeName, UniV3Addresses>;
 pub type UniV2Exchanges = HashMap<ExchangeName, UniV2Addresses>;
 pub type Ve33Exchanges = HashMap<ExchangeName, Ve33Addresses>;
-// #[derive(Debug, Serialize, Deserialize, Clone)]
-// pub struct UniV2Exchanges {
-//     pub uniswapv2: UniV2Addresses,
-//     pub sushiswapv2: UniV2Addresses,
-// }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Exchanges {

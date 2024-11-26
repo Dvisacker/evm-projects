@@ -19,6 +19,7 @@ lazy_static = "1.4.0"
 
 bindings = { path = "../bindings" }
 shared = { path = "../shared" }
+addressbook = { path = "../addressbook" }
 odos-client = { path = "../odos-client" }
 executor-binding = { path = "../executor-binding" }
 types = { path = "../types" }
@@ -31,10 +32,7 @@ futures = "0.3.27"
 anyhow = "1.0.70"
 tracing-subscriber = "0.3.16"
 foundry-evm = { git = "https://github.com/foundry-rs/foundry.git", branch = "master" }
-revm = { version = "14.0.1", features = [
-  "alloydb",
-] }
+revm = { version = "14.0.1", features = ["alloydb"] }
 clap = { version = "4.2.5", features = ["derive"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-

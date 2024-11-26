@@ -5,9 +5,9 @@ use alloy_chains::NamedChain;
 use eyre::{Context, Result};
 use std::sync::Arc;
 
-use crate::addressbook::Addressbook;
 use crate::helpers::approve_token_if_needed;
 use crate::provider::SignerProvider;
+use addressbook::Addressbook;
 
 sol! {
     #[derive(Debug, PartialEq, Eq)]

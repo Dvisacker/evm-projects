@@ -128,18 +128,18 @@ impl Executor<TxSequence> for SequenceExecutor {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use addressbook::Addressbook;
     use alloy::{
         network::{EthereumWallet, NetworkWallet},
         primitives::utils::parse_units,
         providers::WalletProvider,
         signers::local::PrivateKeySigner,
     };
+    use shared::{helpers::parse_token_units, provider::SignerProvider};
     use shared::{
-        addressbook::Addressbook,
         provider::{get_default_wallet, get_provider_map},
         token_manager::TokenManager,
     };
-    use shared::{helpers::parse_token_units, provider::SignerProvider};
     use types::{
         bridge::BridgeName,
         exchange::ExchangeName,

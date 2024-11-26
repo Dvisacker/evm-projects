@@ -1,3 +1,4 @@
+use addressbook::Addressbook;
 use alloy::primitives::Address;
 use alloy::providers::Provider;
 use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
@@ -8,7 +9,6 @@ use artemis_core::executors::sequence_executor::{
 };
 use artemis_core::types::Executor;
 use eyre::{Error, Result};
-use shared::addressbook::Addressbook;
 use shared::amm_utils::{store_uniswap_v2_pools, store_uniswap_v3_pools};
 use shared::provider::{get_default_signer, get_default_wallet, get_provider_map};
 use shared::token_manager::TokenManager;
@@ -203,11 +203,11 @@ pub async fn cross_chain_swap_command(
 
 mod cmd_test {
     use crate::cmd::cross_chain_swap_command;
+    use addressbook::Addressbook;
     use alloy::network::EthereumWallet;
     use alloy::primitives::{Address, U256};
     use alloy::signers::local::PrivateKeySigner;
     use alloy_chains::{Chain, NamedChain};
-    use shared::addressbook::Addressbook;
     use shared::provider::get_provider;
     use std::ptr::eq;
     use std::str::FromStr;

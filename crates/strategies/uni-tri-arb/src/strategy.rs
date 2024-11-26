@@ -1,6 +1,7 @@
 use crate::state::State;
 
 use super::types::{Action, Event};
+use addressbook::Addressbook;
 use alloy::{
     dyn_abi::DynSolValue, primitives::Address, providers::Provider, rpc::types::Log,
     signers::Signer, sol_types::SolEvent,
@@ -37,7 +38,7 @@ use db::{
 use db::{models::NewDbUniV3Pool, queries::exchange::get_exchanges_by_chain};
 use diesel::PgConnection;
 use eyre::Result;
-use shared::{addressbook::Addressbook, amm_utils::db_pools_to_amms};
+use shared::amm_utils::db_pools_to_amms;
 use std::sync::Arc;
 use tracing::{debug, info, warn};
 

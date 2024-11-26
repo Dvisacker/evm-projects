@@ -67,8 +67,8 @@ impl ZeroExClient {
 
 #[cfg(test)]
 mod tests {
-    use crate::addressbook::Addressbook;
     use crate::provider::get_default_anvil_signer;
+    use addressbook::Addressbook;
 
     use super::*;
     use std::env;

@@ -13,7 +13,8 @@ use eyre::{eyre, Error, Result};
 use std::sync::Arc;
 use types::{exchange::ExchangeName, token::TokenIsh};
 
-use crate::{addressbook::Addressbook, provider::SignerProvider, token_manager::TokenManager};
+use crate::{provider::SignerProvider, token_manager::TokenManager};
+use addressbook::Addressbook;
 
 pub async fn get_contract_creation_block<P, T, N>(
     provider: Arc<P>,

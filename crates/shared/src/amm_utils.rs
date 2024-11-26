@@ -1,6 +1,7 @@
 use std::str::FromStr;
 use std::sync::Arc;
 
+use addressbook::Addressbook;
 use alloy::network::Network;
 use alloy::primitives::{Address, U256};
 use alloy::providers::Provider;
@@ -38,7 +39,6 @@ use db::queries::uni_v3_pool::{
 use diesel::PgConnection;
 use types::exchange::{ExchangeName, ExchangeType};
 
-use crate::addressbook::Addressbook;
 use crate::config::get_chain_config;
 use crate::helpers::get_contract_creation_block;
 
