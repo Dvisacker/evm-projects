@@ -5,7 +5,7 @@ members = [
     "bin/swap",
     "crates/artemis-core",
     "crates/strategies/*",
-    "crates/amms-rs",
+    "crates/amms",
     "crates/db",
     "crates/bindings",
     "crates/shared",
@@ -28,8 +28,8 @@ default-members = [
     "crates/odos-client",
     "crates/encoder-client",
     "crates/addressbook",
+    "crates/amms",
 ]
-# default-members = ["crates/amms-rs"]
 resolver = "2"
 
 

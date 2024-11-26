@@ -24,7 +24,7 @@ odos-client = { path = "../odos-client" }
 executor-binding = { path = "../executor-binding" }
 types = { path = "../types" }
 db = { path = "../db" }
-amms = { path = "../../crates/amms-rs" }
+amms = { path = "../amms" }
 diesel = { version = "2.0.0", features = ["postgres", "serde_json", "chrono"] }
 reqwest = { version = "0.12.9", features = ["json"] }
 async-trait = "0.1.64"
