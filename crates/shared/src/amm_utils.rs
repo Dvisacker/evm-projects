@@ -452,7 +452,7 @@ pub async fn activate_pools(
 pub async fn get_amm_value(chain: Chain, pool_address: Address) -> Result<U256, AMMError> {
     let chain_config = get_chain_config(chain).await;
     let provider = chain_config.ws;
-    let addressbook = Addressbook::load(None).unwrap();
+    let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
     let weth_address = addressbook.get_weth(&named_chain).unwrap();
 
@@ -573,7 +573,7 @@ where
     T: Transport + Clone,
     N: Network,
 {
-    let addressbook = Addressbook::load(None).unwrap();
+    let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
     let weth_address = addressbook.get_weth(&named_chain).unwrap();
     let exchange_name: ExchangeName = ExchangeName::UniswapV2;
@@ -633,7 +633,7 @@ where
     T: Transport + Clone,
     N: Network,
 {
-    let addressbook = Addressbook::load(None).unwrap();
+    let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
     let weth_address = addressbook.get_weth(&named_chain).unwrap();
     let exchange_name: ExchangeName = ExchangeName::UniswapV3;

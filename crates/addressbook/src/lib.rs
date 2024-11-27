@@ -180,27 +180,11 @@ pub fn get_exchange_type(exchange_name: ExchangeName) -> ExchangeType {
     }
 }
 
-fn get_absolute_path() -> std::io::Result<PathBuf> {
-    let current_dir = std::env::current_dir()?;
-    let relative_path = file!();
-    Ok(current_dir.join(relative_path))
-}
-
-// 2. Using std::fs::canonicalize() to resolve all symlinks
-fn get_canonical_path() -> std::io::Result<PathBuf> {
-    let path = std::env::current_dir()?.join(file!());
-    std::fs::canonicalize(path)
-}
-
-fn get_manifest_path() -> PathBuf {
-    let manifest_dir = std::env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR not set");
-    PathBuf::from(manifest_dir)
-}
-
 impl Addressbook {
-    pub fn load(filepath: Option<&str>) -> Result<Self, Box<dyn std::error::Error>> {
-        // TODO: Figure out how to get the path to the addressbook.json file
-        let filepath = "/Users/david/programming/mev/artemis/crates/shared/src/addressbook.json";
+    pub fn load() -> Result<Self, Box<dyn std::error::Error>> {
+        let current_file = std::path::Path::new(file!());
+        let parent_dir = current_file.parent().unwrap();
+        let filepath = parent_dir.join("addressbook.json");
         let mut file = File::open(filepath)?;
         let mut contents = String::new();
         file.read_to_string(&mut contents)?;
@@ -500,8 +484,7 @@ mod tests {
     fn test_load_addressbook() {
         let current_dir = std::env::current_dir().unwrap();
         println!("Current directory: {:?}", current_dir);
-        let addressbook =
-            Addressbook::load(Some("./src/addressbook.json")).expect("Failed to load addressbook");
+        let addressbook = Addressbook::load().expect("Failed to load addressbook");
 
         // Test that we can load basic chain configs
         assert!(addressbook
@@ -520,8 +503,7 @@ mod tests {
 
     #[test]
     fn test_get_weth_addresses() {
-        let addressbook =
-            Addressbook::load(Some("./src/addressbook.json")).expect("Failed to load addressbook");
+        let addressbook = Addressbook::load().expect("Failed to load addressbook");
 
         // Get WETH addresses for each chain
         let arb_weth = addressbook
@@ -542,8 +524,7 @@ mod tests {
 
     #[test]
     fn test_get_uniswap_v3_config() {
-        let addressbook =
-            Addressbook::load(Some("./src/addressbook.json")).expect("Failed to load addressbook");
+        let addressbook = Addressbook::load().expect("Failed to load addressbook");
 
         let arb_config = addressbook
             .get_chain_address_book(&NamedChain::Arbitrum)
@@ -566,8 +547,7 @@ mod tests {
 
     #[test]
     fn test_get_pool_by_name() {
-        let addressbook =
-            Addressbook::load(Some("./src/addressbook.json")).expect("Failed to load addressbook");
+        let addressbook = Addressbook::load().expect("Failed to load addressbook");
 
         // Test getting a known pool
         let pool = addressbook.get_pool_by_name(
@@ -585,8 +565,7 @@ mod tests {
 
     #[test]
     fn test_get_factories() {
-        let addressbook =
-            Addressbook::load(Some("./src/addressbook.json")).expect("Failed to load addressbook");
+        let addressbook = Addressbook::load().expect("Failed to load addressbook");
 
         // Get V2 and V3 factories for Arbitrum
         let v2_factories = addressbook.get_v2_factories(&NamedChain::Arbitrum);
@@ -607,8 +586,7 @@ mod tests {
 
     #[test]
     fn test_get_multicall() {
-        let addressbook =
-            Addressbook::load(Some("./src/addressbook.json")).expect("Failed to load addressbook");
+        let addressbook = Addressbook::load().expect("Failed to load addressbook");
 
         // Test multicall addresses for each chain
         let chains = vec![

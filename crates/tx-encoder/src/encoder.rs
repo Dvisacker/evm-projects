@@ -85,7 +85,7 @@ where
 {
     pub async fn new(address: Address, chain: NamedChain, provider: P) -> Self {
         let executor = BatchExecutorInstance::new(address, provider.clone());
-        let addressbook = Addressbook::load(None).unwrap();
+        let addressbook = Addressbook::load().unwrap();
         let total_value = U256::ZERO;
         let owner = executor.OWNER().call().await.unwrap()._0;
 
@@ -844,7 +844,7 @@ mod tests {
     #[tokio::test]
     async fn test_wrap_eth() -> Result<()> {
         dotenv::dotenv().ok();
-        let addressbook = Addressbook::load(None).unwrap();
+        let addressbook = Addressbook::load().unwrap();
         let weth = addressbook.get_weth(&CHAIN).unwrap();
         let provider = get_default_anvil_provider().await;
 
@@ -873,7 +873,7 @@ mod tests {
     #[tokio::test]
     async fn test_swap_usdc_for_dai_via_uniswap_v3() -> Result<()> {
         dotenv::dotenv().ok();
-        let addressbook = Addressbook::load(None).unwrap();
+        let addressbook = Addressbook::load().unwrap();
         let weth = addressbook.get_weth(&CHAIN).unwrap();
         let usdc = addressbook.get_usdc(&CHAIN).unwrap();
         let uni_v3_router = addressbook
@@ -917,7 +917,7 @@ mod tests {
     #[tokio::test]
     async fn test_uniswap_v3_flash_loan() -> Result<()> {
         dotenv::dotenv().ok();
-        let addressbook = Addressbook::load(None).unwrap();
+        let addressbook = Addressbook::load().unwrap();
         let provider = get_default_anvil_provider().await;
 
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
@@ -948,7 +948,7 @@ mod tests {
     #[tokio::test]
     async fn test_morpho_flash_loan() -> Result<()> {
         dotenv::dotenv().ok();
-        let addressbook = Addressbook::load(None).unwrap();
+        let addressbook = Addressbook::load().unwrap();
         let provider = get_default_anvil_provider().await;
 
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
@@ -974,7 +974,7 @@ mod tests {
     #[tokio::test]
     async fn test_aave_v3_supply() -> Result<()> {
         dotenv::dotenv().ok();
-        let addressbook = Addressbook::load(None).unwrap();
+        let addressbook = Addressbook::load().unwrap();
         let provider = get_default_anvil_provider().await;
 
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
@@ -1001,7 +1001,7 @@ mod tests {
     #[tokio::test]
     async fn test_aave_v3_borrow() -> Result<()> {
         dotenv::dotenv().ok();
-        let addressbook = Addressbook::load(None).unwrap();
+        let addressbook = Addressbook::load().unwrap();
         let provider = get_default_anvil_provider().await;
 
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
@@ -1033,7 +1033,7 @@ mod tests {
     #[tokio::test]
     async fn test_aave_v3_repay() -> Result<()> {
         dotenv::dotenv().ok();
-        let addressbook = Addressbook::load(None).unwrap();
+        let addressbook = Addressbook::load().unwrap();
         let provider = get_default_anvil_provider().await;
 
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
@@ -1072,7 +1072,7 @@ mod tests {
     #[tokio::test]
     async fn test_aave_v3_flashloan() -> Result<()> {
         dotenv::dotenv().ok();
-        let addressbook = Addressbook::load(None).unwrap();
+        let addressbook = Addressbook::load().unwrap();
         let provider = get_default_anvil_provider().await;
 
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
@@ -1104,7 +1104,7 @@ mod tests {
         let provider = get_default_anvil_provider().await;
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
         let chain = NamedChain::Base;
-        let addressbook = Addressbook::load(None).unwrap();
+        let addressbook = Addressbook::load().unwrap();
         let weth = addressbook.get_weth(&chain).unwrap();
         let usdc = addressbook.get_usdc(&chain).unwrap();
         let input_amount = U256::from(1000000000000000000u128); // 1 WETH

@@ -338,7 +338,7 @@ mod tests {
     async fn test_bridge_usdc_arbitrum_to_base() -> Result<()> {
         dotenv::dotenv().ok();
 
-        let addressbook = Addressbook::load(None).unwrap();
+        let addressbook = Addressbook::load().unwrap();
         let signer: PrivateKeySigner = get_default_signer();
         let wallet_address = signer.address();
         let provider_map = get_provider_map().await;
@@ -383,7 +383,7 @@ mod tests {
     #[tokio::test]
     async fn test_bridge_weth_arbitrum_to_base() -> Result<()> {
         dotenv::dotenv().ok();
-        let addressbook = Addressbook::load(None).unwrap();
+        let addressbook = Addressbook::load().unwrap();
         let signer: PrivateKeySigner = get_default_signer();
         let wallet_address = signer.address();
         let wallet = EthereumWallet::new(signer);

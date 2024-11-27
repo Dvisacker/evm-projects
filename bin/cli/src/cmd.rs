@@ -28,7 +28,7 @@ pub async fn get_uniswap_v2_pools_command(
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
     let chain_config = get_chain_config(chain).await;
     let provider = Arc::new(chain_config.ws);
-    let addressbook = Addressbook::load(None).unwrap();
+    let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
     let factory_address = addressbook.get_factory(&named_chain, exchange).unwrap();
     info!("Downloading pools from {:?}", factory_address);
@@ -47,7 +47,7 @@ pub async fn get_uniswap_v3_pools_command(
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
     let chain_config = get_chain_config(chain).await;
     let provider = Arc::new(chain_config.ws);
-    let addressbook = Addressbook::load(None).unwrap();
+    let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
     let factory_address = addressbook.get_factory(&named_chain, exchange).unwrap();
 

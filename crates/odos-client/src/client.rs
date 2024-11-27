@@ -246,7 +246,7 @@ mod tests {
     #[tokio::test]
     async fn test_get_odos_quote() {
         let chain = NamedChain::Arbitrum;
-        let addressbook = Addressbook::load(None).unwrap();
+        let addressbook = Addressbook::load().unwrap();
         let anvil_signer = get_default_anvil_signer();
         let user_address = anvil_signer.address();
         let weth = addressbook.get_weth(&chain).unwrap();
@@ -273,7 +273,7 @@ mod tests {
     async fn test_assemble_odos_swap() {
         // First get a quote
         let chain = NamedChain::Arbitrum;
-        let addressbook = Addressbook::load(None).unwrap();
+        let addressbook = Addressbook::load().unwrap();
         let anvil_signer = get_default_anvil_signer();
         let user_address = anvil_signer.address();
         let weth = addressbook.get_weth(&chain).unwrap();
@@ -296,7 +296,7 @@ mod tests {
     async fn send_odos_swap() {
         dotenv::dotenv().ok();
         let chain = NamedChain::Base;
-        let addressbook = Addressbook::load(None).unwrap();
+        let addressbook = Addressbook::load().unwrap();
         let anvil_signer = get_default_anvil_signer();
         let user_address = anvil_signer.address();
         let anvil_provider = get_default_anvil_provider().await;

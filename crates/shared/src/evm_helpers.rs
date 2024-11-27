@@ -102,7 +102,7 @@ pub fn compute_v2_pool_address(
     token_b: Address,
     a_is_0: Option<bool>,
 ) -> Result<Address> {
-    let addressbook = Addressbook::load(None).unwrap();
+    let addressbook = Addressbook::load().unwrap();
     let factory_address = addressbook
         .get_factory(chain, exchange_name)
         .ok_or_else(|| eyre!("Factory address not found"))?;
@@ -143,7 +143,7 @@ pub fn compute_v3_pool_address(
     token_b: Address,
     fee: u16,
 ) -> Result<Address> {
-    let addressbook = Addressbook::load(None).unwrap();
+    let addressbook = Addressbook::load().unwrap();
     let factory_address = addressbook
         .get_factory(chain, exchange_name)
         .ok_or_else(|| eyre!("Factory address not found"))?;

@@ -24,7 +24,7 @@ pub async fn aave_v3_supply(
     token_address: Address,
     amount: U256,
 ) -> Result<()> {
-    let addressbook = Addressbook::load(None).unwrap();
+    let addressbook = Addressbook::load().unwrap();
     let pool_address = addressbook
         .get_lending_pool(&chain, "aave_v3")
         .context("Failed to get Aave V3 pool address")?;
@@ -51,7 +51,7 @@ pub async fn aave_v3_withdraw(
     token: Address,
     amount: U256,
 ) -> Result<()> {
-    let addressbook = Addressbook::load(None).unwrap();
+    let addressbook = Addressbook::load().unwrap();
     let pool_address = addressbook
         .get_lending_pool(&chain, "aave_v3")
         .context("Failed to get Aave V3 pool address")?;

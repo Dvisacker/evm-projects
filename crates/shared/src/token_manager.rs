@@ -51,7 +51,7 @@ impl TokenManager {
 
     async fn new() -> Self {
         let providers = get_provider_map().await;
-        let addressbook = Addressbook::load(None).unwrap();
+        let addressbook = Addressbook::load().unwrap();
 
         TokenManager {
             tokens: Mutex::new(HashMap::new()),

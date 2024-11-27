@@ -262,7 +262,7 @@ where
     N: Network,
     P: Provider<T, N>,
 {
-    let addressbook = Addressbook::load(None).unwrap();
+    let addressbook = Addressbook::load().unwrap();
     let router_address = addressbook
         .get_uni_v2_swap_router(&chain, exchange_name)
         .unwrap();
@@ -461,7 +461,7 @@ where
     let mut best_fee = 0u32;
     let mut best_quote = U256::ZERO;
 
-    let addressbook = Addressbook::load(None).unwrap();
+    let addressbook = Addressbook::load().unwrap();
     let quoter_address = addressbook
         .get_uni_v3_quoter(&chain, exchange_name)
         .unwrap();
@@ -521,7 +521,7 @@ where
     T: Transport + Clone,
     P: Provider<T, Ethereum>,
 {
-    let addressbook = Addressbook::load(None).unwrap();
+    let addressbook = Addressbook::load().unwrap();
 
     // Uniswap V3 Router address
     let router_address = addressbook
@@ -586,10 +586,10 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use provider::get_provider;
     use addressbook::Addressbook;
     use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
     use alloy_chains::{Chain, NamedChain};
+    use provider::get_provider;
     use std::str::FromStr;
 
     const EXCHANGE_NAME: ExchangeName = ExchangeName::UniswapV3;
@@ -599,7 +599,7 @@ mod tests {
     async fn test_swap_eth_to_usdc_arbitrum() -> Result<(), Error> {
         dotenv::dotenv().ok();
 
-        let addressbook = Addressbook::load(None).unwrap();
+        let addressbook = Addressbook::load().unwrap();
         let weth = addressbook.get_weth(&CHAIN).unwrap();
         let usdc = addressbook.get_usdc(&CHAIN).unwrap();
 
