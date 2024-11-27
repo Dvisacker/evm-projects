@@ -401,6 +401,16 @@ impl Addressbook {
                     .unwrap()
                     .factory,
             ),
+            ExchangeName::Aerodrome => Some(
+                chain_config
+                    .exchanges
+                    .ve33
+                    .as_ref()
+                    .unwrap()
+                    .get(&exchange_name)
+                    .unwrap()
+                    .factory,
+            ),
             _ => None,
         }
     }
