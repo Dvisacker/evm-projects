@@ -53,6 +53,7 @@ pub static CHAIN_MAP: Lazy<HashMap<String, Chain>> = Lazy::new(|| {
         "optimism_goerli".to_string(),
         Chain::from_named(NamedChain::OptimismGoerli),
     );
+    m.insert("base".to_string(), Chain::from_named(NamedChain::Base));
     m
 });
 
@@ -100,6 +101,22 @@ pub async fn get_chain_config(chain: Chain) -> ChainConfig {
                 explorer_url: "https://arbiscan.io".to_string(),
                 explorer_api_key: "".to_string(),
                 explorer_api_url: "https://api.arbiscan.io/api".to_string(),
+                ws: Arc::new(provider),
+            };
+        }
+        Ok(NamedChain::Base) => {
+            let ws_url = env::var("BASE_WS_URL").expect("BASE_WS_URL is not set");
+            let provider = ProviderBuilder::new()
+                .on_builtin(ws_url.as_str())
+                .await
+                .unwrap();
+            return ChainConfig {
+                chain: Chain::from_named(NamedChain::Base),
+                chain_id: 8453,
+                signer,
+                explorer_url: "https://basescan.org".to_string(),
+                explorer_api_key: "".to_string(),
+                explorer_api_url: "https://api.basescan.org/api".to_string(),
                 ws: Arc::new(provider),
             };
         }
