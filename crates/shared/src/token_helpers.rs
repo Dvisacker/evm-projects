@@ -1,4 +1,5 @@
 use crate::token_manager::TokenManager;
+use alloy::network::Ethereum;
 use alloy::providers::WalletProvider;
 use alloy::{
     dyn_abi::DynSolType, network::Network, primitives::Address, providers::Provider, sol,
@@ -9,6 +10,7 @@ use alloy_primitives::utils::parse_units;
 use alloy_primitives::U256;
 use amms::errors::AMMError;
 use bindings::ierc20::IERC20;
+use eyre::Context;
 use eyre::{eyre, Error, Result};
 use provider::SignerProvider;
 use serde_json::Value;
@@ -246,4 +248,107 @@ where
     )?;
 
     Ok(())
+}
+
+pub async fn verify_erc20_interface(
+    provider: Arc<SignerProvider>,
+    token_address: Address,
+) -> Result<(), Error> {
+    let token = IERC20::new(token_address, provider.clone());
+
+    // Test name() - Optional in ERC20 but commonly implemented
+    token
+        .name()
+        .call()
+        .await
+        .wrap_err("Failed to get token name - name() method may not be implemented")?;
+
+    // Test symbol() - Optional in ERC20 but commonly implemented
+    token
+        .symbol()
+        .call()
+        .await
+        .wrap_err("Failed to get token symbol - symbol() method may not be implemented")?;
+
+    // Test decimals() - Optional in ERC20 but commonly implemented
+    token
+        .decimals()
+        .call()
+        .await
+        .wrap_err("Failed to get token decimals - decimals() method may not be implemented")?;
+
+    token
+        .totalSupply()
+        .call()
+        .await
+        .wrap_err("Failed to get total supply - totalSupply() method not working")?;
+
+    // Test balanceOf() - Required by ERC20
+    // Using address(0) as test address
+    token
+        .balanceOf(Address::ZERO)
+        .call()
+        .await
+        .wrap_err("Failed to get balance - balanceOf() method not working")?;
+
+    // Test allowance() - Required by ERC20
+    // Using address(0) for both owner and spender as test addresses
+    token
+        .allowance(Address::ZERO, Address::ZERO)
+        .call()
+        .await
+        .wrap_err("Failed to get allowance - allowance() method not working")?;
+
+    Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use alloy_chains::{Chain, NamedChain};
+    use config::get_chain_config;
+    use provider::get_default_anvil_provider;
+
+    #[tokio::test]
+    // TODO make this test independant of anvil
+    async fn test_verify_erc20_interface() {
+        let usdc_address = "0x833589fcd6edb6e08f4c7c32d4f71b54bda02913"
+            .parse()
+            .expect("Invalid address");
+
+        let provider = get_default_anvil_provider().await;
+
+        let result = verify_erc20_interface(provider.clone(), usdc_address).await;
+        println!("{:?}", result);
+        assert!(
+            result.is_ok(),
+            "USDC should implement ERC20 interface correctly"
+        );
+
+        // Test with invalid/non-contract address
+        let invalid_address = Address::ZERO;
+        let result = verify_erc20_interface(provider.clone(), invalid_address).await;
+        assert!(result.is_err(), "Should fail with invalid token address");
+    }
+
+    #[tokio::test]
+    async fn test_verify_erc20_interface_with_shitcoin() {
+        let usdc_address = "0xef4fC624EA1a2Acfd806240Ada70d6802a81Eaf3"
+            .parse()
+            .expect("Invalid address");
+
+        let provider = get_default_anvil_provider().await;
+
+        let result = verify_erc20_interface(provider.clone(), usdc_address).await;
+        println!("{:?}", result);
+        assert!(
+            result.is_ok(),
+            "USDC should implement ERC20 interface correctly"
+        );
+
+        // Test with invalid/non-contract address
+        let invalid_address = Address::ZERO;
+        let result = verify_erc20_interface(provider.clone(), invalid_address).await;
+        assert!(result.is_err(), "Should fail with invalid token address");
+    }
 }
