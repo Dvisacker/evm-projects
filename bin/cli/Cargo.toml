@@ -13,6 +13,7 @@ eyre = { workspace = true }
 alloy-primitives = { workspace = true }
 
 shared = { path = "../../crates/shared" }
+config = { path = "../../crates/config" }
 generalized-arb-strategy = { path = "../../crates/strategies/generalized-arb" }
 types = { path = "../../crates/types" }
 engine = { path = "../../crates/engine" }

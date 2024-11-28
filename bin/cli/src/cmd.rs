@@ -4,17 +4,16 @@ use alloy::providers::Provider;
 use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
 use alloy_chains::{Chain, NamedChain};
 use alloy_primitives::U256;
+use config::get_chain_config;
 use engine::executors::sequence_executor::{
     BridgeBlock, SequenceExecutor, SwapBlock, TxBlock, TxSequence,
 };
 use engine::types::Executor;
 use eyre::{Error, Result};
 use provider::{get_default_signer, get_default_wallet, get_provider, get_provider_map};
-use shared::amm_utils::{store_uniswap_v2_pools, store_uniswap_v3_pools};
+use shared::amm_utils::{store_uniswap_v2_pools, store_uniswap_v3_pools, store_ve33_pools};
 use shared::token_manager::TokenManager;
-use shared::{
-    bridge::bridge_lifi, config::get_chain_config, evm_helpers::get_contract_creation_block,
-};
+use shared::{bridge::bridge_lifi, evm_helpers::get_contract_creation_block};
 use std::{str::FromStr, sync::Arc};
 use tracing::info;
 use types::bridge::BridgeName;
@@ -34,6 +33,22 @@ pub async fn get_uniswap_v2_pools_command(
     info!("Downloading pools from {:?}", factory_address);
     let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
     store_uniswap_v2_pools(provider.clone(), chain, exchange, factory_address, &db_url).await?;
+
+    Ok(())
+}
+
+pub async fn get_aerodrome_pools_command() -> Result<(), Error> {
+    let chain = Chain::from_named(NamedChain::Base);
+    let chain_config = get_chain_config(chain).await;
+    let provider = Arc::new(chain_config.ws);
+    let addressbook = Addressbook::load().unwrap();
+    let exchange = ExchangeName::Aerodrome;
+    let factory_address = addressbook
+        .get_factory(&chain.named().unwrap(), exchange)
+        .unwrap();
+    info!("Downloading pools from {:?}", factory_address);
+    let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
+    store_ve33_pools(provider.clone(), chain, exchange, factory_address, &db_url).await?;
 
     Ok(())
 }

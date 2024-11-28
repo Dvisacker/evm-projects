@@ -8,13 +8,16 @@ license = "MIT OR Apache-2.0"
 [dependencies]
 tokio = { workspace = true }
 eyre = { workspace = true }
-dotenv = "0.15.0"
-async-trait = "0.1.64"
-engine = { path = "../../crates/engine" }
-futures = "0.3.27"
+
 generalized-arb-strategy = { path = "../../crates/strategies/generalized-arb" }
 bindings = { path = "../../crates/bindings" }
+config = { path = "../../crates/config" }
 shared = { path = "../../crates/shared" }
+engine = { path = "../../crates/engine" }
+
+dotenv = "0.15.0"
+async-trait = "0.1.64"
+futures = "0.3.27"
 anyhow = "1.0.70"
 tracing = { workspace = true }
 tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }

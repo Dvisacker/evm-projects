@@ -8,6 +8,7 @@ use alloy::{
 use alloy_chains::Chain;
 use bindings::{iuniswapv2pair::IUniswapV2Pair, iuniswapv3pool::IUniswapV3Pool};
 use clap::Parser;
+use config::get_chain_config;
 use dotenv::dotenv;
 use engine::{
     collectors::multi_log_collector::MultiLogCollector,
@@ -20,7 +21,6 @@ use generalized_arb_strategy::{
     strategy::UniTriArb,
     types::{Action, Event},
 };
-use shared::config::get_chain_config;
 use tracing::info;
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 // use bindings::uniswap::UniswapV2Factory;

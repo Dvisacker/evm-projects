@@ -2,9 +2,9 @@ pub mod cmd;
 use alloy::primitives::Address;
 use alloy_chains::{Chain, NamedChain};
 use clap::{Args, Parser, Subcommand};
+use config::get_chain_config;
 use eyre::Error;
 use shared::amm_utils::{activate_pools, get_amm_value};
-use shared::config::get_chain_config;
 use shared::token_helpers::load_pools_and_fetch_token_data;
 use std::str::FromStr;
 use std::sync::Arc;
@@ -23,6 +23,7 @@ struct Cli {
 #[derive(Subcommand)]
 enum Commands {
     GetNamedPools(GetNamedPoolsArgs),
+    GetAerodromePools,
     GetUniswapV3Pools(GetUniswapV3PoolsArgs),
     GetUniswapV2Pools(GetUniswapV2PoolsArgs),
     GetAMMValue(GetAMMValueArgs),
@@ -148,6 +149,9 @@ async fn main() -> Result<(), Error> {
         .init();
 
     match &cli.command {
+        Commands::GetAerodromePools => {
+            cmd::get_aerodrome_pools_command().await?;
+        }
         Commands::GetNamedPools(args) => {
             let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
             let chain_config = get_chain_config(chain).await;

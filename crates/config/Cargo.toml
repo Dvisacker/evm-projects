@@ -1,0 +1,20 @@
+[package]
+name = "config"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+alloy = { workspace = true }
+alloy-chains = { workspace = true }
+tracing = { workspace = true }
+dotenv = { workspace = true }
+once_cell = { workspace = true }
+lazy_static = "1.4.0"
+
+types = { path = "../types" }
+db = { path = "../db" }
+diesel = { version = "2.0.0", features = ["postgres", "serde_json", "chrono"] }
+reqwest = { version = "0.12.9", features = ["json"] }
+async-trait = "0.1.64"
+futures = "0.3.27"
+anyhow = "1.0.70"

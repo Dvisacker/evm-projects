@@ -6,11 +6,14 @@ build-contracts:
     forge test --root ./contracts
 
 build-amm-contracts:
-    forge compile --root ./crates/amms-rs/contracts
+    forge compile --root ./crates/amms/contracts
 
 #test contracts using forge
 test-contracts: 
     forge test --root ./contracts
+
+generate-amm-bindings:
+    forge bind --bindings-path ./crates/amms/src/bindings --root ./crates/amms/contracts --module --alloy --alloy-version v0.5.4 --overwrite
 
 generate-bindings:
     #!/usr/bin/env bash
@@ -61,6 +64,9 @@ get-uni-v3-pools CHAIN_ID EXCHANGE_NAME STEP START_BLOCK:
 
 get-uni-v2-pools CHAIN_ID EXCHANGE_NAME:
     cargo run --bin cli -- get-uniswap-v2-pools --chain-id {{CHAIN_ID}} --exchange {{EXCHANGE_NAME}}
+
+get-aerodrome-pools:
+    cargo run --bin cli -- get-aerodrome-pools
 
 get-contract-creation-block CHAIN_ID CONTRACT_ADDRESS:
     cargo run --bin cli -- get-contract-creation-block --chain-id {{CHAIN_ID}} --contract-address {{CONTRACT_ADDRESS}}

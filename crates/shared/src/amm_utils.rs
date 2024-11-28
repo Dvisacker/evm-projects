@@ -12,6 +12,7 @@ use amms::amm::uniswap_v2::batch_request::get_v2_pool_data_batch_request;
 use amms::amm::uniswap_v2::IUniswapV2Pair;
 use amms::amm::uniswap_v3::batch_request::get_v3_pool_data_batch_request;
 use amms::amm::uniswap_v3::{json_to_tickbitmap, json_to_ticks, IUniswapV3Pool};
+use amms::amm::ve33::factory::Ve33Factory;
 use amms::amm::AutomatedMarketMaker;
 use amms::errors::AMMError;
 use amms::filters::value::get_weth_values_in_amms;
@@ -39,8 +40,8 @@ use db::queries::uni_v3_pool::{
 use diesel::PgConnection;
 use types::exchange::{ExchangeName, ExchangeType};
 
-use crate::config::get_chain_config;
 use crate::evm_helpers::get_contract_creation_block;
+use config::get_chain_config;
 
 fn extract_v2_pools(amms: &[AMM]) -> Vec<UniswapV2Pool> {
     amms.iter()
@@ -54,7 +55,6 @@ fn extract_v2_pools(amms: &[AMM]) -> Vec<UniswapV2Pool> {
         .collect()
 }
 
-// Function to extract UniswapV3Pools
 fn extract_v3_pools(amms: &[AMM]) -> Vec<UniswapV3Pool> {
     amms.iter()
         .filter_map(|amm| {
@@ -67,7 +67,6 @@ fn extract_v3_pools(amms: &[AMM]) -> Vec<UniswapV3Pool> {
         .collect()
 }
 
-// Function to extract CamelotV3Pools
 #[allow(dead_code)]
 fn extract_camelot_v3_pools(amms: &[AMM]) -> Vec<CamelotV3Pool> {
     amms.iter()
@@ -243,7 +242,8 @@ where
     let mut conn = establish_connection(db_url);
     let factory = Factory::UniswapV2Factory(UniswapV2Factory::new(factory_address, 0, 3000));
 
-    tracing::info!("Syncing uniswap v2 pools");
+    tracing::info!("Syncing uni-v2 like pools");
+
     let (amms, _) = sync::sync_amms(vec![factory], provider.clone(), None, 100000)
         .await
         .unwrap();
@@ -270,6 +270,60 @@ where
             })
             .collect::<Vec<NewDbUniV2Pool>>();
 
+        batch_upsert_uni_v2_pools(&mut conn, &new_pools).unwrap();
+        tracing::info!("Inserted {:?} pools", new_pools.len());
+    }
+
+    Ok(())
+}
+
+// ve33 pools are stored as uni-v2 pools as of now because they have the same data.
+pub async fn store_ve33_pools<P, T, N>(
+    provider: Arc<P>,
+    chain: Chain,
+    exchange_name: ExchangeName,
+    factory_address: Address,
+    db_url: &str,
+) -> Result<(), AMMError>
+where
+    P: Provider<T, N> + 'static,
+    T: Transport + Clone,
+    N: Network,
+{
+    let mut conn = establish_connection(db_url);
+    let factory = Factory::Ve33Factory(Ve33Factory::new(factory_address, 0, 3000));
+
+    tracing::info!("Syncing ve33 pools");
+
+    let (amms, _) = sync::sync_amms(vec![factory], provider.clone(), None, 100000)
+        .await
+        .unwrap();
+
+    tracing::info!("Amms synced");
+
+    let mut pools = extract_v2_pools(&amms);
+
+    for mut chunk in pools.chunks_mut(50) {
+        // add additional data such as the exchange name
+        get_v2_pool_data_batch_request(&mut chunk, provider.clone()).await?;
+        let new_pools = chunk
+            .iter_mut()
+            .map(|pool| {
+                pool.exchange_type = ExchangeType::Ve33;
+                pool.exchange_name = exchange_name;
+                pool.chain = chain.named().unwrap();
+                pool.to_new_db_pool()
+            })
+            .filter_map(|db_pool| {
+                if let NewDbPool::UniV2(v2_pool) = db_pool {
+                    Some(v2_pool)
+                } else {
+                    None
+                }
+            })
+            .collect::<Vec<NewDbUniV2Pool>>();
+
+        // upsert pools in the database
         batch_upsert_uni_v2_pools(&mut conn, &new_pools).unwrap();
         tracing::info!("Inserted {:?} pools", new_pools.len());
     }
@@ -359,8 +413,6 @@ pub async fn activate_v2_pools(
         .collect::<Vec<DbPool>>();
 
     let amms = db_pools_to_amms(&v2_pools)?;
-
-    println!("Got {:?} pools", pools.len());
 
     for chunk in amms.chunks(1000) {
         let result = filter_amms(chain, usd_threshold, chunk.to_vec()).await;

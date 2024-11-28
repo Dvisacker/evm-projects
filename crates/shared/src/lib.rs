@@ -1,6 +1,5 @@
 pub mod amm_utils;
 pub mod bridge;
-pub mod config;
 pub mod cycle;
 pub mod evm_helpers;
 pub mod lend;

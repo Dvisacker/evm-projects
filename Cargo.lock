@@ -1388,8 +1388,10 @@ dependencies = [
  "arraydeque",
  "async-recursion",
  "async-trait",
+ "config",
  "criterion",
  "db",
+ "dotenv",
  "eyre",
  "futures",
  "lazy_static",
@@ -1986,6 +1988,35 @@ dependencies = [
 ]
 
 [[package]]
+name = "base-arb-strategy"
+version = "0.1.0"
+dependencies = [
+ "addressbook",
+ "alloy 0.6.4",
+ "alloy-chains",
+ "alloy-sol-types",
+ "amms",
+ "anyhow",
+ "async-trait",
+ "bindings",
+ "csv",
+ "dashmap",
+ "db",
+ "diesel",
+ "engine",
+ "eyre",
+ "indicatif",
+ "mev-share",
+ "serde",
+ "serde_json",
+ "shared",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "types",
+]
+
+[[package]]
 name = "base16ct"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2137,6 +2168,7 @@ dependencies = [
  "async-trait",
  "bindings",
  "clap",
+ "config",
  "dotenv",
  "engine",
  "env_logger",
@@ -2383,6 +2415,7 @@ dependencies = [
  "alloy-primitives 0.8.12",
  "anyhow",
  "clap",
+ "config",
  "dotenv",
  "engine",
  "eyre",
@@ -2546,6 +2579,25 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4ca0197aee26d1ae37445ee532fefce43251d24cc7c166799f4d46817f1d3973"
 dependencies = [
  "crossbeam-utils",
+]
+
+[[package]]
+name = "config"
+version = "0.1.0"
+dependencies = [
+ "alloy 0.6.4",
+ "alloy-chains",
+ "anyhow",
+ "async-trait",
+ "db",
+ "diesel",
+ "dotenv",
+ "futures",
+ "lazy_static",
+ "once_cell",
+ "reqwest 0.12.9",
+ "tracing",
+ "types",
 ]
 
 [[package]]
@@ -7501,6 +7553,7 @@ dependencies = [
  "async-trait",
  "bindings",
  "clap",
+ "config",
  "db",
  "diesel",
  "dotenv",
@@ -7558,35 +7611,6 @@ name = "simd-adler32"
 version = "0.3.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d66dc143e6b11c1eddc06d5c423cfc97062865baf299914ab64caa38182078fe"
-
-[[package]]
-name = "simple-arb-strategy"
-version = "0.1.0"
-dependencies = [
- "addressbook",
- "alloy 0.6.4",
- "alloy-chains",
- "alloy-sol-types",
- "amms",
- "anyhow",
- "async-trait",
- "bindings",
- "csv",
- "dashmap",
- "db",
- "diesel",
- "engine",
- "eyre",
- "indicatif",
- "mev-share",
- "serde",
- "serde_json",
- "shared",
- "tokio",
- "tracing",
- "tracing-subscriber",
- "types",
-]
 
 [[package]]
 name = "simple_asn1"
