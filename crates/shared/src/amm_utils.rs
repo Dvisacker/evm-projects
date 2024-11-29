@@ -43,7 +43,7 @@ use types::exchange::{ExchangeName, ExchangeType};
 use crate::evm_helpers::get_contract_creation_block;
 use config::get_chain_config;
 
-fn extract_v2_pools(amms: &[AMM]) -> Vec<UniswapV2Pool> {
+pub fn extract_v2_pools(amms: &[AMM]) -> Vec<UniswapV2Pool> {
     amms.iter()
         .filter_map(|amm| {
             if let AMM::UniswapV2Pool(pool) = amm {
@@ -55,7 +55,7 @@ fn extract_v2_pools(amms: &[AMM]) -> Vec<UniswapV2Pool> {
         .collect()
 }
 
-fn extract_v3_pools(amms: &[AMM]) -> Vec<UniswapV3Pool> {
+pub fn extract_v3_pools(amms: &[AMM]) -> Vec<UniswapV3Pool> {
     amms.iter()
         .filter_map(|amm| {
             if let AMM::UniswapV3Pool(pool) = amm {
@@ -68,7 +68,7 @@ fn extract_v3_pools(amms: &[AMM]) -> Vec<UniswapV3Pool> {
 }
 
 #[allow(dead_code)]
-fn extract_camelot_v3_pools(amms: &[AMM]) -> Vec<CamelotV3Pool> {
+pub fn extract_camelot_v3_pools(amms: &[AMM]) -> Vec<CamelotV3Pool> {
     amms.iter()
         .filter_map(|amm| {
             if let AMM::CamelotV3Pool(pool) = amm {
