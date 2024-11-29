@@ -24,16 +24,26 @@ sol! {
 
 #[derive(Debug, Serialize)]
 pub struct LiFiQuoteRequest {
-    pub fromChain: String,
-    pub toChain: String,
-    pub fromToken: String,
-    pub toToken: String,
-    pub fromAmount: String,
-    pub fromAddress: String,
-    pub toAddress: String,
-    slippage: String,
-    allowBridges: String,
-    order: String,
+    #[serde(rename = "chainId")]
+    pub chain_id: u64,
+    #[serde(rename = "fromChain")]
+    pub from_chain: String,
+    #[serde(rename = "toChain")]
+    pub to_chain: String,
+    #[serde(rename = "fromToken")]
+    pub from_token: String,
+    #[serde(rename = "toToken")]
+    pub to_token: String,
+    #[serde(rename = "fromAmount")]
+    pub from_amount: String,
+    #[serde(rename = "fromAddress")]
+    pub from_address: String,
+    #[serde(rename = "toAddress")]
+    pub to_address: String,
+    pub slippage: String,
+    #[serde(rename = "allowBridges")]
+    pub allow_bridges: String,
+    pub order: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -214,16 +224,17 @@ where
     let to_chain_id: u64 = (*to_chain).into();
 
     let quote_request = LiFiQuoteRequest {
-        fromChain: from_chain_id.to_string(),
-        toChain: to_chain_id.to_string(),
-        fromToken: from_token_address.to_string(),
-        toToken: to_token_address.to_string(),
-        fromAmount: amonut_in.to_string(),
-        fromAddress: from_address.to_string(),
-        toAddress: to_address.to_string(),
+        chain_id: from_chain_id,
+        from_chain: from_chain.to_string(),
+        to_chain: to_chain.to_string(),
+        from_token: from_token_address.to_string(),
+        to_token: to_token_address.to_string(),
+        from_amount: amonut_in.to_string(),
+        from_address: from_address.to_string(),
+        to_address: to_address.to_string(),
         slippage: "0.10".to_string(),
         order: "FASTEST".to_string(),
-        allowBridges: bridge_name.to_string(),
+        allow_bridges: bridge_name.to_string(),
     };
 
     let response = client
@@ -324,17 +335,13 @@ where
 
 #[cfg(test)]
 mod tests {
-    use crate::{token_helpers::parse_token_units, token_manager::TokenManager};
+    use crate::token_helpers::parse_token_units;
 
     use super::*;
     use addressbook::Addressbook;
     use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
     use alloy_chains::{Chain, NamedChain};
-    use provider::{
-        get_basic_provider, get_basic_provider_map, get_default_signer, get_signer_provider,
-        get_signer_provider_map,
-    };
-    use std::str::FromStr;
+    use provider::{get_default_signer, get_signer_provider, get_signer_provider_map};
     use types::token::{NamedToken, TokenIsh};
 
     #[tokio::test]

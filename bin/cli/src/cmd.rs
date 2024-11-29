@@ -1,7 +1,7 @@
 use addressbook::Addressbook;
+use alloy::network::EthereumWallet;
 use alloy::primitives::Address;
 use alloy::providers::Provider;
-use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
 use alloy_chains::{Chain, NamedChain};
 use alloy_primitives::U256;
 use engine::executors::sequence_executor::{
@@ -212,19 +212,11 @@ pub async fn cross_chain_swap_command(
     Ok(())
 }
 
+#[cfg(test)]
 mod cmd_test {
     use crate::cmd::cross_chain_swap_command;
-    use addressbook::Addressbook;
-    use alloy::network::EthereumWallet;
-    use alloy::primitives::{Address, U256};
-    use alloy::signers::local::PrivateKeySigner;
-    use alloy_chains::{Chain, NamedChain};
-    use provider::get_signer_provider;
-    use std::ptr::eq;
-    use std::str::FromStr;
-    use std::sync::Arc;
+    use alloy_chains::NamedChain;
     use types::token::{NamedToken, TokenIsh};
-
     const ORIGIN_CHAIN: NamedChain = NamedChain::Arbitrum;
     const DESTINATION_CHAIN: NamedChain = NamedChain::Base;
 

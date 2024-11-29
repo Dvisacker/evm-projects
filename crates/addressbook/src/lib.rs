@@ -185,6 +185,7 @@ impl Addressbook {
         let current_file = std::path::Path::new(file!());
         let parent_dir = current_file.parent().unwrap();
         let filepath = parent_dir.join("addressbook.json");
+        println!("Loading addressbook from: {:?}", filepath);
         let mut file = File::open(filepath)?;
         let mut contents = String::new();
         file.read_to_string(&mut contents)?;

@@ -587,9 +587,9 @@ where
 mod tests {
     use super::*;
     use addressbook::Addressbook;
-    use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
+    use alloy::providers::WalletProvider;
     use alloy_chains::{Chain, NamedChain};
-    use provider::get_signer_provider;
+    use provider::get_default_signer_provider;
     use std::str::FromStr;
 
     const EXCHANGE_NAME: ExchangeName = ExchangeName::UniswapV3;
@@ -602,18 +602,8 @@ mod tests {
         let addressbook = Addressbook::load().unwrap();
         let weth = addressbook.get_weth(&CHAIN).unwrap();
         let usdc = addressbook.get_usdc(&CHAIN).unwrap();
-
-        // Setup wallet and provider
-        let signer: PrivateKeySigner = std::env::var("DEV_PRIVATE_KEY")
-            .expect("PRIVATE_KEY must be set")
-            .parse()
-            .expect("should parse private key");
-
-        let wallet_address = signer.address();
-        let wallet = EthereumWallet::new(signer);
-        let provider = get_signer_provider(Chain::from_named(CHAIN), wallet).await;
-
-        // Token addresses
+        let provider = get_default_signer_provider(Chain::from_named(CHAIN)).await;
+        let wallet_address = provider.default_signer_address();
         let amount_in = U256::from(100000000000000u64); // few cents
 
         println!("Starting swap of {} ETH for USDC", amount_in);

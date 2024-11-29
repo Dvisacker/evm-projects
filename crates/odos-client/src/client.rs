@@ -6,7 +6,6 @@ use alloy_sol_types::{SolCall, SolValue};
 use eyre::Result;
 use reqwest;
 use serde::{Deserialize, Serialize};
-use serde_json::json;
 
 #[derive(Debug, Serialize, Deserialize)]
 struct OdosInputToken {
@@ -228,18 +227,14 @@ mod tests {
 
     use addressbook::Addressbook;
     use alloy::hex::hex;
-    use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
-    use alloy::{
-        network::{NetworkWallet, TransactionBuilder},
-        providers::Provider,
-    };
+    use alloy::{network::TransactionBuilder, providers::Provider};
     use alloy_chains::{Chain, NamedChain};
     use alloy_primitives::Bytes;
     use alloy_rpc_types::TransactionRequest;
     use bindings::ierc20::IERC20;
     use bindings::iweth;
     use provider::{get_anvil_signer, get_anvil_signer_provider};
-    use shared::token_helpers::{get_token_allowance, get_token_balance, parse_token_units};
+    use shared::token_helpers::parse_token_units;
     use types::token::TokenIsh;
 
     use super::*;

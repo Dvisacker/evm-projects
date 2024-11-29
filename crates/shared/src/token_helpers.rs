@@ -1,8 +1,7 @@
 use crate::token_manager::TokenManager;
-use alloy::network::Ethereum;
 use alloy::providers::WalletProvider;
 use alloy::{
-    dyn_abi::DynSolType, network::Network, primitives::Address, providers::Provider, sol,
+    dyn_abi::DynSolType, network::Network, primitives::Address, providers::Provider,
     transports::Transport,
 };
 use alloy_chains::NamedChain;
@@ -299,7 +298,6 @@ pub async fn verify_erc20_interface(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloy_chains::{Chain, NamedChain};
     use provider::get_anvil_signer_provider;
 
     #[tokio::test]

@@ -2,8 +2,6 @@ use std::sync::Arc;
 
 use crate::types::Executor;
 use alloy::primitives::{Address, U256};
-use alloy::providers::Provider;
-use alloy::signers::local::PrivateKeySigner;
 use alloy_chains::NamedChain;
 use async_trait::async_trait;
 use eyre::{Context, Result};
@@ -188,14 +186,8 @@ impl Executor<TxSequence> for SequenceExecutor {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use addressbook::Addressbook;
-    use alloy::{
-        network::{EthereumWallet, NetworkWallet},
-        primitives::utils::parse_units,
-        providers::WalletProvider,
-        signers::local::PrivateKeySigner,
-    };
-    use provider::{get_basic_provider_map, get_default_wallet, get_signer_provider_map};
+    use alloy::network::EthereumWallet;
+    use provider::{get_default_wallet, get_signer_provider_map};
     use shared::token_helpers::parse_token_units;
     use shared::token_manager::TokenManager;
     use types::{

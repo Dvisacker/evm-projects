@@ -1,21 +1,13 @@
-use alloy::{
-    network::Network,
-    providers::{Provider, WalletProvider},
-    sol,
-    transports::Transport,
-};
+use addressbook::Addressbook;
+use alloy::{network::Network, providers::Provider, sol, transports::Transport};
 use alloy_chains::NamedChain;
-use alloy_primitives::{aliases::U24, keccak256, utils::parse_units, Address, Bytes, U256};
+use alloy_primitives::{aliases::U24, keccak256, Address, Bytes, U256};
 use alloy_rpc_types::{BlockId, BlockNumberOrTag};
 use alloy_sol_types::SolValue;
-use bindings::ierc20::IERC20;
 use eyre::{eyre, Error, Result};
-use std::sync::Arc;
-use types::{exchange::ExchangeName, token::TokenIsh};
-
-use crate::token_manager::TokenManager;
-use addressbook::Addressbook;
 use provider::SignerProvider;
+use std::sync::Arc;
+use types::exchange::ExchangeName;
 
 pub async fn get_contract_creation_block<P, T, N>(
     provider: Arc<P>,
