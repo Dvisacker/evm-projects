@@ -11,7 +11,7 @@ use engine::executors::sequence_executor::{
 use engine::types::Executor;
 use eyre::{Error, Result};
 use provider::{get_default_signer, get_default_wallet, get_provider, get_provider_map};
-use shared::amm_utils::{store_uniswap_v2_pools, store_uniswap_v3_pools, store_ve33_pools};
+use shared::pool_helpers::{store_uniswap_v2_pools, store_uniswap_v3_pools, store_ve33_pools};
 use shared::token_manager::TokenManager;
 use shared::{bridge::bridge_lifi, evm_helpers::get_contract_creation_block};
 use std::{str::FromStr, sync::Arc};

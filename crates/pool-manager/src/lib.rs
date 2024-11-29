@@ -26,8 +26,8 @@ use db::queries::uni_v3_pool::{
     batch_update_uni_v3_pool_active, batch_upsert_uni_v3_pools, get_uni_v3_pools,
 };
 use diesel::PgConnection;
-use shared::amm_utils::{db_pools_to_amms, extract_v2_pools, extract_v3_pools, filter_amms};
 use shared::evm_helpers::get_contract_creation_block;
+use shared::pool_helpers::{db_pools_to_amms, extract_v2_pools, extract_v3_pools, filter_amms};
 use std::sync::Arc;
 use types::exchange::{ExchangeName, ExchangeType};
 

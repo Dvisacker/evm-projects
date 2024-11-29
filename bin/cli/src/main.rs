@@ -4,7 +4,7 @@ use alloy_chains::{Chain, NamedChain};
 use clap::{Args, Parser, Subcommand};
 use config::get_chain_config;
 use eyre::Error;
-use shared::amm_utils::{activate_pools, get_amm_value};
+use shared::pool_helpers::{activate_pools, get_amm_value};
 use shared::token_helpers::load_pools_and_fetch_token_data;
 use std::str::FromStr;
 use std::sync::Arc;
