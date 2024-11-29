@@ -15,6 +15,9 @@ test-contracts:
 generate-amm-bindings:
     forge bind --bindings-path ./crates/amms/src/bindings --root ./crates/amms/contracts --module --alloy --alloy-version v0.5.4 --overwrite
 
+generate-shared-bindings:
+    forge bind --bindings-path ./crates/shared/src/bindings --root ./crates/shared/contracts --module --alloy --alloy-version v0.7.0 --overwrite
+
 generate-bindings:
     #!/usr/bin/env bash
     bindings_path="./crates/bindings"

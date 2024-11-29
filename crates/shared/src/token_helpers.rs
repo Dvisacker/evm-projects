@@ -9,6 +9,7 @@ use alloy_chains::NamedChain;
 use alloy_primitives::utils::parse_units;
 use alloy_primitives::U256;
 use amms::errors::AMMError;
+use bindings::geterc20tokendatabatchrequest::GetERC20TokenDataBatchRequest;
 use bindings::ierc20::IERC20;
 use eyre::Context;
 use eyre::{eyre, Error, Result};
@@ -18,13 +19,6 @@ use std::collections::HashSet;
 use std::fs;
 use std::sync::Arc;
 use types::token::TokenIsh;
-
-sol! {
-    #[allow(missing_docs)]
-    #[sol(rpc)]
-    IGetERC20TokenDataBatchRequest,
-    "src/abis/GetERC20TokenDataBatchRequest.json"
-}
 
 pub struct ERC20TokenData {
     pub address: Address,
@@ -128,7 +122,7 @@ where
 
     for chunk in token_addresses.chunks(BATCH_SIZE) {
         let deployer =
-            IGetERC20TokenDataBatchRequest::deploy_builder(provider.clone(), chunk.to_vec());
+            GetERC20TokenDataBatchRequest::deploy_builder(provider.clone(), chunk.to_vec());
         let res = deployer.call().await?;
 
         let constructor_return = DynSolType::Array(Box::new(DynSolType::Tuple(vec![

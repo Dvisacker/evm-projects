@@ -23,14 +23,14 @@ sol! {
 }
 
 #[derive(Debug, Serialize)]
-struct LiFiQuoteRequest {
-    fromChain: String,
-    toChain: String,
-    fromToken: String,
-    toToken: String,
-    fromAmount: String,
-    fromAddress: String,
-    toAddress: String,
+pub struct LiFiQuoteRequest {
+    pub fromChain: String,
+    pub toChain: String,
+    pub fromToken: String,
+    pub toToken: String,
+    pub fromAmount: String,
+    pub fromAddress: String,
+    pub toAddress: String,
     slippage: String,
     allowBridges: String,
     order: String,
