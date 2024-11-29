@@ -6182,6 +6182,44 @@ dependencies = [
 ]
 
 [[package]]
+name = "pool-manager"
+version = "0.1.0"
+dependencies = [
+ "addressbook",
+ "alloy 0.6.4",
+ "alloy-chains",
+ "alloy-primitives 0.8.12",
+ "alloy-rpc-types 0.6.4",
+ "alloy-sol-types",
+ "amms",
+ "anyhow",
+ "async-trait",
+ "bindings",
+ "clap",
+ "config",
+ "db",
+ "diesel",
+ "dotenv",
+ "executor-binding",
+ "eyre",
+ "foundry-config 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "foundry-evm",
+ "futures",
+ "lazy_static",
+ "once_cell",
+ "provider",
+ "reqwest 0.12.9",
+ "revm 14.0.3",
+ "serde",
+ "serde_json",
+ "shared",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "types",
+]
+
+[[package]]
 name = "portable-atomic"
 version = "1.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"

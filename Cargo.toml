@@ -14,7 +14,7 @@ members = [
     "crates/tx-encoder",
     "crates/addressbook",
     "crates/provider",
-    "crates/config", "crates/lifi-client",
+    "crates/config", "crates/lifi-client", "crates/pool-manager",
 ]
 
 default-members = [
