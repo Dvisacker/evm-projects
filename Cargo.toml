@@ -35,12 +35,12 @@ resolver = "2"
 
 
 [workspace.dependencies]
-alloy = { version = "0.6.4", features = ["full"] }
+alloy = { version = "0.7.0", features = ["full"] }
 alloy-primitives = "0.8"
-alloy-rpc-types = "0.6.4"
+alloy-rpc-types = "0.7.0"
 alloy-sol-types = "0.8.6"
-alloy-consensus = "0.6.4"
-alloy-provider = "0.6.4"
+alloy-consensus = "0.7.0"
+alloy-provider = "0.7.0"
 alloy-chains = "0.1.27"
 foundry-config = "0.2.0"
 uniswap_v3_math = { git = "https://github.com/0xKitsune/uniswap-v3-math.git" }
