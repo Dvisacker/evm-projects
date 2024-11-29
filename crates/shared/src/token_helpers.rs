@@ -300,7 +300,6 @@ pub async fn verify_erc20_interface(
 mod tests {
     use super::*;
     use alloy_chains::{Chain, NamedChain};
-    use config::get_chain_config;
     use provider::get_anvil_signer_provider;
 
     #[tokio::test]

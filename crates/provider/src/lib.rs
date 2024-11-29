@@ -126,6 +126,11 @@ pub async fn get_signer_provider(chain: Chain, wallet: EthereumWallet) -> Arc<Si
     return Arc::new(provider);
 }
 
+pub async fn get_default_signer_provider(chain: Chain) -> Arc<SignerProvider> {
+    let wallet = get_default_wallet();
+    get_signer_provider(chain, wallet).await
+}
+
 pub async fn get_signer_provider_map() -> Arc<SignerProviderMap> {
     let mut provider_guard = SIGNER_PROVIDER_MAP.lock().unwrap();
 

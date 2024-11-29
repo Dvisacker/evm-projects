@@ -11,7 +11,7 @@ eyre = { workspace = true }
 
 generalized-arb-strategy = { path = "../../crates/strategies/generalized-arb" }
 bindings = { path = "../../crates/bindings" }
-config = { path = "../../crates/config" }
+provider = { path = "../../crates/provider" }
 shared = { path = "../../crates/shared" }
 engine = { path = "../../crates/engine" }
 

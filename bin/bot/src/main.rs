@@ -8,7 +8,6 @@ use alloy::{
 use alloy_chains::Chain;
 use bindings::{iuniswapv2pair::IUniswapV2Pair, iuniswapv3pool::IUniswapV3Pool};
 use clap::Parser;
-use config::get_chain_config;
 use dotenv::dotenv;
 use engine::{
     collectors::multi_log_collector::MultiLogCollector,
@@ -21,9 +20,9 @@ use generalized_arb_strategy::{
     strategy::UniTriArb,
     types::{Action, Event},
 };
+use provider::get_default_signer_provider;
 use tracing::info;
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
-// use bindings::uniswap::UniswapV2Factory;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -53,9 +52,7 @@ async fn main() -> Result<()> {
     let args = Args::parse();
     let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
     let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
-    let chain_config = get_chain_config(chain).await;
-    let provider = chain_config.provider;
-    let signer = chain_config.signer;
+    let provider = get_default_signer_provider(chain).await;
     let mut engine: Engine<Event, Action> = Engine::default();
 
     // let block_collector = Box::new(BlockCollector::new(provider.clone()));
@@ -80,7 +77,7 @@ async fn main() -> Result<()> {
     engine.add_collector(Box::new(multi_log_collector));
 
     info!("Adding strategy...");
-    let strategy = UniTriArb::new(chain, Arc::new(provider.clone()), signer, db_url);
+    let strategy = UniTriArb::new(chain, Arc::new(provider.clone()), db_url);
     engine.add_strategy(Box::new(strategy));
 
     info!("Adding executor...");

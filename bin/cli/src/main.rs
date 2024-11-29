@@ -2,8 +2,8 @@ pub mod cmd;
 use alloy::primitives::Address;
 use alloy_chains::{Chain, NamedChain};
 use clap::{Args, Parser, Subcommand};
-use config::get_chain_config;
 use eyre::Error;
+use provider::get_basic_provider;
 use shared::pool_helpers::{activate_pools, get_amm_value};
 use shared::token_helpers::load_pools_and_fetch_token_data;
 use std::str::FromStr;
@@ -154,8 +154,7 @@ async fn main() -> Result<(), Error> {
         }
         Commands::GetNamedPools(args) => {
             let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
-            let chain_config = get_chain_config(chain).await;
-            let provider = Arc::new(chain_config.provider);
+            let provider = get_basic_provider(chain).await;
             load_pools_and_fetch_token_data(provider).await?;
             info!("Token data has been fetched and saved to tokens.json");
         }

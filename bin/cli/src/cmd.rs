@@ -4,14 +4,14 @@ use alloy::providers::Provider;
 use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
 use alloy_chains::{Chain, NamedChain};
 use alloy_primitives::U256;
-use config::get_chain_config;
 use engine::executors::sequence_executor::{
     BridgeBlock, SequenceExecutor, SwapBlock, TxBlock, TxSequence,
 };
 use engine::types::Executor;
 use eyre::{Error, Result};
 use provider::{
-    get_default_signer, get_default_wallet, get_signer_provider, get_signer_provider_map,
+    get_basic_provider, get_default_signer, get_default_wallet, get_signer_provider,
+    get_signer_provider_map,
 };
 use shared::pool_helpers::{store_uniswap_v2_pools, store_uniswap_v3_pools, store_ve33_pools};
 use shared::token_manager::TokenManager;
@@ -27,8 +27,7 @@ pub async fn get_uniswap_v2_pools_command(
     exchange: ExchangeName,
 ) -> Result<(), Error> {
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
-    let chain_config = get_chain_config(chain).await;
-    let provider = Arc::new(chain_config.provider);
+    let provider = get_basic_provider(chain).await;
     let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
     let factory_address = addressbook.get_factory(&named_chain, exchange).unwrap();
@@ -41,8 +40,7 @@ pub async fn get_uniswap_v2_pools_command(
 
 pub async fn get_aerodrome_pools_command() -> Result<(), Error> {
     let chain = Chain::from_named(NamedChain::Base);
-    let chain_config = get_chain_config(chain).await;
-    let provider = Arc::new(chain_config.provider);
+    let provider = get_basic_provider(chain).await;
     let addressbook = Addressbook::load().unwrap();
     let exchange = ExchangeName::Aerodrome;
     let factory_address = addressbook
@@ -62,8 +60,7 @@ pub async fn get_uniswap_v3_pools_command(
     step: u64,
 ) -> Result<(), Error> {
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
-    let chain_config = get_chain_config(chain).await;
-    let provider = Arc::new(chain_config.provider);
+    let provider = get_basic_provider(chain).await;
     let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
     let factory_address = addressbook.get_factory(&named_chain, exchange).unwrap();
@@ -94,8 +91,7 @@ pub async fn get_contract_creation_block_command(
     end_block: Option<u64>,
 ) -> Result<(), Error> {
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
-    let chain_config = get_chain_config(chain).await;
-    let provider = Arc::new(chain_config.provider);
+    let provider = get_basic_provider(chain).await;
     let contract_address = Address::from_str(contract_address).expect("Invalid contract address");
 
     let start_block = start_block.unwrap_or(0);

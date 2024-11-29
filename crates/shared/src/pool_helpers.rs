@@ -38,10 +38,10 @@ use db::queries::uni_v3_pool::{
     batch_update_uni_v3_pool_active, batch_upsert_uni_v3_pools, get_uni_v3_pools,
 };
 use diesel::PgConnection;
+use provider::get_basic_provider;
 use types::exchange::{ExchangeName, ExchangeType};
 
 use crate::evm_helpers::get_contract_creation_block;
-use config::get_chain_config;
 
 pub fn extract_v2_pools(amms: &[AMM]) -> Vec<UniswapV2Pool> {
     amms.iter()
@@ -502,8 +502,7 @@ pub async fn activate_pools(
 /// # Returns
 /// A Result containing the U256 value of the pool or an AMMError
 pub async fn get_amm_value(chain: Chain, pool_address: Address) -> Result<U256, AMMError> {
-    let chain_config = get_chain_config(chain).await;
-    let provider = chain_config.provider;
+    let provider = get_basic_provider(chain).await;
     let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
     let weth_address = addressbook.get_weth(&named_chain).unwrap();
@@ -598,8 +597,7 @@ pub async fn filter_amms(
     usd_threshold: f64,
     amms: Vec<AMM>,
 ) -> Result<Vec<AMM>, AMMError> {
-    let chain_config = get_chain_config(chain).await;
-    let provider = chain_config.provider;
+    let provider = get_basic_provider(chain).await;
 
     let v2_active_pools =
         filter_univ2_pools(amms.clone(), chain, provider.clone(), usd_threshold).await?;
