@@ -3,7 +3,8 @@ use alloy::sol;
 use alloy_chains::NamedChain;
 use alloy_primitives::Address;
 use lazy_static::lazy_static;
-use provider::{get_provider_map, ProviderMap};
+use provider::get_signer_provider_map;
+use provider::SignerProviderMap;
 use std::collections::HashMap;
 use std::error::Error;
 use std::sync::{Arc, Mutex};
@@ -28,7 +29,7 @@ lazy_static! {
 pub struct TokenManager {
     tokens: Mutex<HashMap<Address, Token>>,
     addressbook: Arc<Addressbook>,
-    providers: Arc<ProviderMap>,
+    providers: Arc<SignerProviderMap>,
 }
 
 impl TokenManager {
@@ -50,7 +51,7 @@ impl TokenManager {
     }
 
     async fn new() -> Self {
-        let providers = get_provider_map().await;
+        let providers = get_signer_provider_map().await;
         let addressbook = Addressbook::load().unwrap();
 
         TokenManager {

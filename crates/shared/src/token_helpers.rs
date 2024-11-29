@@ -301,7 +301,7 @@ mod tests {
     use super::*;
     use alloy_chains::{Chain, NamedChain};
     use config::get_chain_config;
-    use provider::get_default_anvil_provider;
+    use provider::get_anvil_signer_provider;
 
     #[tokio::test]
     // TODO make this test independant of anvil
@@ -310,7 +310,7 @@ mod tests {
             .parse()
             .expect("Invalid address");
 
-        let provider = get_default_anvil_provider().await;
+        let provider = get_anvil_signer_provider().await;
 
         let result = verify_erc20_interface(provider.clone(), usdc_address).await;
         println!("{:?}", result);
@@ -331,7 +331,7 @@ mod tests {
             .parse()
             .expect("Invalid address");
 
-        let provider = get_default_anvil_provider().await;
+        let provider = get_anvil_signer_provider().await;
 
         let result = verify_erc20_interface(provider.clone(), usdc_address).await;
         println!("{:?}", result);

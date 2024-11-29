@@ -589,7 +589,7 @@ mod tests {
     use addressbook::Addressbook;
     use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
     use alloy_chains::{Chain, NamedChain};
-    use provider::get_provider;
+    use provider::get_signer_provider;
     use std::str::FromStr;
 
     const EXCHANGE_NAME: ExchangeName = ExchangeName::UniswapV3;
@@ -611,7 +611,7 @@ mod tests {
 
         let wallet_address = signer.address();
         let wallet = EthereumWallet::new(signer);
-        let provider = get_provider(Chain::from_named(CHAIN), wallet).await;
+        let provider = get_signer_provider(Chain::from_named(CHAIN), wallet).await;
 
         // Token addresses
         let amount_in = U256::from(100000000000000u64); // few cents

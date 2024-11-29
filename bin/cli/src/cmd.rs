@@ -10,7 +10,9 @@ use engine::executors::sequence_executor::{
 };
 use engine::types::Executor;
 use eyre::{Error, Result};
-use provider::{get_default_signer, get_default_wallet, get_provider, get_provider_map};
+use provider::{
+    get_default_signer, get_default_wallet, get_signer_provider, get_signer_provider_map,
+};
 use shared::pool_helpers::{store_uniswap_v2_pools, store_uniswap_v3_pools, store_ve33_pools};
 use shared::token_manager::TokenManager;
 use shared::{bridge::bridge_lifi, evm_helpers::get_contract_creation_block};
@@ -26,7 +28,7 @@ pub async fn get_uniswap_v2_pools_command(
 ) -> Result<(), Error> {
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
     let chain_config = get_chain_config(chain).await;
-    let provider = Arc::new(chain_config.ws);
+    let provider = Arc::new(chain_config.provider);
     let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
     let factory_address = addressbook.get_factory(&named_chain, exchange).unwrap();
@@ -40,7 +42,7 @@ pub async fn get_uniswap_v2_pools_command(
 pub async fn get_aerodrome_pools_command() -> Result<(), Error> {
     let chain = Chain::from_named(NamedChain::Base);
     let chain_config = get_chain_config(chain).await;
-    let provider = Arc::new(chain_config.ws);
+    let provider = Arc::new(chain_config.provider);
     let addressbook = Addressbook::load().unwrap();
     let exchange = ExchangeName::Aerodrome;
     let factory_address = addressbook
@@ -61,7 +63,7 @@ pub async fn get_uniswap_v3_pools_command(
 ) -> Result<(), Error> {
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
     let chain_config = get_chain_config(chain).await;
-    let provider = Arc::new(chain_config.ws);
+    let provider = Arc::new(chain_config.provider);
     let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
     let factory_address = addressbook.get_factory(&named_chain, exchange).unwrap();
@@ -93,7 +95,7 @@ pub async fn get_contract_creation_block_command(
 ) -> Result<(), Error> {
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
     let chain_config = get_chain_config(chain).await;
-    let provider = Arc::new(chain_config.ws);
+    let provider = Arc::new(chain_config.provider);
     let contract_address = Address::from_str(contract_address).expect("Invalid contract address");
 
     let start_block = start_block.unwrap_or(0);
@@ -122,8 +124,8 @@ pub async fn bridge_command(
     let origin_chain = Chain::from_named(*from_chain_name);
     let destination_chain = Chain::from_named(*to_chain_name);
 
-    let origin_provider = get_provider(origin_chain, wallet.clone()).await;
-    let destination_provider = get_provider(destination_chain, wallet.clone()).await;
+    let origin_provider = get_signer_provider(origin_chain, wallet.clone()).await;
+    let destination_provider = get_signer_provider(destination_chain, wallet.clone()).await;
     let token_manager = TokenManager::instance().await;
 
     // Convert TokenIsh to &TokenIsh for the token_manager.get() calls
@@ -169,7 +171,6 @@ pub async fn cross_chain_swap_command(
     amount_in: &str,
 ) -> Result<(), Error> {
     let signer = get_default_signer();
-    let wallet_address = signer.address();
     let token_manager = TokenManager::instance().await;
 
     let origin_token_in = token_manager
@@ -185,7 +186,7 @@ pub async fn cross_chain_swap_command(
     let destination_bridge_token = token_manager
         .get(&destination_chain_name, &bridge_token)
         .unwrap();
-    let providers = get_provider_map().await;
+    let providers = get_signer_provider_map().await;
     let default_wallet: EthereumWallet = get_default_wallet();
     let default_wallet_address = default_wallet.default_signer().address();
 
@@ -222,7 +223,7 @@ mod cmd_test {
     use alloy::primitives::{Address, U256};
     use alloy::signers::local::PrivateKeySigner;
     use alloy_chains::{Chain, NamedChain};
-    use provider::get_provider;
+    use provider::get_signer_provider;
     use std::ptr::eq;
     use std::str::FromStr;
     use std::sync::Arc;

@@ -155,7 +155,7 @@ async fn main() -> Result<(), Error> {
         Commands::GetNamedPools(args) => {
             let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
             let chain_config = get_chain_config(chain).await;
-            let provider = Arc::new(chain_config.ws);
+            let provider = Arc::new(chain_config.provider);
             load_pools_and_fetch_token_data(provider).await?;
             info!("Token data has been fetched and saved to tokens.json");
         }

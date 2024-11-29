@@ -216,7 +216,7 @@ mod tests {
     use addressbook::Addressbook;
     use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
     use alloy_chains::{Chain, NamedChain};
-    use provider::{get_default_signer, get_provider, get_provider_map};
+    use provider::{get_default_signer, get_signer_provider_map};
     use shared::token_helpers::parse_token_units;
     use shared::token_manager::TokenManager;
     use types::token::{NamedToken, TokenIsh};
@@ -229,7 +229,7 @@ mod tests {
         let addressbook = Addressbook::load().unwrap();
         let signer: PrivateKeySigner = get_default_signer();
         let wallet_address = signer.address();
-        let provider_map = get_provider_map().await;
+        let provider_map = get_signer_provider_map().await;
 
         let result = lifi_client
             .bridge(

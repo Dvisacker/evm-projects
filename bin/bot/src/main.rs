@@ -54,9 +54,8 @@ async fn main() -> Result<()> {
     let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
     let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
     let chain_config = get_chain_config(chain).await;
-    let ws = chain_config.ws;
+    let provider = chain_config.provider;
     let signer = chain_config.signer;
-    let provider = ws;
     let mut engine: Engine<Event, Action> = Engine::default();
 
     // let block_collector = Box::new(BlockCollector::new(provider.clone()));

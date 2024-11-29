@@ -330,7 +330,10 @@ mod tests {
     use addressbook::Addressbook;
     use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
     use alloy_chains::{Chain, NamedChain};
-    use provider::{get_default_signer, get_provider, get_provider_map};
+    use provider::{
+        get_basic_provider, get_basic_provider_map, get_default_signer, get_signer_provider,
+        get_signer_provider_map,
+    };
     use std::str::FromStr;
     use types::token::{NamedToken, TokenIsh};
 
@@ -341,7 +344,7 @@ mod tests {
         let addressbook = Addressbook::load().unwrap();
         let signer: PrivateKeySigner = get_default_signer();
         let wallet_address = signer.address();
-        let provider_map = get_provider_map().await;
+        let provider_map = get_signer_provider_map().await;
         let origin_provider = provider_map.get(&NamedChain::Arbitrum).unwrap();
         let destination_provider = provider_map.get(&NamedChain::Base).unwrap();
         let from_address = wallet_address;
@@ -388,9 +391,9 @@ mod tests {
         let wallet_address = signer.address();
         let wallet = EthereumWallet::new(signer);
         let origin_provider =
-            get_provider(Chain::from_named(NamedChain::Arbitrum), wallet.clone()).await;
+            get_signer_provider(Chain::from_named(NamedChain::Arbitrum), wallet.clone()).await;
         let destination_provider =
-            get_provider(Chain::from_named(NamedChain::Base), wallet.clone()).await;
+            get_signer_provider(Chain::from_named(NamedChain::Base), wallet.clone()).await;
         let from_address = wallet_address;
         let to_address = wallet_address;
         let weth_arb = addressbook.get_weth(&NamedChain::Arbitrum).unwrap();

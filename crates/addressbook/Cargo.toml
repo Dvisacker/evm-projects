@@ -20,7 +20,6 @@ lazy_static = "1.4.0"
 bindings = { path = "../bindings" }
 types = { path = "../types" }
 db = { path = "../db" }
-amms = { path = "../amms" }
 diesel = { version = "2.0.0", features = ["postgres", "serde_json", "chrono"] }
 reqwest = { version = "0.12.9", features = ["json"] }
 async-trait = "0.1.64"

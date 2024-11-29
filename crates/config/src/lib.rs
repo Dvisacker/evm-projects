@@ -1,20 +1,18 @@
-use alloy::{
-    providers::{ProviderBuilder, RootProvider},
-    signers::local::PrivateKeySigner,
-    transports::BoxTransport,
-};
+use alloy::signers::local::PrivateKeySigner;
 use alloy_chains::{Chain, NamedChain};
 use once_cell::sync::Lazy;
+use provider::{get_basic_provider, get_chain_rpc_url, BasicProvider};
 use std::{collections::HashMap, env, path::PathBuf, sync::Arc};
 
 pub struct ChainConfig {
     pub chain: Chain,
     pub chain_id: u64,
+    pub default_rpc_url: String,
     pub explorer_url: String,
     pub explorer_api_key: String,
     pub explorer_api_url: String,
     pub signer: PrivateKeySigner,
-    pub ws: Arc<RootProvider<BoxTransport>>,
+    pub provider: Arc<BasicProvider>,
 }
 
 // Add this new static mapping
@@ -66,74 +64,58 @@ pub fn get_whitelist_path() -> PathBuf {
 pub async fn get_chain_config(chain: Chain) -> ChainConfig {
     let priv_key = std::env::var("DEV_PRIVATE_KEY").expect("missing PRIVATE_KEY");
     let signer: PrivateKeySigner = priv_key.parse().unwrap();
-    // let wallet = EthereumWallet::from(signer);
     let chain_id = chain.id();
-    let chain = NamedChain::try_from(chain_id);
+    let chain = NamedChain::try_from(chain_id).unwrap();
+    let provider = get_basic_provider(Chain::from_named(chain)).await;
+    let default_rpc_url = get_chain_rpc_url(chain).await;
 
     match chain {
-        Ok(NamedChain::Mainnet) => {
-            let ws_url = env::var("MAINNET_WS_URL").expect("MAINNET_WS_URL is not set");
-            // let provider = ProviderBuilder::new().on_ws(ws_connect).await.unwrap();
-            let provider = ProviderBuilder::new()
-                .on_builtin(ws_url.as_str())
-                .await
-                .unwrap();
+        NamedChain::Mainnet => {
             return ChainConfig {
                 chain: Chain::from_named(NamedChain::Mainnet),
                 chain_id: 1,
+                default_rpc_url,
                 signer,
                 explorer_url: "https://etherscan.io".to_string(),
                 explorer_api_key: "TCZS3DYFANPFZRPFY338CCKHTMF5QNMCG9".to_string(),
                 explorer_api_url: "https://api.etherscan.io/api".to_string(),
-                ws: Arc::new(provider),
+                provider: provider,
             };
         }
-        Ok(NamedChain::Arbitrum) => {
-            let ws_url = env::var("ARBITRUM_WS_URL").expect("ARBITRUM_WS_URL is not set");
-            let provider = ProviderBuilder::new()
-                .on_builtin(ws_url.as_str())
-                .await
-                .unwrap();
+        NamedChain::Arbitrum => {
             return ChainConfig {
                 chain: Chain::from_named(NamedChain::Arbitrum),
                 chain_id: 42161,
                 signer,
+                default_rpc_url,
                 explorer_url: "https://arbiscan.io".to_string(),
                 explorer_api_key: "".to_string(),
                 explorer_api_url: "https://api.arbiscan.io/api".to_string(),
-                ws: Arc::new(provider),
+                provider,
             };
         }
-        Ok(NamedChain::Base) => {
-            let ws_url = env::var("BASE_WS_URL").expect("BASE_WS_URL is not set");
-            let provider = ProviderBuilder::new()
-                .on_builtin(ws_url.as_str())
-                .await
-                .unwrap();
+        NamedChain::Base => {
             return ChainConfig {
                 chain: Chain::from_named(NamedChain::Base),
                 chain_id: 8453,
                 signer,
+                default_rpc_url,
                 explorer_url: "https://basescan.org".to_string(),
                 explorer_api_key: "".to_string(),
                 explorer_api_url: "https://api.basescan.org/api".to_string(),
-                ws: Arc::new(provider),
+                provider,
             };
         }
-        Ok(NamedChain::Optimism) => {
-            let ws_url = env::var("OPTIMISM_WS_URL").expect("OPTIMISM_WS_URL is not set");
-            let provider = ProviderBuilder::new()
-                .on_builtin(ws_url.as_str())
-                .await
-                .unwrap();
+        NamedChain::Optimism => {
             return ChainConfig {
                 chain: Chain::from_named(NamedChain::Optimism),
                 chain_id: 10,
                 signer,
+                default_rpc_url,
                 explorer_url: "https://optimistic.etherscan.io".to_string(),
                 explorer_api_key: "".to_string(),
                 explorer_api_url: "https://api-optimistic.etherscan.io/api".to_string(),
-                ws: Arc::new(provider),
+                provider,
             };
         }
         _ => panic!("Chain not supported"),

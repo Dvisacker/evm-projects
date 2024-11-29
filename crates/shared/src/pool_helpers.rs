@@ -503,7 +503,7 @@ pub async fn activate_pools(
 /// A Result containing the U256 value of the pool or an AMMError
 pub async fn get_amm_value(chain: Chain, pool_address: Address) -> Result<U256, AMMError> {
     let chain_config = get_chain_config(chain).await;
-    let provider = chain_config.ws;
+    let provider = chain_config.provider;
     let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
     let weth_address = addressbook.get_weth(&named_chain).unwrap();
@@ -599,7 +599,7 @@ pub async fn filter_amms(
     amms: Vec<AMM>,
 ) -> Result<Vec<AMM>, AMMError> {
     let chain_config = get_chain_config(chain).await;
-    let provider = chain_config.ws;
+    let provider = chain_config.provider;
 
     let v2_active_pools =
         filter_univ2_pools(amms.clone(), chain, provider.clone(), usd_threshold).await?;

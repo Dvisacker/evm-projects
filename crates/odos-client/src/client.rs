@@ -236,8 +236,9 @@ mod tests {
     use alloy_chains::{Chain, NamedChain};
     use alloy_primitives::Bytes;
     use alloy_rpc_types::TransactionRequest;
-    use executor_binding::{ierc20::IERC20, weth::WETH};
-    use provider::{get_default_anvil_provider, get_default_anvil_signer};
+    use bindings::ierc20::IERC20;
+    use bindings::iweth;
+    use provider::{get_anvil_signer, get_anvil_signer_provider};
     use shared::token_helpers::{get_token_allowance, get_token_balance, parse_token_units};
     use types::token::TokenIsh;
 
@@ -247,7 +248,7 @@ mod tests {
     async fn test_get_odos_quote() {
         let chain = NamedChain::Arbitrum;
         let addressbook = Addressbook::load().unwrap();
-        let anvil_signer = get_default_anvil_signer();
+        let anvil_signer = get_anvil_signer();
         let user_address = anvil_signer.address();
         let weth = addressbook.get_weth(&chain).unwrap();
         let usdc = addressbook.get_usdc(&chain).unwrap();
@@ -274,7 +275,7 @@ mod tests {
         // First get a quote
         let chain = NamedChain::Arbitrum;
         let addressbook = Addressbook::load().unwrap();
-        let anvil_signer = get_default_anvil_signer();
+        let anvil_signer = get_anvil_signer();
         let user_address = anvil_signer.address();
         let weth = addressbook.get_weth(&chain).unwrap();
         let usdc = addressbook.get_usdc(&chain).unwrap();
@@ -297,10 +298,10 @@ mod tests {
         dotenv::dotenv().ok();
         let chain = NamedChain::Base;
         let addressbook = Addressbook::load().unwrap();
-        let anvil_signer = get_default_anvil_signer();
+        let anvil_signer = get_anvil_signer();
         let user_address = anvil_signer.address();
-        let anvil_provider = get_default_anvil_provider().await;
-        // let providers = get_provider_map().await;
+        let anvil_provider = get_anvil_signer_provider().await;
+        // let providers = get_signer_provider_map().await;
         // let anvil_provider: &std::sync::Arc<alloy::providers::fillers::FillProvider<alloy::providers::fillers::JoinFill<alloy::providers::fillers::JoinFill<alloy::providers::Identity, alloy::providers::fillers::JoinFill<alloy::providers::fillers::GasFiller, alloy::providers::fillers::JoinFill<alloy::providers::fillers::BlobGasFiller, alloy::providers::fillers::JoinFill<alloy::providers::fillers::NonceFiller, alloy::providers::fillers::ChainIdFiller>>>>, alloy::providers::fillers::WalletFiller<EthereumWallet>>, alloy::providers::RootProvider<alloy::transports::BoxTransport>, alloy::transports::BoxTransport, alloy::network::Ethereum>> = providers.get(&chain).unwrap();
         // let signer = get_default_wallet().default_signer();
         // let user_address = signer.address();
@@ -312,7 +313,7 @@ mod tests {
         let slippage = 2.0;
         let router = Address::from_str("0x19cEeAd7105607Cd444F5ad10dd51356436095a1").unwrap();
 
-        let call = WETH::depositCall {};
+        let call = iweth::IWETH::depositCall {};
         let encoded = call.abi_encode();
 
         let wrap_eth_tx = TransactionRequest::default()
