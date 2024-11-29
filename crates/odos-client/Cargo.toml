@@ -19,7 +19,6 @@ lazy_static = "1.4.0"
 
 addressbook = { path = "../addressbook" }
 bindings = { path = "../bindings" }
-executor-binding = { path = "../executor-binding" }
 types = { path = "../types" }
 provider = { path = "../provider" }
 db = { path = "../db" }

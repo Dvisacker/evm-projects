@@ -38,7 +38,6 @@ dependencies = [
  "db",
  "diesel",
  "dotenv",
- "executor-binding",
  "eyre",
  "foundry-config 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "foundry-evm",
@@ -3249,7 +3248,6 @@ dependencies = [
  "anyhow",
  "async-trait",
  "dotenv",
- "executor-binding",
  "eyre",
  "futures",
  "provider",
@@ -3257,6 +3255,7 @@ dependencies = [
  "tokio",
  "tokio-stream",
  "tracing",
+ "tx-executor",
  "types",
 ]
 
@@ -3482,13 +3481,6 @@ name = "event-listener"
 version = "2.5.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0206175f82b8d6bf6652ff7d71a1e27fd2e4efde587fd368662814d6ec1d9ce0"
-
-[[package]]
-name = "executor-binding"
-version = "0.1.0"
-dependencies = [
- "alloy 0.6.4",
-]
 
 [[package]]
 name = "eyre"
@@ -5323,7 +5315,6 @@ dependencies = [
  "db",
  "diesel",
  "dotenv",
- "executor-binding",
  "eyre",
  "foundry-config 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "foundry-evm",
@@ -5739,7 +5730,6 @@ dependencies = [
  "db",
  "diesel",
  "dotenv",
- "executor-binding",
  "eyre",
  "foundry-config 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "foundry-evm",
@@ -6200,7 +6190,6 @@ dependencies = [
  "db",
  "diesel",
  "dotenv",
- "executor-binding",
  "eyre",
  "foundry-config 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "foundry-evm",
@@ -6434,7 +6423,6 @@ dependencies = [
  "db",
  "diesel",
  "dotenv",
- "executor-binding",
  "eyre",
  "foundry-config 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "foundry-evm",
@@ -7633,7 +7621,6 @@ dependencies = [
  "db",
  "diesel",
  "dotenv",
- "executor-binding",
  "eyre",
  "foundry-config 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "foundry-evm",
@@ -8471,7 +8458,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "tx-encoder"
+name = "tx-executor"
 version = "0.1.0"
 dependencies = [
  "addressbook",
@@ -8483,12 +8470,10 @@ dependencies = [
  "amms",
  "anyhow",
  "async-trait",
- "bindings",
  "clap",
  "db",
  "diesel",
  "dotenv",
- "executor-binding",
  "eyre",
  "foundry-config 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "foundry-evm",

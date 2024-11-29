@@ -24,10 +24,10 @@ generate-bindings:
 
 generate-executor-binding:
     #!/usr/bin/env bash
-    bindings_path="./crates/executor-binding"
-    contract_root_path="./contracts"
+    bindings_path="./crates/tx-encoder/src/bindings"
+    contract_root_path="./crates/tx-encoder/contracts"
     rm -rf $bindings_path
-    forge bind --bindings-path $bindings_path --root $contract_root_path --crate-name executor-binding --alloy --alloy-version v0.5.4 --via-ir
+    forge bind --bindings-path $bindings_path --root $contract_root_path --module --alloy --alloy-version v0.5.4 --via-ir --overwrite
 
 fmt: 
     cargo +nightly fmt --all

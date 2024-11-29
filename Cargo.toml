@@ -9,12 +9,13 @@ members = [
     "crates/bindings",
     "crates/shared",
     "crates/types",
-    "crates/executor-binding",
     "crates/odos-client",
-    "crates/tx-encoder",
+    "crates/tx-executor",
     "crates/addressbook",
     "crates/provider",
-    "crates/config", "crates/lifi-client", "crates/pool-manager",
+    "crates/config",
+    "crates/lifi-client",
+    "crates/pool-manager",
 ]
 
 default-members = [
@@ -24,9 +25,8 @@ default-members = [
     "crates/db",
     "crates/engine",
     "crates/bindings",
-    "crates/executor-binding",
     "crates/odos-client",
-    "crates/tx-encoder",
+    "crates/tx-executor",
     "crates/addressbook",
     "crates/amms",
     "crates/provider",
