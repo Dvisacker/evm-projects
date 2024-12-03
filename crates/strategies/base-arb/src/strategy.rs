@@ -6,6 +6,7 @@ use alloy::{dyn_abi::DynSolValue, primitives::Address, rpc::types::Log};
 use alloy_chains::Chain;
 use alloy_sol_types::SolEvent;
 use amms::bindings::iaerodromepool::IAerodromePool;
+use amms::bindings::iuniswapv2pool::IUniswapV2Pool;
 use amms::{
     amm::{
         uniswap_v2::{
@@ -17,7 +18,6 @@ use amms::{
     sync,
 };
 use async_trait::async_trait;
-use bindings::iuniswapv2pair::IUniswapV2Pair;
 use db::{
     establish_connection,
     models::{db_pool::DbPool, NewDbUniV2Pool},
@@ -149,10 +149,10 @@ impl BaseArb {
         }
 
         match log.topics()[0] {
-            topic if topic == IUniswapV2Pair::Swap::SIGNATURE_HASH => {
+            topic if topic == IUniswapV2Pool::Swap::SIGNATURE_HASH => {
                 debug!("New uniswap v2 swap on pool {:?}", pool_address);
             }
-            topic if topic == IUniswapV2Pair::Sync::SIGNATURE_HASH => {
+            topic if topic == IUniswapV2Pool::Sync::SIGNATURE_HASH => {
                 if let Err(e) = self.handle_v2_sync(pool_address, log.clone()).await {
                     warn!("Failed to handle uniswap v2 sync: {}", e);
                     debug!("Pool: {:?}, Log: {:?}", pool_address, log);
