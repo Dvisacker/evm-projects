@@ -15,6 +15,7 @@ bindings = { path = "../../crates/bindings" }
 provider = { path = "../../crates/provider" }
 shared = { path = "../../crates/shared" }
 engine = { path = "../../crates/engine" }
+amms = { path = "../../crates/amms" }
 
 dotenv = "0.15.0"
 async-trait = "0.1.64"

@@ -32,6 +32,8 @@ generate-executor-binding:
     rm -rf $bindings_path
     forge bind --bindings-path $bindings_path --root $contract_root_path --module --alloy --alloy-version v0.5.4 --via-ir --overwrite
 
+
+
 fmt: 
     cargo +nightly fmt --all
 
@@ -58,6 +60,9 @@ run-bot-arbitrum:
 
 run-bot-mainnet:
     cargo run --bin bot -- --chain-id 1
+
+run-aerodrome-bot:
+    RUST_BACKTRACE=full cargo run --bin bot -- --chain-id 8453 --strategy base-arb
 
 get-filtered-pools CHAIN_ID:
     cargo run --bin cli -- filter --chain-id {{CHAIN_ID}}

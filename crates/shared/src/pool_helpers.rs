@@ -13,6 +13,7 @@ use amms::amm::uniswap_v2::IUniswapV2Pair;
 use amms::amm::uniswap_v3::batch_request::get_v3_pool_data_batch_request;
 use amms::amm::uniswap_v3::{json_to_tickbitmap, json_to_ticks, IUniswapV3Pool};
 use amms::amm::ve33::factory::Ve33Factory;
+use amms::amm::ve33::Ve33Pool;
 use amms::amm::AutomatedMarketMaker;
 use amms::errors::AMMError;
 use amms::filters::value::get_weth_values_in_amms;
@@ -761,22 +762,41 @@ pub fn db_univ2_pool_to_amm(pool: &DbUniV2Pool) -> Result<AMM, AMMError> {
         ExchangeName::from_str(pool.exchange_name.as_ref().unwrap()).unwrap();
     let chain: Chain = Chain::try_from(pool.chain.parse::<NamedChain>().unwrap()).unwrap();
 
-    Ok(AMM::UniswapV2Pool(UniswapV2Pool {
-        address,
-        token_a: token0,
-        token_a_decimals: pool.token_a_decimals as u8,
-        token_a_symbol: pool.token_a_symbol.clone(),
-        token_b: token1,
-        token_b_decimals: pool.token_b_decimals as u8,
-        token_b_symbol: pool.token_b_symbol.clone(),
-        reserve_0: pool.reserve_0.parse().unwrap(),
-        reserve_1: pool.reserve_1.parse().unwrap(),
-        fee: pool.fee as u32,
-        exchange_name,
-        exchange_type,
-        chain: chain.named().ok_or(AMMError::ParseError)?,
-        factory: Address::ZERO,
-    }))
+    match exchange_type {
+        ExchangeType::UniV2 => Ok(AMM::UniswapV2Pool(UniswapV2Pool {
+            address,
+            token_a: token0,
+            token_a_decimals: pool.token_a_decimals as u8,
+            token_a_symbol: pool.token_a_symbol.clone(),
+            token_b: token1,
+            token_b_decimals: pool.token_b_decimals as u8,
+            token_b_symbol: pool.token_b_symbol.clone(),
+            reserve_0: pool.reserve_0.parse().unwrap(),
+            reserve_1: pool.reserve_1.parse().unwrap(),
+            fee: pool.fee as u32,
+            exchange_name,
+            exchange_type,
+            chain: chain.named().ok_or(AMMError::ParseError)?,
+            factory: Address::ZERO,
+        })),
+        ExchangeType::Ve33 => Ok(AMM::Ve33Pool(Ve33Pool {
+            address,
+            token_a: token0,
+            token_a_decimals: pool.token_a_decimals as u8,
+            token_a_symbol: pool.token_a_symbol.clone(),
+            token_b: token1,
+            token_b_decimals: pool.token_b_decimals as u8,
+            token_b_symbol: pool.token_b_symbol.clone(),
+            reserve_0: pool.reserve_0.parse().unwrap(),
+            reserve_1: pool.reserve_1.parse().unwrap(),
+            fee: pool.fee as u32,
+            exchange_name,
+            exchange_type,
+            chain: chain.named().ok_or(AMMError::ParseError)?,
+            factory: Address::ZERO,
+        })),
+        _ => Err(AMMError::UnsupportedExchangeType),
+    }
 }
 
 fn db_univ3_pool_to_amm(pool: &DbUniV3Pool) -> Result<AMM, AMMError> {

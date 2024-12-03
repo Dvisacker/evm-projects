@@ -4,13 +4,14 @@ use alloy::{
     sol_types::SolEvent,
 };
 use alloy_chains::Chain;
+use amms::bindings::iaerodromepool::IAerodromePool;
 use base_arb_strategy::{
     strategy::BaseArb,
     types::{Action as BaseArbAction, Event as BaseArbEvent},
 };
 use bindings::{iuniswapv2pair::IUniswapV2Pair, iuniswapv3pool::IUniswapV3Pool};
 use engine::{
-    collectors::multi_log_collector::{self, MultiLogCollector},
+    collectors::multi_log_collector::MultiLogCollector,
     engine::Engine,
     executors::mempool_executor::MempoolExecutor,
     types::{CollectorMap, ExecutorMap},
@@ -64,11 +65,11 @@ pub fn init_base_arbitrage_bot(
 ) -> Engine<BaseArbEvent, BaseArbAction> {
     let mut engine: Engine<BaseArbEvent, BaseArbAction> = Engine::default();
 
-    let uniswap_v2_filter = Filter::new()
+    let aerodrome_filter = Filter::new()
         .from_block(BlockNumberOrTag::Latest)
-        .event(IUniswapV2Pair::Sync::SIGNATURE);
+        .event(IAerodromePool::Sync::SIGNATURE);
 
-    let filters = vec![uniswap_v2_filter];
+    let filters = vec![aerodrome_filter];
 
     let strategy = BaseArb::new(chain, provider.clone(), db_url);
     engine.add_strategy(Box::new(strategy));

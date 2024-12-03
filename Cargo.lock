@@ -2208,6 +2208,7 @@ version = "0.1.0"
 dependencies = [
  "alloy 0.7.0",
  "alloy-chains",
+ "amms",
  "anyhow",
  "async-trait",
  "base-arb-strategy",
@@ -2458,6 +2459,7 @@ dependencies = [
  "alloy 0.7.0",
  "alloy-chains",
  "alloy-primitives 0.8.12",
+ "amms",
  "anyhow",
  "clap",
  "config",

@@ -5,6 +5,7 @@ use alloy::providers::Provider;
 use alloy::{dyn_abi::DynSolValue, primitives::Address, rpc::types::Log};
 use alloy_chains::Chain;
 use alloy_sol_types::SolEvent;
+use amms::bindings::iaerodromepool::IAerodromePool;
 use amms::{
     amm::{
         uniswap_v2::{
@@ -61,11 +62,12 @@ impl BaseArb {
         let chain = self.chain.named().expect("Chain must be named").to_string();
         let mut conn = establish_connection(&self.db_url);
 
+        // aerodrome pools are "univ2-ish" pools
         let aerodrome_pools = get_uni_v2_pools(
             &mut conn,
             Some(&chain),
             Some("aerodrome"),
-            Some("univ2"),
+            Some("ve33"),
             None,
             None,
         )?;
@@ -76,6 +78,7 @@ impl BaseArb {
             .collect::<Vec<DbPool>>();
 
         let mut amms = db_pools_to_amms(&db_pools)?;
+
         let block_number = self.state.block_number;
         sync::populate_amms(&mut amms, block_number, self.client.clone()).await?;
         self.state.set_pools(amms);
@@ -150,8 +153,14 @@ impl BaseArb {
                 debug!("New uniswap v2 swap on pool {:?}", pool_address);
             }
             topic if topic == IUniswapV2Pair::Sync::SIGNATURE_HASH => {
-                if let Err(e) = self.handle_uniswap_v2_sync(pool_address, log.clone()).await {
+                if let Err(e) = self.handle_v2_sync(pool_address, log.clone()).await {
                     warn!("Failed to handle uniswap v2 sync: {}", e);
+                    debug!("Pool: {:?}, Log: {:?}", pool_address, log);
+                }
+            }
+            topic if topic == IAerodromePool::Sync::SIGNATURE_HASH => {
+                if let Err(e) = self.handle_v2_sync(pool_address, log.clone()).await {
+                    warn!("Failed to handle aerodrome sync: {}", e);
                     debug!("Pool: {:?}, Log: {:?}", pool_address, log);
                 }
             }
@@ -159,14 +168,14 @@ impl BaseArb {
         }
     }
 
-    async fn handle_uniswap_v2_sync(&mut self, pool_address: Address, log: Log) -> Result<()> {
+    // handles sync for both uniswap v2 and ve33 pools
+    async fn handle_v2_sync(&mut self, pool_address: Address, log: Log) -> Result<()> {
         if let Some(mut pool) = self.state.pools.get_mut(&pool_address) {
             return self.handle_known_pool_sync(&mut pool, log).await;
         }
 
         if self.state.inactive_pools.contains_key(&pool_address) {
-            info!("New uniswap v2 sync on inactive pool {:?}", pool_address);
-            return Ok(());
+            return self.handle_inactive_pool_sync(pool_address).await;
         }
 
         self.handle_unknown_pool_sync(pool_address).await
@@ -190,6 +199,11 @@ impl BaseArb {
         let updated_cycles = self.state.get_updated_cycles(amm_slice.to_vec());
         self.log_arbitrage_cycles(&updated_cycles);
 
+        Ok(())
+    }
+
+    async fn handle_inactive_pool_sync(&self, pool_address: Address) -> Result<()> {
+        info!("New uniswap v2 sync on inactive pool {:?}", pool_address);
         Ok(())
     }
 

@@ -16,7 +16,7 @@ use provider::{
 use shared::pool_helpers::{store_uniswap_v2_pools, store_uniswap_v3_pools, store_ve33_pools};
 use shared::token_manager::TokenManager;
 use shared::{bridge::bridge_lifi, evm_helpers::get_contract_creation_block};
-use std::{str::FromStr, sync::Arc};
+use std::str::FromStr;
 use tracing::info;
 use types::bridge::BridgeName;
 use types::exchange::ExchangeName;
@@ -166,7 +166,6 @@ pub async fn cross_chain_swap_command(
     destination_token_out: TokenIsh,
     amount_in: &str,
 ) -> Result<(), Error> {
-    let signer = get_default_signer();
     let token_manager = TokenManager::instance().await;
 
     let origin_token_in = token_manager

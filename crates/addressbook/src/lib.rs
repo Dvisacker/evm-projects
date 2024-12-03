@@ -1,11 +1,10 @@
 use alloy::primitives::Address;
 use alloy_chains::NamedChain;
 use serde::{Deserialize, Deserializer, Serialize};
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::Read;
-use std::path::PathBuf;
 use std::str::FromStr;
-use std::{collections::HashMap, env};
 use types::exchange::{ExchangeName, ExchangeType};
 use types::token::NamedToken;
 

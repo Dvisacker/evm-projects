@@ -7,7 +7,6 @@ use cli::{Args, StrategyType};
 use dotenv::dotenv;
 use eyre::Result;
 use provider::get_default_signer_provider;
-use std::sync::Arc;
 use tracing::info;
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 
