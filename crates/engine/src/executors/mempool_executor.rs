@@ -7,6 +7,7 @@ use crate::types::Executor;
 use alloy::{primitives::U256, providers::Provider, rpc::types::TransactionRequest};
 use async_trait::async_trait;
 use eyre::{Context, Result};
+use provider::SignerProvider;
 
 /// MempoolExecutor is responsible for submitting transactions to the public mempool.
 /// It supports both basic transaction submission and gas price optimization based on
@@ -29,9 +30,9 @@ use eyre::{Context, Result};
 ///     executor.execute(tx).await.unwrap();
 /// }
 /// ```
-pub struct MempoolExecutor<M> {
+pub struct MempoolExecutor {
     /// The blockchain provider used to submit transactions
-    client: Arc<M>,
+    client: Arc<SignerProvider>,
 }
 
 /// Information about the gas bid for a transaction.
@@ -56,8 +57,8 @@ pub struct SubmitTxToMempool {
     pub gas_bid_info: Option<GasBidInfo>,
 }
 
-impl<M: Provider> MempoolExecutor<M> {
-    pub fn new(client: Arc<M>) -> Self {
+impl MempoolExecutor {
+    pub fn new(client: Arc<SignerProvider>) -> Self {
         Self { client }
     }
 }
@@ -69,10 +70,7 @@ impl<M: Provider> MempoolExecutor<M> {
 /// 3. Submits the transaction to the mempool
 /// 4. Waits for and returns the transaction receipt
 #[async_trait]
-impl<M> Executor<SubmitTxToMempool> for MempoolExecutor<M>
-where
-    M: Provider,
-{
+impl Executor<SubmitTxToMempool> for MempoolExecutor {
     /// Executes a transaction submission to the mempool.
     ///
     /// # Arguments

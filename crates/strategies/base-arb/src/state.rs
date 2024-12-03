@@ -4,11 +4,11 @@ use amms::amm::{AutomatedMarketMaker, AMM};
 use amms::errors::AMMError;
 use amms::sync;
 use dashmap::DashMap;
+use provider::SignerProvider;
 use shared::cycle::Cycle;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 use tracing::info;
-use types::token::SignerProvider;
 
 #[derive(Debug, Clone)]
 pub struct State {

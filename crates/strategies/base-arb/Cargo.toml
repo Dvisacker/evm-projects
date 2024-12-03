@@ -1,5 +1,5 @@
 [package]
-name = "generalized-arb-strategy"
+name = "base-arb-strategy"
 version = "0.1.0"
 edition = "2021"
 
@@ -17,9 +17,9 @@ engine = { path = "../../engine" }
 anyhow = "1.0.70"
 tracing-subscriber = "0.3.16"
 csv = "1.1"
-provider = { path = "../../provider" }
 serde = { version = "1", features = ["derive"] }
 indicatif = "0.17.8"
+provider = { path = "../../provider" }
 bindings = { path = "../../bindings" }
 serde_json = "1.0"
 addressbook = { path = "../../addressbook" }

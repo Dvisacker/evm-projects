@@ -44,14 +44,14 @@ use std::sync::Arc;
 use tracing::{debug, info, warn};
 
 #[derive(Debug, Clone)]
-pub struct GeneralizedArb {
+pub struct BaseArb {
     pub chain: Chain,
     pub client: Arc<SignerProvider>,
     pub state: State,
     pub db_url: String,
 }
 
-impl GeneralizedArb {
+impl BaseArb {
     pub fn new(chain: Chain, client: Arc<SignerProvider>, db_url: String) -> Self {
         let addressbook = Addressbook::load().unwrap();
         let weth = addressbook.get_weth(&chain.named().unwrap()).unwrap();
@@ -65,7 +65,7 @@ impl GeneralizedArb {
 }
 
 #[async_trait]
-impl Strategy<Event, Action> for GeneralizedArb {
+impl Strategy<Event, Action> for BaseArb {
     async fn init_state(&mut self) -> Result<()> {
         info!("Initializing state...");
 
@@ -86,69 +86,11 @@ impl Strategy<Event, Action> for GeneralizedArb {
         .map(|p| p.into())
         .collect::<Vec<DbPool>>();
 
-        // let active_v3_pools = get_uni_v3_pools(
-        //     &mut establish_connection(&self.db_url),
-        //     Some(&chain.to_string()),
-        //     None,
-        //     None,
-        //     None,
-        //     Some(true),
-        // )
-        // .unwrap()
-        // .into_iter()
-        // .map(|p| p.into())
-        // .collect::<Vec<DbPool>>();
-
-        // let active_camelot_v3_pools = get_uni_v3_pools(
-        //     &mut establish_connection(&self.db_url),
-        //     Some(&chain.to_string()),
-        //     None,
-        //     None,
-        //     None,
-        //     Some(true),
-        // )
-        // .unwrap()
-        // .into_iter()
-        // .map(|p| p.into())
-        // .collect::<Vec<DbPool>>();
-
         let mut active_v2_amms = db_pools_to_amms(&active_v2_pools)?;
-        // let mut active_v3_amms = db_pools_to_amms(&active_v3_pools)?;
-        // let mut active_camelot_v3_amms = db_pools_to_amms(&active_camelot_v3_pools)?;
 
         sync::populate_amms(&mut active_v2_amms, block_number, self.client.clone()).await?;
-        // sync::populate_amms(&mut active_v3_amms, block_number, self.client.clone()).await?;
-        // sync::populate_amms(
-        //     &mut active_camelot_v3_amms,
-        //     block_number,
-        //     self.client.clone(),
-        // )
-        // .await?;
 
-        // for pool in &mut active_v3_amms {
-        //     if let AMM::UniswapV3Pool(uniswap_v3_pool) = pool {
-        //         let tick_start = uniswap_v3_pool.tick - 40;
-        //         let num_ticks = 80;
-        //         let (tick_data, _) = get_uniswap_v3_tick_data_batch_request(
-        //             &uniswap_v3_pool,
-        //             tick_start,
-        //             false,
-        //             num_ticks,
-        //             Some(block_number),
-        //             self.client.clone(),
-        //         )
-        //         .await?;
-        //         uniswap_v3_pool.populate_ticks_from_tick_data(tick_data);
-        //         println!(
-        //             "Populated tick data for pool: {:?} - {:?}",
-        //             uniswap_v3_pool.address, uniswap_v3_pool
-        //         );
-        //     }
-        // }
-
-        let synced_amms = vec![active_v2_amms].concat();
-        // let synced_amms = vec![active_v2_amms, active_v3_amms, active_camelot_v3_amms].concat();
-        self.state.set_pools(synced_amms);
+        self.state.set_pools(active_v2_amms);
 
         info!("Updated pools: {:?}", self.state.pools);
 
@@ -160,46 +102,6 @@ impl Strategy<Event, Action> for GeneralizedArb {
         }
 
         Ok(())
-
-        // info!("{:?} active pools", active_pools.len());
-
-        // let inactive_v2_pools = get_uni_v2_pools(
-        //     &mut establish_connection(&self.db_url),
-        //     Some(&chain.to_string()),
-        //     None,
-        //     None,
-        //     None,
-        //     None,
-        // )
-        // .unwrap();
-
-        // let inactive_v2_pools = info!("{:?} inactive pools", inactive_v2_pools.len());
-
-        // let inactive_amms = db_pools_to_amms(
-        //     &inactive_v2_pools
-        //         .into_iter()
-        //         .map(|p| p.into())
-        //         .collect::<Vec<DbPool>>(),
-        // )?;
-
-        // self.state.set_inactive_pools(inactive_amms);
-
-        // let uniswap_v2_amms = db_pools_to_amms(&active_pools)?;
-
-        // let active_amms = db_pools_to_amms(&active_pools)?;
-
-        // let (mut uniswap_v2_pools, mut uniswap_v3_pools, _, mut camelot_v3_pools) =
-        //     sort_amms(active_amms);
-
-        // take only 50 uniswap v3 pools for testing
-        // let mut uniswap_v3_pools: Vec<AMM> = uniswap_v3_pools
-        //     .into_iter()
-        //     .filter(|pool| matches!(pool, AMM::UniswapV3Pool(_)))
-        //     .take(50)
-        //     .collect();
-
-        // sync::populate_amms(&mut uniswap_v3_pools, block_number, self.client.clone()).await?;
-        // sync::populate_amms(&mut camelot_v3_pools, block_number, self.client.clone()).await?;
     }
 
     async fn sync_state(&mut self) -> Result<()> {
@@ -213,67 +115,11 @@ impl Strategy<Event, Action> for GeneralizedArb {
     }
 
     async fn process_event(&mut self, event: Event) -> Vec<Action> {
-        match event {
-            Event::NewBlock(event) => {
-                // info!("New block: {:?}", event);
-                let block_number = event.number.to::<u64>();
-                self.state.update_block_number(block_number).await.unwrap();
-                return vec![];
-            }
-            Event::UniswapV2Swap(swap) => {
-                info!(
-                    "New UniswapV2 swap from {:?} on pool {:?}",
-                    swap.sender, swap.to
-                );
-                return vec![];
-            }
-            Event::UniswapV3Swap(swap) => {
-                info!(
-                    "New UniswapV3 swap from {:?} on pool {:?}",
-                    swap.sender, swap.recipient
-                );
-                return vec![];
-            }
-            Event::UniswapV2Sync(_) => {
-                return vec![];
-            }
-            Event::Log(log) => {
-                let pool_address = log.address();
-                let block_number = log.block_number.unwrap();
-                let mut conn = establish_connection(&self.db_url);
-                self.state.update_block_number(block_number).await.unwrap();
-
-                if log.topics()[0] == IUniswapV2Pair::Swap::SIGNATURE_HASH {
-                    // self.handle_uniswap_v2_swap(&mut conn, pool_address, log.clone())
-                    //     .await
-                    //     .unwrap_or_else(|e| {
-                    //         error!(
-                    //             "Failed to handle uniswap v2 swap: {:?}. Pool: {:?}. Log: {:?}",
-                    //             e, pool_address, log
-                    //         );
-                    //     });
-                } else if log.topics()[0] == IUniswapV3Pool::Swap::SIGNATURE_HASH {
-                    self.handle_uniswap_v3_swap(&mut conn, pool_address, log.clone())
-                        .await
-                        .unwrap_or_else(|e| {
-                            debug!("Failed to handle uniswap v3 swap. Pool: {:?}", e);
-                            warn!("Failed to handle uniswap v3 swap: {:?}", pool_address);
-                        });
-                } else if log.topics()[0] == IUniswapV2Pair::Sync::SIGNATURE_HASH {
-                    self.handle_uniswap_v2_sync(&mut conn, pool_address, log.clone())
-                        .await
-                        .unwrap_or_else(|e| {
-                            warn!("Failed to handle uniswap v2 swap: {:?}", pool_address);
-                            debug!("Error: {:?}. Pool: {:?}. Log: {:?}", e, pool_address, log);
-                        });
-                }
-            }
-        }
         vec![]
     }
 }
 
-impl GeneralizedArb {
+impl BaseArb {
     async fn handle_uniswap_v2_sync(
         &self,
         mut conn: &mut PgConnection,

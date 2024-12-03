@@ -1,17 +1,13 @@
-use alloy::network::{Ethereum, Network};
+use alloy::network::Ethereum;
 use alloy::providers::Provider;
-use alloy::sol_types::SolType;
 use alloy::transports::Transport;
 use alloy::{hex, sol};
 use alloy_chains::NamedChain;
-use alloy_primitives::aliases::U24;
-use alloy_primitives::{Address, Bytes, FixedBytes, TxHash, U160, U256};
+use alloy_primitives::{Address, Bytes, FixedBytes, U256};
 use alloy_rpc_types::TransactionReceipt;
-use alloy_sol_types::sol_data::Bytes as SolBytes;
 use alloy_sol_types::{SolCall, SolValue};
 use eyre::Result;
 use std::str::FromStr;
-use std::sync::Arc;
 use types::exchange::ExchangeName;
 
 use addressbook::Addressbook;
@@ -74,7 +70,6 @@ where
 {
     chain: NamedChain,
     executor: BatchExecutorInstance<T, P>,
-    provider: P,
     owner: Address,
     total_value: U256,
     calldata: Vec<Bytes>,
@@ -109,7 +104,6 @@ where
         Self {
             chain,
             executor,
-            provider,
             owner,
             calldata: Vec::new(),
             total_value,
@@ -823,19 +817,13 @@ where
 
 #[cfg(test)]
 mod tests {
-    use provider::{get_anvil_signer, get_anvil_signer_provider, get_default_signer};
+    use provider::get_anvil_signer_provider;
     use shared::{
-        evm_helpers::{compute_v2_pool_address, compute_v3_pool_address},
-        lend::IAaveV3Pool,
+        evm_helpers::compute_v3_pool_address,
         token_helpers::{get_token_balance, parse_token_units},
-        utils::prettify_json,
     };
 
     use super::*;
-    use alloy::{
-        network::EthereumWallet, providers::WalletProvider, signers::local::PrivateKeySigner,
-    };
-    use alloy_chains::Chain;
     use alloy_primitives::{aliases::U24, U160, U256};
     use std::{env, str::FromStr};
     use types::token::TokenIsh;
@@ -860,7 +848,7 @@ mod tests {
             .await
             .unwrap();
 
-        let (success, _tx_hash) = encoder.add_wrap_eth(weth, amount).exec().await?;
+        let (_success, _tx_hash) = encoder.add_wrap_eth(weth, amount).exec().await?;
 
         let balance_after = get_token_balance(provider.clone(), weth, executor_address)
             .await
@@ -1113,7 +1101,7 @@ mod tests {
 
         let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
 
-        let (success, receipt) = encoder
+        let (_success, receipt) = encoder
             .add_wrap_eth(weth, input_amount)
             .add_transfer_erc20(weth, executor_address, input_amount)
             .add_odos_swap(input_amount, weth, usdc, slippage)

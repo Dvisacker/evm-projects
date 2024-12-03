@@ -69,7 +69,7 @@ impl Default for ExchangeName {
 pub enum ExchangeType {
     UniV2,
     UniV3,
-    Ve33,
+    Ve33, // solidly&aerodrome
     CamelotV3,
     Curve,
     ERC4626,
