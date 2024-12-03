@@ -1,28 +1,19 @@
-use crate::state::State;
-
 use super::types::{Action, Event};
+use crate::state::State;
 use addressbook::Addressbook;
-use alloy::{
-    dyn_abi::DynSolValue, primitives::Address, providers::Provider, rpc::types::Log,
-    signers::Signer, sol_types::SolEvent,
-};
+use alloy::providers::Provider;
+use alloy::{dyn_abi::DynSolValue, primitives::Address, rpc::types::Log};
 use alloy_chains::Chain;
+use alloy_sol_types::SolEvent;
 use amms::{
     amm::{
         uniswap_v2::{
             batch_request::{fetch_v2_pool_data_batch_request, populate_v2_pool_data},
             UniswapV2Pool,
         },
-        uniswap_v3::{
-            batch_request::{
-                fetch_v3_pool_data_batch_request, get_uniswap_v3_tick_data_batch_request,
-                populate_v3_pool_data,
-            },
-            IUniswapV3Pool, UniswapV3Pool,
-        },
         AutomatedMarketMaker, AMM,
     },
-    sync::{self},
+    sync,
 };
 use async_trait::async_trait;
 use bindings::iuniswapv2pair::IUniswapV2Pair;
@@ -30,11 +21,10 @@ use db::{
     establish_connection,
     models::{db_pool::DbPool, NewDbUniV2Pool},
     queries::{
+        exchange::get_exchanges_by_chain,
         uni_v2_pool::{batch_upsert_uni_v2_pools, get_uni_v2_pools},
-        uni_v3_pool::{batch_upsert_uni_v3_pools, get_uni_v3_pools},
     },
 };
-use db::{models::NewDbUniV3Pool, queries::exchange::get_exchanges_by_chain};
 use diesel::PgConnection;
 use engine::types::Strategy;
 use eyre::Result;
@@ -53,13 +43,50 @@ pub struct BaseArb {
 
 impl BaseArb {
     pub fn new(chain: Chain, client: Arc<SignerProvider>, db_url: String) -> Self {
-        let addressbook = Addressbook::load().unwrap();
-        let weth = addressbook.get_weth(&chain.named().unwrap()).unwrap();
+        let addressbook = Addressbook::load().expect("Failed to load addressbook");
+        let chain_name = chain.named().expect("Chain must be named");
+        let weth = addressbook
+            .get_weth(&chain_name)
+            .expect("Failed to get WETH address");
+
         Self {
             chain,
             client: client.clone(),
             state: State::new(client.clone(), vec![weth]),
             db_url,
+        }
+    }
+
+    async fn load_pools(&mut self) -> Result<()> {
+        let chain = self.chain.named().expect("Chain must be named").to_string();
+        let mut conn = establish_connection(&self.db_url);
+
+        let aerodrome_pools = get_uni_v2_pools(
+            &mut conn,
+            Some(&chain),
+            Some("aerodrome"),
+            Some("univ2"),
+            None,
+            None,
+        )?;
+
+        let db_pools = aerodrome_pools
+            .into_iter()
+            .map(|p| p.into())
+            .collect::<Vec<DbPool>>();
+
+        let mut amms = db_pools_to_amms(&db_pools)?;
+        let block_number = self.state.block_number;
+        sync::populate_amms(&mut amms, block_number, self.client.clone()).await?;
+        self.state.set_pools(amms);
+
+        Ok(())
+    }
+
+    fn log_arbitrage_cycles(&self, cycles: &[impl std::fmt::Display]) {
+        info!("Found {} arbitrage cycles", cycles.len());
+        for cycle in cycles {
+            info!("{}", cycle);
         }
     }
 }
@@ -69,151 +96,114 @@ impl Strategy<Event, Action> for BaseArb {
     async fn init_state(&mut self) -> Result<()> {
         info!("Initializing state...");
 
-        let block_number = self.client.get_block_number().await.unwrap();
-        let chain = self.chain.named().unwrap();
-        self.state.update_block_number(block_number).await.unwrap();
+        let block_number = self.client.get_block_number().await?;
+        self.state.update_block_number(block_number).await?;
 
-        let active_v2_pools = get_uni_v2_pools(
-            &mut establish_connection(&self.db_url),
-            Some(&chain.to_string()),
-            None,
-            None,
-            None,
-            Some(true),
-        )
-        .unwrap()
-        .into_iter()
-        .map(|p| p.into())
-        .collect::<Vec<DbPool>>();
-
-        let mut active_v2_amms = db_pools_to_amms(&active_v2_pools)?;
-
-        sync::populate_amms(&mut active_v2_amms, block_number, self.client.clone()).await?;
-
-        self.state.set_pools(active_v2_amms);
-
+        self.load_pools().await?;
         info!("Updated pools: {:?}", self.state.pools);
 
         let arb_cycles = self.state.update_cycles();
-
-        info!("{} arbitrage cycles", arb_cycles.len());
-        for cycle in arb_cycles {
-            info!("{}: Profit: {}", cycle, cycle.get_profit_perc());
-        }
+        self.log_arbitrage_cycles(&arb_cycles);
 
         Ok(())
     }
 
     async fn sync_state(&mut self) -> Result<()> {
         info!("Syncing state...");
-        self.state
-            .update_pools()
-            .await
-            .map_err(|e| eyre::eyre!("Failed to sync pools: {}", e))?;
-
+        self.state.update_pools().await?;
         Ok(())
     }
 
     async fn process_event(&mut self, event: Event) -> Vec<Action> {
+        match event {
+            Event::NewBlock(event) => {
+                if let Err(e) = self
+                    .state
+                    .update_block_number(event.number.to::<u64>())
+                    .await
+                {
+                    warn!("Failed to update block number: {}", e);
+                }
+            }
+            Event::Log(log) => {
+                self.handle_log_event(log).await;
+            }
+            _ => {}
+        }
         vec![]
     }
 }
 
+// Private implementation details
 impl BaseArb {
-    async fn handle_uniswap_v2_sync(
-        &self,
-        mut conn: &mut PgConnection,
-        pool_address: Address,
-        log: Log,
-    ) -> Result<()> {
-        let pool = self.state.pools.get_mut(&pool_address);
-        if pool.is_some() {
-            info!("New uniswap v2 swap on known pool {:?}", pool_address);
-            let mut pool_ref = pool.unwrap();
-            let pool = pool_ref.value_mut();
-            let price_before = pool.calculate_price(pool.tokens()[0])?;
-            pool.sync_from_log(log)?;
-            let price_after = pool.calculate_price(pool.tokens()[0])?;
+    async fn handle_log_event(&mut self, log: Log) {
+        let pool_address = log.address();
+        let block_number = log.block_number.expect("Log must have block number");
 
-            info!(
-                "New uniswap v2 swap on pool {:?}. Price: {:?} -> {:?}",
-                pool.name(),
-                price_before,
-                price_after
-            );
+        if let Err(e) = self.state.update_block_number(block_number).await {
+            warn!("Failed to update block number: {}", e);
+            return;
+        }
 
-            let amm_slice: &mut [AMM] = std::slice::from_mut(pool);
-            let updated_cycles = self.state.get_updated_cycles(amm_slice.to_vec());
-            info!("Found {} updated cycles", updated_cycles.len());
-            for cycle in updated_cycles {
-                info!("{}: Profit: {}", cycle, cycle.get_profit_perc());
+        match log.topics()[0] {
+            topic if topic == IUniswapV2Pair::Swap::SIGNATURE_HASH => {
+                debug!("New uniswap v2 swap on pool {:?}", pool_address);
             }
+            topic if topic == IUniswapV2Pair::Sync::SIGNATURE_HASH => {
+                if let Err(e) = self.handle_uniswap_v2_sync(pool_address, log.clone()).await {
+                    warn!("Failed to handle uniswap v2 sync: {}", e);
+                    debug!("Pool: {:?}, Log: {:?}", pool_address, log);
+                }
+            }
+            _ => {}
+        }
+    }
 
-            return Ok(());
+    async fn handle_uniswap_v2_sync(&mut self, pool_address: Address, log: Log) -> Result<()> {
+        if let Some(mut pool) = self.state.pools.get_mut(&pool_address) {
+            return self.handle_known_pool_sync(&mut pool, log).await;
         }
 
         if self.state.inactive_pools.contains_key(&pool_address) {
-            info!("New uniswap v2 swap on inactive pool {:?}", pool_address);
+            info!("New uniswap v2 sync on inactive pool {:?}", pool_address);
             return Ok(());
         }
 
-        info!("New uniswap v2 swap on unknown pool {:?}", pool_address);
-        let provider = self.client.clone();
-        let result = fetch_v2_pool_data_batch_request(&[pool_address], provider).await;
+        self.handle_unknown_pool_sync(pool_address).await
+    }
 
-        let pool_data =
-            result.map_err(|e| eyre::eyre!("Failed to parse pool batch request: {:?}", e))?;
+    async fn handle_known_pool_sync(&self, pool: &mut AMM, log: Log) -> Result<()> {
+        info!("New uniswap v2 sync on known pool {:?}", pool.address());
 
-        let new_pool = self.parse_univ2_pool_data(pool_data, &mut conn, pool_address)?;
+        let price_before = pool.calculate_price(pool.tokens()[0])?;
+        pool.sync_from_log(log)?;
+        let price_after = pool.calculate_price(pool.tokens()[0])?;
 
-        batch_upsert_uni_v2_pools(&mut conn, &vec![new_pool]).unwrap();
+        info!(
+            "Pool {} price update: {} -> {}",
+            pool.name(),
+            price_before,
+            price_after
+        );
+
+        let amm_slice: &mut [AMM] = std::slice::from_mut(pool);
+        let updated_cycles = self.state.get_updated_cycles(amm_slice.to_vec());
+        self.log_arbitrage_cycles(&updated_cycles);
+
         Ok(())
     }
 
-    async fn handle_uniswap_v3_swap(
-        &self,
-        mut conn: &mut PgConnection,
-        pool_address: Address,
-        log: Log,
-    ) -> Result<()> {
-        let pool = self.state.pools.get_mut(&pool_address);
-        if pool.is_some() {
-            let mut pool_ref = pool.unwrap();
-            let pool = pool_ref.value_mut();
-            let price_before = pool.calculate_price(pool.tokens()[0])?;
-            pool.sync_from_log(log)?;
-            let price_after = pool.calculate_price(pool.tokens()[0])?;
-            info!(
-                "New uniswap v3 swap on pool {:?}. Price: {:?} -> {:?}",
-                pool.name(),
-                price_before,
-                price_after
-            );
+    async fn handle_unknown_pool_sync(&self, pool_address: Address) -> Result<()> {
+        info!("New uniswap v2 sync on unknown pool {:?}", pool_address);
 
-            let amm_slice: &mut [AMM] = std::slice::from_mut(pool);
-            let updated_cycles = self.state.get_updated_cycles(amm_slice.to_vec());
-            info!("Found {} updated cycles", updated_cycles.len());
-            for cycle in updated_cycles {
-                info!("{}: Profit: {}", cycle, cycle.get_profit_perc());
-            }
+        let pool_data = fetch_v2_pool_data_batch_request(&[pool_address], self.client.clone())
+            .await
+            .map_err(|e| eyre::eyre!("Failed to fetch pool data: {}", e))?;
 
-            return Ok(());
-        }
+        let mut conn = establish_connection(&self.db_url);
+        let new_pool = self.parse_univ2_pool_data(pool_data, &mut conn, pool_address)?;
+        batch_upsert_uni_v2_pools(&mut conn, &vec![new_pool])?;
 
-        if self.state.inactive_pools.contains_key(&pool_address) {
-            info!("New uniswap v3 swap on inactive pool {:?}", pool_address);
-            return Ok(());
-        }
-
-        info!("New uniswap v3 swap on unknown pool {:?}", pool_address);
-        let result =
-            fetch_v3_pool_data_batch_request(&[pool_address], None, self.client.clone()).await;
-
-        let uniswap_v3_log =
-            result.map_err(|e| eyre::eyre!("Failed to pool batch request: {:?}", e))?;
-
-        let new_pool = self.parse_univ3_pool_data(uniswap_v3_log, &mut conn, pool_address)?;
-        batch_upsert_uni_v3_pools(&mut conn, &vec![new_pool]).unwrap();
         Ok(())
     }
 
@@ -260,60 +250,6 @@ impl BaseArb {
             } else {
                 break;
             };
-        }
-        return Err(eyre::eyre!("Failed to parse pool data"));
-    }
-
-    fn parse_univ3_pool_data(
-        &self,
-        data: DynSolValue,
-        mut conn: &mut PgConnection,
-        pool_address: Address,
-    ) -> Result<NewDbUniV3Pool> {
-        let data = data
-            .as_array()
-            .ok_or_else(|| eyre::eyre!("Failed to parse pool data"))?;
-
-        for token in data {
-            let pool_data = token
-                .as_tuple()
-                .ok_or_else(|| eyre::eyre!("Failed to parse pool data"))?;
-
-            let address = pool_data[0]
-                .as_address()
-                .ok_or_else(|| eyre::eyre!("Failed to parse pool data"))?;
-
-            // If the pool token A is not zero, signaling that the pool data was populated
-            if !address.is_zero() {
-                let mut pool = UniswapV3Pool::default();
-                pool.address = pool_address;
-
-                let chain = self.chain.named().unwrap().to_string();
-                let known_exchanges = get_exchanges_by_chain(&mut conn, &chain).unwrap();
-
-                populate_v3_pool_data(&mut pool, &pool_data)?;
-
-                let exchange_name = known_exchanges
-                    .iter()
-                    .find(|e| *e.factory_address.as_ref().unwrap() == pool.factory.to_string())
-                    .map(|e| e.exchange_name.clone())
-                    .unwrap_or("unknown".to_string());
-
-                let mut db_pool: NewDbUniV3Pool = pool.into();
-                db_pool.exchange_name = Some(exchange_name);
-                db_pool.exchange_type = Some("univ3".to_string());
-                db_pool.chain = chain;
-
-                info!(
-                    "Parsed pool: Factory: {}, Exchange: {}",
-                    db_pool.factory_address.as_ref().unwrap(),
-                    db_pool.exchange_name.as_ref().unwrap()
-                );
-
-                return Ok(db_pool);
-            } else {
-                break;
-            }
         }
         return Err(eyre::eyre!("Failed to parse pool data"));
     }
