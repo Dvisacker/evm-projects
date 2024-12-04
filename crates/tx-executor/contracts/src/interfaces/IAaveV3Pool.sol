@@ -6,7 +6,7 @@ pragma solidity ^0.8.0;
  * @author Aave
  * @notice Defines the basic interface for an Aave Pool.
  */
-interface IPool {
+interface IAaveV3Pool {
     /**
      * @notice Mints an `amount` of aTokens to the `onBehalfOf`
      * @param asset The address of the underlying asset to mint

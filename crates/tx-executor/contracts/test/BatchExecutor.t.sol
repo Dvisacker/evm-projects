@@ -25,7 +25,7 @@ contract BatchExecutorTest is Test {
     address owner = address(this);
     IUniswapV3Router public uniswapV3Router = IUniswapV3Router(0x2626664c2603336E57B271c5C0b26F421741e481);
     IUniswapV2Router public uniswapV2Router = IUniswapV2Router(0x4752ba5DBc23f44D87826276BF6Fd6b1C372aD24);
-    IAerodromeRouter public aerodromeRouter = IAerodromeRouter(0xcF77a3Ba9A5CA399B7c97c74d54e5b1Beb874E43);
+    IAerodromeRouter public aerodromeRouter = IAerodromeRouter(payable(0xcF77a3Ba9A5CA399B7c97c74d54e5b1Beb874E43));
     address public aerodromeFactoryAddress = 0x420DD381b31aEf6683db6B902084cB0FFECe40Da;
     // V3 factory address
     address factory = 0x33128a8fC17869897dcE68Ed026d694621f6FDfD;
@@ -227,8 +227,8 @@ contract BatchExecutorTest is Test {
             new BatchExecutor.DynamicCall[](0)
         );
 
-        IAerodromeRouter.Route[] memory routes = new IAerodromeRouter.Route[](1);
-        routes[0] = IAerodromeRouter.Route({
+        IRouter.Route[] memory routes = new IRouter.Route[](1);
+        routes[0] = IRouter.Route({
             from: address(weth),
             to: address(usdc),
             stable: false,
@@ -245,6 +245,70 @@ contract BatchExecutorTest is Test {
             ),
             CallbackContext({dataIndex: 0, sender: address(this)}),
             new BatchExecutor.DynamicCall[](0)
+        );
+
+        bytes[] memory callDataArray = new bytes[](3);
+        callDataArray[0] = depositWethCallData;
+        callDataArray[1] = approveErc20CallData;
+        callDataArray[2] = swapCallData;
+
+        vm.startPrank(deployer);
+        executor.batchCall{value: amountIn}(callDataArray);
+        vm.stopPrank();
+    }
+
+    function testAerodromeSwapAll() public {
+        uint256 amountIn = 1 ether;
+
+        bytes memory depositWethCallData = buildCall(
+            address(weth),
+            amountIn,
+            abi.encodeWithSelector(weth.deposit.selector),
+            CallbackContext({dataIndex: 0, sender: address(this)}),
+            new BatchExecutor.DynamicCall[](0)
+        );
+        bytes memory approveErc20CallData = buildCall(
+            address(weth),
+            0,
+            abi.encodeWithSelector(weth.approve.selector, aerodromeRouter, amountIn),
+            CallbackContext({dataIndex: 0, sender: address(this)}),
+            new BatchExecutor.DynamicCall[](0)
+        );
+
+        BatchExecutor.DynamicCall memory balanceOf = BatchExecutor.DynamicCall({
+            to: address(weth),
+            data: abi.encodeWithSelector(weth.balanceOf.selector, address(executor)),
+            offset: 4 + 0, // amount is the first parameter
+            length: 32,
+            resOffset: 0
+        });
+
+        BatchExecutor.DynamicCall[] memory dynamicCalls = new BatchExecutor.DynamicCall[](1);
+        dynamicCalls[0] = balanceOf;
+
+        IRouter.Route[] memory routes = new IRouter.Route[](1);
+        routes[0] = IRouter.Route({
+            from: address(weth),
+            to: address(usdc),
+            stable: false,
+            factory: address(aerodromeFactoryAddress)
+        });
+
+        uint256 deadline = block.timestamp + 1000;
+
+        bytes memory swapCallData = buildCall(
+            address(aerodromeRouter),
+            0,
+            abi.encodeWithSelector(
+                aerodromeRouter.swapExactTokensForTokens.selector,
+                0, // replaced by dynamic call
+                0,
+                routes,
+                address(executor),
+                deadline
+            ),
+            CallbackContext({dataIndex: 0, sender: address(this)}),
+            dynamicCalls
         );
 
         bytes[] memory callDataArray = new bytes[](3);
