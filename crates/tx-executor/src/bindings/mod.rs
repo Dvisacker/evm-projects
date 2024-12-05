@@ -11,6 +11,7 @@ pub mod erc20;
 pub mod ierc20;
 pub mod helperconfig;
 pub mod iaavev2pool;
+pub mod iaavev3pool;
 pub mod ipool;
 pub mod iaerodromerouter;
 pub mod ierc165;
