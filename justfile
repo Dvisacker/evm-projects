@@ -27,12 +27,10 @@ generate-bindings:
 
 generate-executor-binding:
     #!/usr/bin/env bash
-    bindings_path="./crates/tx-encoder/src/bindings"
-    contract_root_path="./crates/tx-encoder/contracts"
+    bindings_path="./crates/tx-executor/src/bindings"
+    contract_root_path="./crates/tx-executor/contracts"
     rm -rf $bindings_path
     forge bind --bindings-path $bindings_path --root $contract_root_path --module --alloy --alloy-version v0.5.4 --via-ir --overwrite
-
-
 
 fmt: 
     cargo +nightly fmt --all
@@ -111,10 +109,10 @@ start-anvil-ethereum:
     anvil --chain-id 1 --fork-url https://eth-mainnet.alchemyapi.io/v2/fVddI-_ivqrBOeXVNVF2uqSvzZfSgwrw --steps-tracing
 
 deploy-executor-local:
-    cd contracts && forge script ./script/DeployBatchExecutor.s.sol:DeployBatchExecutor --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --broadcast -vv
+    cd crates/tx-executor/contracts && forge script ./script/DeployBatchExecutor.s.sol:DeployBatchExecutor --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --broadcast -vv
 
 deploy-executor-arbitrum:
-    cd contracts && forge script ./script/DeployBatchExecutor.s.sol:DeployBatchExecutor --rpc-url https://arb-mainnet.g.alchemy.com/v2/-FDfJ1GYdKyvmVXVfQLTbr_7i04YGMKU --private-key $DEV_PRIVATE_KEY --broadcast -vv
+    cd crates/tx-executor/contracts && forge script ./script/DeployBatchExecutor.s.sol:DeployBatchExecutor --rpc-url https://arb-mainnet.g.alchemy.com/v2/-FDfJ1GYdKyvmVXVfQLTbr_7i04YGMKU --private-key $DEV_PRIVATE_KEY --broadcast -vv
 
 deploy-executor-mainnet:
-    cd contracts && forge script ./script/DeployBatchExecutor.s.sol:DeployBatchExecutor --rpc-url https://eth-mainnet.alchemyapi.io/v2/fVddI-_ivqrBOeXVNVF2uqSvzZfSgwrw --private-key $DEV_PRIVATE_KEY --broadcast -vv
+    cd crates/tx-executor/contracts && forge script ./script/DeployBatchExecutor.s.sol:DeployBatchExecutor --rpc-url https://eth-mainnet.alchemyapi.io/v2/fVddI-_ivqrBOeXVNVF2uqSvzZfSgwrw --private-key $DEV_PRIVATE_KEY --broadcast -vv
