@@ -6,6 +6,7 @@ use alloy_chains::NamedChain;
 use alloy_primitives::{Address, Bytes, FixedBytes, U256};
 use alloy_rpc_types::TransactionReceipt;
 use alloy_sol_types::{SolCall, SolValue};
+use amms::bindings::iaerodromeclpool::IAerodromeCLPool::IAerodromeCLPoolCalls;
 use eyre::Result;
 use std::str::FromStr;
 use types::exchange::ExchangeName;
@@ -17,6 +18,7 @@ use crate::bindings::batchexecutor::BatchExecutor::{
     singlecallCall, BatchExecutorInstance, DynamicCall,
 };
 use crate::bindings::erc20::ERC20;
+use crate::bindings::iaerodromerouter::IAerodromeRouter;
 use crate::bindings::imorpho::IMorpho;
 use crate::bindings::ipool::IPool::{
     self, borrowCall, flashLoanCall, liquidationCallCall, repayCall,
@@ -73,6 +75,7 @@ where
     owner: Address,
     total_value: U256,
     calldata: Vec<Bytes>,
+    addressbook: Addressbook,
     addresses: ContractAddresses,
 }
 
@@ -107,6 +110,7 @@ where
             owner,
             calldata: Vec::new(),
             total_value,
+            addressbook,
             addresses: ContractAddresses {
                 aave_v3_pool_address,
                 uniswap_v3_router_address,
@@ -504,6 +508,105 @@ where
         )
     }
 
+    // AERODROME
+
+    pub fn add_aerodrome_router_swap(
+        &mut self,
+        amount_in: U256,
+        token_in: Address,
+        token_out: Address,
+        deadline: U256,
+    ) -> &mut Self {
+        let aerodrome_router_address = self
+            .addressbook
+            .get_ve33_router(&self.chain, ExchangeName::Aerodrome)
+            .expect("Aerodrome router not found");
+
+        let route = IAerodromeRouter::Route {
+            from: token_in,
+            to: token_out,
+            stable: false,
+            factory: aerodrome_router_address,
+        };
+        let call = IAerodromeRouter::swapExactTokensForTokensCall {
+            amountIn: amount_in,
+            amountOutMin: U256::ZERO,
+            routes: vec![route],
+            to: *self.executor.address(),
+            deadline,
+        };
+
+        let encoded = call.abi_encode();
+
+        self.add_call(
+            self.addresses.uniswap_v2_router_address,
+            U256::ZERO,
+            Bytes::from(encoded),
+            None,
+            None,
+        )
+    }
+
+    pub fn add_aerodrome_swap_all(
+        &mut self,
+        token_in: Address,
+        token_out: Address,
+        deadline: U256,
+    ) -> &mut Self {
+        let aerodrome_factory_address = self
+            .addressbook
+            .get_ve33_factory(&self.chain, ExchangeName::Aerodrome)
+            .expect("Aerodrome factory not found");
+
+        let aerodrome_router_address = self
+            .addressbook
+            .get_ve33_router(&self.chain, ExchangeName::Aerodrome)
+            .expect("Aerodrome router not found");
+
+        // Create the dynamic call to get balance
+        let dynamic_call = DynamicCall {
+            to: token_in,
+            data: Bytes::from(
+                ERC20::balanceOfCall {
+                    account: *self.executor.address(),
+                }
+                .abi_encode(),
+            ),
+            offset: 4 + 0, // amount is the first parameter
+            length: 32,
+            resOffset: 0,
+        };
+
+        // Create the route
+        let route = IAerodromeRouter::Route {
+            from: token_in,
+            to: token_out,
+            stable: false,
+            factory: aerodrome_factory_address,
+        };
+
+        // Create the swap call
+        let swap_call = IAerodromeRouter::swapExactTokensForTokensCall {
+            amountIn: U256::ZERO, // Will be replaced by dynamic call
+            amountOutMin: U256::ZERO,
+            routes: vec![route],
+            to: *self.executor.address(),
+            deadline,
+        };
+
+        // Add approve for token_in
+        self.add_approve_erc20(token_in, aerodrome_router_address, U256::MAX)
+            .add_call(
+                aerodrome_router_address,
+                U256::ZERO,
+                Bytes::from(swap_call.abi_encode()),
+                None,
+                Some(vec![dynamic_call]),
+            )
+    }
+
+    // MORPHO
+
     pub fn add_morpho_flash_loan(
         &mut self,
         morpho_pool_address: Address,
@@ -825,7 +928,11 @@ mod tests {
 
     use super::*;
     use alloy_primitives::{aliases::U24, U160, U256};
-    use std::{env, str::FromStr};
+    use std::{
+        env,
+        str::FromStr,
+        time::{SystemTime, UNIX_EPOCH},
+    };
     use types::token::TokenIsh;
 
     const CHAIN: NamedChain = NamedChain::Base;
@@ -1110,6 +1217,66 @@ mod tests {
             .await?;
 
         assert!(receipt.status(), "Transaction failed");
+
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_aerodrome_swap_all() -> Result<()> {
+        dotenv::dotenv().ok();
+        let addressbook = Addressbook::load().unwrap();
+        let provider = get_anvil_signer_provider().await;
+
+        let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+        let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
+
+        let weth = addressbook.get_weth(&CHAIN).unwrap();
+        let usdc = addressbook.get_usdc(&CHAIN).unwrap();
+        let amount = parse_token_units(&CHAIN, &TokenIsh::Address(weth), "1")
+            .await
+            .unwrap();
+
+        let initial_usdc_balance = get_token_balance(provider.clone(), usdc, executor_address)
+            .await
+            .unwrap();
+
+        let deadline = U256::from(
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_secs()
+                + 1000,
+        );
+
+        let (_success, receipt) = encoder
+            .add_wrap_eth(weth, amount)
+            .add_transfer_erc20(weth, executor_address, amount)
+            .add_aerodrome_swap_all(weth, usdc, deadline)
+            .exec()
+            .await?;
+
+        assert!(receipt.status(), "Transaction failed");
+
+        // Get final USDC balance
+        let final_usdc_balance = get_token_balance(provider.clone(), usdc, executor_address)
+            .await
+            .unwrap();
+
+        // Verify USDC balance increased
+        assert!(
+            final_usdc_balance > initial_usdc_balance,
+            "USDC balance did not increase"
+        );
+
+        // Verify WETH balance is 0
+        let final_weth_balance = get_token_balance(provider.clone(), weth, executor_address)
+            .await
+            .unwrap();
+        assert_eq!(
+            final_weth_balance,
+            U256::ZERO,
+            "WETH balance should be zero after swapping all"
+        );
 
         Ok(())
     }
