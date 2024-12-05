@@ -1,3 +1,4 @@
+pub mod utils;
 use alloy::primitives::Address;
 use alloy_chains::NamedChain;
 use serde::{Deserialize, Deserializer, Serialize};
@@ -7,6 +8,7 @@ use std::io::Read;
 use std::str::FromStr;
 use types::exchange::{ExchangeName, ExchangeType};
 use types::token::NamedToken;
+use utils::get_workspace_dir;
 
 fn deserialize_address<'de, D>(deserializer: D) -> Result<Address, D::Error>
 where
@@ -180,12 +182,13 @@ pub fn get_exchange_type(exchange_name: ExchangeName) -> ExchangeType {
 }
 
 impl Addressbook {
+    // TODO - Messy, make this cleaner
     pub fn load() -> Result<Self, Box<dyn std::error::Error>> {
+        let workspace_dir = get_workspace_dir()?;
         let current_file = std::path::Path::new(file!());
         let parent_dir = current_file.parent().unwrap();
-        let filepath = parent_dir.join("addressbook.json");
-        println!("Loading addressbook from: {:?}", filepath);
-        let mut file = File::open(filepath)?;
+        let addressbook_file = workspace_dir.join(parent_dir).join("addressbook.json");
+        let mut file = File::open(addressbook_file)?;
         let mut contents = String::new();
         file.read_to_string(&mut contents)?;
         let addressbook: Addressbook = serde_json::from_str(&contents)?;
