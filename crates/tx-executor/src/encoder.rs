@@ -8,6 +8,7 @@ use alloy_rpc_types::TransactionReceipt;
 use alloy_sol_types::{SolCall, SolValue};
 use eyre::Result;
 use std::str::FromStr;
+use std::time::{SystemTime, UNIX_EPOCH};
 use types::exchange::ExchangeName;
 
 use addressbook::Addressbook;
@@ -514,8 +515,20 @@ where
         amount_in: U256,
         token_in: Address,
         token_out: Address,
-        deadline: U256,
+        deadline: Option<U256>,
+        stable: Option<bool>,
     ) -> &mut Self {
+        let default_deadline = U256::from(
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_secs()
+                + 1000,
+        );
+
+        let deadline = deadline.unwrap_or(default_deadline);
+        let stable = stable.unwrap_or(false);
+
         let aerodrome_router_address = self
             .addressbook
             .get_ve33_router(&self.chain, ExchangeName::Aerodrome)
@@ -524,7 +537,7 @@ where
         let route = IAerodromeRouter::Route {
             from: token_in,
             to: token_out,
-            stable: false,
+            stable,
             factory: aerodrome_router_address,
         };
         let call = IAerodromeRouter::swapExactTokensForTokensCall {
@@ -550,8 +563,20 @@ where
         &mut self,
         token_in: Address,
         token_out: Address,
-        deadline: U256,
+        deadline: Option<U256>,
+        stable: Option<bool>,
     ) -> &mut Self {
+        let default_deadline = U256::from(
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_secs()
+                + 1000,
+        );
+
+        let deadline = deadline.unwrap_or(default_deadline);
+        let stable = stable.unwrap_or(false);
+
         let aerodrome_factory_address = self
             .addressbook
             .get_ve33_factory(&self.chain, ExchangeName::Aerodrome)
@@ -580,7 +605,7 @@ where
         let route = IAerodromeRouter::Route {
             from: token_in,
             to: token_out,
-            stable: false,
+            stable,
             factory: aerodrome_factory_address,
         };
 
@@ -1239,18 +1264,10 @@ mod tests {
             .await
             .unwrap();
 
-        let deadline = U256::from(
-            SystemTime::now()
-                .duration_since(UNIX_EPOCH)
-                .unwrap()
-                .as_secs()
-                + 1000,
-        );
-
         let (_success, receipt) = encoder
             .add_wrap_eth(weth, amount)
             .add_transfer_erc20(weth, executor_address, amount)
-            .add_aerodrome_swap_all(weth, usdc, deadline)
+            .add_aerodrome_swap_all(weth, usdc, None, None)
             .exec()
             .await?;
 
