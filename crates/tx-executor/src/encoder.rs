@@ -6,7 +6,6 @@ use alloy_chains::NamedChain;
 use alloy_primitives::{Address, Bytes, FixedBytes, U256};
 use alloy_rpc_types::TransactionReceipt;
 use alloy_sol_types::{SolCall, SolValue};
-use amms::bindings::iaerodromeclpool::IAerodromeCLPool::IAerodromeCLPoolCalls;
 use eyre::Result;
 use std::str::FromStr;
 use types::exchange::ExchangeName;
