@@ -12,6 +12,7 @@ pub struct Cycle {
 
 impl fmt::Display for Cycle {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let profit_perc = self.get_profit_perc();
         for (i, pool) in self.amms.iter().enumerate() {
             if i > 0 {
                 write!(f, " -> ")?;
@@ -26,7 +27,8 @@ impl fmt::Display for Cycle {
 
             write!(f, "{}:{}-{}", pool.exchange_name(), token_a, token_b)?;
         }
-        write!(f, "]")
+        write!(f, "] ")?;
+        write!(f, "Profit: {}", profit_perc)
     }
 }
 

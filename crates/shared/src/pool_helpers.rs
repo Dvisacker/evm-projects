@@ -790,6 +790,7 @@ pub fn db_univ2_pool_to_amm(pool: &DbUniV2Pool) -> Result<AMM, AMMError> {
             reserve_0: pool.reserve_0.parse().unwrap(),
             reserve_1: pool.reserve_1.parse().unwrap(),
             fee: pool.fee as u32,
+            stable: false, // TODO: fix this
             exchange_name,
             exchange_type,
             chain: chain.named().ok_or(AMMError::ParseError)?,

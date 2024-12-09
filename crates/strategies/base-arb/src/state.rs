@@ -1,9 +1,9 @@
 use alloy::primitives::Address;
 use alloy::providers::Provider;
 use amms::amm::{AutomatedMarketMaker, AMM};
-use amms::errors::AMMError;
 use amms::sync;
 use dashmap::DashMap;
+use eyre::{eyre, Result};
 use provider::SignerProvider;
 use shared::cycle::Cycle;
 use std::collections::{HashMap, HashSet};
@@ -75,14 +75,14 @@ impl State {
         current_pairs: &Vec<AMM>,
         circles: &mut Vec<Cycle>,
         seen: &mut HashSet<Address>,
-    ) -> Vec<Cycle> {
+    ) -> Result<Vec<Cycle>> {
         let mut circles_copy: Vec<Cycle> = circles.clone();
 
         for pair in pairs {
             let address = pair.address();
             let tokens = pair.tokens();
             let [token_a, token_b] = tokens.as_slice() else {
-                todo!();
+                todo!()
             };
             if seen.contains(&address) {
                 continue;
@@ -119,11 +119,11 @@ impl State {
                     &new_pairs,
                     &mut circles_copy,
                     &mut new_seen,
-                );
+                )?;
             }
         }
 
-        circles_copy
+        Ok(circles_copy)
     }
 
     /// Updates the active pools list
@@ -141,27 +141,29 @@ impl State {
     }
 
     /// Returns cycles that contain any of the provided AMMs
-    pub fn get_updated_cycles(&self, amms: Vec<AMM>) -> Vec<Cycle> {
+    pub fn get_updated_cycles(&self, amms: Vec<AMM>) -> Result<Vec<Cycle>> {
         let mut cycles = vec![];
         for amm in amms {
             let pool_address = amm.address();
             let pool_cycles = self.pools_cycles_map.get(&pool_address);
-            if let Some(c) = pool_cycles {
-                let cycle_ids = c.iter().collect::<Vec<_>>();
-                for cycle_id in cycle_ids {
-                    let cycle = self.cycles.get(cycle_id).unwrap().clone();
+            if let Some(pool_cycles) = pool_cycles {
+                for cycle_id in pool_cycles.iter() {
+                    let cycle = self
+                        .cycles
+                        .get(cycle_id)
+                        .ok_or_else(|| eyre!("Cycle not found with id: {}", cycle_id))?
+                        .clone();
                     cycles.push(cycle);
                 }
             }
         }
 
-        return cycles;
+        Ok(cycles)
     }
 
     /// Updates all possible trading cycles in the system
     /// Returns cycles that meet the profit threshold (-0.50%)
-    pub fn update_cycles(&mut self) -> Vec<Cycle> {
-        let mut nb_cycles = 0;
+    pub fn update_cycles(&mut self) -> Result<Vec<Cycle>> {
         let mut all_cycles = vec![];
 
         // Find cycles starting from each token in inventory
@@ -180,7 +182,7 @@ impl State {
                 &vec![],
                 &mut vec![],
                 &mut HashSet::new(),
-            );
+            )?;
 
             all_cycles.extend(cycles);
         }
@@ -189,43 +191,57 @@ impl State {
 
         // Filter cycles by profit threshold
         let profit_threshold = -0.50;
-        let potential_cycles: Vec<Cycle> = all_cycles
-            .into_iter()
-            .filter(|cycle| cycle.get_profit_perc() > profit_threshold)
-            .collect();
 
         // Update the pools_cycles_map with new cycles
-        for cycle in potential_cycles.clone() {
-            nb_cycles += 1;
-            let id = cycle.id.clone();
-            self.cycles.insert(id.clone(), cycle.clone());
+        for cycle in all_cycles.clone() {
+            let profit_perc = cycle.get_profit_perc();
+            if profit_perc > profit_threshold {
+                let id = cycle.id.clone();
+                self.cycles.insert(id.clone(), cycle.clone());
 
-            for pool in &cycle.amms {
-                let pool_address = pool.address();
-                let pool_cycles = self.pools_cycles_map.get_mut(&pool_address);
-                if let Some(mut c) = pool_cycles {
-                    c.insert(id.clone());
-                } else {
-                    self.pools_cycles_map
-                        .insert(pool_address, HashSet::from([id.clone()]));
+                for pool in &cycle.amms {
+                    let pool_address = pool.address();
+                    let pool_cycles = self.pools_cycles_map.get_mut(&pool_address);
+                    if let Some(mut c) = pool_cycles {
+                        c.insert(id.clone());
+                    } else {
+                        self.pools_cycles_map
+                            .insert(pool_address, HashSet::from([id.clone()]));
+                    }
                 }
+            } else {
+                tracing::info!("Cycle {} has no profit", cycle);
+                let amms = cycle.amms.clone();
+                for amm in amms {
+                    let pool_address = amm.address();
+                    let pool_cycles = self.pools_cycles_map.get_mut(&pool_address);
+                    if let Some(mut c) = pool_cycles {
+                        c.remove(&cycle.id);
+                    }
+                }
+                self.cycles.remove(&cycle.id);
             }
         }
 
-        info!("Found {} cycles", self.cycles.len());
-        info!("Nb cycles: {}", nb_cycles);
-        return potential_cycles;
+        let profitable_cycles: Vec<Cycle> =
+            self.cycles.values().map(|cycle| cycle.clone()).collect();
+
+        // info!("Found {} cycles", self.cycles.len());
+        // info!("Nb cycles: {}", nb_cycles);
+        Ok(profitable_cycles)
     }
 
     /// Synchronizes pool states with current blockchain state
-    pub async fn update_pools(&self) -> Result<(), AMMError> {
+    pub async fn update_pools(&self) -> Result<()> {
         let mut amms: Vec<AMM> = self
             .pools
             .iter()
             .map(|entry| entry.value().clone())
             .collect();
 
-        sync::populate_amms(&mut amms, self.block_number, self.provider.clone()).await?;
+        sync::populate_amms(&mut amms, self.block_number, self.provider.clone())
+            .await
+            .map_err(|e| eyre!("AMM Error: {}", e))?;
 
         for amm in amms {
             self.pools.insert(amm.address(), amm);
@@ -235,7 +251,7 @@ impl State {
     }
 
     /// Updates the current block number
-    pub async fn update_block_number(&mut self, block_number: u64) -> Result<(), AMMError> {
+    pub async fn update_block_number(&mut self, block_number: u64) -> Result<()> {
         self.block_number = block_number;
         Ok(())
     }

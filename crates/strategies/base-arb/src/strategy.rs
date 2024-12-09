@@ -30,6 +30,7 @@ use diesel::PgConnection;
 use engine::types::Strategy;
 use eyre::Result;
 use provider::SignerProvider;
+use shared::cycle::Cycle;
 use shared::pool_helpers::db_pools_to_amms;
 use std::sync::Arc;
 use tracing::{debug, info, warn};
@@ -87,7 +88,6 @@ impl BaseArb {
     }
 
     fn log_arbitrage_cycles(&self, cycles: &[impl std::fmt::Display]) {
-        info!("Found {} arbitrage cycles", cycles.len());
         for cycle in cycles {
             info!("{}", cycle);
         }
@@ -105,7 +105,7 @@ impl Strategy<Event, Action> for BaseArb {
         self.load_pools().await?;
         info!("Updated pools: {:?}", self.state.pools);
 
-        let arb_cycles = self.state.update_cycles();
+        let arb_cycles = self.state.update_cycles()?;
         self.log_arbitrage_cycles(&arb_cycles);
 
         Ok(())
@@ -118,6 +118,7 @@ impl Strategy<Event, Action> for BaseArb {
     }
 
     async fn process_event(&mut self, event: Event) -> Vec<Action> {
+        let mut updated_cycles = vec![];
         match event {
             Event::NewBlock(event) => {
                 if let Err(e) = self
@@ -129,61 +130,71 @@ impl Strategy<Event, Action> for BaseArb {
                 }
             }
             Event::Log(log) => {
-                self.handle_log_event(log).await;
+                updated_cycles = self.handle_log_event(log).await;
             }
             _ => {}
         }
+
+        info!("Updated cycles: {:?}", updated_cycles.len());
+        self.log_arbitrage_cycles(&updated_cycles);
         vec![]
     }
 }
 
 // Private implementation details
 impl BaseArb {
-    async fn handle_log_event(&mut self, log: Log) {
+    async fn handle_log_event(&mut self, log: Log) -> Vec<Cycle> {
         let pool_address = log.address();
         let block_number = log.block_number.expect("Log must have block number");
 
         if let Err(e) = self.state.update_block_number(block_number).await {
             warn!("Failed to update block number: {}", e);
-            return;
+            return vec![];
         }
 
         match log.topics()[0] {
             topic if topic == IUniswapV2Pool::Swap::SIGNATURE_HASH => {
                 debug!("New uniswap v2 swap on pool {:?}", pool_address);
+                return vec![];
             }
             topic if topic == IUniswapV2Pool::Sync::SIGNATURE_HASH => {
-                if let Err(e) = self.handle_v2_sync(pool_address, log.clone()).await {
+                let updated_cycles = self.handle_v2_sync(pool_address, log.clone()).await;
+                return updated_cycles.unwrap_or_else(|e| {
                     warn!("Failed to handle uniswap v2 sync: {}", e);
                     debug!("Pool: {:?}, Log: {:?}", pool_address, log);
-                }
+                    vec![]
+                });
             }
             topic if topic == IAerodromePool::Sync::SIGNATURE_HASH => {
-                if let Err(e) = self.handle_v2_sync(pool_address, log.clone()).await {
+                let updated_cycles = self.handle_v2_sync(pool_address, log.clone()).await;
+                return updated_cycles.unwrap_or_else(|e| {
                     warn!("Failed to handle aerodrome sync: {}", e);
                     debug!("Pool: {:?}, Log: {:?}", pool_address, log);
-                }
+                    vec![]
+                });
             }
             _ => {}
         }
+
+        vec![]
     }
 
     // handles sync for both uniswap v2 and ve33 pools
-    async fn handle_v2_sync(&mut self, pool_address: Address, log: Log) -> Result<()> {
+    async fn handle_v2_sync(&mut self, pool_address: Address, log: Log) -> Result<Vec<Cycle>> {
         if let Some(mut pool) = self.state.pools.get_mut(&pool_address) {
             return self.handle_known_pool_sync(&mut pool, log).await;
         }
 
         if self.state.inactive_pools.contains_key(&pool_address) {
-            return self.handle_inactive_pool_sync(pool_address).await;
+            self.handle_inactive_pool_sync(pool_address).await?;
+            return Ok(vec![]);
         }
 
-        self.handle_unknown_pool_sync(pool_address).await
+        self.handle_unknown_pool_sync(pool_address).await?;
+        Ok(vec![])
     }
 
-    async fn handle_known_pool_sync(&self, pool: &mut AMM, log: Log) -> Result<()> {
-        info!("New uniswap v2 sync on known pool {:?}", pool.address());
-
+    async fn handle_known_pool_sync(&self, pool: &mut AMM, log: Log) -> Result<Vec<Cycle>> {
         let price_before = pool.calculate_price(pool.tokens()[0])?;
         pool.sync_from_log(log)?;
         let price_after = pool.calculate_price(pool.tokens()[0])?;
@@ -195,20 +206,18 @@ impl BaseArb {
             price_after
         );
 
-        let amm_slice: &mut [AMM] = std::slice::from_mut(pool);
-        let updated_cycles = self.state.get_updated_cycles(amm_slice.to_vec());
-        self.log_arbitrage_cycles(&updated_cycles);
-
-        Ok(())
+        let amms: &mut [AMM] = std::slice::from_mut(pool);
+        let updated_cycles = self.state.get_updated_cycles(amms.to_vec())?;
+        Ok(updated_cycles)
     }
 
     async fn handle_inactive_pool_sync(&self, pool_address: Address) -> Result<()> {
-        info!("New uniswap v2 sync on inactive pool {:?}", pool_address);
+        info!("New sync on inactive pool {:?}", pool_address);
         Ok(())
     }
 
     async fn handle_unknown_pool_sync(&self, pool_address: Address) -> Result<()> {
-        info!("New uniswap v2 sync on unknown pool {:?}", pool_address);
+        info!("New v2 sync on unknown pool {:?}", pool_address);
 
         let pool_data = fetch_v2_pool_data_batch_request(&[pool_address], self.client.clone())
             .await
