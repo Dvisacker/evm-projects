@@ -3294,7 +3294,6 @@ dependencies = [
  "addressbook",
  "alloy 0.7.0",
  "alloy-chains",
- "anyhow",
  "async-trait",
  "dotenv",
  "eyre",

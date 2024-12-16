@@ -103,7 +103,7 @@ impl Strategy<Event, Action> for BaseArb {
         self.state.update_block_number(block_number).await?;
 
         self.load_pools().await?;
-        info!("Updated pools: {:?}", self.state.pools);
+        info!("Loaded {} pools", self.state.pools.len());
 
         let arb_cycles = self.state.update_cycles()?;
         self.log_arbitrage_cycles(&arb_cycles);

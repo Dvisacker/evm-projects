@@ -17,8 +17,6 @@ impl fmt::Display for Cycle {
             if i > 0 {
                 write!(f, " -> ")?;
             }
-            // let address = pool.address();
-            // write!(f, "{}", address)?;
 
             let token_symbols = pool.token_symbols();
             let [token_a, token_b] = token_symbols.as_slice() else {

@@ -26,5 +26,4 @@ tokio-stream = { version = "0.1", features = ['sync'] }
 
 
 ## misc
-anyhow = "1.0.70"
 tracing = { workspace = true }
