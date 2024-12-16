@@ -85,7 +85,7 @@ where
     P: Provider<T, Ethereum> + Clone,
 {
     pub async fn new(address: Address, chain: NamedChain, provider: P) -> Self {
-        let executor = BatchExecutorInstance::new(address, provider.clone());
+        let executor = BatchExecutorInstance::new(address, provider);
         let addressbook = Addressbook::load().unwrap();
         let total_value = U256::ZERO;
         let owner = executor.OWNER().call().await.unwrap()._0;

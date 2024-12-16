@@ -14,7 +14,6 @@ tracing = { workspace = true }
 mev-share = "0.1.4"
 async-trait = "0.1.64"
 engine = { path = "../../engine" }
-anyhow = "1.0.70"
 tracing-subscriber = "0.3.16"
 csv = "1.1"
 serde = { version = "1", features = ["derive"] }
@@ -24,6 +23,7 @@ bindings = { path = "../../bindings" }
 serde_json = "1.0"
 addressbook = { path = "../../addressbook" }
 amms = { path = "../../amms" }
+tx-executor = { path = "../../tx-executor" }
 dashmap = "6.0.1"
 shared = { path = "../../shared" }
 db = { path = "../../db" }

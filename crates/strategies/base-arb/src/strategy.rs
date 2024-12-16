@@ -1,6 +1,7 @@
 use super::types::{Action, Event};
 use crate::state::State;
 use addressbook::Addressbook;
+use alloy::primitives::{Bytes, U256};
 use alloy::providers::Provider;
 use alloy::{dyn_abi::DynSolValue, primitives::Address, rpc::types::Log};
 use alloy_chains::Chain;
@@ -30,15 +31,17 @@ use diesel::PgConnection;
 use engine::types::Strategy;
 use eyre::Result;
 use provider::SignerProvider;
-use shared::cycle::Cycle;
+use shared::cycle::{get_most_profitable_cycle, Cycle};
 use shared::pool_helpers::db_pools_to_amms;
 use std::sync::Arc;
 use tracing::{debug, info, warn};
+use tx_executor::{get_default_encoder, BasicEncoder};
 
 #[derive(Debug, Clone)]
 pub struct BaseArb {
     pub chain: Chain,
     pub client: Arc<SignerProvider>,
+    pub encoder: Option<Arc<BasicEncoder>>,
     pub state: State,
     pub db_url: String,
 }
@@ -54,9 +57,15 @@ impl BaseArb {
         Self {
             chain,
             client: client.clone(),
+            encoder: None,
             state: State::new(client.clone(), vec![weth]),
             db_url,
         }
+    }
+
+    async fn load_encoder(&mut self) -> Result<()> {
+        self.encoder = Some(Arc::new(get_default_encoder(self.chain).await));
+        Ok(())
     }
 
     async fn load_pools(&mut self) -> Result<()> {
@@ -92,6 +101,76 @@ impl BaseArb {
             info!("{}", cycle);
         }
     }
+
+    // this encode the cycle through the executor contract
+    async fn get_cycle_calldata(
+        &self,
+        token_first: Address,
+        amount_in: U256,
+        cycle: &Cycle,
+    ) -> Result<Vec<Bytes>> {
+        let mut encoder = get_default_encoder(self.chain).await;
+
+        let amms = cycle.amms.clone();
+        let first_amm = amms.first().unwrap();
+        let remaining_amms = amms[1..].to_vec();
+        let first_amm_tokens = first_amm.tokens();
+        let token_a = first_amm_tokens[0];
+        let token_b = first_amm_tokens[1];
+
+        let token_in: Address;
+        let token_out: Address;
+
+        if token_a == token_first {
+            token_in = token_a;
+            token_out = token_b;
+        } else {
+            token_in = token_b;
+            token_out = token_a;
+        };
+
+        let amount_in = amount_in;
+        let stable = if let AMM::Ve33Pool(ve33_pool) = first_amm {
+            ve33_pool.stable
+        } else {
+            eyre::bail!("Pool is not a aerodrome pool");
+        };
+
+        encoder.add_aerodrome_router_swap(amount_in, token_in, token_out, None, Some(stable));
+
+        let mut last_token = token_out;
+
+        for amm in remaining_amms {
+            let tokens = amm.tokens();
+            let token_a = tokens[0];
+            let token_b = tokens[1];
+            let token_out: Address;
+            let token_in: Address;
+
+            if last_token == token_a {
+                token_out = token_b;
+                token_in = token_a;
+            } else if last_token == token_b {
+                token_out = token_a;
+                token_in = token_b;
+            } else {
+                todo!()
+            }
+
+            let stable = if let AMM::Ve33Pool(ve33_pool) = amm {
+                ve33_pool.stable
+            } else {
+                eyre::bail!("Pool is not an aerodrome pool");
+            };
+
+            encoder.add_aerodrome_swap_all(token_in, token_out, None, Some(stable));
+            last_token = token_out;
+        }
+
+        let (calldata, _) = encoder.get();
+
+        Ok(calldata)
+    }
 }
 
 #[async_trait]
@@ -104,6 +183,8 @@ impl Strategy<Event, Action> for BaseArb {
 
         self.load_pools().await?;
         info!("Loaded {} pools", self.state.pools.len());
+
+        self.load_encoder().await?;
 
         let arb_cycles = self.state.update_cycles()?;
         self.log_arbitrage_cycles(&arb_cycles);
@@ -138,6 +219,19 @@ impl Strategy<Event, Action> for BaseArb {
         info!("Updated cycles: {:?}", updated_cycles.len());
         self.log_arbitrage_cycles(&updated_cycles);
         info!("--------------------------------");
+
+        let most_profitable_cycle = get_most_profitable_cycle(updated_cycles);
+
+        if let Some(cycle) = most_profitable_cycle {
+            info!("Most profitable cycle: {}", cycle);
+            let token_first = cycle.get_entry_token();
+            let amount_in = U256::from(1000000000);
+            let calldata = self
+                .get_cycle_calldata(token_first, amount_in, &cycle)
+                .await;
+            info!("Calldata for the most profitable cycle: {:?}", calldata);
+        }
+
         vec![]
     }
 }

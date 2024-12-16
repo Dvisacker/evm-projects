@@ -89,3 +89,17 @@ impl Cycle {
         profit_perc
     }
 }
+
+pub fn sort_cycle_by_profit(cycles: Vec<Cycle>) -> Vec<Cycle> {
+    let mut cycles = cycles;
+    cycles.sort_by(|a, b| {
+        b.get_profit_perc()
+            .partial_cmp(&a.get_profit_perc())
+            .unwrap()
+    });
+    cycles
+}
+
+pub fn get_most_profitable_cycle(cycles: Vec<Cycle>) -> Option<Cycle> {
+    sort_cycle_by_profit(cycles).first().cloned()
+}

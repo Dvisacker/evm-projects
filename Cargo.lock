@@ -2039,7 +2039,6 @@ dependencies = [
  "alloy-chains",
  "alloy-sol-types",
  "amms",
- "anyhow",
  "async-trait",
  "bindings",
  "csv",
@@ -2057,6 +2056,7 @@ dependencies = [
  "tokio",
  "tracing",
  "tracing-subscriber",
+ "tx-executor",
  "types",
 ]
 
