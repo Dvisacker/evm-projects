@@ -496,7 +496,6 @@ mod tests {
     #[test]
     fn test_load_addressbook() {
         let current_dir = std::env::current_dir().unwrap();
-        println!("Current directory: {:?}", current_dir);
         let addressbook = Addressbook::load().expect("Failed to load addressbook");
 
         // Test that we can load basic chain configs

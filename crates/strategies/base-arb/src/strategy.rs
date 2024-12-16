@@ -137,6 +137,7 @@ impl Strategy<Event, Action> for BaseArb {
 
         info!("Updated cycles: {:?}", updated_cycles.len());
         self.log_arbitrage_cycles(&updated_cycles);
+        info!("--------------------------------");
         vec![]
     }
 }

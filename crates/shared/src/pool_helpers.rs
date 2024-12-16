@@ -688,10 +688,6 @@ where
     let named_chain = chain.named().unwrap();
     let weth_address = addressbook.get_weth(&named_chain).unwrap();
     let exchange_name: ExchangeName = ExchangeName::UniswapV3;
-    println!(
-        "Named chain {:?}. Exchange_name {:?}",
-        named_chain, exchange_name
-    );
     let weth_usdc_address = addressbook
         .get_pool_by_name(&named_chain, exchange_name, "WETH-USDC")
         .expect("WETH-USDC pool not found");
