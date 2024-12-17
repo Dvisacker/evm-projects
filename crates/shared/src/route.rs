@@ -13,18 +13,17 @@ pub fn simulate_route(
 
     for pool in route {
         let tokens = pool.tokens();
-        let [token_a, token_b] = tokens.as_slice() else {
-            todo!()
-        };
+        let token_a = tokens[0];
+        let token_b = tokens[1];
 
         let token_out;
 
-        if token_in == *token_a {
-            token_in = *token_b;
-            token_out = *token_a;
+        if token_in == token_a {
+            token_in = token_b;
+            token_out = token_a;
         } else {
-            token_in = *token_a;
-            token_out = *token_b;
+            token_in = token_a;
+            token_out = token_b;
         }
 
         amount_out = pool.simulate_swap(token_in, amount_in, token_out).unwrap();

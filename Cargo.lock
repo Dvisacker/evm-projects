@@ -8544,6 +8544,18 @@ dependencies = [
 [[package]]
 name = "tx-simulator"
 version = "0.1.0"
+dependencies = [
+ "addressbook",
+ "alloy 0.7.0",
+ "alloy-chains",
+ "alloy-primitives 0.8.12",
+ "amms",
+ "dotenv",
+ "eyre",
+ "provider",
+ "tokio",
+ "tracing",
+]
 
 [[package]]
 name = "typenum"
