@@ -6,18 +6,20 @@ import {IUniswapV3QuoterV2} from "./interfaces/IUniswapV3QuoterV2.sol";
 import {ICurvePool} from "./interfaces/ICurvePool.sol";
 import {UniswapV2Library} from "./libraries/UniswapV2Library.sol";
 import {SafeMath} from "./libraries/SafeMath.sol";
+import {IRouter, IAerodromeRouter} from "./interfaces/IAerodromeRouter.sol";
 
 // Credits to https://github.com/solidquant/whack-a-mole
 contract TxSimulator {
     using SafeMath for uint256;
 
     struct SwapParams {
-        uint8 protocol; // 0 (UniswapV2), 1 (UniswapV3), 2 (Curve Finance)
-        address handler; // UniswapV2: Factory, UniswapV3: Quoter, Curve: Pool
+        uint8 protocol; // 0 (UniswapV2), 1 (UniswapV3), 2 (Curve Finance) // 3 (Aerodrome)
+        address handler; // UniswapV2: Factory, UniswapV3: Quoter, Curve: Pool, Aerodrome: Router
         address tokenIn;
         address tokenOut;
         uint24 fee; // only used in Uniswap V3
         uint256 amount; // amount in (1 USDC = 1,000,000 / 1 MATIC = 1 * 10 ** 18)
+        bool stable; // only used in Aerodrome
     }
 
     constructor() {}
@@ -39,6 +41,10 @@ contract TxSimulator {
                 amountOut = simulateUniswapV2SwapIn(params);
             } else if (params.protocol == 1) {
                 amountOut = simulateUniswapV3SwapIn(params);
+            } else if (params.protocol == 2) {
+                amountOut = simulateCurveSwapIn(params);
+            } else if (params.protocol == 3) {
+                amountOut = simulateAeroSwapIn(params);
             }
 
             unchecked {
@@ -94,5 +100,17 @@ contract TxSimulator {
         }
 
         amountOut = pool.get_dy(i, j, params.amount);
+    }
+
+    function simulateAeroSwapIn(SwapParams memory params) public returns (uint256 amountOut) {
+        IAerodromeRouter router = IAerodromeRouter(payable(params.handler));
+        IRouter.Route[] memory route = new IRouter.Route[](1);
+
+        route[0].from = params.tokenIn;
+        route[0].to = params.tokenOut;
+        route[0].stable = params.stable;
+        route[0].factory = params.handler;
+
+        amountOut = router.getAmountsOut(params.amount, route)[1];
     }
 }
