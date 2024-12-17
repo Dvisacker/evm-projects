@@ -22,3 +22,15 @@
 [submodule "contracts/lib/morpho-blue"]
 	path = contracts/lib/morpho-blue
 	url = https://github.com/morpho-org/morpho-blue
+[submodule "crates/tx-simulator/tx-simulator/lib/forge-std"]
+	path = crates/tx-simulator/tx-simulator/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "crates/tx-simulator/lib/forge-std"]
+	path = crates/tx-simulator/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "crates/tx-simulator/contracts/lib/forge-std"]
+	path = crates/tx-simulator/contracts/lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "crates/tx-simulator/contracts/lib/openzeppelin-contracts"]
+	path = crates/tx-simulator/contracts/lib/openzeppelin-contracts
+	url = https://github.com/OpenZeppelin/openzeppelin-contracts
