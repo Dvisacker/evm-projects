@@ -32,6 +32,9 @@ generate-executor-binding:
     rm -rf $bindings_path
     forge bind --bindings-path $bindings_path --root $contract_root_path --module --alloy --alloy-version v0.5.4 --via-ir --overwrite
 
+generate-simulator-bindings:
+    forge bind --bindings-path ./crates/tx-simulator/src/bindings --root ./crates/tx-simulator/contracts --module --alloy --alloy-version v0.7.0 --via-ir --overwrite
+
 fmt: 
     cargo +nightly fmt --all
 
