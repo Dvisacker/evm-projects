@@ -1,0 +1,37 @@
+type Exchange {
+  id: String!
+  name: String!
+  exchangeVersion: String
+}
+
+type Token {
+  name: String!
+  decimals: Int
+  symbol: String!
+  topPairId: String!
+  marketCap: String
+  address: String!
+  volume: String!
+  liquidity: String!
+  exchanges: [Exchange!]!
+}
+
+type Pair {
+  address: String!
+}
+
+type PairWithMetadataResult {
+  results: [PairWithMetadata!]!
+}
+
+type PairWithMetadata {
+  pair: Pair!
+  backingToken: Token!
+  volume: String!
+  liquidity: String!
+}
+
+type Query {
+  listTopTokens(networkFilter: [Int!]): [Token!]!
+  listPairsWithMetadataForToken(tokenAddress: String!, networkId: Int!): PairWithMetadataResult!
+} 

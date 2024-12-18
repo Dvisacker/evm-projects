@@ -1,0 +1,17 @@
+query ListTopTokens($networks: [Int!]) {
+  listTopTokens(networkFilter: $networks) {
+    name
+    decimals
+    symbol
+    topPairId
+    marketCap
+    address
+    volume
+    liquidity
+    exchanges {
+      id
+      name
+      exchangeVersion
+    }
+  }
+} 
