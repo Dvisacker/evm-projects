@@ -5,18 +5,30 @@ use serde::{Deserialize, Serialize};
 #[derive(GraphQLQuery)]
 #[graphql(
     schema_path = "src/schema.graphql",
-    query_path = "src/queries/pairs_for_token.graphql",
+    query_path = "src/queries/query_pairs_for_token.graphql",
     response_derives = "Debug,Serialize,Deserialize"
 )]
-pub struct ListPairsForToken;
+pub struct QueryCodexPairsForToken;
 
 #[derive(GraphQLQuery)]
 #[graphql(
     schema_path = "src/schema.graphql",
-    query_path = "src/queries/top_tokens.graphql",
+    query_path = "src/queries/query_top_tokens.graphql",
     response_derives = "Debug,Serialize,Deserialize"
 )]
-pub struct ListTopTokens;
+pub struct QueryCodexTopTokens;
+
+#[derive(GraphQLQuery)]
+#[graphql(
+    schema_path = "src/schema.graphql",
+    query_path = "src/queries/filter_tokens.graphql",
+    response_derives = "Debug,Serialize,Deserialize,Default"
+)]
+pub struct QueryCodexFilterTokens;
+
+pub type Token = query_codex_top_tokens::QueryCodexTopTokensData;
+pub type Pairs = query_codex_pairs_for_token::QueryCodexPairsForTokenDataResults;
+pub type FilteredTokens = query_codex_filter_tokens::QueryCodexFilterTokensDataResults;
 
 pub struct CodexClient {
     client: reqwest::Client,
@@ -34,11 +46,11 @@ impl CodexClient {
     }
 
     pub async fn get_top_tokens(&self, networks: Vec<i64>) -> Result<Vec<Token>> {
-        let variables = list_top_tokens::Variables {
+        let variables = query_codex_top_tokens::Variables {
             networks: Some(networks),
         };
 
-        let request_body = ListTopTokens::build_query(variables);
+        let request_body = QueryCodexTopTokens::build_query(variables);
 
         let response = self
             .client
@@ -48,7 +60,7 @@ impl CodexClient {
             .send()
             .await?;
 
-        let response_body: Response<list_top_tokens::ResponseData> = response.json().await?;
+        let response_body: Response<query_codex_top_tokens::ResponseData> = response.json().await?;
 
         if let Some(errors) = response_body.errors {
             return Err(anyhow::anyhow!("GraphQL errors: {:?}", errors));
@@ -57,20 +69,21 @@ impl CodexClient {
         let data = response_body
             .data
             .ok_or_else(|| anyhow::anyhow!("No data returned"))?;
-        Ok(data.list_top_tokens.into_iter().map(Token::from).collect())
+
+        Ok(data.data.unwrap())
     }
 
     pub async fn get_pairs_for_token(
         &self,
         token_address: String,
         network_id: i64,
-    ) -> Result<Vec<PairMetadata>> {
-        let variables = list_pairs_for_token::Variables {
+    ) -> Result<Vec<Pairs>> {
+        let variables = query_codex_pairs_for_token::Variables {
             token_address,
             network_id,
         };
 
-        let request_body = ListPairsForToken::build_query(variables);
+        let request_body = QueryCodexPairsForToken::build_query(variables);
 
         let response = self
             .client
@@ -80,7 +93,8 @@ impl CodexClient {
             .send()
             .await?;
 
-        let response_body: Response<list_pairs_for_token::ResponseData> = response.json().await?;
+        let response_body: Response<query_codex_pairs_for_token::ResponseData> =
+            response.json().await?;
 
         if let Some(errors) = response_body.errors {
             return Err(anyhow::anyhow!("GraphQL errors: {:?}", errors));
@@ -90,70 +104,143 @@ impl CodexClient {
             .data
             .ok_or_else(|| anyhow::anyhow!("No data returned"))?;
 
-        Ok(data
-            .list_pairs_with_metadata_for_token
-            .results
-            .into_iter()
-            .map(|result| PairMetadata {
-                pair_address: result.pair.address,
-                backing_token_address: result.backing_token.address,
-                volume: result.volume,
-                liquidity: result.liquidity,
-            })
-            .collect())
+        Ok(data.data.results)
     }
-}
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Exchange {
-    pub id: String,
-    pub name: String,
-    pub exchange_version: Option<String>,
-}
+    pub async fn filter_tokens(
+        &self,
+        liquidity_min: Option<f64>,
+        txn_count_min: Option<f64>,
+        networks: Vec<i64>,
+        exchange_addresses: Option<Vec<String>>,
+        fdv_min: Option<f64>,
+        market_cap_min: Option<f64>,
+        limit: Option<i64>,
+        ranking_attribute: query_codex_filter_tokens::TokenRankingAttribute,
+        ranking_direction: query_codex_filter_tokens::RankingDirection,
+    ) -> Result<Vec<FilteredTokens>> {
+        let variables = query_codex_filter_tokens::Variables {
+            filters: query_codex_filter_tokens::TokenFilters {
+                fdv: fdv_min.map(|min| query_codex_filter_tokens::NumberFilter {
+                    gt: Some(min),
+                    gte: None,
+                    lt: None,
+                    lte: None,
+                }),
+                trending_ignored: None,
+                market_cap: market_cap_min.map(|min| query_codex_filter_tokens::NumberFilter {
+                    gt: Some(min),
+                    gte: None,
+                    lt: None,
+                    lte: None,
+                }),
+                liquidity: liquidity_min.map(|min| query_codex_filter_tokens::NumberFilter {
+                    gt: Some(min),
+                    gte: None,
+                    lt: None,
+                    lte: None,
+                }),
+                txn_count24: txn_count_min.map(|min| query_codex_filter_tokens::NumberFilter {
+                    gt: Some(min),
+                    gte: None,
+                    lt: None,
+                    lte: None,
+                }),
+                age: None,
+                exchange_address: exchange_addresses
+                    .map(|addresses| addresses.into_iter().map(|e| e.into()).collect()),
+                include_scams: None,
+                is_verified: None,
+                potential_scam: None,
+                exchange_id: None,
+                holders: None,
+                txn_count1: None,
+                txn_count12: None,
+                volume1: None,
+                volume4: None,
+                volume12: None,
+                volume24: None,
+                network: Some(networks.into_iter().map(|n| n.into()).collect()),
+                created_at: None,
+                last_transaction: None,
+                change1: None,
+                change12: None,
+                change24: None,
+                change4: None,
+                high1: None,
+                high12: None,
+                high24: None,
+                high4: None,
+                low1: None,
+                low12: None,
+                low24: None,
+                low4: None,
+                volume_change1: None,
+                volume_change12: None,
+                volume_change24: None,
+                volume_change4: None,
+                price_usd: None,
+                sell_count1: None,
+                sell_count12: None,
+                sell_count24: None,
+                sell_count4: None,
+                txn_count4: None,
+                unique_buys1: None,
+                unique_buys12: None,
+                unique_buys24: None,
+                unique_buys4: None,
+                unique_sells1: None,
+                unique_sells12: None,
+                unique_sells24: None,
+                unique_sells4: None,
+                unique_transactions1: None,
+                unique_transactions12: None,
+                unique_transactions24: None,
+                unique_transactions4: None,
+                buy_count1: None,
+                buy_count12: None,
+                buy_count24: None,
+                buy_count4: None,
+            },
+            rankings: Some(vec![query_codex_filter_tokens::TokenRanking {
+                attribute: Some(ranking_attribute),
+                direction: Some(ranking_direction),
+            }]),
+            limit,
+        };
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Token {
-    pub address: String,
-    pub symbol: String,
-    pub name: String,
-    pub decimals: Option<i64>,
-    pub top_pair_id: String,
-    pub market_cap: Option<String>,
-    pub volume: String,
-    pub liquidity: String,
-    pub exchanges: Vec<Exchange>,
-}
+        let request_body = QueryCodexFilterTokens::build_query(variables);
 
-impl From<list_top_tokens::ListTopTokensListTopTokens> for Token {
-    fn from(token: list_top_tokens::ListTopTokensListTopTokens) -> Self {
-        Self {
-            address: token.address,
-            symbol: token.symbol,
-            name: token.name,
-            decimals: token.decimals,
-            top_pair_id: token.top_pair_id,
-            market_cap: token.market_cap,
-            volume: token.volume,
-            liquidity: token.liquidity,
-            exchanges: token
-                .exchanges
-                .into_iter()
-                .map(|e| Exchange {
-                    id: e.id,
-                    name: e.name,
-                    exchange_version: e.exchange_version,
-                })
-                .collect(),
+        let response = self
+            .client
+            .post(&self.endpoint)
+            .header("Authorization", format!("{}", self.api_key))
+            .json(&request_body)
+            .send()
+            .await?;
+
+        let response_body: Response<query_codex_filter_tokens::ResponseData> =
+            response.json().await?;
+
+        if let Some(errors) = response_body.errors {
+            return Err(anyhow::anyhow!("GraphQL errors: {:?}", errors));
         }
-    }
-}
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct PairMetadata {
-    pub pair_address: String,
-    pub backing_token_address: String,
-    pub volume: String,
-    pub liquidity: String,
+        let data = response_body
+            .data
+            .ok_or_else(|| anyhow::anyhow!("No data returned"))?;
+
+        let result = data
+            .data
+            .unwrap()
+            .results
+            .unwrap()
+            .into_iter()
+            .filter_map(|r| r)
+            .collect();
+
+        Ok(result)
+    }
 }
 
 #[cfg(test)]
@@ -171,7 +258,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn test_get_pairs_for_token() {
+    async fn test_query_pairs_for_token() {
         dotenv::dotenv().ok();
         let api_key = std::env::var("CODEX_API_KEY").unwrap();
         let client = CodexClient::new(api_key);
@@ -185,5 +272,28 @@ mod tests {
             .unwrap();
         assert!(!pairs.is_empty());
         println!("First pair: {:?}", pairs.first().unwrap());
+    }
+
+    #[tokio::test]
+    async fn test_filter_tokens() {
+        dotenv::dotenv().ok();
+        let api_key = std::env::var("CODEX_API_KEY").unwrap();
+        let client = CodexClient::new(api_key);
+        let tokens = client
+            .filter_tokens(
+                Some(100000.0),
+                None,
+                vec![8453],
+                None,
+                Some(10000.0),
+                Some(1000.0),
+                Some(10),
+                query_codex_filter_tokens::TokenRankingAttribute::liquidity,
+                query_codex_filter_tokens::RankingDirection::DESC,
+            )
+            .await
+            .unwrap();
+        assert!(!tokens.is_empty());
+        println!("First filtered token: {:?}", tokens.first().unwrap());
     }
 }

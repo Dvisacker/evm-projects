@@ -1,0 +1,39 @@
+query QueryCodexFilterTokens(
+  $filters: TokenFilters!
+  $rankings: [TokenRanking!]
+  $limit: Int
+) {
+  data: filterTokens(
+    filters: $filters
+    rankings: $rankings
+    limit: $limit
+  ) {
+    count
+    page
+    results {
+      buyCount1
+      high1
+      txnCount1
+      uniqueTransactions1
+      volume1
+      liquidity
+      marketCap
+      priceUSD
+      pair {
+        token0
+        token1
+      }
+      exchanges {
+        address
+        name
+      }
+      token {
+        address
+        decimals
+        name
+        networkId
+        symbol
+      }
+    }
+  }
+} 

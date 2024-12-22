@@ -163,6 +163,21 @@ pub fn compute_v3_pool_address(
     ))
 }
 
+// should work for pools on aerodrome/velodrome
+pub fn compute_aerodrome_pool_address(
+    chain: &NamedChain,
+    exchange_name: ExchangeName,
+    token_a: Address,
+    token_b: Address,
+) -> Result<Address> {
+    let addressbook = Addressbook::load().unwrap();
+    let factory_address = addressbook
+        .get_factory(chain, exchange_name)
+        .ok_or_else(|| eyre!("Factory address not found"))?;
+
+    Ok(Address::ZERO)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

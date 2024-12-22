@@ -1,5 +1,5 @@
-query ListTopTokens($networks: [Int!]) {
-  listTopTokens(networkFilter: $networks) {
+query QueryCodexTopTokens($networks: [Int!]) {
+  data: listTopTokens(networkFilter: $networks) {
     name
     decimals
     symbol
