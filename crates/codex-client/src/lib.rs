@@ -149,7 +149,7 @@ impl CodexClient {
                 age: None,
                 exchange_address: exchange_addresses
                     .map(|addresses| addresses.into_iter().map(|e| e.into()).collect()),
-                include_scams: None,
+                include_scams: Some(false),
                 is_verified: None,
                 potential_scam: None,
                 exchange_id: None,
@@ -236,7 +236,7 @@ impl CodexClient {
             .results
             .unwrap()
             .into_iter()
-            .filter_map(|r| r)
+            .filter_map(|r| r) // filter out None values
             .collect();
 
         Ok(result)
@@ -288,12 +288,18 @@ mod tests {
                 Some(10000.0),
                 Some(1000.0),
                 Some(10),
-                query_codex_filter_tokens::TokenRankingAttribute::liquidity,
+                query_codex_filter_tokens::TokenRankingAttribute::volume24,
                 query_codex_filter_tokens::RankingDirection::DESC,
             )
             .await
             .unwrap();
         assert!(!tokens.is_empty());
-        println!("First filtered token: {:?}", tokens.first().unwrap());
+        println!(
+            "Top tokens by volume: {:#?}",
+            tokens
+                .into_iter()
+                .map(|t| t.token.unwrap().name.unwrap())
+                .collect::<Vec<String>>()
+        );
     }
 }
