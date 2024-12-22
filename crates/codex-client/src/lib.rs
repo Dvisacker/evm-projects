@@ -26,10 +26,18 @@ pub struct QueryCodexTopTokens;
 )]
 pub struct QueryCodexFilterTokens;
 
+#[derive(GraphQLQuery)]
+#[graphql(
+    schema_path = "src/schema.graphql",
+    query_path = "src/queries/filter_pairs.graphql",
+    response_derives = "Debug,Serialize,Deserialize,Default,Clone"
+)]
+pub struct QueryCodexFilterPairs;
+
 pub type Token = query_codex_top_tokens::QueryCodexTopTokensData;
 pub type Pairs = query_codex_pairs_for_token::QueryCodexPairsForTokenDataResults;
 pub type FilteredTokens = query_codex_filter_tokens::QueryCodexFilterTokensDataResults;
-
+pub type FilteredPairs = query_codex_filter_pairs::QueryCodexFilterPairsDataResults;
 pub struct CodexClient {
     client: reqwest::Client,
     api_key: String,
@@ -241,6 +249,126 @@ impl CodexClient {
 
         Ok(result)
     }
+
+    pub async fn filter_pairs(
+        &self,
+        liquidity_min: Option<f64>,
+        txn_count_min: Option<f64>,
+        networks: Vec<i64>,
+        exchange_addresses: Option<Vec<String>>,
+        fdv_min: Option<f64>,
+        market_cap_min: Option<f64>,
+        limit: Option<i64>,
+        ranking_attribute: query_codex_filter_pairs::PairRankingAttribute,
+        ranking_direction: query_codex_filter_pairs::RankingDirection,
+    ) -> Result<Vec<FilteredPairs>> {
+        let variables = query_codex_filter_pairs::Variables {
+            filters: query_codex_filter_pairs::PairFilters {
+                last_transaction: None,
+                potential_scam: None,
+                trending_ignored: None,
+                liquidity: liquidity_min.map(|min| query_codex_filter_pairs::NumberFilter {
+                    gt: Some(min),
+                    gte: None,
+                    lt: None,
+                    lte: None,
+                }),
+                txn_count24: txn_count_min.map(|min| query_codex_filter_pairs::NumberFilter {
+                    gt: Some(min),
+                    gte: None,
+                    lt: None,
+                    lte: None,
+                }),
+                exchange_address: exchange_addresses
+                    .map(|addresses| addresses.into_iter().map(|e| e.into()).collect()),
+                volume_change1: None,
+                volume_change12: None,
+                volume_change24: None,
+                volume_change4: None,
+                sell_count1: None,
+                sell_count12: None,
+                sell_count24: None,
+                sell_count4: None,
+                txn_count4: None,
+                unique_buys1: None,
+                unique_buys12: None,
+                unique_buys24: None,
+                unique_buys4: None,
+                unique_sells1: None,
+                unique_sells12: None,
+                unique_sells24: None,
+                unique_sells4: None,
+                unique_transactions1: None,
+                unique_transactions12: None,
+                unique_transactions24: None,
+                unique_transactions4: None,
+                buy_count1: None,
+                buy_count12: None,
+                buy_count24: None,
+                buy_count4: None,
+                created_at: None,
+                high_price1: None,
+                high_price12: None,
+                high_price24: None,
+                high_price4: None,
+                locked_liquidity_percentage: None,
+                low_price1: None,
+                low_price12: None,
+                low_price24: None,
+                low_price4: None,
+                price: None,
+                price_change1: None,
+                price_change12: None,
+                price_change24: None,
+                price_change4: None,
+                token_address: None,
+                txn_count1: None,
+                txn_count12: None,
+                volume_usd1: None,
+                volume_usd12: None,
+                volume_usd24: None,
+                volume_usd4: None,
+                network: Some(networks.into_iter().map(|n| n.into()).collect()),
+            },
+            rankings: Some(vec![query_codex_filter_pairs::PairRanking {
+                attribute: Some(ranking_attribute),
+                direction: Some(ranking_direction),
+            }]),
+            limit,
+        };
+
+        let request_body = QueryCodexFilterPairs::build_query(variables);
+
+        let response = self
+            .client
+            .post(&self.endpoint)
+            .header("Authorization", format!("{}", self.api_key))
+            .json(&request_body)
+            .send()
+            .await?;
+
+        let response_body: Response<query_codex_filter_pairs::ResponseData> =
+            response.json().await?;
+
+        if let Some(errors) = response_body.errors {
+            return Err(anyhow::anyhow!("GraphQL errors: {:?}", errors));
+        }
+
+        let data = response_body
+            .data
+            .ok_or_else(|| anyhow::anyhow!("No data returned"))?;
+
+        let result = data
+            .data
+            .unwrap()
+            .results
+            .unwrap()
+            .into_iter()
+            .filter_map(|r| r) // filter out None values
+            .collect();
+
+        Ok(result)
+    }
 }
 
 #[cfg(test)]
@@ -299,6 +427,39 @@ mod tests {
             tokens
                 .into_iter()
                 .map(|t| t.token.unwrap().name.unwrap())
+                .collect::<Vec<String>>()
+        );
+    }
+
+    #[tokio::test]
+    async fn test_filter_pairs() {
+        dotenv::dotenv().ok();
+        let api_key = std::env::var("CODEX_API_KEY").unwrap();
+        let client = CodexClient::new(api_key);
+        let pairs = client
+            .filter_pairs(
+                Some(100000.0),
+                None,
+                vec![8453],
+                None,
+                Some(10000.0),
+                Some(1000.0),
+                Some(10),
+                query_codex_filter_pairs::PairRankingAttribute::volumeUSD24,
+                query_codex_filter_pairs::RankingDirection::DESC,
+            )
+            .await
+            .unwrap();
+        assert!(!pairs.is_empty());
+        println!(
+            "Top pairs by volume: {:#?}",
+            pairs
+                .into_iter()
+                .map(|p| format!(
+                    "{}-{}",
+                    p.clone().pair.unwrap().token0,
+                    p.clone().pair.unwrap().token1
+                ))
                 .collect::<Vec<String>>()
         );
     }

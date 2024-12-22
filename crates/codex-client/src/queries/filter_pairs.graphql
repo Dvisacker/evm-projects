@@ -1,0 +1,46 @@
+query QueryCodexFilterPairs(
+  $filters: PairFilters!
+  $rankings: [PairRanking!]
+  $limit: Int
+) {
+  data: filterPairs(
+    filters: $filters
+    rankings: $rankings
+    limit: $limit
+  ) {
+    count
+    offset
+    results {
+      txnCount24
+      highPrice24
+      lowPrice24
+      uniqueTransactions24
+      volumeUSD24
+      price
+      marketCap
+      liquidity
+      liquidityToken
+      exchange {
+        name
+      }
+      pair {
+        token0
+        token1
+      }
+      token0 {
+        decimals
+        name
+        networkId
+        pooled
+        totalSupply
+      }
+      token1 {
+        decimals
+        name
+        networkId
+        pooled
+        totalSupply
+      }
+    }
+  }
+} 
