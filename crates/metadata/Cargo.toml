@@ -1,0 +1,9 @@
+[package]
+name = "metadata"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+codex-client = { path = "../codex-client" }
+dotenv = "0.15.0"
+eyre = "0.6.0"

@@ -5546,6 +5546,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "metadata"
+version = "0.1.0"
+dependencies = [
+ "codex-client",
+ "dotenv",
+ "eyre",
+]
+
+[[package]]
 name = "mev-share"
 version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"

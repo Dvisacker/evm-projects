@@ -17,7 +17,7 @@ members = [
     "crates/lifi-client",
     "crates/pool-manager",
     "crates/tx-simulator",
-    "crates/codex-client",
+    "crates/codex-client", "crates/metadata",
 ]
 
 default-members = [
