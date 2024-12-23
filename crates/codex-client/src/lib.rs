@@ -407,7 +407,7 @@ mod tests {
         dotenv::dotenv().ok();
         let api_key = std::env::var("CODEX_API_KEY").unwrap();
         let client = CodexClient::new(api_key);
-        let tokens = client
+        let tokens: Vec<FilteredTokens> = client
             .filter_tokens(
                 Some(100000.0),
                 None,
@@ -436,7 +436,7 @@ mod tests {
         dotenv::dotenv().ok();
         let api_key = std::env::var("CODEX_API_KEY").unwrap();
         let client = CodexClient::new(api_key);
-        let pairs = client
+        let pairs: Vec<FilteredPairs> = client
             .filter_pairs(
                 Some(100000.0),
                 None,
@@ -456,9 +456,11 @@ mod tests {
             pairs
                 .into_iter()
                 .map(|p| format!(
-                    "{}-{}",
-                    p.clone().pair.unwrap().token0,
-                    p.clone().pair.unwrap().token1
+                    "{}:{}-{} ({})",
+                    p.clone().pair.unwrap().address,
+                    p.clone().token0.unwrap().symbol.unwrap(),
+                    p.clone().token1.unwrap().symbol.unwrap(),
+                    p.clone().exchange.unwrap().name.unwrap()
                 ))
                 .collect::<Vec<String>>()
         );

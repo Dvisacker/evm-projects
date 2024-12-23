@@ -24,11 +24,14 @@ query QueryCodexFilterPairs(
         name
       }
       pair {
+        address
+        exchangeHash
         token0
         token1
       }
       token0 {
         decimals
+        symbol
         name
         networkId
         pooled
@@ -36,6 +39,7 @@ query QueryCodexFilterPairs(
       }
       token1 {
         decimals
+        symbol
         name
         networkId
         pooled
