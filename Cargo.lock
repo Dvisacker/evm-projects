@@ -5552,6 +5552,7 @@ dependencies = [
  "codex-client",
  "dotenv",
  "eyre",
+ "tokio",
 ]
 
 [[package]]

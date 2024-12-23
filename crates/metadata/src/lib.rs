@@ -84,3 +84,79 @@ impl MetadataClient {
         Ok(exchanges)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tokio;
+
+    fn setup() -> MetadataClient {
+        MetadataClient::new()
+    }
+
+    #[tokio::test]
+    async fn test_get_most_traded_tokens() {
+        let client = setup();
+        let network_id = 1; // Ethereum mainnet
+        let limit = 10;
+
+        let result = client.get_most_traded_tokens(network_id, limit).await;
+
+        assert!(result.is_ok());
+        let tokens = result.unwrap();
+        assert!(!tokens.is_empty());
+        assert!(tokens.len() <= limit as usize);
+
+        // Check first token has required fields
+        println!("{:?}", tokens);
+    }
+
+    #[tokio::test]
+    async fn test_get_most_traded_pools() {
+        let client = setup();
+        let network_id = 1; // Ethereum mainnet
+        let limit = 10;
+
+        let result = client.get_most_traded_pools(network_id, limit).await;
+
+        assert!(result.is_ok());
+        let pools = result.unwrap();
+        assert!(!pools.is_empty());
+        assert!(pools.len() <= limit as usize);
+
+        // Check first pool has required fields
+        println!("{:?}", pools);
+    }
+
+    #[tokio::test]
+    async fn test_get_exchanges_by_network() {
+        let client = setup();
+        let networks = vec![8453]; // Ethereum mainnet
+        let limit = 10;
+
+        let result = client.get_exchanges_by_network(networks, limit).await;
+
+        assert!(result.is_ok());
+        let exchanges = result.unwrap();
+        assert!(!exchanges.is_empty());
+        assert!(exchanges.len() <= limit as usize);
+
+        // Check first exchange has required fields
+        println!(
+            "{:?}",
+            exchanges
+                .into_iter()
+                .map(|e| format!(
+                    "{}({}): Volume={}",
+                    e.clone()
+                        .exchange
+                        .unwrap_or_default()
+                        .name
+                        .unwrap_or_default(),
+                    e.clone().exchange.unwrap_or_default().address,
+                    e.clone().volume_usd24.unwrap()
+                ))
+                .collect::<Vec<String>>()
+        );
+    }
+}
