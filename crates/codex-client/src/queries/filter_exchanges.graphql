@@ -1,0 +1,25 @@
+query QueryCodexFilterExchanges(
+  $filters: ExchangeFilters!
+  $rankings: [ExchangeRanking!]
+  $limit: Int
+) {
+  data: filterExchanges(
+    filters: $filters
+    rankings: $rankings
+    limit: $limit
+  ) {
+    results {
+      exchange {
+        address
+        iconUrl
+        name
+        tradeUrl
+      }
+      dailyActiveUsers
+      monthlyActiveUsers
+      txnCount1
+      volumeNBT12
+      volumeUSD24
+    }
+  }
+} 

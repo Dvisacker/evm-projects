@@ -1,5 +1,6 @@
 use codex_client::{
-    query_codex_filter_pairs, query_codex_filter_tokens, CodexClient, FilteredPairs, FilteredTokens,
+    query_codex_filter_exchanges, query_codex_filter_pairs, query_codex_filter_tokens, CodexClient,
+    FilteredExchanges, FilteredPairs, FilteredTokens,
 };
 use eyre::Error;
 
@@ -61,5 +62,25 @@ impl MetadataClient {
             .unwrap();
 
         Ok(pairs)
+    }
+
+    pub async fn get_exchanges_by_network(
+        &self,
+        networks: Vec<i64>,
+        limit: i64,
+    ) -> Result<Vec<FilteredExchanges>, Error> {
+        let exchanges = self
+            .client
+            .filter_exchanges(
+                networks,
+                None,
+                None,
+                Some(limit),
+                query_codex_filter_exchanges::ExchangeRankingAttribute::volumeUSD24,
+                query_codex_filter_exchanges::RankingDirection::DESC,
+            )
+            .await
+            .unwrap();
+        Ok(exchanges)
     }
 }

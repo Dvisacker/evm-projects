@@ -34,10 +34,20 @@ pub struct QueryCodexFilterTokens;
 )]
 pub struct QueryCodexFilterPairs;
 
+#[derive(GraphQLQuery)]
+#[graphql(
+    schema_path = "src/schema.graphql",
+    query_path = "src/queries/filter_exchanges.graphql",
+    response_derives = "Debug,Serialize,Deserialize,Default,Clone"
+)]
+pub struct QueryCodexFilterExchanges;
+
 pub type Token = query_codex_top_tokens::QueryCodexTopTokensData;
 pub type Pairs = query_codex_pairs_for_token::QueryCodexPairsForTokenDataResults;
 pub type FilteredTokens = query_codex_filter_tokens::QueryCodexFilterTokensDataResults;
 pub type FilteredPairs = query_codex_filter_pairs::QueryCodexFilterPairsDataResults;
+pub type FilteredExchanges = query_codex_filter_exchanges::QueryCodexFilterExchangesDataResults;
+
 pub struct CodexClient {
     client: reqwest::Client,
     api_key: String,
@@ -348,6 +358,88 @@ impl CodexClient {
             .await?;
 
         let response_body: Response<query_codex_filter_pairs::ResponseData> =
+            response.json().await?;
+
+        if let Some(errors) = response_body.errors {
+            return Err(anyhow::anyhow!("GraphQL errors: {:?}", errors));
+        }
+
+        let data = response_body
+            .data
+            .ok_or_else(|| anyhow::anyhow!("No data returned"))?;
+
+        let result = data
+            .data
+            .unwrap()
+            .results
+            .unwrap()
+            .into_iter()
+            .filter_map(|r| r) // filter out None values
+            .collect();
+
+        Ok(result)
+    }
+
+    pub async fn filter_exchanges(
+        &self,
+        networks: Vec<i64>,
+        min_daily_active_users: Option<i64>,
+        min_volume_usd24: Option<f64>,
+        limit: Option<i64>,
+        ranking_attribute: query_codex_filter_exchanges::ExchangeRankingAttribute,
+        ranking_direction: query_codex_filter_exchanges::RankingDirection,
+    ) -> Result<Vec<FilteredExchanges>> {
+        let variables = query_codex_filter_exchanges::Variables {
+            filters: query_codex_filter_exchanges::ExchangeFilters {
+                address: None,
+                network: Some(networks.into_iter().map(|n| n.into()).collect()),
+                daily_active_users: min_daily_active_users.map(|min| {
+                    query_codex_filter_exchanges::NumberFilter {
+                        gt: Some(min as f64),
+                        gte: None,
+                        lt: None,
+                        lte: None,
+                    }
+                }),
+                monthly_active_users: None,
+                txn_count1: None,
+                txn_count4: None,
+                txn_count12: None,
+                txn_count24: None,
+                volume_nbt12: None,
+                volume_nbt24: None,
+                volume_usd1: None,
+                volume_usd4: None,
+                volume_usd12: None,
+                volume_nbt1: None,
+                volume_nbt4: None,
+                volume_usd24: min_volume_usd24.map(|min| {
+                    query_codex_filter_exchanges::StringFilter {
+                        gt: Some(min.to_string()),
+                        gte: None,
+                        lt: None,
+                        lte: None,
+                    }
+                }),
+            },
+            rankings: Some(vec![query_codex_filter_exchanges::ExchangeRanking {
+                attribute: Some(ranking_attribute),
+                direction: Some(ranking_direction),
+            }]),
+            limit,
+        };
+
+        let request_body = QueryCodexFilterExchanges::build_query(variables);
+
+        let response = self
+            .client
+            .post(&self.endpoint)
+            .header("Authorization", format!("{}", self.api_key))
+            .json(&request_body)
+            .send()
+            .await?;
+
+        let response_body: Response<query_codex_filter_exchanges::ResponseData> =
             response.json().await?;
 
         if let Some(errors) = response_body.errors {
