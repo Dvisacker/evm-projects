@@ -40,16 +40,18 @@ fn read_dir_recursive(path: &Path, depth: u32, files: &mut Vec<PathBuf>) -> std:
     Ok(())
 }
 
-pub fn get_most_recent_deployment(contract_name: &str, chain_id: u64) -> Result<Address> {
-    let path = env::var("BROADCAST_PATH").unwrap();
+pub fn get_most_recent_deployment(
+    contract_name: &str,
+    chain_id: u64,
+    path: Option<PathBuf>,
+) -> Result<Address> {
     let mut latest_address = Address::ZERO;
     let mut last_timestamp = 0u64;
     let mut run_processed = false;
-    let absolute_path = fs::canonicalize(path.clone())?;
 
     // Read all files up to 3 levels deep in the foundry broadcast directory
     let mut files = Vec::new();
-    read_dir_recursive(&absolute_path, 3, &mut files)?;
+    read_dir_recursive(&path.unwrap(), 3, &mut files)?;
 
     for path in files {
         if !is_valid_deployment_file(&path, chain_id) {
@@ -86,7 +88,6 @@ pub fn get_most_recent_deployment(contract_name: &str, chain_id: u64) -> Result<
 
 fn is_valid_deployment_file(path: &Path, chain_id: u64) -> bool {
     let path_str = path.to_string_lossy();
-    println!("path_str: {}", path_str);
     path_str.contains(&format!("/{}/", chain_id))
         && path_str.ends_with(".json")
         && !path_str.contains("dry-run")
@@ -137,7 +138,7 @@ mod tests {
         println!("current dir: {:?}", env::current_dir().unwrap());
         env::set_var("BROADCAST_PATH", "../../contracts/broadcast");
         // You'll need to adjust this test based on your actual broadcast files
-        let result = get_most_recent_deployment("BatchExecutor", 8453);
+        let result = get_most_recent_deployment("BatchExecutor", 8453, None);
         println!("result: {:?}", result);
         assert!(result.is_ok());
 
@@ -147,13 +148,13 @@ mod tests {
 
     #[test]
     fn test_invalid_chain() {
-        let result = get_most_recent_deployment("BatchExecutor", 999999);
+        let result = get_most_recent_deployment("BatchExecutor", 999999, None);
         assert!(result.is_err());
     }
 
     #[test]
     fn test_invalid_contract() {
-        let result = get_most_recent_deployment("NonExistentContract", 8453);
+        let result = get_most_recent_deployment("NonExistentContract", 8453, None);
         assert!(result.is_err());
     }
 }
