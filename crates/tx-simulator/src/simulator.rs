@@ -7,6 +7,8 @@ use alloy::{
 };
 use amms::amm::{AutomatedMarketMaker, AMM};
 use eyre::Error;
+use provider::get_anvil_signer_provider;
+use std::str::FromStr;
 
 pub struct TxSimulatorClient<T, P>
 where
@@ -117,8 +119,59 @@ where
         let params = self
             .build_swap_params(token_in, amount_in, route)
             .expect("Failed to build swap params");
+
+        println!("Params: {:?}", params);
         let call_builder = self.simulator.simulateSwapIn(params);
         let result = call_builder.call().await?;
         Ok(result._0)
+    }
+}
+
+mod tests {
+    use std::env;
+
+    use alloy_chains::NamedChain;
+    use amms::amm::{uniswap_v2::UniswapV2Pool, uniswap_v3::UniswapV3Pool, ve33::Ve33Pool};
+
+    use super::*;
+
+    #[tokio::test]
+    async fn test_simulate_route() -> Result<(), Error> {
+        dotenv::dotenv().ok();
+        let provider = get_anvil_signer_provider().await;
+        let simulator = TxSimulatorClient::new(
+            Address::from_str(&env::var("SIMULATOR_ADDRESS").unwrap()).unwrap(),
+            provider.clone(),
+        )
+        .await;
+
+        // let mut pool = Ve33Pool::new_from_address(
+        //     Address::from_str("0x6cdcb1c4a4d1c3c6d054b27ac5b77e89eafb971d").unwrap(),
+        //     0,
+        //     provider.clone(),
+        // )
+        // .await
+        // .unwrap();
+
+        let mut pool = UniswapV3Pool::new_empty(
+            Address::from_str("0xd0b53d9277642d899df5c87a3966a349a798f224").unwrap(),
+            NamedChain::Base,
+        )
+        .await
+        .unwrap();
+
+        pool.populate_data(None, provider).await.unwrap();
+
+        let result = simulator
+            .simulate_route(
+                Address::from_str("0x4200000000000000000000000000000000000006").unwrap(),
+                U256::from(100000000000000u128),
+                &[AMM::UniswapV3Pool(pool)],
+            )
+            .await;
+
+        println!("Result: {:?}", result);
+
+        Ok(())
     }
 }

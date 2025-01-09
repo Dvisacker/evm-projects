@@ -34,3 +34,6 @@
 [submodule "crates/tx-simulator/contracts/lib/openzeppelin-contracts"]
 	path = crates/tx-simulator/contracts/lib/openzeppelin-contracts
 	url = https://github.com/OpenZeppelin/openzeppelin-contracts
+[submodule "crates/tx-simulator/contracts/lib/solmate"]
+	path = crates/tx-simulator/contracts/lib/solmate
+	url = https://github.com/transmissions11/solmate

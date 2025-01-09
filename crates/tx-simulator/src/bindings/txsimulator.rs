@@ -338,10 +338,10 @@ pub mod TxSimulator {
         b"`\x80`@R`\x046\x10\x15a\0\x12W`\0\x80\xFD[`\x005`\xE0\x1C\x80c\x1C\xBA=\xC9\x14a\0\xF0W\x80cA\x0E\x1E_\x14a\0\xCCW\x80c\x99\x07\xAF'\x14a\0\xA8W\x80c\x99\x9C';\x14a\0\x84Wc\xFB\xCAc\xC3\x14a\0SW`\0\x80\xFD[4a\0\x7FW`\xE06`\x03\x19\x01\x12a\0\x7FW` a\0wa\0r6a\x02\xF7V[a\nVV[`@Q\x90\x81R\xF3[`\0\x80\xFD[4a\0\x7FW`\xE06`\x03\x19\x01\x12a\0\x7FW` a\0wa\0\xA36a\x02\xF7V[a\x06\x87V[4a\0\x7FW`\xE06`\x03\x19\x01\x12a\0\x7FW` a\0wa\0\xC76a\x02\xF7V[a\x04\xDBV[4a\0\x7FW`\xE06`\x03\x19\x01\x12a\0\x7FW` a\0wa\0\xEB6a\x02\xF7V[a\x03\xA8V[4a\0\x7FW` 6`\x03\x19\x01\x12a\0\x7FW`\x045g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11a\0\x7FW6`#\x82\x01\x12\x15a\0\x7FW\x80`\x04\x015g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11a\0\x7FW6`$`\xE0\x83\x02\x84\x01\x01\x11a\0\x7FW`\0\x80[\x82\x81\x10\x15a\x02\x84W`\0\x91`\xE0\x82\x02\x85\x01\x90`\xE0`#\x19\x836\x03\x01\x12a\x02\x80W`@Q\x93a\x01r\x85a\x02\x8FV[`$\x83\x015`\xFF\x81\x16\x81\x03a\x02|W\x85Ra\x01\x8F`D\x84\x01a\x02\xE3V[` \x86\x01Ra\x01\xA0`d\x84\x01a\x02\xE3V[`@\x86\x01Ra\x01\xB1`\x84\x84\x01a\x02\xE3V[``\x86\x01R`\xA4\x83\x015b\xFF\xFF\xFF\x81\x16\x81\x03a\x02|W`\x80\x86\x01R`\xE4`\xA0\x86\x01\x93`\xC4\x81\x015\x85R\x015\x90\x81\x15\x15\x82\x03a\x02yWP`\xC0\x85\x01R\x80a\x02pWPQ\x91[\x80Q`\xFF\x16\x80a\x02\x16WP`\x01\x91\x92Pa\x02\x0E\x90a\x06\x87V[\x91[\x01a\x01EV[`\x01\x81\x03a\x023WP`\x01\x91\x92Pa\x02-\x90a\x03\xA8V[\x91a\x02\x10V[`\x02\x81\x03a\x02JWP`\x01\x91\x92Pa\x02-\x90a\x04\xDBV[`\x03\x14a\x02[W[P`\x01\x90a\x02\x10V[`\x01\x91\x92Pa\x02i\x90a\nVV[\x91\x90a\x02RV[\x80\x93\x91Ra\x01\xF5V[\x80\xFD[P\x80\xFD[\x83\x80\xFD[` \x82`@Q\x90\x81R\xF3[`\xE0\x81\x01\x90\x81\x10g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x11\x17a\x02\xABW`@RV[cNH{q`\xE0\x1B`\0R`A`\x04R`$`\0\xFD[\x90`\x1F\x80\x19\x91\x01\x16\x81\x01\x90\x81\x10g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x11\x17a\x02\xABW`@RV[5\x90`\x01`\x01`\xA0\x1B\x03\x82\x16\x82\x03a\0\x7FWV[`\xE0\x90`\x03\x19\x01\x12a\0\x7FW`@Q\x90a\x03\x10\x82a\x02\x8FV[\x81`\x045`\xFF\x81\x16\x81\x03a\0\x7FW\x81R`$5`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x03a\0\x7FW` \x82\x01R`D5`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x03a\0\x7FW`@\x82\x01R`d5`\x01`\x01`\xA0\x1B\x03\x81\x16\x81\x03a\0\x7FW``\x82\x01R`\x845b\xFF\xFF\xFF\x81\x16\x81\x03a\0\x7FW`\x80\x82\x01R`\xA45`\xA0\x82\x01R`\xC45\x90\x81\x15\x15\x82\x03a\0\x7FW`\xC0\x01RV[Q\x90c\xFF\xFF\xFF\xFF\x82\x16\x82\x03a\0\x7FWV[` \x81\x01Q`@Q\x90`\x01`\x01`\xA0\x1B\x03\x16`\xA0\x82\x01g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x81\x11\x83\x82\x10\x17a\x02\xABW`@\x90\x81R`\0\x80\x84R` \x84\x01\x81\x81R\x82\x85\x01\x82\x81R``\x80\x87\x01\x84\x81R`\x80\x88\x81\x01\x86\x81R\x8A\x88\x01Q`\x01`\x01`\xA0\x1B\x03\x90\x81\x16\x8BR\x93\x8B\x01Q\x84\x16\x86R`\xA0\x8B\x01Q\x85R\x99\x81\x01Qb\xFF\xFF\xFF\x90\x81\x16\x83R\x96QccR\x815`\xE1\x1B\x81R\x98Q\x83\x16`\x04\x8A\x01R\x93Q\x82\x16`$\x89\x01R\x91Q`D\x88\x01R\x90Q\x90\x93\x16`d\x86\x01R\x94Q\x90\x91\x16`\x84\x84\x01R\x91\x92\x91\x83\x91`\xA4\x91\x83\x91Z\xF1\x90\x81\x15a\x04\xCFW`\0\x91a\x04|WP\x90V[`\x80\x81=`\x80\x11a\x04\xC7W[\x81a\x04\x95`\x80\x93\x83a\x02\xC1V[\x81\x01\x03\x12a\x02|W\x80Q` \x82\x01Q\x90\x92\x90`\x01`\x01`\xA0\x1B\x03\x81\x16\x03a\x02yWP`@a\x04\xC3\x91\x01a\x03\x97V[P\x90V[=\x91Pa\x04\x88V[`@Q=`\0\x82>=\x90\xFD[` \x81\x01Q`\x01`\x01`\xA0\x1B\x03\x16`\0\x80\x80[\x82`\x0F\x0B\x82`\x0F\x0B\x14a\x05sW[P`d\x90`\xA0` \x94\x95\x01Q\x94`@Q\x95\x86\x94\x85\x93c^\rD?`\xE0\x1B\x85R`\x0F\x0B`\x04\x85\x01R`\x0F\x0B`$\x84\x01R`D\x83\x01RZ\xFA\x90\x81\x15a\x04\xCFW`\0\x91a\x05DWP\x90V[\x90P` \x81=` \x11a\x05kW[\x81a\x05_` \x93\x83a\x02\xC1V[\x81\x01\x03\x12a\0\x7FWQ\x90V[=\x91Pa\x05RV[\x80`\x0F\x0B`\0\x81\x13\x15a\x06BW`@Q\x90c\xC6a\x06W`\xE0\x1B\x82R`\x04\x82\x01R` \x81`$\x81\x88Z\xFA\x90\x81\x15a\x04\xCFW`\0\x91a\x06\x01W[P`@\x86\x01Q`\x01`\x01`\xA0\x1B\x03\x91\x82\x16\x91\x16\x81\x03a\x05\xE6WP\x90P\x80[\x82`\x0F\x0B\x82`\x0F\x0B\x03a\x05\xE1W`\x01\x01`\x0F\x0Ba\x04\xEEV[a\x04\xFCV[``\x86\x01Q`\x01`\x01`\xA0\x1B\x03\x16\x03a\x05\xC9W\x91P\x81a\x05\xC9V[` \x81=\x82\x11a\x06:W[\x81a\x06\x19` \x93\x83a\x02\xC1V[\x81\x01\x03\x12a\x02|WQ\x90`\x01`\x01`\xA0\x1B\x03\x82\x16\x82\x03a\x02yWP8a\x05\xABV[=\x91Pa\x06\x0CV[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1B`$\x82\x01R\x7FCoin index is out of bounds\0\0\0\0\0`D\x82\x01R`d\x90\xFD[` \x81\x01Q`@\x82\x01Q``\x80\x84\x01Q`\x01`\x01`\xA0\x1B\x03\x90\x81\x16\x93`\0\x93`\x04\x93\x92\x16\x91\x90a\x06\xC2a\x06\xBA\x87\x85a\x0C\xCEV[P\x96\x84a\x0C\xCEV[`@Q\x91\x84\x1Bk\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x81\x16` \x84\x01\x90\x81R\x91\x85\x1B\x16`4\x83\x01R`(\x82R\x90a\x06\xF9`H\x82a\x02\xC1V[Q\x90 \x90`@Q\x91` \x83\x01\x91`\xFF`\xF8\x1B\x83Rk\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x19\x90\x85\x1B\x16`!\x84\x01R`5\x83\x01R\x7F\x96\xE8\xACBw\x19\x8F\xF8\xB6\xF7\x85G\x8A\xA9\xA3\x9F@<\xB7h\xDD\x02\xCB\xEE2l>}\xA3H\x84_`U\x83\x01R`U\x82Ra\x07^`u\x83a\x02\xC1V[\x90Q\x90 `@Qc\x02@\xBCk`\xE2\x1B\x81R\x93\x84\x91\x82\x90`\x01`\x01`\xA0\x1B\x03\x16Z\xFA\x91\x82\x15a\n(W\x83\x90\x84\x93a\t\xC6W[P`\x01`\x01`p\x1B\x03\x92\x83\x16\x94\x92\x16\x91`\x01`\x01`\xA0\x1B\x03\x16\x03a\t\xBDW`\xA0\x90\x92\x93[\x01Q\x91\x82\x15a\tdW\x80\x15\x92\x83\x15\x80a\t[W[\x15a\t\x05Wa\x03\xE5\x81\x02\x92\x81\x84\x04a\x03\xE5\x03a\x08\xC7WP\x80a\x03\xE5\x84\x04\x03a\x08\x8BW`\0\x94\x80\x15\x91\x82\x15a\x08\xDBW[PP\x15a\x08\x8BW`\0a\x03\xE8\x82\x02\x93\x82\x85\x04a\x03\xE8\x14\x17\x15a\x08\xC7WPa\x03\xE8\x83\x04\x03a\x08\x8BW\x81\x01\x90\x81\x81\x11a\x08uW\x81\x10a\x089Wa\x086\x91a\x0C\xAEV[\x90V[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x14`$\x82\x01Rsds-math-add-overflow``\x1B`D\x82\x01R`d\x90\xFD[cNH{q`\xE0\x1B`\0R`\x11`\x04R`$`\0\xFD[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x14`$\x82\x01Rsds-math-mul-overflow``\x1B`D\x82\x01R`d\x90\xFD[cNH{q`\xE0\x1B\x81R`\x11`\x04R`$\x90\xFD[\x81\x02a\x03\xE5\x02\x95P\x90P\x82\x15\x83\x86\x04\x82\x14\x17\x15a\x08uWa\x08\xFD\x83\x91\x86a\x0C\xAEV[\x148\x80a\x07\xF6V[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`(`$\x82\x01R\x7FUniswapV2Library: INSUFFICIENT_L`D\x82\x01RgIQUIDITY`\xC0\x1B`d\x82\x01R`\x84\x90\xFD[P\x84\x15\x15a\x07\xC7V[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`+`$\x82\x01R\x7FUniswapV2Library: INSUFFICIENT_I`D\x82\x01Rj\x13\x94\x15U\x17\xD0SS\xD5S\x95`\xAA\x1B`d\x82\x01R`\x84\x90\xFD[\x92`\xA0\x90a\x07\xB3V[\x92PP``\x82=``\x11a\n W[\x81a\t\xE2``\x93\x83a\x02\xC1V[\x81\x01\x03\x12a\n\x1CW`\x01`\x01`p\x1B\x03\x80a\t\xFC\x84a\x0C\x9AV[a\n\x14`@a\n\r` \x88\x01a\x0C\x9AV[\x96\x01a\x03\x97V[P\x91Pa\x07\x8FV[\x82\x80\xFD[=\x91Pa\t\xD5V[`@Q=\x85\x82>=\x90\xFD[\x80Q\x15a\n@W` \x01\x90V[cNH{q`\xE0\x1B`\0R`2`\x04R`$`\0\xFD[` \x81\x01`\x01\x80`\xA0\x1B\x03\x81Q\x16`@\x92\x83Q\x92a\nt\x85\x85a\x02\xC1V[`\x01\x84R`\x1F\x19\x85\x01`\0[\x81\x81\x10a\x0CWWPP\x84\x82\x01Q`\xA0\x92\x91\x90`\x01`\x01`\xA0\x1B\x03\x16a\n\xA4\x86a\n3V[QR`\x01\x80\x84\x1B\x03``\x83\x01Q\x16` a\n\xBD\x87a\n3V[Q\x01R`\xC0\x82\x01Q\x15\x15\x86a\n\xD1\x87a\n3V[Q\x01RQ`\0\x19`\x01\x84\x1B\x01\x16``a\n\xE9\x86a\n3V[Q\x01R\x01Q\x83Q\x92\x83\x91c\x15Bhk`\xE2\x1B\x83R`D\x83\x01\x90`\x04\x84\x01R\x85`$\x84\x01R\x81Q\x80\x91R` `d\x84\x01\x92\x01\x90`\0[\x81\x81\x10a\x0C\x0BWPPP\x91\x81\x80`\0\x94\x03\x91Z\xFA\x90\x81\x15a\x0C\0W`\0\x91a\x0BQW[P\x80Q`\x01\x10\x15a\n@W\x01Q\x90V[=\x80\x83\x83>a\x0B`\x81\x83a\x02\xC1V[\x81\x01\x90` \x81\x83\x03\x12a\n\x1CW\x80Q\x90g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x82\x11a\x02\x80W\x01\x91\x81`\x1F\x84\x01\x12\x15a\x02yW\x82Q\x92g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x84\x11a\x0B\xECW\x83`\x05\x1B\x91` \x83\x01\x94a\x0B\xB4\x87Q\x96\x87a\x02\xC1V[\x85R` \x80\x86\x01\x93\x83\x01\x01\x93\x84\x11a\x02yWP` \x01\x90[\x82\x82\x10a\x0B\xDCWPPP8a\x0BAV[\x81Q\x81R` \x91\x82\x01\x91\x01a\x0B\xCCV[cNH{q`\xE0\x1B\x82R`A`\x04R`$\x82\xFD[\x82Q=`\0\x82>=\x90\xFD[\x82Q\x80Q`\x01`\x01`\xA0\x1B\x03\x90\x81\x16\x86R` \x82\x81\x01Q\x82\x16\x81\x88\x01R\x8A\x83\x01Q\x15\x15\x8B\x88\x01R``\x92\x83\x01Q\x90\x91\x16\x91\x86\x01\x91\x90\x91R\x87\x95P`\x80\x90\x94\x01\x93\x90\x92\x01\x91`\x01\x01a\x0B\x1EV[\x86Q\x90`\x80\x82\x01\x91\x80\x83\x10g\xFF\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x84\x11\x17a\x02\xABW` \x92\x89R`\0\x81R`\0\x83\x82\x01R`\0\x89\x82\x01R`\0``\x82\x01R\x82\x82\x89\x01\x01R\x01a\n\x80V[Q\x90`\x01`\x01`p\x1B\x03\x82\x16\x82\x03a\0\x7FWV[\x81\x15a\x0C\xB8W\x04\x90V[cNH{q`\xE0\x1B`\0R`\x12`\x04R`$`\0\xFD[\x90\x91\x90`\x01`\x01`\xA0\x1B\x03\x80\x84\x16\x90\x82\x16\x80\x82\x14a\rJW\x10\x15a\rEW\x91[\x90`\x01`\x01`\xA0\x1B\x03\x83\x16\x15a\r\0WV[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`\x1E`$\x82\x01R\x7FUniswapV2Library: ZERO_ADDRESS\0\0`D\x82\x01R`d\x90\xFD[a\x0C\xEEV[`@QbF\x1B\xCD`\xE5\x1B\x81R` `\x04\x82\x01R`%`$\x82\x01R\x7FUniswapV2Library: IDENTICAL_ADDR`D\x82\x01RdESSES`\xD8\x1B`d\x82\x01R`\x84\x90\xFD\xFE\xA2dipfsX\"\x12 1\xB2\x14\xE2\x1C\xE2G\x12Cu\xEF\xE0\x83E\xD2\x819\x91\x1Bh#\xDE\xC9\xC8\xEF\xEA\x9B7\xCA\xA8\xEA\xFCdsolcC\0\x08\x1A\x003",
     );
     /**```solidity
-struct SwapParams { uint8 protocol; address handler; address tokenIn; address tokenOut; uint24 fee; uint256 amount; bool stable; }
-```*/
+    struct SwapParams { uint8 protocol; address handler; address tokenIn; address tokenOut; uint24 fee; uint256 amount; bool stable; }
+    ```*/
     #[allow(non_camel_case_types, non_snake_case)]
-    #[derive(Clone)]
+    #[derive(Clone, Debug)]
     pub struct SwapParams {
         pub protocol: u8,
         pub handler: alloy::sol_types::private::Address,
@@ -376,9 +376,7 @@ struct SwapParams { uint8 protocol; address handler; address tokenIn; address to
         );
         #[cfg(test)]
         #[allow(dead_code, unreachable_patterns)]
-        fn _type_assertion(
-            _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-        ) {
+        fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
             match _t {
                 alloy_sol_types::private::AssertTypeEq::<
                     <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -424,9 +422,9 @@ struct SwapParams { uint8 protocol; address handler; address tokenIn; address to
             #[inline]
             fn stv_to_tokens(&self) -> <Self as alloy_sol_types::SolType>::Token<'_> {
                 (
-                    <alloy::sol_types::sol_data::Uint<
-                        8,
-                    > as alloy_sol_types::SolType>::tokenize(&self.protocol),
+                    <alloy::sol_types::sol_data::Uint<8> as alloy_sol_types::SolType>::tokenize(
+                        &self.protocol,
+                    ),
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.handler,
                     ),
@@ -436,12 +434,12 @@ struct SwapParams { uint8 protocol; address handler; address tokenIn; address to
                     <alloy::sol_types::sol_data::Address as alloy_sol_types::SolType>::tokenize(
                         &self.tokenOut,
                     ),
-                    <alloy::sol_types::sol_data::Uint<
-                        24,
-                    > as alloy_sol_types::SolType>::tokenize(&self.fee),
-                    <alloy::sol_types::sol_data::Uint<
-                        256,
-                    > as alloy_sol_types::SolType>::tokenize(&self.amount),
+                    <alloy::sol_types::sol_data::Uint<24> as alloy_sol_types::SolType>::tokenize(
+                        &self.fee,
+                    ),
+                    <alloy::sol_types::sol_data::Uint<256> as alloy_sol_types::SolType>::tokenize(
+                        &self.amount,
+                    ),
                     <alloy::sol_types::sol_data::Bool as alloy_sol_types::SolType>::tokenize(
                         &self.stable,
                     ),
@@ -452,64 +450,50 @@ struct SwapParams { uint8 protocol; address handler; address tokenIn; address to
                 if let Some(size) = <Self as alloy_sol_types::SolType>::ENCODED_SIZE {
                     return size;
                 }
-                let tuple = <UnderlyingRustTuple<
-                    '_,
-                > as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encoded_size(&tuple)
             }
             #[inline]
             fn stv_eip712_data_word(&self) -> alloy_sol_types::Word {
                 <Self as alloy_sol_types::SolStruct>::eip712_hash_struct(self)
             }
             #[inline]
-            fn stv_abi_encode_packed_to(
-                &self,
-                out: &mut alloy_sol_types::private::Vec<u8>,
-            ) {
-                let tuple = <UnderlyingRustTuple<
-                    '_,
-                > as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_encode_packed_to(&tuple, out)
+            fn stv_abi_encode_packed_to(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_encode_packed_to(
+                    &tuple, out,
+                )
             }
             #[inline]
             fn stv_abi_packed_encoded_size(&self) -> usize {
                 if let Some(size) = <Self as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE {
                     return size;
                 }
-                let tuple = <UnderlyingRustTuple<
-                    '_,
-                > as ::core::convert::From<Self>>::from(self.clone());
-                <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_packed_encoded_size(&tuple)
+                let tuple =
+                    <UnderlyingRustTuple<'_> as ::core::convert::From<Self>>::from(self.clone());
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::abi_packed_encoded_size(
+                    &tuple,
+                )
             }
         }
         #[automatically_derived]
         impl alloy_sol_types::SolType for SwapParams {
             type RustType = Self;
-            type Token<'a> = <UnderlyingSolTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <UnderlyingSolTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
             const SOL_NAME: &'static str = <Self as alloy_sol_types::SolStruct>::NAME;
-            const ENCODED_SIZE: Option<usize> = <UnderlyingSolTuple<
-                '_,
-            > as alloy_sol_types::SolType>::ENCODED_SIZE;
-            const PACKED_ENCODED_SIZE: Option<usize> = <UnderlyingSolTuple<
-                '_,
-            > as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
+            const ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::ENCODED_SIZE;
+            const PACKED_ENCODED_SIZE: Option<usize> =
+                <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::PACKED_ENCODED_SIZE;
             #[inline]
             fn valid_token(token: &Self::Token<'_>) -> bool {
                 <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::valid_token(token)
             }
             #[inline]
             fn detokenize(token: Self::Token<'_>) -> Self::RustType {
-                let tuple = <UnderlyingSolTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::detokenize(token);
+                let tuple = <UnderlyingSolTuple<'_> as alloy_sol_types::SolType>::detokenize(token);
                 <Self as ::core::convert::From<UnderlyingRustTuple<'_>>>::from(tuple)
             }
         }
@@ -523,9 +507,9 @@ struct SwapParams { uint8 protocol; address handler; address tokenIn; address to
                 )
             }
             #[inline]
-            fn eip712_components() -> alloy_sol_types::private::Vec<
-                alloy_sol_types::private::Cow<'static, str>,
-            > {
+            fn eip712_components(
+            ) -> alloy_sol_types::private::Vec<alloy_sol_types::private::Cow<'static, str>>
+            {
                 alloy_sol_types::private::Vec::new()
             }
             #[inline]
@@ -603,9 +587,7 @@ struct SwapParams { uint8 protocol; address handler; address tokenIn; address to
                 rust: &Self::RustType,
                 out: &mut alloy_sol_types::private::Vec<u8>,
             ) {
-                out.reserve(
-                    <Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust),
-                );
+                out.reserve(<Self as alloy_sol_types::EventTopic>::topic_preimage_length(rust));
                 <alloy::sol_types::sol_data::Uint<
                     8,
                 > as alloy_sol_types::EventTopic>::encode_topic_preimage(
@@ -639,24 +621,17 @@ struct SwapParams { uint8 protocol; address handler; address tokenIn; address to
                 );
             }
             #[inline]
-            fn encode_topic(
-                rust: &Self::RustType,
-            ) -> alloy_sol_types::abi::token::WordToken {
+            fn encode_topic(rust: &Self::RustType) -> alloy_sol_types::abi::token::WordToken {
                 let mut out = alloy_sol_types::private::Vec::new();
-                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(
-                    rust,
-                    &mut out,
-                );
-                alloy_sol_types::abi::token::WordToken(
-                    alloy_sol_types::private::keccak256(out),
-                )
+                <Self as alloy_sol_types::EventTopic>::encode_topic_preimage(rust, &mut out);
+                alloy_sol_types::abi::token::WordToken(alloy_sol_types::private::keccak256(out))
             }
         }
     };
     /**Constructor`.
-```solidity
-constructor();
-```*/
+    ```solidity
+    constructor();
+    ```*/
     #[allow(non_camel_case_types, non_snake_case)]
     #[derive(Clone)]
     pub struct constructorCall {}
@@ -669,9 +644,7 @@ constructor();
             type UnderlyingRustTuple<'a> = ();
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -696,9 +669,7 @@ constructor();
         #[automatically_derived]
         impl alloy_sol_types::SolConstructor for constructorCall {
             type Parameters<'a> = ();
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             #[inline]
             fn new<'a>(
                 tuple: <Self::Parameters<'a> as alloy_sol_types::SolType>::RustType,
@@ -712,9 +683,9 @@ constructor();
         }
     };
     /**Function with signature `simulateAeroSwapIn((uint8,address,address,address,uint24,uint256,bool))` and selector `0xfbca63c3`.
-```solidity
-function simulateAeroSwapIn(SwapParams memory params) external returns (uint256 amountOut);
-```*/
+    ```solidity
+    function simulateAeroSwapIn(SwapParams memory params) external returns (uint256 amountOut);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case)]
     #[derive(Clone)]
     pub struct simulateAeroSwapInCall {
@@ -733,14 +704,10 @@ function simulateAeroSwapIn(SwapParams memory params) external returns (uint256 
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (SwapParams,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                <SwapParams as alloy::sol_types::SolType>::RustType,
-            );
+            type UnderlyingRustTuple<'a> = (<SwapParams as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -749,16 +716,14 @@ function simulateAeroSwapIn(SwapParams memory params) external returns (uint256 
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<simulateAeroSwapInCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<simulateAeroSwapInCall> for UnderlyingRustTuple<'_> {
                 fn from(value: simulateAeroSwapInCall) -> Self {
                     (value.params,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for simulateAeroSwapInCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for simulateAeroSwapInCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { params: tuple.0 }
                 }
@@ -768,14 +733,10 @@ function simulateAeroSwapIn(SwapParams memory params) external returns (uint256 
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -784,16 +745,14 @@ function simulateAeroSwapIn(SwapParams memory params) external returns (uint256 
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<simulateAeroSwapInReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<simulateAeroSwapInReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: simulateAeroSwapInReturn) -> Self {
                     (value.amountOut,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for simulateAeroSwapInReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for simulateAeroSwapInReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { amountOut: tuple.0 }
                 }
@@ -802,15 +761,12 @@ function simulateAeroSwapIn(SwapParams memory params) external returns (uint256 
         #[automatically_derived]
         impl alloy_sol_types::SolCall for simulateAeroSwapInCall {
             type Parameters<'a> = (SwapParams,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = simulateAeroSwapInReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "simulateAeroSwapIn((uint8,address,address,address,uint24,uint256,bool))";
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str =
+                "simulateAeroSwapIn((uint8,address,address,address,uint24,uint256,bool))";
             const SELECTOR: [u8; 4] = [251u8, 202u8, 99u8, 195u8];
             #[inline]
             fn new<'a>(
@@ -820,24 +776,26 @@ function simulateAeroSwapIn(SwapParams memory params) external returns (uint256 
             }
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
-                (<SwapParams as alloy_sol_types::SolType>::tokenize(&self.params),)
+                (<SwapParams as alloy_sol_types::SolType>::tokenize(
+                    &self.params,
+                ),)
             }
             #[inline]
             fn abi_decode_returns(
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `simulateCurveSwapIn((uint8,address,address,address,uint24,uint256,bool))` and selector `0x9907af27`.
-```solidity
-function simulateCurveSwapIn(SwapParams memory params) external returns (uint256 amountOut);
-```*/
+    ```solidity
+    function simulateCurveSwapIn(SwapParams memory params) external returns (uint256 amountOut);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case)]
     #[derive(Clone)]
     pub struct simulateCurveSwapInCall {
@@ -856,14 +814,10 @@ function simulateCurveSwapIn(SwapParams memory params) external returns (uint256
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (SwapParams,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                <SwapParams as alloy::sol_types::SolType>::RustType,
-            );
+            type UnderlyingRustTuple<'a> = (<SwapParams as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -872,16 +826,14 @@ function simulateCurveSwapIn(SwapParams memory params) external returns (uint256
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<simulateCurveSwapInCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<simulateCurveSwapInCall> for UnderlyingRustTuple<'_> {
                 fn from(value: simulateCurveSwapInCall) -> Self {
                     (value.params,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for simulateCurveSwapInCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for simulateCurveSwapInCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { params: tuple.0 }
                 }
@@ -891,14 +843,10 @@ function simulateCurveSwapIn(SwapParams memory params) external returns (uint256
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -907,16 +855,14 @@ function simulateCurveSwapIn(SwapParams memory params) external returns (uint256
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<simulateCurveSwapInReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<simulateCurveSwapInReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: simulateCurveSwapInReturn) -> Self {
                     (value.amountOut,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for simulateCurveSwapInReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for simulateCurveSwapInReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { amountOut: tuple.0 }
                 }
@@ -925,15 +871,12 @@ function simulateCurveSwapIn(SwapParams memory params) external returns (uint256
         #[automatically_derived]
         impl alloy_sol_types::SolCall for simulateCurveSwapInCall {
             type Parameters<'a> = (SwapParams,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = simulateCurveSwapInReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "simulateCurveSwapIn((uint8,address,address,address,uint24,uint256,bool))";
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str =
+                "simulateCurveSwapIn((uint8,address,address,address,uint24,uint256,bool))";
             const SELECTOR: [u8; 4] = [153u8, 7u8, 175u8, 39u8];
             #[inline]
             fn new<'a>(
@@ -943,30 +886,31 @@ function simulateCurveSwapIn(SwapParams memory params) external returns (uint256
             }
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
-                (<SwapParams as alloy_sol_types::SolType>::tokenize(&self.params),)
+                (<SwapParams as alloy_sol_types::SolType>::tokenize(
+                    &self.params,
+                ),)
             }
             #[inline]
             fn abi_decode_returns(
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `simulateSwapIn((uint8,address,address,address,uint24,uint256,bool)[])` and selector `0x1cba3dc9`.
-```solidity
-function simulateSwapIn(SwapParams[] memory paramsArray) external returns (uint256);
-```*/
+    ```solidity
+    function simulateSwapIn(SwapParams[] memory paramsArray) external returns (uint256);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case)]
     #[derive(Clone)]
     pub struct simulateSwapInCall {
-        pub paramsArray: alloy::sol_types::private::Vec<
-            <SwapParams as alloy::sol_types::SolType>::RustType,
-        >,
+        pub paramsArray:
+            alloy::sol_types::private::Vec<<SwapParams as alloy::sol_types::SolType>::RustType>,
     }
     ///Container type for the return parameters of the [`simulateSwapIn((uint8,address,address,address,uint24,uint256,bool)[])`](simulateSwapInCall) function.
     #[allow(non_camel_case_types, non_snake_case)]
@@ -979,20 +923,14 @@ function simulateSwapIn(SwapParams[] memory paramsArray) external returns (uint2
         use alloy::sol_types as alloy_sol_types;
         {
             #[doc(hidden)]
-            type UnderlyingSolTuple<'a> = (
-                alloy::sol_types::sol_data::Array<SwapParams>,
-            );
+            type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Array<SwapParams>,);
             #[doc(hidden)]
             type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::Vec<
-                    <SwapParams as alloy::sol_types::SolType>::RustType,
-                >,
+                alloy::sol_types::private::Vec<<SwapParams as alloy::sol_types::SolType>::RustType>,
             );
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1010,7 +948,9 @@ function simulateSwapIn(SwapParams[] memory paramsArray) external returns (uint2
             #[doc(hidden)]
             impl ::core::convert::From<UnderlyingRustTuple<'_>> for simulateSwapInCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
-                    Self { paramsArray: tuple.0 }
+                    Self {
+                        paramsArray: tuple.0,
+                    }
                 }
             }
         }
@@ -1018,14 +958,10 @@ function simulateSwapIn(SwapParams[] memory paramsArray) external returns (uint2
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1034,16 +970,14 @@ function simulateSwapIn(SwapParams[] memory paramsArray) external returns (uint2
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<simulateSwapInReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<simulateSwapInReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: simulateSwapInReturn) -> Self {
                     (value._0,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for simulateSwapInReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for simulateSwapInReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { _0: tuple.0 }
                 }
@@ -1052,15 +986,12 @@ function simulateSwapIn(SwapParams[] memory paramsArray) external returns (uint2
         #[automatically_derived]
         impl alloy_sol_types::SolCall for simulateSwapInCall {
             type Parameters<'a> = (alloy::sol_types::sol_data::Array<SwapParams>,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = simulateSwapInReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "simulateSwapIn((uint8,address,address,address,uint24,uint256,bool)[])";
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str =
+                "simulateSwapIn((uint8,address,address,address,uint24,uint256,bool)[])";
             const SELECTOR: [u8; 4] = [28u8, 186u8, 61u8, 201u8];
             #[inline]
             fn new<'a>(
@@ -1081,17 +1012,17 @@ function simulateSwapIn(SwapParams[] memory paramsArray) external returns (uint2
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `simulateUniswapV2SwapIn((uint8,address,address,address,uint24,uint256,bool))` and selector `0x999c273b`.
-```solidity
-function simulateUniswapV2SwapIn(SwapParams memory params) external view returns (uint256 amountOut);
-```*/
+    ```solidity
+    function simulateUniswapV2SwapIn(SwapParams memory params) external view returns (uint256 amountOut);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case)]
     #[derive(Clone)]
     pub struct simulateUniswapV2SwapInCall {
@@ -1110,14 +1041,10 @@ function simulateUniswapV2SwapIn(SwapParams memory params) external view returns
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (SwapParams,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                <SwapParams as alloy::sol_types::SolType>::RustType,
-            );
+            type UnderlyingRustTuple<'a> = (<SwapParams as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1126,16 +1053,14 @@ function simulateUniswapV2SwapIn(SwapParams memory params) external view returns
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<simulateUniswapV2SwapInCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<simulateUniswapV2SwapInCall> for UnderlyingRustTuple<'_> {
                 fn from(value: simulateUniswapV2SwapInCall) -> Self {
                     (value.params,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for simulateUniswapV2SwapInCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for simulateUniswapV2SwapInCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { params: tuple.0 }
                 }
@@ -1145,14 +1070,10 @@ function simulateUniswapV2SwapIn(SwapParams memory params) external view returns
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1161,16 +1082,14 @@ function simulateUniswapV2SwapIn(SwapParams memory params) external view returns
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<simulateUniswapV2SwapInReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<simulateUniswapV2SwapInReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: simulateUniswapV2SwapInReturn) -> Self {
                     (value.amountOut,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for simulateUniswapV2SwapInReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for simulateUniswapV2SwapInReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { amountOut: tuple.0 }
                 }
@@ -1179,15 +1098,12 @@ function simulateUniswapV2SwapIn(SwapParams memory params) external view returns
         #[automatically_derived]
         impl alloy_sol_types::SolCall for simulateUniswapV2SwapInCall {
             type Parameters<'a> = (SwapParams,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = simulateUniswapV2SwapInReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "simulateUniswapV2SwapIn((uint8,address,address,address,uint24,uint256,bool))";
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str =
+                "simulateUniswapV2SwapIn((uint8,address,address,address,uint24,uint256,bool))";
             const SELECTOR: [u8; 4] = [153u8, 156u8, 39u8, 59u8];
             #[inline]
             fn new<'a>(
@@ -1197,24 +1113,26 @@ function simulateUniswapV2SwapIn(SwapParams memory params) external view returns
             }
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
-                (<SwapParams as alloy_sol_types::SolType>::tokenize(&self.params),)
+                (<SwapParams as alloy_sol_types::SolType>::tokenize(
+                    &self.params,
+                ),)
             }
             #[inline]
             fn abi_decode_returns(
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
     /**Function with signature `simulateUniswapV3SwapIn((uint8,address,address,address,uint24,uint256,bool))` and selector `0x410e1e5f`.
-```solidity
-function simulateUniswapV3SwapIn(SwapParams memory params) external returns (uint256 amountOut);
-```*/
+    ```solidity
+    function simulateUniswapV3SwapIn(SwapParams memory params) external returns (uint256 amountOut);
+    ```*/
     #[allow(non_camel_case_types, non_snake_case)]
     #[derive(Clone)]
     pub struct simulateUniswapV3SwapInCall {
@@ -1233,14 +1151,10 @@ function simulateUniswapV3SwapIn(SwapParams memory params) external returns (uin
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (SwapParams,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                <SwapParams as alloy::sol_types::SolType>::RustType,
-            );
+            type UnderlyingRustTuple<'a> = (<SwapParams as alloy::sol_types::SolType>::RustType,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1249,16 +1163,14 @@ function simulateUniswapV3SwapIn(SwapParams memory params) external returns (uin
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<simulateUniswapV3SwapInCall>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<simulateUniswapV3SwapInCall> for UnderlyingRustTuple<'_> {
                 fn from(value: simulateUniswapV3SwapInCall) -> Self {
                     (value.params,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for simulateUniswapV3SwapInCall {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for simulateUniswapV3SwapInCall {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { params: tuple.0 }
                 }
@@ -1268,14 +1180,10 @@ function simulateUniswapV3SwapIn(SwapParams memory params) external returns (uin
             #[doc(hidden)]
             type UnderlyingSolTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
             #[doc(hidden)]
-            type UnderlyingRustTuple<'a> = (
-                alloy::sol_types::private::primitives::aliases::U256,
-            );
+            type UnderlyingRustTuple<'a> = (alloy::sol_types::private::primitives::aliases::U256,);
             #[cfg(test)]
             #[allow(dead_code, unreachable_patterns)]
-            fn _type_assertion(
-                _t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>,
-            ) {
+            fn _type_assertion(_t: alloy_sol_types::private::AssertTypeEq<UnderlyingRustTuple>) {
                 match _t {
                     alloy_sol_types::private::AssertTypeEq::<
                         <UnderlyingSolTuple as alloy_sol_types::SolType>::RustType,
@@ -1284,16 +1192,14 @@ function simulateUniswapV3SwapIn(SwapParams memory params) external returns (uin
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<simulateUniswapV3SwapInReturn>
-            for UnderlyingRustTuple<'_> {
+            impl ::core::convert::From<simulateUniswapV3SwapInReturn> for UnderlyingRustTuple<'_> {
                 fn from(value: simulateUniswapV3SwapInReturn) -> Self {
                     (value.amountOut,)
                 }
             }
             #[automatically_derived]
             #[doc(hidden)]
-            impl ::core::convert::From<UnderlyingRustTuple<'_>>
-            for simulateUniswapV3SwapInReturn {
+            impl ::core::convert::From<UnderlyingRustTuple<'_>> for simulateUniswapV3SwapInReturn {
                 fn from(tuple: UnderlyingRustTuple<'_>) -> Self {
                     Self { amountOut: tuple.0 }
                 }
@@ -1302,15 +1208,12 @@ function simulateUniswapV3SwapIn(SwapParams memory params) external returns (uin
         #[automatically_derived]
         impl alloy_sol_types::SolCall for simulateUniswapV3SwapInCall {
             type Parameters<'a> = (SwapParams,);
-            type Token<'a> = <Self::Parameters<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
+            type Token<'a> = <Self::Parameters<'a> as alloy_sol_types::SolType>::Token<'a>;
             type Return = simulateUniswapV3SwapInReturn;
             type ReturnTuple<'a> = (alloy::sol_types::sol_data::Uint<256>,);
-            type ReturnToken<'a> = <Self::ReturnTuple<
-                'a,
-            > as alloy_sol_types::SolType>::Token<'a>;
-            const SIGNATURE: &'static str = "simulateUniswapV3SwapIn((uint8,address,address,address,uint24,uint256,bool))";
+            type ReturnToken<'a> = <Self::ReturnTuple<'a> as alloy_sol_types::SolType>::Token<'a>;
+            const SIGNATURE: &'static str =
+                "simulateUniswapV3SwapIn((uint8,address,address,address,uint24,uint256,bool))";
             const SELECTOR: [u8; 4] = [65u8, 14u8, 30u8, 95u8];
             #[inline]
             fn new<'a>(
@@ -1320,17 +1223,19 @@ function simulateUniswapV3SwapIn(SwapParams memory params) external returns (uin
             }
             #[inline]
             fn tokenize(&self) -> Self::Token<'_> {
-                (<SwapParams as alloy_sol_types::SolType>::tokenize(&self.params),)
+                (<SwapParams as alloy_sol_types::SolType>::tokenize(
+                    &self.params,
+                ),)
             }
             #[inline]
             fn abi_decode_returns(
                 data: &[u8],
                 validate: bool,
             ) -> alloy_sol_types::Result<Self::Return> {
-                <Self::ReturnTuple<
-                    '_,
-                > as alloy_sol_types::SolType>::abi_decode_sequence(data, validate)
-                    .map(Into::into)
+                <Self::ReturnTuple<'_> as alloy_sol_types::SolType>::abi_decode_sequence(
+                    data, validate,
+                )
+                .map(Into::into)
             }
         }
     };
@@ -1398,83 +1303,76 @@ function simulateUniswapV3SwapIn(SwapParams memory params) external returns (uin
             data: &[u8],
             validate: bool,
         ) -> alloy_sol_types::Result<Self> {
-            static DECODE_SHIMS: &[fn(
-                &[u8],
-                bool,
-            ) -> alloy_sol_types::Result<TxSimulatorCalls>] = &[
-                {
-                    fn simulateSwapIn(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<TxSimulatorCalls> {
-                        <simulateSwapInCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
+            static DECODE_SHIMS: &[fn(&[u8], bool) -> alloy_sol_types::Result<TxSimulatorCalls>] =
+                &[
+                    {
+                        fn simulateSwapIn(
+                            data: &[u8],
+                            validate: bool,
+                        ) -> alloy_sol_types::Result<TxSimulatorCalls> {
+                            <simulateSwapInCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data, validate,
                             )
                             .map(TxSimulatorCalls::simulateSwapIn)
-                    }
-                    simulateSwapIn
-                },
-                {
-                    fn simulateUniswapV3SwapIn(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<TxSimulatorCalls> {
-                        <simulateUniswapV3SwapInCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                        }
+                        simulateSwapIn
+                    },
+                    {
+                        fn simulateUniswapV3SwapIn(
+                            data: &[u8],
+                            validate: bool,
+                        ) -> alloy_sol_types::Result<TxSimulatorCalls> {
+                            <simulateUniswapV3SwapInCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
                             )
                             .map(TxSimulatorCalls::simulateUniswapV3SwapIn)
-                    }
-                    simulateUniswapV3SwapIn
-                },
-                {
-                    fn simulateCurveSwapIn(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<TxSimulatorCalls> {
-                        <simulateCurveSwapInCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
+                        }
+                        simulateUniswapV3SwapIn
+                    },
+                    {
+                        fn simulateCurveSwapIn(
+                            data: &[u8],
+                            validate: bool,
+                        ) -> alloy_sol_types::Result<TxSimulatorCalls> {
+                            <simulateCurveSwapInCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data, validate,
                             )
                             .map(TxSimulatorCalls::simulateCurveSwapIn)
-                    }
-                    simulateCurveSwapIn
-                },
-                {
-                    fn simulateUniswapV2SwapIn(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<TxSimulatorCalls> {
-                        <simulateUniswapV2SwapInCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                        }
+                        simulateCurveSwapIn
+                    },
+                    {
+                        fn simulateUniswapV2SwapIn(
+                            data: &[u8],
+                            validate: bool,
+                        ) -> alloy_sol_types::Result<TxSimulatorCalls> {
+                            <simulateUniswapV2SwapInCall as alloy_sol_types::SolCall>::abi_decode_raw(
                                 data,
                                 validate,
                             )
                             .map(TxSimulatorCalls::simulateUniswapV2SwapIn)
-                    }
-                    simulateUniswapV2SwapIn
-                },
-                {
-                    fn simulateAeroSwapIn(
-                        data: &[u8],
-                        validate: bool,
-                    ) -> alloy_sol_types::Result<TxSimulatorCalls> {
-                        <simulateAeroSwapInCall as alloy_sol_types::SolCall>::abi_decode_raw(
-                                data,
-                                validate,
+                        }
+                        simulateUniswapV2SwapIn
+                    },
+                    {
+                        fn simulateAeroSwapIn(
+                            data: &[u8],
+                            validate: bool,
+                        ) -> alloy_sol_types::Result<TxSimulatorCalls> {
+                            <simulateAeroSwapInCall as alloy_sol_types::SolCall>::abi_decode_raw(
+                                data, validate,
                             )
                             .map(TxSimulatorCalls::simulateAeroSwapIn)
-                    }
-                    simulateAeroSwapIn
-                },
-            ];
+                        }
+                        simulateAeroSwapIn
+                    },
+                ];
             let Ok(idx) = Self::SELECTORS.binary_search(&selector) else {
-                return Err(
-                    alloy_sol_types::Error::unknown_selector(
-                        <Self as alloy_sol_types::SolInterface>::NAME,
-                        selector,
-                    ),
-                );
+                return Err(alloy_sol_types::Error::unknown_selector(
+                    <Self as alloy_sol_types::SolInterface>::NAME,
+                    selector,
+                ));
             };
             (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
         }
@@ -1482,19 +1380,13 @@ function simulateUniswapV3SwapIn(SwapParams memory params) external returns (uin
         fn abi_encoded_size(&self) -> usize {
             match self {
                 Self::simulateAeroSwapIn(inner) => {
-                    <simulateAeroSwapInCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <simulateAeroSwapInCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::simulateCurveSwapIn(inner) => {
-                    <simulateCurveSwapInCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <simulateCurveSwapInCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::simulateSwapIn(inner) => {
-                    <simulateSwapInCall as alloy_sol_types::SolCall>::abi_encoded_size(
-                        inner,
-                    )
+                    <simulateSwapInCall as alloy_sol_types::SolCall>::abi_encoded_size(inner)
                 }
                 Self::simulateUniswapV2SwapIn(inner) => {
                     <simulateUniswapV2SwapInCall as alloy_sol_types::SolCall>::abi_encoded_size(
@@ -1512,33 +1404,24 @@ function simulateUniswapV3SwapIn(SwapParams memory params) external returns (uin
         fn abi_encode_raw(&self, out: &mut alloy_sol_types::private::Vec<u8>) {
             match self {
                 Self::simulateAeroSwapIn(inner) => {
-                    <simulateAeroSwapInCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <simulateAeroSwapInCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::simulateCurveSwapIn(inner) => {
                     <simulateCurveSwapInCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::simulateSwapIn(inner) => {
-                    <simulateSwapInCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
-                    )
+                    <simulateSwapInCall as alloy_sol_types::SolCall>::abi_encode_raw(inner, out)
                 }
                 Self::simulateUniswapV2SwapIn(inner) => {
                     <simulateUniswapV2SwapInCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
                 Self::simulateUniswapV3SwapIn(inner) => {
                     <simulateUniswapV3SwapInCall as alloy_sol_types::SolCall>::abi_encode_raw(
-                        inner,
-                        out,
+                        inner, out,
                     )
                 }
             }
@@ -1547,7 +1430,7 @@ function simulateUniswapV3SwapIn(SwapParams memory params) external returns (uin
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`TxSimulator`](self) contract instance.
 
-See the [wrapper's documentation](`TxSimulatorInstance`) for more details.*/
+    See the [wrapper's documentation](`TxSimulatorInstance`) for more details.*/
     #[inline]
     pub const fn new<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1561,9 +1444,9 @@ See the [wrapper's documentation](`TxSimulatorInstance`) for more details.*/
     }
     /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+    Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+    For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
     #[inline]
     pub fn deploy<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
@@ -1571,35 +1454,36 @@ For more fine-grained control over the deployment process, use [`deploy_builder`
         N: alloy_contract::private::Network,
     >(
         provider: P,
-    ) -> impl ::core::future::Future<
-        Output = alloy_contract::Result<TxSimulatorInstance<T, P, N>>,
-    > {
+    ) -> impl ::core::future::Future<Output = alloy_contract::Result<TxSimulatorInstance<T, P, N>>>
+    {
         TxSimulatorInstance::<T, P, N>::deploy(provider)
     }
     /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+    and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+    This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+    the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     #[inline]
     pub fn deploy_builder<
         T: alloy_contract::private::Transport + ::core::clone::Clone,
         P: alloy_contract::private::Provider<T, N>,
         N: alloy_contract::private::Network,
-    >(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
+    >(
+        provider: P,
+    ) -> alloy_contract::RawCallBuilder<T, P, N> {
         TxSimulatorInstance::<T, P, N>::deploy_builder(provider)
     }
     /**A [`TxSimulator`](self) instance.
 
-Contains type-safe methods for interacting with an on-chain instance of the
-[`TxSimulator`](self) contract located at a given `address`, using a given
-provider `P`.
+    Contains type-safe methods for interacting with an on-chain instance of the
+    [`TxSimulator`](self) contract located at a given `address`, using a given
+    provider `P`.
 
-If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
-documentation on how to provide it), the `deploy` and `deploy_builder` methods can
-be used to deploy a new instance of the contract.
+    If the contract bytecode is available (see the [`sol!`](alloy_sol_types::sol!)
+    documentation on how to provide it), the `deploy` and `deploy_builder` methods can
+    be used to deploy a new instance of the contract.
 
-See the [module-level documentation](self) for all the available methods.*/
+    See the [module-level documentation](self) for all the available methods.*/
     #[derive(Clone)]
     pub struct TxSimulatorInstance<T, P, N = alloy_contract::private::Ethereum> {
         address: alloy_sol_types::private::Address,
@@ -1610,24 +1494,24 @@ See the [module-level documentation](self) for all the available methods.*/
     impl<T, P, N> ::core::fmt::Debug for TxSimulatorInstance<T, P, N> {
         #[inline]
         fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
-            f.debug_tuple("TxSimulatorInstance").field(&self.address).finish()
+            f.debug_tuple("TxSimulatorInstance")
+                .field(&self.address)
+                .finish()
         }
     }
     /// Instantiation and getters/setters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > TxSimulatorInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > TxSimulatorInstance<T, P, N>
+    {
         /**Creates a new wrapper around an on-chain [`TxSimulator`](self) contract instance.
 
-See the [wrapper's documentation](`TxSimulatorInstance`) for more details.*/
+        See the [wrapper's documentation](`TxSimulatorInstance`) for more details.*/
         #[inline]
-        pub const fn new(
-            address: alloy_sol_types::private::Address,
-            provider: P,
-        ) -> Self {
+        pub const fn new(address: alloy_sol_types::private::Address, provider: P) -> Self {
             Self {
                 address,
                 provider,
@@ -1636,22 +1520,20 @@ See the [wrapper's documentation](`TxSimulatorInstance`) for more details.*/
         }
         /**Deploys this contract using the given `provider` and constructor arguments, if any.
 
-Returns a new instance of the contract, if the deployment was successful.
+        Returns a new instance of the contract, if the deployment was successful.
 
-For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
+        For more fine-grained control over the deployment process, use [`deploy_builder`] instead.*/
         #[inline]
-        pub async fn deploy(
-            provider: P,
-        ) -> alloy_contract::Result<TxSimulatorInstance<T, P, N>> {
+        pub async fn deploy(provider: P) -> alloy_contract::Result<TxSimulatorInstance<T, P, N>> {
             let call_builder = Self::deploy_builder(provider);
             let contract_address = call_builder.deploy().await?;
             Ok(Self::new(contract_address, call_builder.provider))
         }
         /**Creates a `RawCallBuilder` for deploying this contract using the given `provider`
-and constructor arguments, if any.
+        and constructor arguments, if any.
 
-This is a simple wrapper around creating a `RawCallBuilder` with the data set to
-the bytecode concatenated with the constructor's ABI-encoded arguments.*/
+        This is a simple wrapper around creating a `RawCallBuilder` with the data set to
+        the bytecode concatenated with the constructor's ABI-encoded arguments.*/
         #[inline]
         pub fn deploy_builder(provider: P) -> alloy_contract::RawCallBuilder<T, P, N> {
             alloy_contract::RawCallBuilder::new_raw_deploy(
@@ -1694,10 +1576,11 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
     /// Function calls.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > TxSimulatorInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > TxSimulatorInstance<T, P, N>
+    {
         /// Creates a new call builder using this contract instance's provider and address.
         ///
         /// Note that the call can be any function call, not just those defined in this
@@ -1736,31 +1619,24 @@ the bytecode concatenated with the constructor's ABI-encoded arguments.*/
             &self,
             params: <SwapParams as alloy::sol_types::SolType>::RustType,
         ) -> alloy_contract::SolCallBuilder<T, &P, simulateUniswapV2SwapInCall, N> {
-            self.call_builder(
-                &simulateUniswapV2SwapInCall {
-                    params,
-                },
-            )
+            self.call_builder(&simulateUniswapV2SwapInCall { params })
         }
         ///Creates a new call builder for the [`simulateUniswapV3SwapIn`] function.
         pub fn simulateUniswapV3SwapIn(
             &self,
             params: <SwapParams as alloy::sol_types::SolType>::RustType,
         ) -> alloy_contract::SolCallBuilder<T, &P, simulateUniswapV3SwapInCall, N> {
-            self.call_builder(
-                &simulateUniswapV3SwapInCall {
-                    params,
-                },
-            )
+            self.call_builder(&simulateUniswapV3SwapInCall { params })
         }
     }
     /// Event filters.
     #[automatically_derived]
     impl<
-        T: alloy_contract::private::Transport + ::core::clone::Clone,
-        P: alloy_contract::private::Provider<T, N>,
-        N: alloy_contract::private::Network,
-    > TxSimulatorInstance<T, P, N> {
+            T: alloy_contract::private::Transport + ::core::clone::Clone,
+            P: alloy_contract::private::Provider<T, N>,
+            N: alloy_contract::private::Network,
+        > TxSimulatorInstance<T, P, N>
+    {
         /// Creates a new event filter using this contract instance's provider and address.
         ///
         /// Note that the type can be any event, not just those defined in this contract.
