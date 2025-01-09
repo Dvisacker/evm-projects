@@ -14,6 +14,7 @@ alloy-chains = { workspace = true }
 provider = { path = "../provider" }
 addressbook = { path = "../addressbook" }
 amms = { path = "../amms" }
+types = { path = "../types" }
 
 # alloy-rpc-types = { workspace = true }
 # foundry-config = { workspace = true }

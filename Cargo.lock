@@ -8646,6 +8646,7 @@ dependencies = [
  "provider",
  "tokio",
  "tracing",
+ "types",
 ]
 
 [[package]]

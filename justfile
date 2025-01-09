@@ -114,11 +114,24 @@ start-anvil-ethereum:
 deploy-executor-local:
     cd crates/tx-executor/contracts && forge script ./script/DeployBatchExecutor.s.sol:DeployBatchExecutor --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --broadcast -vv
 
+deploy-simulator-local:
+    cd crates/tx-simulator/contracts && forge script ./script/DeployTxSimulator.s.sol:DeployTxSimulator --rpc-url http://localhost:8545 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --broadcast -vv
+
 deploy-executor-base:
     cd crates/tx-executor/contracts && forge script ./script/DeployBatchExecutor.s.sol:DeployBatchExecutor --rpc-url https://base-mainnet.g.alchemy.com/v2/fVddI-_ivqrBOeXVNVF2uqSvzZfSgwrw --private-key $DEV_PRIVATE_KEY --broadcast -vv
+
+deploy-simulator-base:
+    cd crates/tx-simulator/contracts && forge script ./script/DeployTxSimulator.s.sol:DeployTxSimulator --rpc-url https://base-mainnet.g.alchemy.com/v2/fVddI-_ivqrBOeXVNVF2uqSvzZfSgwrw --private-key $DEV_PRIVATE_KEY --broadcast -vv
 
 deploy-executor-arbitrum:
     cd crates/tx-executor/contracts && forge script ./script/DeployBatchExecutor.s.sol:DeployBatchExecutor --rpc-url https://arb-mainnet.g.alchemy.com/v2/-FDfJ1GYdKyvmVXVfQLTbr_7i04YGMKU --private-key $DEV_PRIVATE_KEY --broadcast -vv
 
+deploy-simulator-arbitrum:
+    cd crates/tx-simulator/contracts && forge script ./script/DeployTxSimulator.s.sol:DeployTxSimulator --rpc-url https://arb-mainnet.g.alchemy.com/v2/-FDfJ1GYdKyvmVXVfQLTbr_7i04YGMKU --private-key $DEV_PRIVATE_KEY --broadcast -vv
+
 deploy-executor-mainnet:
     cd crates/tx-executor/contracts && forge script ./script/DeployBatchExecutor.s.sol:DeployBatchExecutor --rpc-url https://eth-mainnet.alchemyapi.io/v2/fVddI-_ivqrBOeXVNVF2uqSvzZfSgwrw --private-key $DEV_PRIVATE_KEY --broadcast -vv
+
+deploy-simulator-mainnet:
+    cd crates/tx-simulator/contracts && forge script ./script/DeployTxSimulator.s.sol:DeployTxSimulator --rpc-url https://eth-mainnet.alchemyapi.io/v2/fVddI-_ivqrBOeXVNVF2uqSvzZfSgwrw --private-key $DEV_PRIVATE_KEY --broadcast -vv
+
