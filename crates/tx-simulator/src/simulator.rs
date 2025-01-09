@@ -12,6 +12,7 @@ use eyre::Error;
 use std::str::FromStr;
 use types::exchange::ExchangeName;
 
+#[derive(Clone)]
 pub struct TxSimulatorClient<T, P>
 where
     T: Transport + Clone,

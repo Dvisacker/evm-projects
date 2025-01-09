@@ -1,8 +1,10 @@
 use super::types::{Action, Event};
 use crate::state::State;
 use addressbook::Addressbook;
+use alloy::network::Ethereum;
 use alloy::primitives::{Bytes, U256};
 use alloy::providers::Provider;
+use alloy::transports::Transport;
 use alloy::{dyn_abi::DynSolValue, primitives::Address, rpc::types::Log};
 use alloy_chains::Chain;
 use alloy_sol_types::SolEvent;
@@ -33,17 +35,22 @@ use eyre::Result;
 use provider::SignerProvider;
 use shared::cycle::{get_most_profitable_cycle, Cycle};
 use shared::pool_helpers::db_pools_to_amms;
+use shared::utils::get_most_recent_deployment;
+use std::str::FromStr;
 use std::sync::Arc;
 use tracing::{debug, info, warn};
 use tx_executor::{get_default_encoder, BasicEncoder};
+use tx_simulator::simulator::TxSimulatorClient;
+use tx_simulator::SimulatorClient;
 
-#[derive(Debug, Clone)]
+#[derive(Clone)]
 pub struct BaseArb {
     pub chain: Chain,
     pub client: Arc<SignerProvider>,
     pub encoder: Option<Arc<BasicEncoder>>,
     pub state: State,
     pub db_url: String,
+    pub simulator: Option<SimulatorClient>,
 }
 
 impl BaseArb {
@@ -58,6 +65,7 @@ impl BaseArb {
             chain,
             client: client.clone(),
             encoder: None,
+            simulator: None,
             state: State::new(client.clone(), vec![weth]),
             db_url,
         }
@@ -65,6 +73,14 @@ impl BaseArb {
 
     async fn load_encoder(&mut self) -> Result<()> {
         self.encoder = Some(Arc::new(get_default_encoder(self.chain).await));
+        Ok(())
+    }
+
+    async fn load_simulator(&mut self) -> Result<()> {
+        let simulator_address =
+            Address::from_str("0x341E61F9f7323d71EBE435706FE1d62FBaC5E722").unwrap();
+        let simulator = TxSimulatorClient::new(simulator_address, self.client.clone()).await;
+        self.simulator = Some(simulator);
         Ok(())
     }
 
@@ -185,6 +201,7 @@ impl Strategy<Event, Action> for BaseArb {
         info!("Loaded {} pools", self.state.pools.len());
 
         self.load_encoder().await?;
+        self.load_simulator().await?;
 
         let arb_cycles = self.state.update_cycles()?;
         self.log_arbitrage_cycles(&arb_cycles);
@@ -226,10 +243,15 @@ impl Strategy<Event, Action> for BaseArb {
             info!("Most profitable cycle: {}", cycle);
             let token_first = cycle.get_entry_token();
             let amount_in = U256::from(1000000000);
-            let calldata = self
-                .get_cycle_calldata(token_first, amount_in, &cycle)
-                .await;
-            info!("Calldata for the most profitable cycle: {:?}", calldata);
+            let amount_out = self
+                .simulator
+                .as_ref()
+                .unwrap()
+                .simulate_route(token_first, amount_in, &cycle.amms)
+                .await
+                .unwrap();
+
+            println!("Amount out - Amount in: {:?}", amount_out - amount_in);
         }
 
         vec![]

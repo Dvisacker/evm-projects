@@ -2057,6 +2057,7 @@ dependencies = [
  "tracing",
  "tracing-subscriber",
  "tx-executor",
+ "tx-simulator",
  "types",
 ]
 
