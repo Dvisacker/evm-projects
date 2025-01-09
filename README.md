@@ -1,16 +1,8 @@
-# Defi Trading Engine
+# EVM projects 
 
-WIP on a defi trading engine
+Various crates and binaries to trade and interact with EVM chains.
 
-## Features
-
-- 🔌 Modular architecture with pluggable components
-- 💱 Support for multiple AMMs and DEX protocols
-- 🔄 Customizable strategies
-- 📊 Database persistence for liquidity pools
-- 🚀 High-performance Rust implementation
-- 🤖 CLI tools for bot management and testing
-- 🦀 Written in Rust with engine forked from [Artemis](https://github.com/paradigmxyz/artemis)
+The event and blocks pub/sub engine is originally forked from [Artemis](https://github.com/paradigmxyz/artemis).
 
 ## Project Structure
 
