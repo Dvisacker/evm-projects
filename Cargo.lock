@@ -8644,6 +8644,7 @@ dependencies = [
  "dotenv",
  "eyre",
  "provider",
+ "shared",
  "tokio",
  "tracing",
  "types",

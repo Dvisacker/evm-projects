@@ -162,16 +162,57 @@ where
 }
 
 mod tests {
-    use std::env;
+    use std::{env, path::PathBuf};
 
-    use alloy_chains::NamedChain;
+    use addressbook::utils::get_workspace_dir;
+    use alloy_chains::{Chain, NamedChain};
     use amms::amm::{uniswap_v2::UniswapV2Pool, uniswap_v3::UniswapV3Pool, ve33::Ve33Pool};
-    use provider::get_anvil_signer_provider;
+    use provider::{get_anvil_signer_provider, get_default_signer_provider};
+    use shared::utils::get_most_recent_deployment;
 
     use super::*;
 
+    async fn get_broadcast_dir_path() -> PathBuf {
+        let workspace_dir = get_workspace_dir().unwrap();
+        let current_file = std::path::Path::new(file!());
+        let parent_dir = current_file.parent().unwrap().parent().unwrap();
+        workspace_dir.join(parent_dir).join("contracts/broadcast/")
+    }
+
     #[tokio::test]
     async fn test_simulate_route_uniswap_v3() -> Result<(), Error> {
+        dotenv::dotenv().ok();
+        let chain = Chain::try_from(8453).unwrap();
+        let provider = get_default_signer_provider(chain).await;
+        let broadcast_dir_path = get_broadcast_dir_path().await;
+        let simulator_address =
+            get_most_recent_deployment("TxSimulator", 8453, Some(broadcast_dir_path)).unwrap();
+        let simulator = TxSimulatorClient::new(simulator_address, provider.clone()).await;
+        let weth = Address::from_str("0x4200000000000000000000000000000000000006").unwrap();
+
+        let mut weth_usdc_pool = UniswapV3Pool::new_empty(
+            Address::from_str("0xd0b53d9277642d899df5c87a3966a349a798f224").unwrap(),
+            NamedChain::Base,
+        )
+        .await
+        .unwrap();
+
+        weth_usdc_pool.populate_data(None, provider).await.unwrap();
+
+        let result = simulator
+            .simulate_route(
+                weth,
+                U256::from(100000000000000u128),
+                &[AMM::UniswapV3Pool(weth_usdc_pool)],
+            )
+            .await;
+
+        assert!(result.unwrap() > U256::from(0));
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_simulate_route_uniswap_v2() -> Result<(), Error> {
         dotenv::dotenv().ok();
         let provider = get_anvil_signer_provider().await;
         let simulator = TxSimulatorClient::new(
@@ -180,25 +221,69 @@ mod tests {
         )
         .await;
 
-        let mut pool = UniswapV3Pool::new_empty(
-            Address::from_str("0xd0b53d9277642d899df5c87a3966a349a798f224").unwrap(),
-            NamedChain::Base,
+        let mut weth_usdc_pool = UniswapV2Pool::new_from_address(
+            Address::from_str("0x88A43bbDF9D098eEC7bCEda4e2494615dfD9bB9C").unwrap(),
+            300,
+            provider.clone(),
         )
         .await
         .unwrap();
 
-        pool.populate_data(None, provider).await.unwrap();
+        let weth = Address::from_str("0x4200000000000000000000000000000000000006").unwrap();
+
+        println!("Populating data...");
+
+        weth_usdc_pool.populate_data(None, provider).await.unwrap();
+
+        println!("Simulating route...");
 
         let result = simulator
             .simulate_route(
-                Address::from_str("0x4200000000000000000000000000000000000006").unwrap(),
+                weth,
                 U256::from(100000000000000u128),
-                &[AMM::UniswapV3Pool(pool)],
+                &[AMM::UniswapV2Pool(weth_usdc_pool)],
             )
             .await;
 
-        println!("Result: {:?}", result);
+        assert!(result.unwrap() > U256::from(0));
+        Ok(())
+    }
 
+    #[tokio::test]
+    async fn test_simulate_route_aerodrome() -> Result<(), Error> {
+        dotenv::dotenv().ok();
+        let provider = get_anvil_signer_provider().await;
+        let simulator = TxSimulatorClient::new(
+            Address::from_str(&env::var("SIMULATOR_ADDRESS").unwrap()).unwrap(),
+            provider.clone(),
+        )
+        .await;
+
+        let mut weth_usdc_pool = Ve33Pool::new_from_address(
+            Address::from_str("0xcdac0d6c6c59727a65f871236188350531885c43").unwrap(),
+            30, // not used i think
+            provider.clone(),
+        )
+        .await
+        .unwrap();
+
+        let weth = Address::from_str("0x4200000000000000000000000000000000000006").unwrap();
+
+        println!("Populating data...");
+
+        weth_usdc_pool.populate_data(None, provider).await.unwrap();
+
+        println!("Simulating route...");
+
+        let result = simulator
+            .simulate_route(
+                weth,
+                U256::from(100000000000000u128),
+                &[AMM::Ve33Pool(weth_usdc_pool)],
+            )
+            .await;
+
+        assert!(result.unwrap() > U256::from(0));
         Ok(())
     }
 }
