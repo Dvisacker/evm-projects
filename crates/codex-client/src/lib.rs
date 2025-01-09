@@ -474,7 +474,6 @@ mod tests {
         let client = CodexClient::new(api_key);
         let tokens = client.get_top_tokens(vec![8453]).await.unwrap();
         assert!(!tokens.is_empty());
-        println!("First token: {:?}", tokens.first().unwrap());
     }
 
     #[tokio::test]
@@ -491,7 +490,6 @@ mod tests {
             .await
             .unwrap();
         assert!(!pairs.is_empty());
-        println!("First pair: {:?}", pairs.first().unwrap());
     }
 
     #[tokio::test]
@@ -514,13 +512,13 @@ mod tests {
             .await
             .unwrap();
         assert!(!tokens.is_empty());
-        println!(
-            "Top tokens by volume: {:#?}",
-            tokens
-                .into_iter()
-                .map(|t| t.token.unwrap().name.unwrap())
-                .collect::<Vec<String>>()
-        );
+        // println!(
+        //     "Top tokens by volume: {:#?}",
+        //     tokens
+        //         .into_iter()
+        //         .map(|t| t.token.unwrap().name.unwrap())
+        //         .collect::<Vec<String>>()
+        // );
     }
 
     #[tokio::test]

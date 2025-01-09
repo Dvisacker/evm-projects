@@ -64,6 +64,7 @@ impl MetadataClient {
         Ok(pairs)
     }
 
+    // unfortunately, doesn't seem to ƒetch all exchanges (for example aerodrome is missing)
     pub async fn get_exchanges_by_network(
         &self,
         networks: Vec<i64>,
@@ -83,6 +84,12 @@ impl MetadataClient {
             .unwrap();
         Ok(exchanges)
     }
+
+    // pub async fn get_verified_token_by_symbol(&self, symbol: String) -> Result<FilteredTokens, Error> {
+    //     let tokens = self.get_most_traded_tokens(8453, 100).await.unwrap();
+    //     let token = tokens.into_iter().find(|t| t.token.unwrap().symbol.unwrap() == symbol);
+    //     Ok(token)
+    // }
 }
 
 #[cfg(test)]
@@ -114,7 +121,7 @@ mod tests {
     #[tokio::test]
     async fn test_get_most_traded_pools() {
         let client = setup();
-        let network_id = 1; // Ethereum mainnet
+        let network_id = 8453; // Ethereum mainnet
         let limit = 10;
 
         let result = client.get_most_traded_pools(network_id, limit).await;
@@ -132,7 +139,7 @@ mod tests {
     async fn test_get_exchanges_by_network() {
         let client = setup();
         let networks = vec![8453]; // Ethereum mainnet
-        let limit = 10;
+        let limit = 100;
 
         let result = client.get_exchanges_by_network(networks, limit).await;
 
