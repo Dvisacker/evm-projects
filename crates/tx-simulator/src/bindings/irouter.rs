@@ -16,22 +16,22 @@ pub mod IRouter {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea2646970667358221220ff774641e8d976423e86264930dfbc4e93e0cbc1063ab6e69dde2c7580c7eb8a64736f6c634300081a0033
+    ///0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea2646970667358221220dc92a2a3d920d666fecf4bb434234f78be797965e7f1b23c5982fcf6559603f364736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80\x80`@R4`\x17W`:\x90\x81`\x1D\x8290\x81PP\xF3[`\0\x80\xFD\xFE`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \xFFwFA\xE8\xD9vB>\x86&I0\xDF\xBCN\x93\xE0\xCB\xC1\x06:\xB6\xE6\x9D\xDE,u\x80\xC7\xEB\x8AdsolcC\0\x08\x1A\x003",
+        b"`\x80\x80`@R4`\x17W`:\x90\x81`\x1D\x8290\x81PP\xF3[`\0\x80\xFD\xFE`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \xDC\x92\xA2\xA3\xD9 \xD6f\xFE\xCFK\xB44#Ox\xBEyye\xE7\xF1\xB2<Y\x82\xFC\xF6U\x96\x03\xF3dsolcC\0\x08\x1A\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x600080fdfea2646970667358221220ff774641e8d976423e86264930dfbc4e93e0cbc1063ab6e69dde2c7580c7eb8a64736f6c634300081a0033
+    ///0x600080fdfea2646970667358221220dc92a2a3d920d666fecf4bb434234f78be797965e7f1b23c5982fcf6559603f364736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \xFFwFA\xE8\xD9vB>\x86&I0\xDF\xBCN\x93\xE0\xCB\xC1\x06:\xB6\xE6\x9D\xDE,u\x80\xC7\xEB\x8AdsolcC\0\x08\x1A\x003",
+        b"`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \xDC\x92\xA2\xA3\xD9 \xD6f\xFE\xCFK\xB44#Ox\xBEyye\xE7\xF1\xB2<Y\x82\xFC\xF6U\x96\x03\xF3dsolcC\0\x08\x1A\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IRouter`](self) contract instance.

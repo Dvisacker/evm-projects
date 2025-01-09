@@ -16,22 +16,22 @@ pub mod UniswapV2Library {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea2646970667358221220b8aa778bf91294d45fb155cef0683ce525a77c134df8d1cc28cf434588af00e764736f6c634300081a0033
+    ///0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea2646970667358221220db22a64e351a97f4cc3ae776d810ee7565f141053ca266c0ac8cb7030fe984ae64736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80\x80`@R4`\x17W`:\x90\x81`\x1D\x8290\x81PP\xF3[`\0\x80\xFD\xFE`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \xB8\xAAw\x8B\xF9\x12\x94\xD4_\xB1U\xCE\xF0h<\xE5%\xA7|\x13M\xF8\xD1\xCC(\xCFCE\x88\xAF\0\xE7dsolcC\0\x08\x1A\x003",
+        b"`\x80\x80`@R4`\x17W`:\x90\x81`\x1D\x8290\x81PP\xF3[`\0\x80\xFD\xFE`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \xDB\"\xA6N5\x1A\x97\xF4\xCC:\xE7v\xD8\x10\xEEue\xF1A\x05<\xA2f\xC0\xAC\x8C\xB7\x03\x0F\xE9\x84\xAEdsolcC\0\x08\x1A\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x600080fdfea2646970667358221220b8aa778bf91294d45fb155cef0683ce525a77c134df8d1cc28cf434588af00e764736f6c634300081a0033
+    ///0x600080fdfea2646970667358221220db22a64e351a97f4cc3ae776d810ee7565f141053ca266c0ac8cb7030fe984ae64736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \xB8\xAAw\x8B\xF9\x12\x94\xD4_\xB1U\xCE\xF0h<\xE5%\xA7|\x13M\xF8\xD1\xCC(\xCFCE\x88\xAF\0\xE7dsolcC\0\x08\x1A\x003",
+        b"`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \xDB\"\xA6N5\x1A\x97\xF4\xCC:\xE7v\xD8\x10\xEEue\xF1A\x05<\xA2f\xC0\xAC\x8C\xB7\x03\x0F\xE9\x84\xAEdsolcC\0\x08\x1A\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`UniswapV2Library`](self) contract instance.

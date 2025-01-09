@@ -16,22 +16,22 @@ pub mod IUniswapV3QuoterV2Lib {
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea26469706673582212205780f68333e08a4a17540dd5f48ae4b04e45aea4b8069ac38f3d88ad0d3f599b64736f6c634300081a0033
+    ///0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea26469706673582212207984aa4703dd2f3204449a5429aa7a3e1f573677c9ff63bb093d51bb751c6a0a64736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80\x80`@R4`\x17W`:\x90\x81`\x1D\x8290\x81PP\xF3[`\0\x80\xFD\xFE`\0\x80\xFD\xFE\xA2dipfsX\"\x12 W\x80\xF6\x833\xE0\x8AJ\x17T\r\xD5\xF4\x8A\xE4\xB0NE\xAE\xA4\xB8\x06\x9A\xC3\x8F=\x88\xAD\r?Y\x9BdsolcC\0\x08\x1A\x003",
+        b"`\x80\x80`@R4`\x17W`:\x90\x81`\x1D\x8290\x81PP\xF3[`\0\x80\xFD\xFE`\0\x80\xFD\xFE\xA2dipfsX\"\x12 y\x84\xAAG\x03\xDD/2\x04D\x9AT)\xAAz>\x1FW6w\xC9\xFFc\xBB\t=Q\xBBu\x1Cj\ndsolcC\0\x08\x1A\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x600080fdfea26469706673582212205780f68333e08a4a17540dd5f48ae4b04e45aea4b8069ac38f3d88ad0d3f599b64736f6c634300081a0033
+    ///0x600080fdfea26469706673582212207984aa4703dd2f3204449a5429aa7a3e1f573677c9ff63bb093d51bb751c6a0a64736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\0\x80\xFD\xFE\xA2dipfsX\"\x12 W\x80\xF6\x833\xE0\x8AJ\x17T\r\xD5\xF4\x8A\xE4\xB0NE\xAE\xA4\xB8\x06\x9A\xC3\x8F=\x88\xAD\r?Y\x9BdsolcC\0\x08\x1A\x003",
+        b"`\0\x80\xFD\xFE\xA2dipfsX\"\x12 y\x84\xAAG\x03\xDD/2\x04D\x9AT)\xAAz>\x1FW6w\xC9\xFFc\xBB\t=Q\xBBu\x1Cj\ndsolcC\0\x08\x1A\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`IUniswapV3QuoterV2Lib`](self) contract instance.
