@@ -3,12 +3,15 @@ pragma solidity ^0.8.9;
 
 import {IUniswapV3QuoterV2Lib} from "./interfaces/IUniswapV3QuoterV2.sol";
 import {IUniswapV3QuoterV2} from "./interfaces/IUniswapV3QuoterV2.sol";
-import {ICurvePool} from "./interfaces/ICurvePool.sol";
+import {ICurvePoolV2} from "./interfaces/ICurvePoolV2.sol";
 import {UniswapV2Library} from "./libraries/UniswapV2Library.sol";
 import {SafeMath} from "./libraries/SafeMath.sol";
 import {IRouter, IAerodromeRouter} from "./interfaces/IAerodromeRouter.sol";
+import "forge-std/console.sol";
 
-// Credits to https://github.com/solidquant/whack-a-mole
+// Credits to https://github.com/solidquant/whack-a-mole.
+// This is a modified version of the original code to support Aerodrome.
+
 contract TxSimulator {
     using SafeMath for uint256;
 
@@ -20,6 +23,7 @@ contract TxSimulator {
         uint24 fee; // only used in Uniswap V3
         uint256 amount; // amount in (1 USDC = 1,000,000 / 1 MATIC = 1 * 10 ** 18)
         bool stable; // only used in Aerodrome
+        address factory; // only used in Aerodrome
     }
 
     constructor() {}
@@ -42,6 +46,7 @@ contract TxSimulator {
             } else if (params.protocol == 1) {
                 amountOut = simulateUniswapV3SwapIn(params);
             } else if (params.protocol == 2) {
+                console.log("simulateCurveSwapIn");
                 amountOut = simulateCurveSwapIn(params);
             } else if (params.protocol == 3) {
                 amountOut = simulateAeroSwapIn(params);
@@ -72,17 +77,18 @@ contract TxSimulator {
         (amountOut,,,) = quoter.quoteExactInputSingle(quoterParams);
     }
 
+    // TODO: Replace the pool with the curve router.
+    // NOTE: This uses the curve pool v2 interface (the one deployed on base)
     function simulateCurveSwapIn(SwapParams memory params) public returns (uint256 amountOut) {
-        ICurvePool pool = ICurvePool(params.handler);
+        ICurvePoolV2 pool = ICurvePoolV2(params.handler);
 
-        int128 i;
-        int128 j;
+        uint256 i;
+        uint256 j;
 
-        int128 coinIdx;
+        uint256 coinIdx = 0;
 
         while (i == j) {
-            require(coinIdx > 0, "Coin index is out of bounds");
-            address coin = pool.coins(uint256(int256(coinIdx)));
+            address coin = pool.coins(coinIdx);
 
             if (coin == params.tokenIn) {
                 i = coinIdx;
@@ -109,7 +115,7 @@ contract TxSimulator {
         route[0].from = params.tokenIn;
         route[0].to = params.tokenOut;
         route[0].stable = params.stable;
-        route[0].factory = params.handler;
+        route[0].factory = params.factory;
 
         amountOut = router.getAmountsOut(params.amount, route)[1];
     }

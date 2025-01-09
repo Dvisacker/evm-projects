@@ -18,6 +18,9 @@ contract TxSimulatorTest is Test {
     ERC20 dai = ERC20(0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb);
     ERC20 usdc = ERC20(0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913);
     ERC20 usdt = ERC20(0xfde4C96c8593536E31F229EA8f37b2ADa2699bb2);
+    ERC20 cbETH = ERC20(0x2Ae3F1Ec7F1F5012CFEab0185bfc7aa3cf0DEc22);
+
+    address WETHcbETHCurvePool = 0x11C1fBd4b3De66bC0565779b35171a6CF3E71f59;
 
     TxSimulator public simulator;
     IUniswapV3Router public uniswapV3Router = IUniswapV3Router(0x2626664c2603336E57B271c5C0b26F421741e481);
@@ -28,6 +31,7 @@ contract TxSimulatorTest is Test {
     address uniswapV3Factory = 0x33128a8fC17869897dcE68Ed026d694621f6FDfD;
     address uniswapV3Quoter = 0x3d4e44Eb1374240CE5F1B871ab261CD16335B76a;
     address uniswapV2Factory = 0x8909Dc15e40173Ff4699343b6eB8132c65e18eC6;
+    address aerodromeFactory = 0x420DD381b31aEf6683db6B902084cB0FFECe40Da;
     // V3 init code hash
     bytes32 initCodeHash = 0xe34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54;
 
@@ -48,7 +52,8 @@ contract TxSimulatorTest is Test {
             tokenOut: address(usdc),
             fee: 3000,
             amount: amountIn,
-            stable: false
+            stable: false,
+            factory: address(0)
         });
 
         vm.startPrank(deployer);
@@ -67,7 +72,28 @@ contract TxSimulatorTest is Test {
             tokenOut: address(usdc),
             fee: 3000,
             amount: amountIn,
-            stable: false
+            stable: false,
+            factory: address(0)
+        });
+
+        vm.startPrank(deployer);
+        simulator.simulateSwapIn(paramsArray);
+        vm.stopPrank();
+    }
+
+    function testAeroSwap() public {
+        uint256 amountIn = 1 ether;
+
+        TxSimulator.SwapParams[] memory paramsArray = new TxSimulator.SwapParams[](1);
+        paramsArray[0] = TxSimulator.SwapParams({
+            protocol: 3,
+            handler: address(aerodromeRouter),
+            tokenIn: address(weth),
+            tokenOut: address(usdc),
+            fee: 30, // 0.03% -- actually not used since aerodrome uses the stable to determine the fee
+            amount: amountIn,
+            stable: false,
+            factory: address(aerodromeFactory)
         });
 
         vm.startPrank(deployer);
@@ -81,12 +107,13 @@ contract TxSimulatorTest is Test {
         TxSimulator.SwapParams[] memory paramsArray = new TxSimulator.SwapParams[](1);
         paramsArray[0] = TxSimulator.SwapParams({
             protocol: 2,
-            handler: address(aerodromeRouter),
+            handler: WETHcbETHCurvePool,
             tokenIn: address(weth),
-            tokenOut: address(usdc),
-            fee: 0,
+            tokenOut: address(cbETH),
             amount: amountIn,
-            stable: true
+            fee: 0, // not used
+            stable: true, // not used
+            factory: address(0) // not used
         });
 
         vm.startPrank(deployer);
