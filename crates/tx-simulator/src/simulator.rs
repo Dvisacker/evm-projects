@@ -62,11 +62,11 @@ where
             let token_out;
 
             if token_in == token_a {
-                token_in = token_b;
-                token_out = token_a;
-            } else {
                 token_in = token_a;
                 token_out = token_b;
+            } else {
+                token_in = token_b;
+                token_out = token_a;
             }
 
             match amm {
@@ -232,11 +232,7 @@ mod tests {
 
         let weth = Address::from_str("0x4200000000000000000000000000000000000006").unwrap();
 
-        println!("Populating data...");
-
         weth_usdc_pool.populate_data(None, provider).await.unwrap();
-
-        println!("Simulating route...");
 
         let result = simulator
             .simulate_route(
@@ -254,11 +250,10 @@ mod tests {
     async fn test_simulate_route_aerodrome() -> Result<(), Error> {
         dotenv::dotenv().ok();
         let provider = get_anvil_signer_provider().await;
-        let simulator = TxSimulatorClient::new(
-            Address::from_str(&env::var("SIMULATOR_ADDRESS").unwrap()).unwrap(),
-            provider.clone(),
-        )
-        .await;
+        let broadcast_dir_path = get_broadcast_dir_path().await;
+        let simulator_address =
+            get_most_recent_deployment("TxSimulator", 8453, Some(broadcast_dir_path)).unwrap();
+        let simulator = TxSimulatorClient::new(simulator_address, provider.clone()).await;
 
         let mut weth_usdc_pool = Ve33Pool::new_from_address(
             Address::from_str("0xcdac0d6c6c59727a65f871236188350531885c43").unwrap(),
@@ -270,11 +265,7 @@ mod tests {
 
         let weth = Address::from_str("0x4200000000000000000000000000000000000006").unwrap();
 
-        println!("Populating data...");
-
         weth_usdc_pool.populate_data(None, provider).await.unwrap();
-
-        println!("Simulating route...");
 
         let result = simulator
             .simulate_route(

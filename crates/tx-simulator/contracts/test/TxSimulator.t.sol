@@ -92,7 +92,7 @@ contract TxSimulatorTest is Test {
             tokenOut: address(usdc),
             fee: 30, // 0.03% -- actually not used since aerodrome uses the stable to determine the fee
             amount: amountIn,
-            stable: false,
+            stable: true,
             factory: address(aerodromeFactory)
         });
 
