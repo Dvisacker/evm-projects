@@ -142,6 +142,9 @@ where
                     return Err(eyre::eyre!("Unsupported AMM: {:?}", amm));
                 }
             }
+
+            // The token_in for the next swap is the token_out of the current swap
+            token_in = token_out;
         }
         Ok(params)
     }
@@ -272,6 +275,70 @@ mod tests {
                 weth,
                 U256::from(100000000000000u128),
                 &[AMM::Ve33Pool(weth_usdc_pool)],
+            )
+            .await;
+
+        assert!(result.unwrap() > U256::from(0));
+        Ok(())
+    }
+
+    #[tokio::test]
+    async fn test_simulate_route_aerodrome_2() -> Result<(), Error> {
+        dotenv::dotenv().ok();
+        let provider = get_anvil_signer_provider().await;
+        let broadcast_dir_path = get_broadcast_dir_path().await;
+        let simulator_address =
+            get_most_recent_deployment("TxSimulator", 8453, Some(broadcast_dir_path)).unwrap();
+        let simulator = TxSimulatorClient::new(simulator_address, provider.clone()).await;
+
+        let mut weth_wseth_pool = Ve33Pool::new_from_address(
+            Address::from_str("0x29BBb5F85F01702Ec85D217CEEb2d9657700cF04").unwrap(),
+            30, // not used i think
+            provider.clone(),
+        )
+        .await
+        .unwrap();
+
+        let mut fbomb_wseth_pool = Ve33Pool::new_from_address(
+            Address::from_str("0xBd1F3d188de7eE07B1b323C0D26D6720CAfB8780").unwrap(),
+            30, // not used i think
+            provider.clone(),
+        )
+        .await
+        .unwrap();
+
+        let mut weth_fbomb_pool = Ve33Pool::new_from_address(
+            Address::from_str("0x4F9Dc2229f2357B27C22db56cB39582c854Ad6d5").unwrap(),
+            30, // not used i think
+            provider.clone(),
+        )
+        .await
+        .unwrap();
+
+        let weth = Address::from_str("0x4200000000000000000000000000000000000006").unwrap();
+
+        weth_wseth_pool
+            .populate_data(None, provider.clone())
+            .await
+            .unwrap();
+        fbomb_wseth_pool
+            .populate_data(None, provider.clone())
+            .await
+            .unwrap();
+        weth_fbomb_pool
+            .populate_data(None, provider.clone())
+            .await
+            .unwrap();
+
+        let result = simulator
+            .simulate_route(
+                weth,
+                U256::from(100000000000000u128),
+                &[
+                    AMM::Ve33Pool(weth_wseth_pool.clone()),
+                    AMM::Ve33Pool(fbomb_wseth_pool.clone()),
+                    AMM::Ve33Pool(weth_fbomb_pool.clone()),
+                ],
             )
             .await;
 
