@@ -33,9 +33,10 @@ use diesel::PgConnection;
 use engine::types::Strategy;
 use eyre::Result;
 use provider::SignerProvider;
-use shared::cycle::{get_most_profitable_cycle, Cycle};
+use shared::cycle::{self, get_most_profitable_cycle, get_most_profitable_cycles, Cycle};
 use shared::pool_helpers::db_pools_to_amms;
 use shared::utils::get_most_recent_deployment;
+use std::env;
 use std::str::FromStr;
 use std::sync::Arc;
 use tracing::{debug, info, warn};
@@ -77,9 +78,11 @@ impl BaseArb {
     }
 
     async fn load_simulator(&mut self) -> Result<()> {
-        let simulator_address =
-            Address::from_str("0x341E61F9f7323d71EBE435706FE1d62FBaC5E722").unwrap();
-        let simulator = TxSimulatorClient::new(simulator_address, self.client.clone()).await;
+        let simulator = TxSimulatorClient::new(
+            Address::from_str(&env::var("SIMULATOR_ADDRESS").unwrap()).unwrap(),
+            self.client.clone(),
+        )
+        .await;
         self.simulator = Some(simulator);
         Ok(())
     }
@@ -237,10 +240,9 @@ impl Strategy<Event, Action> for BaseArb {
         self.log_arbitrage_cycles(&updated_cycles);
         info!("--------------------------------");
 
-        let most_profitable_cycle = get_most_profitable_cycle(updated_cycles);
+        let most_profitable_cycles = get_most_profitable_cycles(updated_cycles, 5);
 
-        if let Some(cycle) = most_profitable_cycle {
-            info!("Most profitable cycle: {}", cycle);
+        for cycle in most_profitable_cycles {
             let token_first = cycle.get_entry_token();
             let amount_in = U256::from(1000000000);
             let amount_out = self
@@ -249,9 +251,16 @@ impl Strategy<Event, Action> for BaseArb {
                 .unwrap()
                 .simulate_route(token_first, amount_in, &cycle.amms)
                 .await
-                .unwrap();
+                .unwrap_or_else(|e| {
+                    warn!("Failed to simulate route: {}", e);
+                    U256::from(0)
+                });
 
-            println!("Amount out - Amount in: {:?}", amount_out - amount_in);
+            if amount_out > amount_in {
+                info!("Cycle {} - Profit: {:?}", cycle, amount_out - amount_in);
+            } else {
+                info!("Cycle {} - Loss: {:?}", cycle, amount_in - amount_out);
+            }
         }
 
         vec![]

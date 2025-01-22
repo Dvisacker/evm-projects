@@ -103,3 +103,7 @@ pub fn sort_cycle_by_profit(cycles: Vec<Cycle>) -> Vec<Cycle> {
 pub fn get_most_profitable_cycle(cycles: Vec<Cycle>) -> Option<Cycle> {
     sort_cycle_by_profit(cycles).first().cloned()
 }
+
+pub fn get_most_profitable_cycles(cycles: Vec<Cycle>, n: usize) -> Vec<Cycle> {
+    sort_cycle_by_profit(cycles).into_iter().take(n).collect()
+}
