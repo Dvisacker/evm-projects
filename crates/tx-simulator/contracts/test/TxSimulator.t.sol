@@ -101,6 +101,49 @@ contract TxSimulatorTest is Test {
         vm.stopPrank();
     }
 
+    // Test cycle: WETH -> wstETH -> fBOMB -> WETH
+    function testAeroSwap2() public {
+        uint256 amountIn = 1 ether;
+        address wstETH = 0xc1CBa3fCea344f92D9239c08C0568f6F2F0ee452;
+        address fBOMB = 0x74ccbe53F77b08632ce0CB91D3A545bF6B8E0979;
+
+        TxSimulator.SwapParams[] memory paramsArray = new TxSimulator.SwapParams[](3);
+        paramsArray[0] = TxSimulator.SwapParams({
+            protocol: 3,
+            handler: address(aerodromeRouter),
+            tokenIn: address(weth),
+            tokenOut: address(wstETH),
+            fee: 30,
+            amount: amountIn,
+            stable: false,
+            factory: address(aerodromeFactory)
+        });
+        paramsArray[1] = TxSimulator.SwapParams({
+            protocol: 3,
+            handler: address(aerodromeRouter),
+            tokenIn: address(wstETH),
+            tokenOut: address(fBOMB),
+            fee: 30,
+            amount: amountIn,
+            stable: false,
+            factory: address(aerodromeFactory)
+        });
+        paramsArray[2] = TxSimulator.SwapParams({
+            protocol: 3,
+            handler: address(aerodromeRouter),
+            tokenIn: address(fBOMB),
+            tokenOut: address(weth),
+            fee: 30,
+            amount: amountIn,
+            stable: false,
+            factory: address(aerodromeFactory)
+        });
+
+        vm.startPrank(deployer);
+        simulator.simulateSwapIn(paramsArray);
+        vm.stopPrank();
+    }
+
     function testCurveSwap() public {
         uint256 amountIn = 1 ether;
 

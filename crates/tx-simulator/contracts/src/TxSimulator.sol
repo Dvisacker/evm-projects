@@ -35,12 +35,10 @@ contract TxSimulator {
         for (uint256 i; i < paramsArrayLength;) {
             SwapParams memory params = paramsArray[i];
 
-            if (amountOut == 0) {
-                amountOut = params.amount;
-            } else {
+            if (amountOut != 0) {
                 params.amount = amountOut;
-            }
-
+            } 
+            
             if (params.protocol == 0) {
                 amountOut = simulateUniswapV2SwapIn(params);
             } else if (params.protocol == 1) {
