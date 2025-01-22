@@ -9,29 +9,35 @@ interface SafeMath {}
 ```json
 []
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style,
+    clippy::empty_structs_with_brackets
+)]
 pub mod SafeMath {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea264697066735822122016079b231301a55caa2a3592174817fea71956c06f4b9320cb4c136fd000376964736f6c634300081a0033
+    ///0x608060405234601d57600e6021565b603e602c823930815050603e90f35b6027565b60405190565b5f80fdfe60806040525f80fdfea2646970667358221220b87bff2dfe0d9e04c834f96e8a417786cdd84b3846b4fc95c4dd203bf259457964736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80\x80`@R4`\x17W`:\x90\x81`\x1D\x8290\x81PP\xF3[`\0\x80\xFD\xFE`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \x16\x07\x9B#\x13\x01\xA5\\\xAA*5\x92\x17H\x17\xFE\xA7\x19V\xC0oK\x93 \xCBL\x13o\xD0\x007idsolcC\0\x08\x1A\x003",
+        b"`\x80`@R4`\x1DW`\x0E`!V[`>`,\x8290\x81PP`>\x90\xF3[`'V[`@Q\x90V[_\x80\xFD\xFE`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \xB8{\xFF-\xFE\r\x9E\x04\xC84\xF9n\x8AAw\x86\xCD\xD8K8F\xB4\xFC\x95\xC4\xDD ;\xF2YEydsolcC\0\x08\x1A\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x600080fdfea264697066735822122016079b231301a55caa2a3592174817fea71956c06f4b9320cb4c136fd000376964736f6c634300081a0033
+    ///0x60806040525f80fdfea2646970667358221220b87bff2dfe0d9e04c834f96e8a417786cdd84b3846b4fc95c4dd203bf259457964736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \x16\x07\x9B#\x13\x01\xA5\\\xAA*5\x92\x17H\x17\xFE\xA7\x19V\xC0oK\x93 \xCBL\x13o\xD0\x007idsolcC\0\x08\x1A\x003",
+        b"`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \xB8{\xFF-\xFE\r\x9E\x04\xC84\xF9n\x8AAw\x86\xCD\xD8K8F\xB4\xFC\x95\xC4\xDD ;\xF2YEydsolcC\0\x08\x1A\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`SafeMath`](self) contract instance.

@@ -142,7 +142,13 @@ interface IExecutor {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style,
+    clippy::empty_structs_with_brackets
+)]
 pub mod IExecutor {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
@@ -169,16 +175,26 @@ pub mod IExecutor {
     /**```solidity
 struct Placeholder { address to; bytes data; uint64 offset; uint64 length; uint64 resOffset; }
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct Placeholder {
+        #[allow(missing_docs)]
         pub to: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub data: alloy::sol_types::private::Bytes,
+        #[allow(missing_docs)]
         pub offset: u64,
+        #[allow(missing_docs)]
         pub length: u64,
+        #[allow(missing_docs)]
         pub resOffset: u64,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -447,22 +463,32 @@ struct Placeholder { address to; bytes data; uint64 offset; uint64 length; uint6
 ```solidity
 function callWithPlaceholders4845164670(address target, uint256 value, bytes32 context, bytes memory callData, Placeholder[] memory placeholders) external payable;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct callWithPlaceholders4845164670Call {
+        #[allow(missing_docs)]
         pub target: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub value: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub context: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub callData: alloy::sol_types::private::Bytes,
+        #[allow(missing_docs)]
         pub placeholders: alloy::sol_types::private::Vec<
             <Placeholder as alloy::sol_types::SolType>::RustType,
         >,
     }
     ///Container type for the return parameters of the [`callWithPlaceholders4845164670(address,uint256,bytes32,bytes,(address,bytes,uint64,uint64,uint64)[])`](callWithPlaceholders4845164670Call) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct callWithPlaceholders4845164670Return {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -618,19 +644,28 @@ function callWithPlaceholders4845164670(address target, uint256 value, bytes32 c
 ```solidity
 function call_g0oyU7o(address target, uint256 value, bytes32 context, bytes memory callData) external payable;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct call_g0oyU7oCall {
+        #[allow(missing_docs)]
         pub target: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub value: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub context: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub callData: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`call_g0oyU7o(address,uint256,bytes32,bytes)`](call_g0oyU7oCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct call_g0oyU7oReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -767,16 +802,22 @@ function call_g0oyU7o(address target, uint256 value, bytes32 context, bytes memo
 ```solidity
 function exec_606BaXt(bytes[] memory data) external payable;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct exec_606BaXtCall {
+        #[allow(missing_docs)]
         pub data: alloy::sol_types::private::Vec<alloy::sol_types::private::Bytes>,
     }
     ///Container type for the return parameters of the [`exec_606BaXt(bytes[])`](exec_606BaXtCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct exec_606BaXtReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -890,17 +931,24 @@ function exec_606BaXt(bytes[] memory data) external payable;
 ```solidity
 function transfer(address recipient, uint256 amount) external payable;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferCall {
+        #[allow(missing_docs)]
         pub recipient: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`transfer(address,uint256)`](transferCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct transferReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1021,9 +1069,13 @@ function transfer(address recipient, uint256 amount) external payable;
     };
     ///Container for all the [`IExecutor`](self) function calls.
     pub enum IExecutorCalls {
+        #[allow(missing_docs)]
         callWithPlaceholders4845164670(callWithPlaceholders4845164670Call),
+        #[allow(missing_docs)]
         call_g0oyU7o(call_g0oyU7oCall),
+        #[allow(missing_docs)]
         exec_606BaXt(exec_606BaXtCall),
+        #[allow(missing_docs)]
         transfer(transferCall),
     }
     #[automatically_derived]
@@ -1070,7 +1122,7 @@ function transfer(address recipient, uint256 amount) external payable;
             Self::SELECTORS.binary_search(&selector).is_ok()
         }
         #[inline]
-        #[allow(unsafe_code, non_snake_case)]
+        #[allow(non_snake_case)]
         fn abi_decode_raw(
             selector: [u8; 4],
             data: &[u8],
@@ -1141,7 +1193,7 @@ function transfer(address recipient, uint256 amount) external payable;
                     ),
                 );
             };
-            (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
+            DECODE_SHIMS[idx](data, validate)
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {

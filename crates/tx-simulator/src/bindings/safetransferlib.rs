@@ -9,29 +9,35 @@ interface SafeTransferLib {}
 ```json
 []
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style,
+    clippy::empty_structs_with_brackets
+)]
 pub mod SafeTransferLib {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea264697066735822122017b051311f82ff97c9c892953729cc403ade5f30e38169f7acb07067ff685f9364736f6c634300081a0033
+    ///0x608060405234601d57600e6021565b603e602c823930815050603e90f35b6027565b60405190565b5f80fdfe60806040525f80fdfea26469706673582212200aae90579bcb1a1b896864a67ae21b3ba49f434bf8503f91b82758547f6c492c64736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80\x80`@R4`\x17W`:\x90\x81`\x1D\x8290\x81PP\xF3[`\0\x80\xFD\xFE`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \x17\xB0Q1\x1F\x82\xFF\x97\xC9\xC8\x92\x957)\xCC@:\xDE_0\xE3\x81i\xF7\xAC\xB0pg\xFFh_\x93dsolcC\0\x08\x1A\x003",
+        b"`\x80`@R4`\x1DW`\x0E`!V[`>`,\x8290\x81PP`>\x90\xF3[`'V[`@Q\x90V[_\x80\xFD\xFE`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \n\xAE\x90W\x9B\xCB\x1A\x1B\x89hd\xA6z\xE2\x1B;\xA4\x9FCK\xF8P?\x91\xB8'XT\x7FlI,dsolcC\0\x08\x1A\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x600080fdfea264697066735822122017b051311f82ff97c9c892953729cc403ade5f30e38169f7acb07067ff685f9364736f6c634300081a0033
+    ///0x60806040525f80fdfea26469706673582212200aae90579bcb1a1b896864a67ae21b3ba49f434bf8503f91b82758547f6c492c64736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \x17\xB0Q1\x1F\x82\xFF\x97\xC9\xC8\x92\x957)\xCC@:\xDE_0\xE3\x81i\xF7\xAC\xB0pg\xFFh_\x93dsolcC\0\x08\x1A\x003",
+        b"`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \n\xAE\x90W\x9B\xCB\x1A\x1B\x89hd\xA6z\xE2\x1B;\xA4\x9FCK\xF8P?\x91\xB8'XT\x7FlI,dsolcC\0\x08\x1A\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`SafeTransferLib`](self) contract instance.

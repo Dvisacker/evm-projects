@@ -7,23 +7,39 @@ library IUniswapV3QuoterV2Lib {
     struct QuoteExactOutputSingleParams { address tokenIn; address tokenOut; uint256 amount; uint24 fee; uint160 sqrtPriceLimitX96; }
 }
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style,
+    clippy::empty_structs_with_brackets
+)]
 pub mod IUniswapV3QuoterV2Lib {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
     /**```solidity
 struct QuoteExactInputSingleParams { address tokenIn; address tokenOut; uint256 amountIn; uint24 fee; uint160 sqrtPriceLimitX96; }
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct QuoteExactInputSingleParams {
+        #[allow(missing_docs)]
         pub tokenIn: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub tokenOut: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amountIn: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub fee: alloy::sol_types::private::primitives::aliases::U24,
+        #[allow(missing_docs)]
         pub sqrtPriceLimitX96: alloy::sol_types::private::primitives::aliases::U160,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -297,16 +313,26 @@ struct QuoteExactInputSingleParams { address tokenIn; address tokenOut; uint256 
     /**```solidity
 struct QuoteExactOutputSingleParams { address tokenIn; address tokenOut; uint256 amount; uint24 fee; uint160 sqrtPriceLimitX96; }
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct QuoteExactOutputSingleParams {
+        #[allow(missing_docs)]
         pub tokenIn: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub tokenOut: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub fee: alloy::sol_types::private::primitives::aliases::U24,
+        #[allow(missing_docs)]
         pub sqrtPriceLimitX96: alloy::sol_types::private::primitives::aliases::U160,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -995,7 +1021,13 @@ interface IUniswapV3QuoterV2 {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style,
+    clippy::empty_structs_with_brackets
+)]
 pub mod IUniswapV3QuoterV2 {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
@@ -1023,16 +1055,22 @@ pub mod IUniswapV3QuoterV2 {
 ```solidity
 function WETH9() external view returns (address);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct WETH9Call {}
     ///Container type for the return parameters of the [`WETH9()`](WETH9Call) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct WETH9Return {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1136,16 +1174,22 @@ function WETH9() external view returns (address);
 ```solidity
 function factory() external view returns (address);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct factoryCall {}
     ///Container type for the return parameters of the [`factory()`](factoryCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct factoryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1249,24 +1293,35 @@ function factory() external view returns (address);
 ```solidity
 function quoteExactInput(bytes memory path, uint256 amountIn) external returns (uint256 amountOut, uint160[] memory sqrtPriceX96AfterList, uint32[] memory initializedTicksCrossedList, uint256 gasEstimate);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct quoteExactInputCall {
+        #[allow(missing_docs)]
         pub path: alloy::sol_types::private::Bytes,
+        #[allow(missing_docs)]
         pub amountIn: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`quoteExactInput(bytes,uint256)`](quoteExactInputCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct quoteExactInputReturn {
+        #[allow(missing_docs)]
         pub amountOut: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub sqrtPriceX96AfterList: alloy::sol_types::private::Vec<
             alloy::sol_types::private::primitives::aliases::U160,
         >,
+        #[allow(missing_docs)]
         pub initializedTicksCrossedList: alloy::sol_types::private::Vec<u32>,
+        #[allow(missing_docs)]
         pub gasEstimate: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1418,21 +1473,31 @@ function quoteExactInput(bytes memory path, uint256 amountIn) external returns (
 ```solidity
 function quoteExactInputSingle(IUniswapV3QuoterV2Lib.QuoteExactInputSingleParams memory params) external returns (uint256 amountOut, uint160 sqrtPriceX96After, uint32 initializedTicksCrossed, uint256 gasEstimate);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct quoteExactInputSingleCall {
+        #[allow(missing_docs)]
         pub params: <IUniswapV3QuoterV2Lib::QuoteExactInputSingleParams as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`quoteExactInputSingle((address,address,uint256,uint24,uint160))`](quoteExactInputSingleCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct quoteExactInputSingleReturn {
+        #[allow(missing_docs)]
         pub amountOut: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub sqrtPriceX96After: alloy::sol_types::private::primitives::aliases::U160,
+        #[allow(missing_docs)]
         pub initializedTicksCrossed: u32,
+        #[allow(missing_docs)]
         pub gasEstimate: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1573,24 +1638,35 @@ function quoteExactInputSingle(IUniswapV3QuoterV2Lib.QuoteExactInputSingleParams
 ```solidity
 function quoteExactOutput(bytes memory path, uint256 amountOut) external returns (uint256 amountIn, uint160[] memory sqrtPriceX96AfterList, uint32[] memory initializedTicksCrossedList, uint256 gasEstimate);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct quoteExactOutputCall {
+        #[allow(missing_docs)]
         pub path: alloy::sol_types::private::Bytes,
+        #[allow(missing_docs)]
         pub amountOut: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`quoteExactOutput(bytes,uint256)`](quoteExactOutputCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct quoteExactOutputReturn {
+        #[allow(missing_docs)]
         pub amountIn: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub sqrtPriceX96AfterList: alloy::sol_types::private::Vec<
             alloy::sol_types::private::primitives::aliases::U160,
         >,
+        #[allow(missing_docs)]
         pub initializedTicksCrossedList: alloy::sol_types::private::Vec<u32>,
+        #[allow(missing_docs)]
         pub gasEstimate: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1744,21 +1820,31 @@ function quoteExactOutput(bytes memory path, uint256 amountOut) external returns
 ```solidity
 function quoteExactOutputSingle(IUniswapV3QuoterV2Lib.QuoteExactOutputSingleParams memory params) external returns (uint256 amountIn, uint160 sqrtPriceX96After, uint32 initializedTicksCrossed, uint256 gasEstimate);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct quoteExactOutputSingleCall {
+        #[allow(missing_docs)]
         pub params: <IUniswapV3QuoterV2Lib::QuoteExactOutputSingleParams as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`quoteExactOutputSingle((address,address,uint256,uint24,uint160))`](quoteExactOutputSingleCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct quoteExactOutputSingleReturn {
+        #[allow(missing_docs)]
         pub amountIn: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub sqrtPriceX96After: alloy::sol_types::private::primitives::aliases::U160,
+        #[allow(missing_docs)]
         pub initializedTicksCrossed: u32,
+        #[allow(missing_docs)]
         pub gasEstimate: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1899,18 +1985,26 @@ function quoteExactOutputSingle(IUniswapV3QuoterV2Lib.QuoteExactOutputSinglePara
 ```solidity
 function uniswapV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes memory path) external view;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct uniswapV3SwapCallbackCall {
+        #[allow(missing_docs)]
         pub amount0Delta: alloy::sol_types::private::primitives::aliases::I256,
+        #[allow(missing_docs)]
         pub amount1Delta: alloy::sol_types::private::primitives::aliases::I256,
+        #[allow(missing_docs)]
         pub path: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`uniswapV3SwapCallback(int256,int256,bytes)`](uniswapV3SwapCallbackCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct uniswapV3SwapCallbackReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2042,12 +2136,19 @@ function uniswapV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes m
     };
     ///Container for all the [`IUniswapV3QuoterV2`](self) function calls.
     pub enum IUniswapV3QuoterV2Calls {
+        #[allow(missing_docs)]
         WETH9(WETH9Call),
+        #[allow(missing_docs)]
         factory(factoryCall),
+        #[allow(missing_docs)]
         quoteExactInput(quoteExactInputCall),
+        #[allow(missing_docs)]
         quoteExactInputSingle(quoteExactInputSingleCall),
+        #[allow(missing_docs)]
         quoteExactOutput(quoteExactOutputCall),
+        #[allow(missing_docs)]
         quoteExactOutputSingle(quoteExactOutputSingleCall),
+        #[allow(missing_docs)]
         uniswapV3SwapCallback(uniswapV3SwapCallbackCall),
     }
     #[automatically_derived]
@@ -2104,7 +2205,7 @@ function uniswapV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes m
             Self::SELECTORS.binary_search(&selector).is_ok()
         }
         #[inline]
-        #[allow(unsafe_code, non_snake_case)]
+        #[allow(non_snake_case)]
         fn abi_decode_raw(
             selector: [u8; 4],
             data: &[u8],
@@ -2214,7 +2315,7 @@ function uniswapV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes m
                     ),
                 );
             };
-            (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
+            DECODE_SHIMS[idx](data, validate)
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {

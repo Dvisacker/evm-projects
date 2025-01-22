@@ -9,29 +9,35 @@ interface UniswapV2Library {}
 ```json
 []
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style,
+    clippy::empty_structs_with_brackets
+)]
 pub mod UniswapV2Library {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
     /// The creation / init bytecode of the contract.
     ///
     /// ```text
-    ///0x60808060405234601757603a9081601d823930815050f35b600080fdfe600080fdfea2646970667358221220db22a64e351a97f4cc3ae776d810ee7565f141053ca266c0ac8cb7030fe984ae64736f6c634300081a0033
+    ///0x608060405234601d57600e6021565b603e602c823930815050603e90f35b6027565b60405190565b5f80fdfe60806040525f80fdfea26469706673582212201a3a1559b92b56ad8af772144e388032adbc077c6ff42d0252f1952bd3076a8864736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\x80\x80`@R4`\x17W`:\x90\x81`\x1D\x8290\x81PP\xF3[`\0\x80\xFD\xFE`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \xDB\"\xA6N5\x1A\x97\xF4\xCC:\xE7v\xD8\x10\xEEue\xF1A\x05<\xA2f\xC0\xAC\x8C\xB7\x03\x0F\xE9\x84\xAEdsolcC\0\x08\x1A\x003",
+        b"`\x80`@R4`\x1DW`\x0E`!V[`>`,\x8290\x81PP`>\x90\xF3[`'V[`@Q\x90V[_\x80\xFD\xFE`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \x1A:\x15Y\xB9+V\xAD\x8A\xF7r\x14N8\x802\xAD\xBC\x07|o\xF4-\x02R\xF1\x95+\xD3\x07j\x88dsolcC\0\x08\x1A\x003",
     );
     /// The runtime bytecode of the contract, as deployed on the network.
     ///
     /// ```text
-    ///0x600080fdfea2646970667358221220db22a64e351a97f4cc3ae776d810ee7565f141053ca266c0ac8cb7030fe984ae64736f6c634300081a0033
+    ///0x60806040525f80fdfea26469706673582212201a3a1559b92b56ad8af772144e388032adbc077c6ff42d0252f1952bd3076a8864736f6c634300081a0033
     /// ```
     #[rustfmt::skip]
     #[allow(clippy::all)]
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
-        b"`\0\x80\xFD\xFE\xA2dipfsX\"\x12 \xDB\"\xA6N5\x1A\x97\xF4\xCC:\xE7v\xD8\x10\xEEue\xF1A\x05<\xA2f\xC0\xAC\x8C\xB7\x03\x0F\xE9\x84\xAEdsolcC\0\x08\x1A\x003",
+        b"`\x80`@R_\x80\xFD\xFE\xA2dipfsX\"\x12 \x1A:\x15Y\xB9+V\xAD\x8A\xF7r\x14N8\x802\xAD\xBC\x07|o\xF4-\x02R\xF1\x95+\xD3\x07j\x88dsolcC\0\x08\x1A\x003",
     );
     use alloy::contract as alloy_contract;
     /**Creates a new wrapper around an on-chain [`UniswapV2Library`](self) contract instance.

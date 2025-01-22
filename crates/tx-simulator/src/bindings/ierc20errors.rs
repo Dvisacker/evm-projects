@@ -103,7 +103,13 @@ interface IERC20Errors {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style,
+    clippy::empty_structs_with_brackets
+)]
 pub mod IERC20Errors {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
@@ -131,14 +137,22 @@ pub mod IERC20Errors {
 ```solidity
 error ERC20InsufficientAllowance(address spender, uint256 allowance, uint256 needed);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ERC20InsufficientAllowance {
+        #[allow(missing_docs)]
         pub spender: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub allowance: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub needed: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -218,14 +232,22 @@ error ERC20InsufficientAllowance(address spender, uint256 allowance, uint256 nee
 ```solidity
 error ERC20InsufficientBalance(address sender, uint256 balance, uint256 needed);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ERC20InsufficientBalance {
+        #[allow(missing_docs)]
         pub sender: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub balance: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub needed: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -305,12 +327,18 @@ error ERC20InsufficientBalance(address sender, uint256 balance, uint256 needed);
 ```solidity
 error ERC20InvalidApprover(address approver);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ERC20InvalidApprover {
+        #[allow(missing_docs)]
         pub approver: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -370,12 +398,18 @@ error ERC20InvalidApprover(address approver);
 ```solidity
 error ERC20InvalidReceiver(address receiver);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ERC20InvalidReceiver {
+        #[allow(missing_docs)]
         pub receiver: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -435,12 +469,18 @@ error ERC20InvalidReceiver(address receiver);
 ```solidity
 error ERC20InvalidSender(address sender);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ERC20InvalidSender {
+        #[allow(missing_docs)]
         pub sender: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -500,12 +540,18 @@ error ERC20InvalidSender(address sender);
 ```solidity
 error ERC20InvalidSpender(address spender);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ERC20InvalidSpender {
+        #[allow(missing_docs)]
         pub spender: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -563,11 +609,17 @@ error ERC20InvalidSpender(address spender);
     };
     ///Container for all the [`IERC20Errors`](self) custom errors.
     pub enum IERC20ErrorsErrors {
+        #[allow(missing_docs)]
         ERC20InsufficientAllowance(ERC20InsufficientAllowance),
+        #[allow(missing_docs)]
         ERC20InsufficientBalance(ERC20InsufficientBalance),
+        #[allow(missing_docs)]
         ERC20InvalidApprover(ERC20InvalidApprover),
+        #[allow(missing_docs)]
         ERC20InvalidReceiver(ERC20InvalidReceiver),
+        #[allow(missing_docs)]
         ERC20InvalidSender(ERC20InvalidSender),
+        #[allow(missing_docs)]
         ERC20InvalidSpender(ERC20InvalidSpender),
     }
     #[automatically_derived]
@@ -624,7 +676,7 @@ error ERC20InvalidSpender(address spender);
             Self::SELECTORS.binary_search(&selector).is_ok()
         }
         #[inline]
-        #[allow(unsafe_code, non_snake_case)]
+        #[allow(non_snake_case)]
         fn abi_decode_raw(
             selector: [u8; 4],
             data: &[u8],
@@ -721,7 +773,7 @@ error ERC20InvalidSpender(address spender);
                     ),
                 );
             };
-            (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
+            DECODE_SHIMS[idx](data, validate)
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {

@@ -122,7 +122,13 @@ interface IERC721Errors {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style,
+    clippy::empty_structs_with_brackets
+)]
 pub mod IERC721Errors {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
@@ -150,14 +156,22 @@ pub mod IERC721Errors {
 ```solidity
 error ERC721IncorrectOwner(address sender, uint256 tokenId, address owner);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ERC721IncorrectOwner {
+        #[allow(missing_docs)]
         pub sender: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub tokenId: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub owner: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -235,13 +249,20 @@ error ERC721IncorrectOwner(address sender, uint256 tokenId, address owner);
 ```solidity
 error ERC721InsufficientApproval(address operator, uint256 tokenId);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ERC721InsufficientApproval {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub tokenId: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -315,12 +336,18 @@ error ERC721InsufficientApproval(address operator, uint256 tokenId);
 ```solidity
 error ERC721InvalidApprover(address approver);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ERC721InvalidApprover {
+        #[allow(missing_docs)]
         pub approver: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -380,12 +407,18 @@ error ERC721InvalidApprover(address approver);
 ```solidity
 error ERC721InvalidOperator(address operator);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ERC721InvalidOperator {
+        #[allow(missing_docs)]
         pub operator: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -445,12 +478,18 @@ error ERC721InvalidOperator(address operator);
 ```solidity
 error ERC721InvalidOwner(address owner);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ERC721InvalidOwner {
+        #[allow(missing_docs)]
         pub owner: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -510,12 +549,18 @@ error ERC721InvalidOwner(address owner);
 ```solidity
 error ERC721InvalidReceiver(address receiver);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ERC721InvalidReceiver {
+        #[allow(missing_docs)]
         pub receiver: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -575,12 +620,18 @@ error ERC721InvalidReceiver(address receiver);
 ```solidity
 error ERC721InvalidSender(address sender);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ERC721InvalidSender {
+        #[allow(missing_docs)]
         pub sender: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -640,12 +691,18 @@ error ERC721InvalidSender(address sender);
 ```solidity
 error ERC721NonexistentToken(uint256 tokenId);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ERC721NonexistentToken {
+        #[allow(missing_docs)]
         pub tokenId: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -705,13 +762,21 @@ error ERC721NonexistentToken(uint256 tokenId);
     };
     ///Container for all the [`IERC721Errors`](self) custom errors.
     pub enum IERC721ErrorsErrors {
+        #[allow(missing_docs)]
         ERC721IncorrectOwner(ERC721IncorrectOwner),
+        #[allow(missing_docs)]
         ERC721InsufficientApproval(ERC721InsufficientApproval),
+        #[allow(missing_docs)]
         ERC721InvalidApprover(ERC721InvalidApprover),
+        #[allow(missing_docs)]
         ERC721InvalidOperator(ERC721InvalidOperator),
+        #[allow(missing_docs)]
         ERC721InvalidOwner(ERC721InvalidOwner),
+        #[allow(missing_docs)]
         ERC721InvalidReceiver(ERC721InvalidReceiver),
+        #[allow(missing_docs)]
         ERC721InvalidSender(ERC721InvalidSender),
+        #[allow(missing_docs)]
         ERC721NonexistentToken(ERC721NonexistentToken),
     }
     #[automatically_derived]
@@ -776,7 +841,7 @@ error ERC721NonexistentToken(uint256 tokenId);
             Self::SELECTORS.binary_search(&selector).is_ok()
         }
         #[inline]
-        #[allow(unsafe_code, non_snake_case)]
+        #[allow(non_snake_case)]
         fn abi_decode_raw(
             selector: [u8; 4],
             data: &[u8],
@@ -899,7 +964,7 @@ error ERC721NonexistentToken(uint256 tokenId);
                     ),
                 );
             };
-            (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
+            DECODE_SHIMS[idx](data, validate)
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {
