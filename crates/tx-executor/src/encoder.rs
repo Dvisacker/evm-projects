@@ -70,12 +70,12 @@ where
     T: Transport + Clone,
     P: Provider<T, Ethereum>,
 {
-    chain: NamedChain,
-    executor: BatchExecutorInstance<T, P>,
-    owner: Address,
-    total_value: U256,
-    calldata: Vec<Bytes>,
-    addressbook: Addressbook,
+    pub chain: NamedChain,
+    pub executor: BatchExecutorInstance<T, P>,
+    pub owner: Address,
+    pub total_value: U256,
+    pub calldata: Vec<Bytes>,
+    pub addressbook: Addressbook,
     addresses: ContractAddresses,
 }
 
@@ -925,6 +925,10 @@ where
         self
     }
 
+    pub fn set_calldata(&mut self, calldata: Vec<Bytes>) {
+        self.calldata = calldata;
+    }
+
     pub fn get(&mut self) -> (Vec<Bytes>, U256) {
         let calldata = self.calldata.clone();
         let total_value = self.total_value;
@@ -939,6 +943,13 @@ where
         let pending_tx = call.send().await?;
         let receipt = pending_tx.get_receipt().await?;
         Ok((true, receipt))
+    }
+
+    pub async fn estimate_gas(&mut self) -> Result<u64> {
+        let (calldata, total_value) = self.get();
+        let call = self.executor.batchCall(calldata).value(total_value);
+        let gas_estimate = call.estimate_gas().await?;
+        Ok(gas_estimate)
     }
 }
 

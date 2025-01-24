@@ -1,9 +1,10 @@
 use super::types::{Action, Event};
 use crate::state::State;
 use addressbook::Addressbook;
-use alloy::network::Ethereum;
+use alloy::network::{Ethereum, TransactionBuilder};
 use alloy::primitives::{Bytes, U256};
 use alloy::providers::Provider;
+use alloy::rpc::types::{TransactionInput, TransactionRequest};
 use alloy::transports::Transport;
 use alloy::{dyn_abi::DynSolValue, primitives::Address, rpc::types::Log};
 use alloy_chains::Chain;
@@ -30,6 +31,8 @@ use db::{
     },
 };
 use diesel::PgConnection;
+use engine::executors::encoded_tx_executor::SubmitEncodedTx;
+use engine::executors::mempool_executor::SubmitTxToMempool;
 use engine::types::Strategy;
 use eyre::Result;
 use provider::SignerProvider;
@@ -219,6 +222,7 @@ impl Strategy<Event, Action> for BaseArb {
     }
 
     async fn process_event(&mut self, event: Event) -> Vec<Action> {
+        let mut actions = vec![];
         let mut updated_cycles = vec![];
         match event {
             Event::NewBlock(event) => {
@@ -258,6 +262,16 @@ impl Strategy<Event, Action> for BaseArb {
 
             if amount_out > amount_in {
                 info!("Cycle {} - Profit: {:?}", cycle, amount_out - amount_in);
+                let calldata = self
+                    .get_cycle_calldata(token_first, amount_in, &cycle)
+                    .await
+                    .unwrap();
+
+                let action = Action::SubmitEncodedTx(SubmitEncodedTx {
+                    calldata,
+                    gas_bid_info: None,
+                });
+                actions.push(action);
             } else {
                 info!("Cycle {} - Loss: {:?}", cycle, amount_in - amount_out);
             }

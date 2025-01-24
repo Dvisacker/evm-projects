@@ -44,7 +44,6 @@ contract TxSimulator {
             } else if (params.protocol == 1) {
                 amountOut = simulateUniswapV3SwapIn(params);
             } else if (params.protocol == 2) {
-                console.log("simulateCurveSwapIn");
                 amountOut = simulateCurveSwapIn(params);
             } else if (params.protocol == 3) {
                 amountOut = simulateAeroSwapIn(params);

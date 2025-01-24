@@ -5,3 +5,5 @@
 pub mod mempool_executor;
 /// This executor submits transactions to the public mempool.
 pub mod sequence_executor;
+
+pub mod encoded_tx_executor;

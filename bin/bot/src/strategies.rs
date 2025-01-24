@@ -14,7 +14,7 @@ use base_arb_strategy::{
 use engine::{
     collectors::multi_log_collector::MultiLogCollector,
     engine::Engine,
-    executors::mempool_executor::MempoolExecutor,
+    executors::{encoded_tx_executor::EncodedTxExecutor, mempool_executor::MempoolExecutor},
     types::{CollectorMap, ExecutorMap},
 };
 use generalized_arb_strategy::{
@@ -75,10 +75,10 @@ pub fn init_base_arbitrage_bot(
     let strategy = BaseArb::new(chain, provider.clone(), db_url);
     engine.add_strategy(Box::new(strategy));
 
-    let mempool_executor = Box::new(MempoolExecutor::new(provider.clone()));
+    let mempool_executor = Box::new(EncodedTxExecutor::new(provider.clone()));
     let mempool_executor =
         ExecutorMap::new(mempool_executor, |action: BaseArbAction| match action {
-            BaseArbAction::SubmitTx(tx) => Some(tx),
+            BaseArbAction::SubmitEncodedTx(tx) => Some(tx),
         });
     engine.add_executor(Box::new(mempool_executor));
 
