@@ -1,13 +1,43 @@
 use addressbook::Addressbook;
-use alloy::{network::Network, providers::Provider, sol, transports::Transport};
+use alloy::{
+    network::Network,
+    providers::{ext::DebugApi, Provider},
+    sol,
+    transports::{Transport, TransportResult},
+};
 use alloy_chains::NamedChain;
 use alloy_primitives::{aliases::U24, keccak256, Address, Bytes, U256};
-use alloy_rpc_types::{BlockId, BlockNumberOrTag};
+use alloy_rpc_types::{
+    trace::geth::{GethDebugTracingCallOptions, GethDebugTracingOptions, GethTrace},
+    BlockId, BlockNumberOrTag, TransactionRequest,
+};
 use alloy_sol_types::SolValue;
 use eyre::{eyre, Error, Result};
 use provider::SignerProvider;
 use std::sync::Arc;
 use types::exchange::ExchangeName;
+
+pub async fn get_trace_call<P, T, N>(
+    provider: Arc<P>,
+    tx_request: TransactionRequest,
+) -> TransportResult<GethTrace>
+where
+    P: Provider<T, N>,
+    T: Transport + Clone,
+    N: Network,
+{
+    let s = "{\"tracer\": \"callTracer\"}";
+    let opts = serde_json::from_str::<GethDebugTracingOptions>(s).unwrap();
+    let tracing_call_options = GethDebugTracingCallOptions::new(opts);
+
+    provider
+        .debug_trace_call(
+            tx_request,
+            BlockNumberOrTag::Latest.into(),
+            tracing_call_options,
+        )
+        .await
+}
 
 pub async fn get_contract_creation_block<P, T, N>(
     provider: Arc<P>,

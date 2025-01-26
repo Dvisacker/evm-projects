@@ -37,7 +37,7 @@ resolver = "2"
 
 
 [workspace.dependencies]
-alloy = { version = "0.9.2", features = ["full"] }
+alloy = { version = "0.9.2", features = ["full", "rpc-types-debug", "rpc-types-trace", "rpc-client", "node-bindings", "json-rpc", "eips"] }
 alloy-primitives = "0.8.19"
 alloy-rpc-types = "0.9.2"
 alloy-sol-types = "0.8.19"
