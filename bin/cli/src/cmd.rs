@@ -230,8 +230,44 @@ pub async fn wrap_eth_command(chain_id: u64, amount: &str) -> Result<(), Error> 
     let gas_estimate = encoder
         .add_wrap_eth(weth, amount_weth)
         .estimate_gas()
-        .await?;
-    println!("Gas estimate: {}", gas_estimate);
+        .await
+        .unwrap_or(0);
+
+    if gas_estimate > 0 {
+        let (_, receipt) = encoder.exec().await.unwrap();
+        println!("Transaction succeeded. Receipt: {:?}", receipt);
+    } else {
+        println!("Simulation failed");
+    }
+
+    Ok(())
+}
+
+pub async fn unwrap_eth_command(chain_id: u64, amount: &str) -> Result<(), Error> {
+    let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
+    let provider = get_default_signer_provider(chain).await;
+    let addressbook = Addressbook::load().unwrap();
+    let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+    let named_chain = chain.named().unwrap();
+    let weth = addressbook.get_weth(&named_chain).unwrap();
+    let amount_weth = parse_token_units(&named_chain, &TokenIsh::Address(weth), amount)
+        .await
+        .unwrap();
+    let mut encoder =
+        BatchExecutorClient::new(executor_address, named_chain, provider.clone()).await;
+    let gas_estimate = encoder
+        .add_unwrap_eth(weth, amount_weth)
+        .estimate_gas()
+        .await
+        .unwrap_or(0);
+
+    if gas_estimate > 0 {
+        let (_, receipt) = encoder.exec().await.unwrap();
+        println!("Transaction succeeded. Receipt: {:?}", receipt);
+    } else {
+        println!("Simulation failed");
+    }
+
     Ok(())
 }
 
