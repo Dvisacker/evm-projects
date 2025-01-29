@@ -199,4 +199,8 @@ contract BatchExecutor {
             revert(add(32, returnData), length)
         }
     }
+
+    function requireProfitable(address token, uint256 amount) external view {
+        require(IERC20(token).balanceOf(address(this)) >= amount, "Not profitable");
+    }
 }

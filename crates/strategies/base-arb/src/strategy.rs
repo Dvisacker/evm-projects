@@ -165,7 +165,8 @@ impl BaseArb {
         encoder
             .add_wrap_eth(weth, amount_in)
             .add_transfer_erc20(weth, executor_address, amount_in)
-            .add_aerodrome_router_swap(amount_in, token_in, token_out, None, Some(stable));
+            .add_aerodrome_router_swap(amount_in, token_in, token_out, None, Some(stable))
+            .require_profitable(token_in, amount_in);
 
         let mut last_token = token_out;
 

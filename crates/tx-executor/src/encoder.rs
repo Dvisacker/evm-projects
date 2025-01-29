@@ -15,10 +15,10 @@ use addressbook::Addressbook;
 use odos_client::client::{assemble_odos_swap, get_odos_quote};
 
 use crate::bindings::batchexecutor::BatchExecutor::{
-    singlecallCall, BatchExecutorInstance, DynamicCall,
+    requireProfitableCall, singlecallCall, BatchExecutorInstance, DynamicCall,
 };
 use crate::bindings::erc20::ERC20;
-use crate::bindings::iaerodromerouter::IAerodromeRouter;
+use crate::bindings::iaerodromerouter::{IAerodromeRouter, IRouter};
 use crate::bindings::imorpho::IMorpho;
 use crate::bindings::ipool::IPool::{
     self, borrowCall, flashLoanCall, liquidationCallCall, repayCall,
@@ -540,7 +540,7 @@ where
             .get_ve33_factory(&self.chain, ExchangeName::Aerodrome)
             .expect("Aerodrome factory not found");
 
-        let route = IAerodromeRouter::Route {
+        let route = IRouter::Route {
             from: token_in,
             to: token_out,
             stable,
@@ -607,7 +607,7 @@ where
         };
 
         // Create the route
-        let route = IAerodromeRouter::Route {
+        let route = IRouter::Route {
             from: token_in,
             to: token_out,
             stable,
@@ -930,6 +930,20 @@ where
         self
     }
 
+    pub fn require_profitable(&mut self, token: Address, amount_in: U256) -> &mut Self {
+        let call = requireProfitableCall {
+            token,
+            amount: amount_in,
+        };
+
+        let encoded = Bytes::from(call.abi_encode());
+
+        self.calldata.push(encoded);
+        self.total_value += U256::ZERO;
+
+        self
+    }
+
     pub fn set_calldata(&mut self, calldata: Vec<Bytes>) {
         self.calldata = calldata;
     }
@@ -974,8 +988,7 @@ where
 
 #[cfg(test)]
 mod tests {
-    use alloy_chains::Chain;
-    use provider::{get_anvil_signer_provider, get_default_signer_provider};
+    use provider::get_anvil_signer_provider;
     use shared::{
         evm_helpers::compute_v3_pool_address,
         token_helpers::{get_token_balance, parse_token_units},
