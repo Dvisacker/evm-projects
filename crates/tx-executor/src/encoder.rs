@@ -932,26 +932,38 @@ where
     pub fn get(&mut self) -> (Vec<Bytes>, U256) {
         let calldata = self.calldata.clone();
         let total_value = self.total_value;
+        (calldata, total_value)
+    }
+
+    pub fn flush(&mut self) -> (Vec<Bytes>, U256) {
+        let calldata = self.calldata.clone();
+        let total_value = self.total_value;
         self.calldata.clear();
         self.total_value = U256::ZERO;
         (calldata, total_value)
     }
 
-    pub async fn exec(&mut self) -> Result<(bool, TransactionReceipt)> {
+    pub async fn estimate_gas(&mut self) -> Result<u64> {
         let (calldata, total_value) = self.get();
-        println!("calldata: {:?}", calldata);
-        println!("total_value: {:?}", total_value);
-        let call = self.executor.batchCall(calldata).value(total_value);
+        let call = self
+            .executor
+            .batchCall(calldata)
+            .from(self.owner)
+            .value(total_value);
+        let gas_estimate = call.estimate_gas().await?;
+        Ok(gas_estimate)
+    }
+
+    pub async fn exec(&mut self) -> Result<(bool, TransactionReceipt)> {
+        let (calldata, total_value) = self.flush();
+        let call = self
+            .executor
+            .batchCall(calldata)
+            .from(self.owner)
+            .value(total_value);
         let pending_tx = call.send().await?;
         let receipt = pending_tx.get_receipt().await?;
         Ok((true, receipt))
-    }
-
-    pub async fn estimate_gas(&mut self) -> Result<u64> {
-        let (calldata, total_value) = self.get();
-        let call = self.executor.batchCall(calldata).value(total_value);
-        let gas_estimate = call.estimate_gas().await?;
-        Ok(gas_estimate)
     }
 }
 
@@ -965,10 +977,7 @@ mod tests {
 
     use super::*;
     use alloy_primitives::{aliases::U24, U160, U256};
-    use std::{
-        env,
-        str::FromStr,
-    };
+    use std::{env, str::FromStr};
     use types::token::TokenIsh;
 
     const CHAIN: NamedChain = NamedChain::Base;

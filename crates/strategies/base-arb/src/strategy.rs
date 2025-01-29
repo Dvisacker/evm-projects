@@ -192,7 +192,7 @@ impl BaseArb {
             last_token = token_out;
         }
 
-        let (calldata, _) = encoder.get();
+        let (calldata, _) = encoder.flush();
 
         Ok(calldata)
     }
