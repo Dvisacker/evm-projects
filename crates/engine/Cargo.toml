@@ -6,24 +6,18 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-
 alloy = { workspace = true }
 tokio = { workspace = true }
 eyre = { workspace = true }
 alloy-chains = { workspace = true }
-dotenv = { workspace = true }
 provider = { path = "../provider" }
-addressbook = { path = "../addressbook" }
 types = { path = "../types" }
 shared = { path = "../shared" }
 tx-executor = { path = "../tx-executor" }
-
-
-## async
 async-trait = "0.1.64"
 futures = "0.3"
 tokio-stream = { version = "0.1", features = ['sync'] }
-
-
-## misc
 tracing = { workspace = true }
+
+[dev-dependencies]
+dotenv = { workspace = true }

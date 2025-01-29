@@ -64,7 +64,7 @@ pub async fn approve_token_if_needed(
     };
 
     if allowance < amount {
-        token.approve(spender, amount).send().await?;
+        let _ = token.approve(spender, amount).send().await?;
     }
 
     Ok(())
@@ -80,7 +80,7 @@ pub async fn transfer_token_if_needed(
     let wallet_address = provider.default_signer_address();
     let balance = token.balanceOf(wallet_address).call().await?;
     if balance._0 < amount {
-        token.transfer(to, amount).send().await?;
+        let _ = token.transfer(to, amount).send().await?;
     }
     Ok(())
 }

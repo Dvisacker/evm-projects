@@ -262,7 +262,6 @@ impl Addressbook {
             NamedToken::USDC => Some(config.tokens.usdc),
             NamedToken::WETH => Some(config.tokens.weth),
             NamedToken::USDT => Some(config.tokens.usdt),
-            _ => None,
         }
     }
 
@@ -495,7 +494,6 @@ mod tests {
 
     #[test]
     fn test_load_addressbook() {
-        let current_dir = std::env::current_dir().unwrap();
         let addressbook = Addressbook::load().expect("Failed to load addressbook");
 
         // Test that we can load basic chain configs

@@ -1,5 +1,4 @@
 use std::{
-    str::FromStr,
     sync::Arc,
     time::{SystemTime, UNIX_EPOCH},
 };
@@ -590,7 +589,7 @@ mod tests {
     use alloy::providers::WalletProvider;
     use alloy_chains::{Chain, NamedChain};
     use provider::get_default_signer_provider;
-    use std::str::FromStr;
+    
 
     const EXCHANGE_NAME: ExchangeName = ExchangeName::UniswapV3;
     const CHAIN: NamedChain = NamedChain::Arbitrum;

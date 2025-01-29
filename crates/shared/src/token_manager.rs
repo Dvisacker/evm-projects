@@ -8,7 +8,7 @@ use provider::SignerProviderMap;
 use std::collections::HashMap;
 use std::error::Error;
 use std::sync::{Arc, Mutex};
-use types::token::{NamedToken, Token, TokenIsh};
+use types::token::{Token, TokenIsh};
 
 sol! {
     #[derive(Debug, PartialEq, Eq)]

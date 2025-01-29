@@ -2,9 +2,9 @@ use alloy_primitives::Address;
 use eyre::Result;
 use serde::Serialize;
 use serde_json::Value;
+use std::fs;
 use std::path::{Path, PathBuf};
 use std::str::FromStr;
-use std::{env, fs};
 
 pub fn bytes32_to_string(bytes: &[u8]) -> String {
     let mut result = String::from_utf8_lossy(bytes).into_owned();
@@ -111,7 +111,7 @@ fn process_run(json: &Value, contract_name: &str) -> Option<Address> {
 #[cfg(test)]
 mod tests {
     use serde::Serialize;
-    use std::str::FromStr;
+    use std::env;
 
     #[derive(Serialize, Debug)]
     struct Person {

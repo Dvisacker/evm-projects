@@ -1,5 +1,4 @@
 use alloy::primitives::Address;
-use alloy::providers::Provider;
 use amms::amm::{AutomatedMarketMaker, AMM};
 use amms::sync;
 use dashmap::DashMap;

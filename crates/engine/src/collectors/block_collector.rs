@@ -5,7 +5,7 @@ use alloy::{
 };
 use async_trait::async_trait;
 use eyre::Result;
-use std::{hash::Hash, sync::Arc};
+use std::sync::Arc;
 use tokio_stream::StreamExt;
 
 /// BlockCollector is responsible for monitoring new blocks on the blockchain.

@@ -10,14 +10,17 @@ use engine::executors::sequence_executor::{
 use engine::types::Executor;
 use eyre::{Error, Result};
 use provider::{
-    get_basic_provider, get_default_signer, get_default_wallet, get_signer_provider,
-    get_signer_provider_map,
+    get_basic_provider, get_default_signer, get_default_signer_provider, get_default_wallet,
+    get_signer_provider, get_signer_provider_map,
 };
 use shared::pool_helpers::{store_uniswap_v2_pools, store_uniswap_v3_pools, store_ve33_pools};
+use shared::token_helpers::parse_token_units;
 use shared::token_manager::TokenManager;
 use shared::{bridge::bridge_lifi, evm_helpers::get_contract_creation_block};
+use std::env;
 use std::str::FromStr;
 use tracing::info;
+use tx_executor::encoder::BatchExecutorClient;
 use types::bridge::BridgeName;
 use types::exchange::ExchangeName;
 use types::token::TokenIsh;
@@ -208,6 +211,27 @@ pub async fn cross_chain_swap_command(
     ]);
     swap_executor.execute(seq).await?;
 
+    Ok(())
+}
+
+pub async fn wrap_eth_command(chain_id: u64, amount: &str) -> Result<(), Error> {
+    let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
+    let provider = get_default_signer_provider(chain).await;
+    // let provider = get_anvil_signer_provider().await;
+    let addressbook = Addressbook::load().unwrap();
+    let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+    let named_chain = chain.named().unwrap();
+    let weth = addressbook.get_weth(&named_chain).unwrap();
+    let amount_weth = parse_token_units(&named_chain, &TokenIsh::Address(weth), amount)
+        .await
+        .unwrap();
+    let mut encoder =
+        BatchExecutorClient::new(executor_address, named_chain, provider.clone()).await;
+    let gas_estimate = encoder
+        .add_wrap_eth(weth, amount_weth)
+        .estimate_gas()
+        .await?;
+    println!("Gas estimate: {}", gas_estimate);
     Ok(())
 }
 

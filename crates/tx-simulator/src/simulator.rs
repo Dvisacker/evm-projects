@@ -9,7 +9,6 @@ use alloy::{
 use alloy_chains::NamedChain;
 use amms::amm::{AutomatedMarketMaker, AMM};
 use eyre::Error;
-use std::str::FromStr;
 use types::exchange::ExchangeName;
 
 #[derive(Clone)]
@@ -18,10 +17,12 @@ where
     T: Transport + Clone,
     P: Provider<T, Ethereum> + Clone,
 {
+    #[allow(unused)]
     address: Address,
     simulator: TxSimulatorInstance<T, P>,
     chain: NamedChain,
     addressbook: Addressbook,
+    #[allow(unused)]
     provider: P,
 }
 
@@ -165,6 +166,7 @@ where
     }
 }
 
+#[cfg(test)]
 mod tests {
     use std::{env, path::PathBuf};
 
@@ -173,6 +175,7 @@ mod tests {
     use amms::amm::{uniswap_v2::UniswapV2Pool, uniswap_v3::UniswapV3Pool, ve33::Ve33Pool};
     use provider::{get_anvil_signer_provider, get_default_signer_provider};
     use shared::utils::get_most_recent_deployment;
+    use std::str::FromStr;
 
     use super::*;
 

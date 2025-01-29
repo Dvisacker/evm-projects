@@ -20,6 +20,7 @@ engine = { path = "../../crates/engine" }
 addressbook = { path = "../../crates/addressbook" }
 provider = { path = "../../crates/provider" }
 amms = { path = "../../crates/amms" }
+tx-executor = { path = "../../crates/tx-executor" }
 
 anyhow = "1.0.70"
 clap = { version = "4.2.5", features = ["derive"] }

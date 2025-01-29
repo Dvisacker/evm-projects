@@ -1,6 +1,6 @@
 pub mod lifi_types;
 use alloy::network::Ethereum;
-use alloy::{hex, providers::Provider, sol, transports::Transport};
+use alloy::{hex, providers::Provider, transports::Transport};
 use alloy_chains::NamedChain;
 use alloy_primitives::{Address, U256};
 use alloy_rpc_types::TransactionRequest;
@@ -8,7 +8,6 @@ use bindings::ierc20::IERC20;
 use eyre::{eyre, Context, Result};
 use lifi_types::{LiFiQuoteRequest, LiFiQuoteResponse, LiFiTransactionRequest};
 use reqwest;
-use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 use std::sync::Arc;
 use std::time::Duration;
@@ -214,12 +213,10 @@ impl Default for LifiClient {
 mod tests {
     use super::*;
     use addressbook::Addressbook;
-    use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
-    use alloy_chains::{Chain, NamedChain};
+    use alloy::signers::local::PrivateKeySigner;
+    use alloy_chains::NamedChain;
     use provider::{get_default_signer, get_signer_provider_map};
-    use shared::token_helpers::parse_token_units;
-    use shared::token_manager::TokenManager;
-    use types::token::{NamedToken, TokenIsh};
+    use types::token::NamedToken;
 
     #[tokio::test]
     async fn test_bridge_usdc_arbitrum_to_base() -> Result<()> {

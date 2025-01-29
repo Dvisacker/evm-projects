@@ -6,14 +6,13 @@ use alloy::{
     transports::{Transport, TransportResult},
 };
 use alloy_chains::NamedChain;
-use alloy_primitives::{aliases::U24, keccak256, Address, Bytes, U256};
+use alloy_primitives::{aliases::U24, keccak256, Address, Bytes};
 use alloy_rpc_types::{
     trace::geth::{GethDebugTracingCallOptions, GethDebugTracingOptions, GethTrace},
     BlockId, BlockNumberOrTag, TransactionRequest,
 };
 use alloy_sol_types::SolValue;
-use eyre::{eyre, Error, Result};
-use provider::SignerProvider;
+use eyre::{eyre, Result};
 use std::sync::Arc;
 use types::exchange::ExchangeName;
 
@@ -191,21 +190,6 @@ pub fn compute_v3_pool_address(
         salt,
         INIT_CODE_V3_HASH,
     ))
-}
-
-// should work for pools on aerodrome/velodrome
-pub fn compute_aerodrome_pool_address(
-    chain: &NamedChain,
-    exchange_name: ExchangeName,
-    token_a: Address,
-    token_b: Address,
-) -> Result<Address> {
-    let addressbook = Addressbook::load().unwrap();
-    let factory_address = addressbook
-        .get_factory(chain, exchange_name)
-        .ok_or_else(|| eyre!("Factory address not found"))?;
-
-    Ok(Address::ZERO)
 }
 
 #[cfg(test)]

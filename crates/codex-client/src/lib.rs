@@ -1,6 +1,5 @@
 use anyhow::Result;
 use graphql_client::{GraphQLQuery, Response};
-use serde::{Deserialize, Serialize};
 
 #[derive(GraphQLQuery)]
 #[graphql(
@@ -266,8 +265,8 @@ impl CodexClient {
         txn_count_min: Option<f64>,
         networks: Vec<i64>,
         exchange_addresses: Option<Vec<String>>,
-        fdv_min: Option<f64>,
-        market_cap_min: Option<f64>,
+        _fdv_min: Option<f64>,
+        _market_cap_min: Option<f64>,
         limit: Option<i64>,
         ranking_attribute: query_codex_filter_pairs::PairRankingAttribute,
         ranking_direction: query_codex_filter_pairs::RankingDirection,

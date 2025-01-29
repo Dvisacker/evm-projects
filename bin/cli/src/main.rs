@@ -7,7 +7,6 @@ use provider::get_basic_provider;
 use shared::pool_helpers::{activate_pools, get_amm_value};
 use shared::token_helpers::load_pools_and_fetch_token_data;
 use std::str::FromStr;
-use std::sync::Arc;
 use tracing::info;
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 use types::exchange::ExchangeName;
@@ -40,6 +39,7 @@ enum Commands {
         amount_in: String,
     },
     CrossChainSwap(CrossChainSwapArgs),
+    WrapEth(WrapEthArgs),
 }
 
 #[derive(Args)]
@@ -130,6 +130,14 @@ struct GetContractCreationBlockArgs {
     end_block: Option<u64>,
 }
 
+#[derive(Args)]
+struct WrapEthArgs {
+    #[arg(short, long)]
+    chain_id: u64,
+    #[arg(short, long)]
+    amount: String,
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Error> {
     let cli = Cli::parse();
@@ -208,6 +216,9 @@ async fn main() -> Result<(), Error> {
                 &args.amount_in,
             )
             .await?;
+        }
+        Commands::WrapEth(args) => {
+            cmd::wrap_eth_command(args.chain_id, &args.amount).await?;
         }
     }
 

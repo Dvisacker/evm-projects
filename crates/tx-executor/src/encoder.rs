@@ -939,6 +939,8 @@ where
 
     pub async fn exec(&mut self) -> Result<(bool, TransactionReceipt)> {
         let (calldata, total_value) = self.get();
+        println!("calldata: {:?}", calldata);
+        println!("total_value: {:?}", total_value);
         let call = self.executor.batchCall(calldata).value(total_value);
         let pending_tx = call.send().await?;
         let receipt = pending_tx.get_receipt().await?;
@@ -966,7 +968,6 @@ mod tests {
     use std::{
         env,
         str::FromStr,
-        time::{SystemTime, UNIX_EPOCH},
     };
     use types::token::TokenIsh;
 
@@ -1267,7 +1268,7 @@ mod tests {
 
         let weth = addressbook.get_weth(&CHAIN).unwrap();
         let usdc = addressbook.get_usdc(&CHAIN).unwrap();
-        let amount = parse_token_units(&CHAIN, &TokenIsh::Address(weth), "1")
+        let amount = parse_token_units(&CHAIN, &TokenIsh::Address(weth), "0.0001")
             .await
             .unwrap();
 

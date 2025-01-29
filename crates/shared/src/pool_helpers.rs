@@ -187,7 +187,7 @@ where
 
         let mut pools = extract_v3_pools(&amms);
 
-        for mut chunk in pools.chunks_mut(50) {
+        for chunk in pools.chunks_mut(50) {
             get_v3_pool_data_batch_request(chunk, None, provider.clone()).await?;
 
             let new_pools = chunk

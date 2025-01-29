@@ -66,12 +66,6 @@ pub fn init_base_arbitrage_bot(
 ) -> Engine<BaseArbEvent, BaseArbAction> {
     let mut engine: Engine<BaseArbEvent, BaseArbAction> = Engine::default();
 
-    let aerodrome_filter = Filter::new()
-        .from_block(BlockNumberOrTag::Latest)
-        .event(IAerodromePool::Sync::SIGNATURE);
-
-    let filters = vec![aerodrome_filter];
-
     let strategy = BaseArb::new(chain, provider.clone(), db_url);
     engine.add_strategy(Box::new(strategy));
 
@@ -82,6 +76,10 @@ pub fn init_base_arbitrage_bot(
         });
     engine.add_executor(Box::new(mempool_executor));
 
+    let aerodrome_filter = Filter::new()
+        .from_block(BlockNumberOrTag::Latest)
+        .event(IAerodromePool::Sync::SIGNATURE);
+    let filters = vec![aerodrome_filter];
     let collector = Box::new(MultiLogCollector::new(provider, filters));
     let collector = CollectorMap::new(collector, |event: Log| BaseArbEvent::Log(event));
     engine.add_collector(Box::new(collector));

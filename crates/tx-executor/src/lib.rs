@@ -4,7 +4,7 @@ use alloy::transports::BoxTransport;
 use alloy_chains::{Chain, NamedChain};
 use alloy_primitives::Address;
 use encoder::BatchExecutorClient;
-use provider::{get_anvil_signer_provider, get_default_signer_provider, SignerProvider};
+use provider::{get_anvil_signer_provider, get_default_signer_provider};
 
 pub mod bindings;
 pub mod encoder;

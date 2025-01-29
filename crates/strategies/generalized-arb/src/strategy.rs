@@ -4,7 +4,7 @@ use super::types::{Action, Event};
 use addressbook::Addressbook;
 use alloy::{
     dyn_abi::DynSolValue, primitives::Address, providers::Provider, rpc::types::Log,
-    signers::Signer, sol_types::SolEvent,
+    sol_types::SolEvent,
 };
 use alloy_chains::Chain;
 use amms::{
@@ -14,10 +14,7 @@ use amms::{
             UniswapV2Pool,
         },
         uniswap_v3::{
-            batch_request::{
-                fetch_v3_pool_data_batch_request, get_uniswap_v3_tick_data_batch_request,
-                populate_v3_pool_data,
-            },
+            batch_request::{fetch_v3_pool_data_batch_request, populate_v3_pool_data},
             IUniswapV3Pool, UniswapV3Pool,
         },
         AutomatedMarketMaker, AMM,
@@ -31,7 +28,7 @@ use db::{
     models::{db_pool::DbPool, NewDbUniV2Pool},
     queries::{
         uni_v2_pool::{batch_upsert_uni_v2_pools, get_uni_v2_pools},
-        uni_v3_pool::{batch_upsert_uni_v3_pools, get_uni_v3_pools},
+        uni_v3_pool::batch_upsert_uni_v3_pools,
     },
 };
 use db::{models::NewDbUniV3Pool, queries::exchange::get_exchanges_by_chain};

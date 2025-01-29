@@ -1,11 +1,9 @@
 use super::types::{Action, Event};
 use crate::state::State;
 use addressbook::Addressbook;
-use alloy::network::{Ethereum, TransactionBuilder};
-use alloy::primitives::{Bytes, U256};
+use alloy::primitives::utils::parse_units;
+use alloy::primitives::{Bytes, I256, U256};
 use alloy::providers::Provider;
-use alloy::rpc::types::{TransactionInput, TransactionRequest};
-use alloy::transports::Transport;
 use alloy::{dyn_abi::DynSolValue, primitives::Address, rpc::types::Log};
 use alloy_chains::Chain;
 use alloy_sol_types::SolEvent;
@@ -32,13 +30,11 @@ use db::{
 };
 use diesel::PgConnection;
 use engine::executors::encoded_tx_executor::SubmitEncodedTx;
-use engine::executors::mempool_executor::SubmitTxToMempool;
 use engine::types::Strategy;
 use eyre::Result;
 use provider::SignerProvider;
-use shared::cycle::{self, get_most_profitable_cycle, get_most_profitable_cycles, Cycle};
+use shared::cycle::{get_most_profitable_cycles, Cycle};
 use shared::pool_helpers::db_pools_to_amms;
-use shared::utils::get_most_recent_deployment;
 use std::env;
 use std::str::FromStr;
 use std::sync::Arc;
@@ -158,6 +154,13 @@ impl BaseArb {
             eyre::bail!("Pool is not a aerodrome pool");
         };
 
+        let _executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+
+        // encoder.add_transfer_erc20(token_in, executor_address, amount_in);
+        // encoder.add_wrap_eth(
+        //     Address::from_str("0x4200000000000000000000000000000000000006").unwrap(),
+        //     amount_in,
+        // );
         encoder.add_aerodrome_router_swap(amount_in, token_in, token_out, None, Some(stable));
 
         let mut last_token = token_out;
@@ -198,13 +201,13 @@ impl BaseArb {
 #[async_trait]
 impl Strategy<Event, Action> for BaseArb {
     async fn init_state(&mut self) -> Result<()> {
-        info!("Initializing state...");
+        info!("Initializing state... 🚀");
 
         let block_number = self.client.get_block_number().await?;
         self.state.update_block_number(block_number).await?;
 
         self.load_pools().await?;
-        info!("Loaded {} pools", self.state.pools.len());
+        info!("Loaded {} pools 🏊", self.state.pools.len());
 
         self.load_encoder().await?;
         self.load_simulator().await?;
@@ -216,7 +219,7 @@ impl Strategy<Event, Action> for BaseArb {
     }
 
     async fn sync_state(&mut self) -> Result<()> {
-        info!("Syncing state...");
+        info!("Syncing state... 🔄");
         self.state.update_pools().await?;
         Ok(())
     }
@@ -244,11 +247,13 @@ impl Strategy<Event, Action> for BaseArb {
         self.log_arbitrage_cycles(&updated_cycles);
         info!("--------------------------------");
 
-        let most_profitable_cycles = get_most_profitable_cycles(updated_cycles, 5);
+        let most_profitable_cycles = get_most_profitable_cycles(updated_cycles, 1);
 
         for cycle in most_profitable_cycles {
             let token_first = cycle.get_entry_token();
-            let amount_in = U256::from(1000000000);
+            let amount_in = parse_units("0.00001", 18).unwrap().into();
+            // 100000000000000
+            println!("Amount in: {:?}", amount_in);
             let amount_out = self
                 .simulator
                 .as_ref()
@@ -260,8 +265,18 @@ impl Strategy<Event, Action> for BaseArb {
                     U256::from(0)
                 });
 
-            if amount_out > amount_in {
-                info!("Cycle {} - Profit: {:?}", cycle, amount_out - amount_in);
+            let scale_decimals = 5;
+            let scale_multiplier: U256 = parse_units("1", scale_decimals).unwrap().into();
+            let percentage_profit = (amount_out - amount_in) * scale_multiplier / amount_in;
+            let scaled_percentage: I256 = parse_units("-0.03", scale_decimals).unwrap().into();
+            let profitable = I256::try_from(percentage_profit).unwrap() >= scaled_percentage;
+
+            if profitable {
+                info!(
+                    "Profitable cycle: {} - Profit: {:?} 💰",
+                    cycle,
+                    amount_out - amount_in
+                );
                 let calldata = self
                     .get_cycle_calldata(token_first, amount_in, &cycle)
                     .await
@@ -271,13 +286,18 @@ impl Strategy<Event, Action> for BaseArb {
                     calldata,
                     gas_bid_info: None,
                 });
+                info!("Submitting encoded tx... 📨");
                 actions.push(action);
             } else {
-                info!("Cycle {} - Loss: {:?}", cycle, amount_in - amount_out);
+                info!(
+                    "Negative cycle: {} - Loss: {:?} 📉",
+                    cycle,
+                    amount_in - amount_out
+                );
             }
         }
 
-        vec![]
+        actions
     }
 }
 
@@ -340,7 +360,7 @@ impl BaseArb {
         let price_after = pool.calculate_price(pool.tokens()[0])?;
 
         info!(
-            "Pool {} price update: {} -> {}",
+            "Pool {} price update: {} -> {} 📊",
             pool.name(),
             price_before,
             price_after
