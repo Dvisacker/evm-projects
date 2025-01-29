@@ -63,6 +63,7 @@ pub struct ContractAddresses {
     pub uniswap_v3_router_address: Address,
     pub uniswap_v2_router_address: Address,
     pub morpho_pool_address: Address,
+    pub aerodrome_router_address: Address,
 }
 
 pub struct BatchExecutorClient<T, P>
@@ -103,6 +104,9 @@ where
             .expect("Uniswap v2 router not found");
 
         let morpho_pool_address = addressbook.get_lending_pool(&chain, "morpho").unwrap();
+        let aerodrome_router_address = addressbook
+            .get_ve33_router(&chain, ExchangeName::Aerodrome)
+            .expect("Aerodrome router not found");
 
         Self {
             chain,
@@ -116,6 +120,7 @@ where
                 uniswap_v3_router_address,
                 uniswap_v2_router_address,
                 morpho_pool_address,
+                aerodrome_router_address,
             },
         }
     }
@@ -529,16 +534,17 @@ where
         let deadline = deadline.unwrap_or(default_deadline);
         let stable = stable.unwrap_or(false);
 
-        let aerodrome_router_address = self
+        let aerodrome_router_address = self.addresses.aerodrome_router_address;
+        let aerodrome_factory_address = self
             .addressbook
-            .get_ve33_router(&self.chain, ExchangeName::Aerodrome)
-            .expect("Aerodrome router not found");
+            .get_ve33_factory(&self.chain, ExchangeName::Aerodrome)
+            .expect("Aerodrome factory not found");
 
         let route = IAerodromeRouter::Route {
             from: token_in,
             to: token_out,
             stable,
-            factory: aerodrome_router_address,
+            factory: aerodrome_factory_address,
         };
         let call = IAerodromeRouter::swapExactTokensForTokensCall {
             amountIn: amount_in,
@@ -548,15 +554,14 @@ where
             deadline,
         };
 
-        let encoded = call.abi_encode();
-
-        self.add_call(
-            self.addresses.uniswap_v2_router_address,
-            U256::ZERO,
-            Bytes::from(encoded),
-            None,
-            None,
-        )
+        self.add_approve_erc20(token_in, aerodrome_router_address, amount_in)
+            .add_call(
+                aerodrome_router_address,
+                U256::ZERO,
+                Bytes::from(call.abi_encode()),
+                None,
+                None,
+            )
     }
 
     pub fn add_aerodrome_swap_all(
@@ -611,7 +616,7 @@ where
 
         // Create the swap call
         let swap_call = IAerodromeRouter::swapExactTokensForTokensCall {
-            amountIn: U256::ZERO, // Will be replaced by dynamic call
+            amountIn: U256::ZERO, // replaced by dynamic call
             amountOutMin: U256::ZERO,
             routes: vec![route],
             to: *self.executor.address(),
@@ -969,7 +974,8 @@ where
 
 #[cfg(test)]
 mod tests {
-    use provider::get_anvil_signer_provider;
+    use alloy_chains::Chain;
+    use provider::{get_anvil_signer_provider, get_default_signer_provider};
     use shared::{
         evm_helpers::compute_v3_pool_address,
         token_helpers::{get_token_balance, parse_token_units},
@@ -1271,7 +1277,6 @@ mod tests {
         dotenv::dotenv().ok();
         let addressbook = Addressbook::load().unwrap();
         let provider = get_anvil_signer_provider().await;
-
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
         let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
 

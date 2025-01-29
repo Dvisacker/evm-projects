@@ -48,6 +48,7 @@ pub struct BaseArb {
     pub chain: Chain,
     pub client: Arc<SignerProvider>,
     pub encoder: Option<Arc<BasicEncoder>>,
+    pub addressbook: Addressbook,
     pub state: State,
     pub db_url: String,
     pub simulator: Option<SimulatorClient>,
@@ -63,6 +64,7 @@ impl BaseArb {
 
         Self {
             chain,
+            addressbook,
             client: client.clone(),
             encoder: None,
             simulator: None,
@@ -126,7 +128,7 @@ impl BaseArb {
         token_first: Address,
         amount_in: U256,
         cycle: &Cycle,
-    ) -> Result<Vec<Bytes>> {
+    ) -> Result<(Vec<Bytes>, U256)> {
         let mut encoder = get_default_encoder(self.chain).await;
 
         let amms = cycle.amms.clone();
@@ -154,14 +156,16 @@ impl BaseArb {
             eyre::bail!("Pool is not a aerodrome pool");
         };
 
-        let _executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+        let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+        let weth = self
+            .addressbook
+            .get_weth(&self.chain.named().unwrap())
+            .unwrap();
 
-        // encoder.add_transfer_erc20(token_in, executor_address, amount_in);
-        // encoder.add_wrap_eth(
-        //     Address::from_str("0x4200000000000000000000000000000000000006").unwrap(),
-        //     amount_in,
-        // );
-        encoder.add_aerodrome_router_swap(amount_in, token_in, token_out, None, Some(stable));
+        encoder
+            .add_wrap_eth(weth, amount_in)
+            .add_transfer_erc20(weth, executor_address, amount_in)
+            .add_aerodrome_router_swap(amount_in, token_in, token_out, None, Some(stable));
 
         let mut last_token = token_out;
 
@@ -192,9 +196,9 @@ impl BaseArb {
             last_token = token_out;
         }
 
-        let (calldata, _) = encoder.flush();
+        let (calldata, total_value) = encoder.flush();
 
-        Ok(calldata)
+        Ok((calldata, total_value))
     }
 }
 
@@ -251,9 +255,7 @@ impl Strategy<Event, Action> for BaseArb {
 
         for cycle in most_profitable_cycles {
             let token_first = cycle.get_entry_token();
-            let amount_in = parse_units("0.00001", 18).unwrap().into();
-            // 100000000000000
-            println!("Amount in: {:?}", amount_in);
+            let amount_in = parse_units("0.001", 18).unwrap().into();
             let amount_out = self
                 .simulator
                 .as_ref()
@@ -277,13 +279,14 @@ impl Strategy<Event, Action> for BaseArb {
                     cycle,
                     amount_out - amount_in
                 );
-                let calldata = self
+                let (calldata, total_value) = self
                     .get_cycle_calldata(token_first, amount_in, &cycle)
                     .await
                     .unwrap();
 
                 let action = Action::SubmitEncodedTx(SubmitEncodedTx {
                     calldata,
+                    total_value,
                     gas_bid_info: None,
                 });
                 info!("Submitting encoded tx... 📨");
