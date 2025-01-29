@@ -2,7 +2,7 @@
 
 Various crates and binaries to trade and interact with EVM chains.
 
-The event and blocks pub/sub engine is originally forked from [Artemis](https://github.com/paradigmxyz/artemis).
+The pub/sub engine is originally forked from [Artemis](https://github.com/paradigmxyz/artemis).
 
 ## Project Structure
 
@@ -10,19 +10,21 @@ The event and blocks pub/sub engine is originally forked from [Artemis](https://
 /
 ├── bin/                    # Binary crates (bot, cli, swap)
 ├── crates/                 # Core library crates
-│   ├── addressbook/       # Blockchain address management
-│   ├── amms/              # AMM integrations
-│   ├── engine/            # Core engine
-│   ├── bindings/          # Contract bindings (rust interfaces)
-│   ├── db/                # Database interface
-│   ├── encoder-client/    # Blockchain transaction encoding
-│   ├── executor-binding/  # Executor contract binding 
-│   ├── odos-client/       # Odos protocol client
-│   ├── provider/          # Blockchain provider
-│   ├── shared/            # Shared utilities
-│   ├── strategies/        # Strategy folder
-│   └── types/             # Common types
-├── contracts/             # Smart contracts
+│   ├── addressbook/       # Address book to easily fetch known addresses
+│   ├── amms/              # Fork of amms-rs using alloy and with added support for curve, ramses, etc.  
+│   ├── engine/            # Pub/sub engine. Based on artemis.
+│   ├── bindings/          # Contract bindings (to be removed)
+│   ├── db/                # Database models and queries
+│   ├── pool-manager/      # Pool storage manager for example for fetching/flagging pools in the db
+│   ├── tx-executor/       # Bundled tx encoder/executor
+│   ├── tx-simulator/      # Swap simulator
+│   ├── odos-client/       # Odos aggregator client
+│   ├── codex-client/      # Codex API client
+│   ├── lifi-client/       # Lifi bridge client
+│   ├── metadata/          # Functions to fetch aggregated chain data
+│   ├── provider/          # Provider utils
+│   ├── shared/            # Shared utils
+│   └── types/             # Shared types
 └── docker/               # Docker configuration
 ```
 
@@ -30,7 +32,7 @@ The event and blocks pub/sub engine is originally forked from [Artemis](https://
 
 ### Prerequisites
 
-- Rust 1.70 or higher
+- Rust 1.82 or higher
 - Docker (optional)
 - Access to Ethereum nodes or providers
 
@@ -75,22 +77,3 @@ See `.env.example` for available configuration options.
 
 1. Create a new crate in `crates/strategies/`
 2. Implement the strategy traits from `engine`
-
-## License
-
-This project is dual-licensed under:
-- MIT License ([LICENSE-MIT](LICENSE-MIT))
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Open a Pull Request
-
-## Disclaimer
-
-This software is for educational purposes only. Do not use it to exploit blockchain networks or engage in harmful MEV practices. Users are responsible for ensuring compliance with all applicable laws and regulations. 
