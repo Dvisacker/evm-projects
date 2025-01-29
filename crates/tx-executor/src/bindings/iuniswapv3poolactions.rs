@@ -238,7 +238,13 @@ interface IUniswapV3PoolActions {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style,
+    clippy::empty_structs_with_brackets
+)]
 pub mod IUniswapV3PoolActions {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
@@ -266,21 +272,31 @@ pub mod IUniswapV3PoolActions {
 ```solidity
 function burn(int24 tickLower, int24 tickUpper, uint128 amount) external returns (uint256 amount0, uint256 amount1);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct burnCall {
+        #[allow(missing_docs)]
         pub tickLower: alloy::sol_types::private::primitives::aliases::I24,
+        #[allow(missing_docs)]
         pub tickUpper: alloy::sol_types::private::primitives::aliases::I24,
+        #[allow(missing_docs)]
         pub amount: u128,
     }
     ///Container type for the return parameters of the [`burn(int24,int24,uint128)`](burnCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct burnReturn {
+        #[allow(missing_docs)]
         pub amount0: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub amount1: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -422,23 +438,35 @@ function burn(int24 tickLower, int24 tickUpper, uint128 amount) external returns
 ```solidity
 function collect(address recipient, int24 tickLower, int24 tickUpper, uint128 amount0Requested, uint128 amount1Requested) external returns (uint128 amount0, uint128 amount1);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct collectCall {
+        #[allow(missing_docs)]
         pub recipient: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub tickLower: alloy::sol_types::private::primitives::aliases::I24,
+        #[allow(missing_docs)]
         pub tickUpper: alloy::sol_types::private::primitives::aliases::I24,
+        #[allow(missing_docs)]
         pub amount0Requested: u128,
+        #[allow(missing_docs)]
         pub amount1Requested: u128,
     }
     ///Container type for the return parameters of the [`collect(address,int24,int24,uint128,uint128)`](collectCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct collectReturn {
+        #[allow(missing_docs)]
         pub amount0: u128,
+        #[allow(missing_docs)]
         pub amount1: u128,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -597,19 +625,28 @@ function collect(address recipient, int24 tickLower, int24 tickUpper, uint128 am
 ```solidity
 function flash(address recipient, uint256 amount0, uint256 amount1, bytes memory data) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct flashCall {
+        #[allow(missing_docs)]
         pub recipient: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount0: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub amount1: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub data: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`flash(address,uint256,uint256,bytes)`](flashCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct flashReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -746,16 +783,22 @@ function flash(address recipient, uint256 amount0, uint256 amount1, bytes memory
 ```solidity
 function increaseObservationCardinalityNext(uint16 observationCardinalityNext) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct increaseObservationCardinalityNextCall {
+        #[allow(missing_docs)]
         pub observationCardinalityNext: u16,
     }
     ///Container type for the return parameters of the [`increaseObservationCardinalityNext(uint16)`](increaseObservationCardinalityNextCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct increaseObservationCardinalityNextReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -871,16 +914,22 @@ function increaseObservationCardinalityNext(uint16 observationCardinalityNext) e
 ```solidity
 function initialize(uint160 sqrtPriceX96) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct initializeCall {
+        #[allow(missing_docs)]
         pub sqrtPriceX96: alloy::sol_types::private::primitives::aliases::U160,
     }
     ///Container type for the return parameters of the [`initialize(uint160)`](initializeCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct initializeReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -990,23 +1039,35 @@ function initialize(uint160 sqrtPriceX96) external;
 ```solidity
 function mint(address recipient, int24 tickLower, int24 tickUpper, uint128 amount, bytes memory data) external returns (uint256 amount0, uint256 amount1);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct mintCall {
+        #[allow(missing_docs)]
         pub recipient: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub tickLower: alloy::sol_types::private::primitives::aliases::I24,
+        #[allow(missing_docs)]
         pub tickUpper: alloy::sol_types::private::primitives::aliases::I24,
+        #[allow(missing_docs)]
         pub amount: u128,
+        #[allow(missing_docs)]
         pub data: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`mint(address,int24,int24,uint128,bytes)`](mintCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct mintReturn {
+        #[allow(missing_docs)]
         pub amount0: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub amount1: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1168,23 +1229,35 @@ function mint(address recipient, int24 tickLower, int24 tickUpper, uint128 amoun
 ```solidity
 function swap(address recipient, bool zeroForOne, int256 amountSpecified, uint160 sqrtPriceLimitX96, bytes memory data) external returns (int256 amount0, int256 amount1);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct swapCall {
+        #[allow(missing_docs)]
         pub recipient: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub zeroForOne: bool,
+        #[allow(missing_docs)]
         pub amountSpecified: alloy::sol_types::private::primitives::aliases::I256,
+        #[allow(missing_docs)]
         pub sqrtPriceLimitX96: alloy::sol_types::private::primitives::aliases::U160,
+        #[allow(missing_docs)]
         pub data: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`swap(address,bool,int256,uint160,bytes)`](swapCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct swapReturn {
+        #[allow(missing_docs)]
         pub amount0: alloy::sol_types::private::primitives::aliases::I256,
+        #[allow(missing_docs)]
         pub amount1: alloy::sol_types::private::primitives::aliases::I256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1344,12 +1417,19 @@ function swap(address recipient, bool zeroForOne, int256 amountSpecified, uint16
     };
     ///Container for all the [`IUniswapV3PoolActions`](self) function calls.
     pub enum IUniswapV3PoolActionsCalls {
+        #[allow(missing_docs)]
         burn(burnCall),
+        #[allow(missing_docs)]
         collect(collectCall),
+        #[allow(missing_docs)]
         flash(flashCall),
+        #[allow(missing_docs)]
         increaseObservationCardinalityNext(increaseObservationCardinalityNextCall),
+        #[allow(missing_docs)]
         initialize(initializeCall),
+        #[allow(missing_docs)]
         mint(mintCall),
+        #[allow(missing_docs)]
         swap(swapCall),
     }
     #[automatically_derived]
@@ -1400,7 +1480,7 @@ function swap(address recipient, bool zeroForOne, int256 amountSpecified, uint16
             Self::SELECTORS.binary_search(&selector).is_ok()
         }
         #[inline]
-        #[allow(unsafe_code, non_snake_case)]
+        #[allow(non_snake_case)]
         fn abi_decode_raw(
             selector: [u8; 4],
             data: &[u8],
@@ -1512,7 +1592,7 @@ function swap(address recipient, bool zeroForOne, int256 amountSpecified, uint16
                     ),
                 );
             };
-            (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
+            DECODE_SHIMS[idx](data, validate)
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {

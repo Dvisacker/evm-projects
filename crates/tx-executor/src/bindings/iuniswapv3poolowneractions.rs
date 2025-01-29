@@ -65,7 +65,13 @@ interface IUniswapV3PoolOwnerActions {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style,
+    clippy::empty_structs_with_brackets
+)]
 pub mod IUniswapV3PoolOwnerActions {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
@@ -93,21 +99,31 @@ pub mod IUniswapV3PoolOwnerActions {
 ```solidity
 function collectProtocol(address recipient, uint128 amount0Requested, uint128 amount1Requested) external returns (uint128 amount0, uint128 amount1);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct collectProtocolCall {
+        #[allow(missing_docs)]
         pub recipient: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount0Requested: u128,
+        #[allow(missing_docs)]
         pub amount1Requested: u128,
     }
     ///Container type for the return parameters of the [`collectProtocol(address,uint128,uint128)`](collectProtocolCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct collectProtocolReturn {
+        #[allow(missing_docs)]
         pub amount0: u128,
+        #[allow(missing_docs)]
         pub amount1: u128,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -248,17 +264,24 @@ function collectProtocol(address recipient, uint128 amount0Requested, uint128 am
 ```solidity
 function setFeeProtocol(uint8 feeProtocol0, uint8 feeProtocol1) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setFeeProtocolCall {
+        #[allow(missing_docs)]
         pub feeProtocol0: u8,
+        #[allow(missing_docs)]
         pub feeProtocol1: u8,
     }
     ///Container type for the return parameters of the [`setFeeProtocol(uint8,uint8)`](setFeeProtocolCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setFeeProtocolReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -378,7 +401,9 @@ function setFeeProtocol(uint8 feeProtocol0, uint8 feeProtocol1) external;
     };
     ///Container for all the [`IUniswapV3PoolOwnerActions`](self) function calls.
     pub enum IUniswapV3PoolOwnerActionsCalls {
+        #[allow(missing_docs)]
         collectProtocol(collectProtocolCall),
+        #[allow(missing_docs)]
         setFeeProtocol(setFeeProtocolCall),
     }
     #[automatically_derived]
@@ -419,7 +444,7 @@ function setFeeProtocol(uint8 feeProtocol0, uint8 feeProtocol1) external;
             Self::SELECTORS.binary_search(&selector).is_ok()
         }
         #[inline]
-        #[allow(unsafe_code, non_snake_case)]
+        #[allow(non_snake_case)]
         fn abi_decode_raw(
             selector: [u8; 4],
             data: &[u8],
@@ -464,7 +489,7 @@ function setFeeProtocol(uint8 feeProtocol0, uint8 feeProtocol1) external;
                     ),
                 );
             };
-            (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
+            DECODE_SHIMS[idx](data, validate)
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {

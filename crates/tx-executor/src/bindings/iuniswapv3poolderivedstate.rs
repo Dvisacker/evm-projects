@@ -71,7 +71,13 @@ interface IUniswapV3PoolDerivedState {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style,
+    clippy::empty_structs_with_brackets
+)]
 pub mod IUniswapV3PoolDerivedState {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
@@ -99,23 +105,31 @@ pub mod IUniswapV3PoolDerivedState {
 ```solidity
 function observe(uint32[] memory secondsAgos) external view returns (int56[] memory tickCumulatives, uint160[] memory secondsPerLiquidityCumulativeX128s);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct observeCall {
+        #[allow(missing_docs)]
         pub secondsAgos: alloy::sol_types::private::Vec<u32>,
     }
     ///Container type for the return parameters of the [`observe(uint32[])`](observeCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct observeReturn {
+        #[allow(missing_docs)]
         pub tickCumulatives: alloy::sol_types::private::Vec<
             alloy::sol_types::private::primitives::aliases::I56,
         >,
+        #[allow(missing_docs)]
         pub secondsPerLiquidityCumulativeX128s: alloy::sol_types::private::Vec<
             alloy::sol_types::private::primitives::aliases::U160,
         >,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -243,21 +257,31 @@ function observe(uint32[] memory secondsAgos) external view returns (int56[] mem
 ```solidity
 function snapshotCumulativesInside(int24 tickLower, int24 tickUpper) external view returns (int56 tickCumulativeInside, uint160 secondsPerLiquidityInsideX128, uint32 secondsInside);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct snapshotCumulativesInsideCall {
+        #[allow(missing_docs)]
         pub tickLower: alloy::sol_types::private::primitives::aliases::I24,
+        #[allow(missing_docs)]
         pub tickUpper: alloy::sol_types::private::primitives::aliases::I24,
     }
     ///Container type for the return parameters of the [`snapshotCumulativesInside(int24,int24)`](snapshotCumulativesInsideCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct snapshotCumulativesInsideReturn {
+        #[allow(missing_docs)]
         pub tickCumulativeInside: alloy::sol_types::private::primitives::aliases::I56,
+        #[allow(missing_docs)]
         pub secondsPerLiquidityInsideX128: alloy::sol_types::private::primitives::aliases::U160,
+        #[allow(missing_docs)]
         pub secondsInside: u32,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -402,7 +426,9 @@ function snapshotCumulativesInside(int24 tickLower, int24 tickUpper) external vi
     };
     ///Container for all the [`IUniswapV3PoolDerivedState`](self) function calls.
     pub enum IUniswapV3PoolDerivedStateCalls {
+        #[allow(missing_docs)]
         observe(observeCall),
+        #[allow(missing_docs)]
         snapshotCumulativesInside(snapshotCumulativesInsideCall),
     }
     #[automatically_derived]
@@ -441,7 +467,7 @@ function snapshotCumulativesInside(int24 tickLower, int24 tickUpper) external vi
             Self::SELECTORS.binary_search(&selector).is_ok()
         }
         #[inline]
-        #[allow(unsafe_code, non_snake_case)]
+        #[allow(non_snake_case)]
         fn abi_decode_raw(
             selector: [u8; 4],
             data: &[u8],
@@ -488,7 +514,7 @@ function snapshotCumulativesInside(int24 tickLower, int24 tickUpper) external vi
                     ),
                 );
             };
-            (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
+            DECODE_SHIMS[idx](data, validate)
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {

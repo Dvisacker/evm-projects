@@ -1095,7 +1095,13 @@ interface IMorpho {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style,
+    clippy::empty_structs_with_brackets
+)]
 pub mod IMorpho {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
@@ -1119,7 +1125,7 @@ pub mod IMorpho {
     pub static DEPLOYED_BYTECODE: alloy_sol_types::private::Bytes = alloy_sol_types::private::Bytes::from_static(
         b"",
     );
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct Id(alloy::sol_types::private::FixedBytes<32>);
     const _: () = {
@@ -1247,16 +1253,26 @@ pub mod IMorpho {
     /**```solidity
 struct Authorization { address authorizer; address authorized; bool isAuthorized; uint256 nonce; uint256 deadline; }
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct Authorization {
+        #[allow(missing_docs)]
         pub authorizer: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub authorized: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub isAuthorized: bool,
+        #[allow(missing_docs)]
         pub nonce: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub deadline: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -1524,17 +1540,28 @@ struct Authorization { address authorizer; address authorized; bool isAuthorized
     /**```solidity
 struct Market { uint128 totalSupplyAssets; uint128 totalSupplyShares; uint128 totalBorrowAssets; uint128 totalBorrowShares; uint128 lastUpdate; uint128 fee; }
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct Market {
+        #[allow(missing_docs)]
         pub totalSupplyAssets: u128,
+        #[allow(missing_docs)]
         pub totalSupplyShares: u128,
+        #[allow(missing_docs)]
         pub totalBorrowAssets: u128,
+        #[allow(missing_docs)]
         pub totalBorrowShares: u128,
+        #[allow(missing_docs)]
         pub lastUpdate: u128,
+        #[allow(missing_docs)]
         pub fee: u128,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -1834,16 +1861,26 @@ struct Market { uint128 totalSupplyAssets; uint128 totalSupplyShares; uint128 to
     /**```solidity
 struct MarketParams { address loanToken; address collateralToken; address oracle; address irm; uint256 lltv; }
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct MarketParams {
+        #[allow(missing_docs)]
         pub loanToken: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub collateralToken: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub oracle: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub irm: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub lltv: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -2107,14 +2144,22 @@ struct MarketParams { address loanToken; address collateralToken; address oracle
     /**```solidity
 struct Position { uint256 supplyShares; uint128 borrowShares; uint128 collateral; }
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct Position {
+        #[allow(missing_docs)]
         pub supplyShares: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub borrowShares: u128,
+        #[allow(missing_docs)]
         pub collateral: u128,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -2348,14 +2393,22 @@ struct Position { uint256 supplyShares; uint128 borrowShares; uint128 collateral
     /**```solidity
 struct Signature { uint8 v; bytes32 r; bytes32 s; }
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct Signature {
+        #[allow(missing_docs)]
         pub v: u8,
+        #[allow(missing_docs)]
         pub r: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub s: alloy::sol_types::private::FixedBytes<32>,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -2575,16 +2628,22 @@ struct Signature { uint8 v; bytes32 r; bytes32 s; }
 ```solidity
 function DOMAIN_SEPARATOR() external view returns (bytes32);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct DOMAIN_SEPARATORCall {}
     ///Container type for the return parameters of the [`DOMAIN_SEPARATOR()`](DOMAIN_SEPARATORCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct DOMAIN_SEPARATORReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::FixedBytes<32>,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2692,16 +2751,22 @@ function DOMAIN_SEPARATOR() external view returns (bytes32);
 ```solidity
 function accrueInterest(MarketParams memory marketParams) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct accrueInterestCall {
+        #[allow(missing_docs)]
         pub marketParams: <MarketParams as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`accrueInterest((address,address,address,address,uint256))`](accrueInterestCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct accrueInterestReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2813,23 +2878,35 @@ function accrueInterest(MarketParams memory marketParams) external;
 ```solidity
 function borrow(MarketParams memory marketParams, uint256 assets, uint256 shares, address onBehalf, address receiver) external returns (uint256 assetsBorrowed, uint256 sharesBorrowed);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct borrowCall {
+        #[allow(missing_docs)]
         pub marketParams: <MarketParams as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub assets: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub shares: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub onBehalf: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub receiver: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`borrow((address,address,address,address,uint256),uint256,uint256,address,address)`](borrowCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct borrowReturn {
+        #[allow(missing_docs)]
         pub assetsBorrowed: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub sharesBorrowed: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2991,16 +3068,22 @@ function borrow(MarketParams memory marketParams, uint256 assets, uint256 shares
 ```solidity
 function createMarket(MarketParams memory marketParams) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createMarketCall {
+        #[allow(missing_docs)]
         pub marketParams: <MarketParams as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`createMarket((address,address,address,address,uint256))`](createMarketCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct createMarketReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3110,16 +3193,22 @@ function createMarket(MarketParams memory marketParams) external;
 ```solidity
 function enableIrm(address irm) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct enableIrmCall {
+        #[allow(missing_docs)]
         pub irm: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`enableIrm(address)`](enableIrmCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct enableIrmReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3227,16 +3316,22 @@ function enableIrm(address irm) external;
 ```solidity
 function enableLltv(uint256 lltv) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct enableLltvCall {
+        #[allow(missing_docs)]
         pub lltv: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`enableLltv(uint256)`](enableLltvCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct enableLltvReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3346,22 +3441,29 @@ function enableLltv(uint256 lltv) external;
 ```solidity
 function extSloads(bytes32[] memory slots) external view returns (bytes32[] memory);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct extSloadsCall {
+        #[allow(missing_docs)]
         pub slots: alloy::sol_types::private::Vec<
             alloy::sol_types::private::FixedBytes<32>,
         >,
     }
     ///Container type for the return parameters of the [`extSloads(bytes32[])`](extSloadsCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct extSloadsReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Vec<
             alloy::sol_types::private::FixedBytes<32>,
         >,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3493,16 +3595,22 @@ function extSloads(bytes32[] memory slots) external view returns (bytes32[] memo
 ```solidity
 function feeRecipient() external view returns (address);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct feeRecipientCall {}
     ///Container type for the return parameters of the [`feeRecipient()`](feeRecipientCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct feeRecipientReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3606,18 +3714,26 @@ function feeRecipient() external view returns (address);
 ```solidity
 function flashLoan(address token, uint256 assets, bytes memory data) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct flashLoanCall {
+        #[allow(missing_docs)]
         pub token: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub assets: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub data: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`flashLoan(address,uint256,bytes)`](flashLoanCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct flashLoanReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3747,18 +3863,25 @@ function flashLoan(address token, uint256 assets, bytes memory data) external;
 ```solidity
 function idToMarketParams(Id id) external view returns (MarketParams memory);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct idToMarketParamsCall {
+        #[allow(missing_docs)]
         pub id: <Id as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`idToMarketParams(bytes32)`](idToMarketParamsCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct idToMarketParamsReturn {
+        #[allow(missing_docs)]
         pub _0: <MarketParams as alloy::sol_types::SolType>::RustType,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3870,19 +3993,27 @@ function idToMarketParams(Id id) external view returns (MarketParams memory);
 ```solidity
 function isAuthorized(address authorizer, address authorized) external view returns (bool);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isAuthorizedCall {
+        #[allow(missing_docs)]
         pub authorizer: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub authorized: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`isAuthorized(address,address)`](isAuthorizedCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isAuthorizedReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -4005,18 +4136,25 @@ function isAuthorized(address authorizer, address authorized) external view retu
 ```solidity
 function isIrmEnabled(address irm) external view returns (bool);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isIrmEnabledCall {
+        #[allow(missing_docs)]
         pub irm: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`isIrmEnabled(address)`](isIrmEnabledCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isIrmEnabledReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -4124,18 +4262,25 @@ function isIrmEnabled(address irm) external view returns (bool);
 ```solidity
 function isLltvEnabled(uint256 lltv) external view returns (bool);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isLltvEnabledCall {
+        #[allow(missing_docs)]
         pub lltv: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`isLltvEnabled(uint256)`](isLltvEnabledCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct isLltvEnabledReturn {
+        #[allow(missing_docs)]
         pub _0: bool,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -4245,23 +4390,35 @@ function isLltvEnabled(uint256 lltv) external view returns (bool);
 ```solidity
 function liquidate(MarketParams memory marketParams, address borrower, uint256 seizedAssets, uint256 repaidShares, bytes memory data) external returns (uint256, uint256);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct liquidateCall {
+        #[allow(missing_docs)]
         pub marketParams: <MarketParams as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub borrower: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub seizedAssets: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub repaidShares: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub data: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`liquidate((address,address,address,address,uint256),address,uint256,uint256,bytes)`](liquidateCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct liquidateReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub _1: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -4420,18 +4577,25 @@ function liquidate(MarketParams memory marketParams, address borrower, uint256 s
 ```solidity
 function market(Id id) external view returns (Market memory m);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct marketCall {
+        #[allow(missing_docs)]
         pub id: <Id as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`market(bytes32)`](marketCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct marketReturn {
+        #[allow(missing_docs)]
         pub m: <Market as alloy::sol_types::SolType>::RustType,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -4539,18 +4703,25 @@ function market(Id id) external view returns (Market memory m);
 ```solidity
 function nonce(address authorizer) external view returns (uint256);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct nonceCall {
+        #[allow(missing_docs)]
         pub authorizer: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`nonce(address)`](nonceCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct nonceReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -4660,16 +4831,22 @@ function nonce(address authorizer) external view returns (uint256);
 ```solidity
 function owner() external view returns (address);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerCall {}
     ///Container type for the return parameters of the [`owner()`](ownerCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ownerReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -4773,19 +4950,27 @@ function owner() external view returns (address);
 ```solidity
 function position(Id id, address user) external view returns (Position memory p);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct positionCall {
+        #[allow(missing_docs)]
         pub id: <Id as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub user: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`position(bytes32,address)`](positionCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct positionReturn {
+        #[allow(missing_docs)]
         pub p: <Position as alloy::sol_types::SolType>::RustType,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -4899,23 +5084,35 @@ function position(Id id, address user) external view returns (Position memory p)
 ```solidity
 function repay(MarketParams memory marketParams, uint256 assets, uint256 shares, address onBehalf, bytes memory data) external returns (uint256 assetsRepaid, uint256 sharesRepaid);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct repayCall {
+        #[allow(missing_docs)]
         pub marketParams: <MarketParams as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub assets: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub shares: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub onBehalf: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub data: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`repay((address,address,address,address,uint256),uint256,uint256,address,bytes)`](repayCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct repayReturn {
+        #[allow(missing_docs)]
         pub assetsRepaid: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub sharesRepaid: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -5077,17 +5274,24 @@ function repay(MarketParams memory marketParams, uint256 assets, uint256 shares,
 ```solidity
 function setAuthorization(address authorized, bool newIsAuthorized) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAuthorizationCall {
+        #[allow(missing_docs)]
         pub authorized: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub newIsAuthorized: bool,
     }
     ///Container type for the return parameters of the [`setAuthorization(address,bool)`](setAuthorizationCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAuthorizationReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -5211,17 +5415,24 @@ function setAuthorization(address authorized, bool newIsAuthorized) external;
 ```solidity
 function setAuthorizationWithSig(Authorization memory authorization, Signature memory signature) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAuthorizationWithSigCall {
+        #[allow(missing_docs)]
         pub authorization: <Authorization as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub signature: <Signature as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`setAuthorizationWithSig((address,address,bool,uint256,uint256),(uint8,bytes32,bytes32))`](setAuthorizationWithSigCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAuthorizationWithSigReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -5340,17 +5551,24 @@ function setAuthorizationWithSig(Authorization memory authorization, Signature m
 ```solidity
 function setFee(MarketParams memory marketParams, uint256 newFee) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setFeeCall {
+        #[allow(missing_docs)]
         pub marketParams: <MarketParams as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub newFee: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`setFee((address,address,address,address,uint256),uint256)`](setFeeCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setFeeReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -5470,16 +5688,22 @@ function setFee(MarketParams memory marketParams, uint256 newFee) external;
 ```solidity
 function setFeeRecipient(address newFeeRecipient) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setFeeRecipientCall {
+        #[allow(missing_docs)]
         pub newFeeRecipient: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setFeeRecipient(address)`](setFeeRecipientCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setFeeRecipientReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -5589,16 +5813,22 @@ function setFeeRecipient(address newFeeRecipient) external;
 ```solidity
 function setOwner(address newOwner) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setOwnerCall {
+        #[allow(missing_docs)]
         pub newOwner: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setOwner(address)`](setOwnerCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setOwnerReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -5706,23 +5936,35 @@ function setOwner(address newOwner) external;
 ```solidity
 function supply(MarketParams memory marketParams, uint256 assets, uint256 shares, address onBehalf, bytes memory data) external returns (uint256 assetsSupplied, uint256 sharesSupplied);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct supplyCall {
+        #[allow(missing_docs)]
         pub marketParams: <MarketParams as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub assets: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub shares: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub onBehalf: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub data: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`supply((address,address,address,address,uint256),uint256,uint256,address,bytes)`](supplyCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct supplyReturn {
+        #[allow(missing_docs)]
         pub assetsSupplied: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub sharesSupplied: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -5884,19 +6126,28 @@ function supply(MarketParams memory marketParams, uint256 assets, uint256 shares
 ```solidity
 function supplyCollateral(MarketParams memory marketParams, uint256 assets, address onBehalf, bytes memory data) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct supplyCollateralCall {
+        #[allow(missing_docs)]
         pub marketParams: <MarketParams as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub assets: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub onBehalf: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub data: alloy::sol_types::private::Bytes,
     }
     ///Container type for the return parameters of the [`supplyCollateral((address,address,address,address,uint256),uint256,address,bytes)`](supplyCollateralCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct supplyCollateralReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -6037,23 +6288,35 @@ function supplyCollateral(MarketParams memory marketParams, uint256 assets, addr
 ```solidity
 function withdraw(MarketParams memory marketParams, uint256 assets, uint256 shares, address onBehalf, address receiver) external returns (uint256 assetsWithdrawn, uint256 sharesWithdrawn);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct withdrawCall {
+        #[allow(missing_docs)]
         pub marketParams: <MarketParams as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub assets: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub shares: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub onBehalf: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub receiver: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`withdraw((address,address,address,address,uint256),uint256,uint256,address,address)`](withdrawCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct withdrawReturn {
+        #[allow(missing_docs)]
         pub assetsWithdrawn: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub sharesWithdrawn: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -6215,19 +6478,28 @@ function withdraw(MarketParams memory marketParams, uint256 assets, uint256 shar
 ```solidity
 function withdrawCollateral(MarketParams memory marketParams, uint256 assets, address onBehalf, address receiver) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct withdrawCollateralCall {
+        #[allow(missing_docs)]
         pub marketParams: <MarketParams as alloy::sol_types::SolType>::RustType,
+        #[allow(missing_docs)]
         pub assets: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub onBehalf: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub receiver: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`withdrawCollateral((address,address,address,address,uint256),uint256,address,address)`](withdrawCollateralCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct withdrawCollateralReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -6366,33 +6638,61 @@ function withdrawCollateral(MarketParams memory marketParams, uint256 assets, ad
     };
     ///Container for all the [`IMorpho`](self) function calls.
     pub enum IMorphoCalls {
+        #[allow(missing_docs)]
         DOMAIN_SEPARATOR(DOMAIN_SEPARATORCall),
+        #[allow(missing_docs)]
         accrueInterest(accrueInterestCall),
+        #[allow(missing_docs)]
         borrow(borrowCall),
+        #[allow(missing_docs)]
         createMarket(createMarketCall),
+        #[allow(missing_docs)]
         enableIrm(enableIrmCall),
+        #[allow(missing_docs)]
         enableLltv(enableLltvCall),
+        #[allow(missing_docs)]
         extSloads(extSloadsCall),
+        #[allow(missing_docs)]
         feeRecipient(feeRecipientCall),
+        #[allow(missing_docs)]
         flashLoan(flashLoanCall),
+        #[allow(missing_docs)]
         idToMarketParams(idToMarketParamsCall),
+        #[allow(missing_docs)]
         isAuthorized(isAuthorizedCall),
+        #[allow(missing_docs)]
         isIrmEnabled(isIrmEnabledCall),
+        #[allow(missing_docs)]
         isLltvEnabled(isLltvEnabledCall),
+        #[allow(missing_docs)]
         liquidate(liquidateCall),
+        #[allow(missing_docs)]
         market(marketCall),
+        #[allow(missing_docs)]
         nonce(nonceCall),
+        #[allow(missing_docs)]
         owner(ownerCall),
+        #[allow(missing_docs)]
         position(positionCall),
+        #[allow(missing_docs)]
         repay(repayCall),
+        #[allow(missing_docs)]
         setAuthorization(setAuthorizationCall),
+        #[allow(missing_docs)]
         setAuthorizationWithSig(setAuthorizationWithSigCall),
+        #[allow(missing_docs)]
         setFee(setFeeCall),
+        #[allow(missing_docs)]
         setFeeRecipient(setFeeRecipientCall),
+        #[allow(missing_docs)]
         setOwner(setOwnerCall),
+        #[allow(missing_docs)]
         supply(supplyCall),
+        #[allow(missing_docs)]
         supplyCollateral(supplyCollateralCall),
+        #[allow(missing_docs)]
         withdraw(withdrawCall),
+        #[allow(missing_docs)]
         withdrawCollateral(withdrawCollateralCall),
     }
     #[automatically_derived]
@@ -6517,7 +6817,7 @@ function withdrawCollateral(MarketParams memory marketParams, uint256 assets, ad
             Self::SELECTORS.binary_search(&selector).is_ok()
         }
         #[inline]
-        #[allow(unsafe_code, non_snake_case)]
+        #[allow(non_snake_case)]
         fn abi_decode_raw(
             selector: [u8; 4],
             data: &[u8],
@@ -6900,7 +7200,7 @@ function withdrawCollateral(MarketParams memory marketParams, uint256 assets, ad
                     ),
                 );
             };
-            (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
+            DECODE_SHIMS[idx](data, validate)
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {

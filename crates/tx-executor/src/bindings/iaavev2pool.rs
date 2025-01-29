@@ -247,7 +247,13 @@ interface IAaveV2Pool {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style,
+    clippy::empty_structs_with_brackets
+)]
 pub mod IAaveV2Pool {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
@@ -275,20 +281,30 @@ pub mod IAaveV2Pool {
 ```solidity
 function borrow(address asset, uint256 amount, uint256 interestRateMode, uint16 referralCode, address onBehalfOf) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct borrowCall {
+        #[allow(missing_docs)]
         pub asset: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub interestRateMode: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub referralCode: u16,
+        #[allow(missing_docs)]
         pub onBehalfOf: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`borrow(address,uint256,uint256,uint16,address)`](borrowCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct borrowReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -438,19 +454,28 @@ function borrow(address asset, uint256 amount, uint256 interestRateMode, uint16 
 ```solidity
 function deposit(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct depositCall {
+        #[allow(missing_docs)]
         pub asset: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub onBehalfOf: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub referralCode: u16,
     }
     ///Container type for the return parameters of the [`deposit(address,uint256,address,uint16)`](depositCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct depositReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -587,26 +612,38 @@ function deposit(address asset, uint256 amount, address onBehalfOf, uint16 refer
 ```solidity
 function flashLoan(address receiverAddress, address[] memory assets, uint256[] memory amounts, uint256[] memory modes, address onBehalfOf, bytes memory params, uint16 referralCode) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct flashLoanCall {
+        #[allow(missing_docs)]
         pub receiverAddress: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub assets: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub amounts: alloy::sol_types::private::Vec<
             alloy::sol_types::private::primitives::aliases::U256,
         >,
+        #[allow(missing_docs)]
         pub modes: alloy::sol_types::private::Vec<
             alloy::sol_types::private::primitives::aliases::U256,
         >,
+        #[allow(missing_docs)]
         pub onBehalfOf: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub params: alloy::sol_types::private::Bytes,
+        #[allow(missing_docs)]
         pub referralCode: u16,
     }
     ///Container type for the return parameters of the [`flashLoan(address,address[],uint256[],uint256[],address,bytes,uint16)`](flashLoanCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct flashLoanReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -776,23 +813,35 @@ function flashLoan(address receiverAddress, address[] memory assets, uint256[] m
 ```solidity
 function getUserAccountData(address user) external view returns (uint256 totalCollateralETH, uint256 totalDebtETH, uint256 availableBorrowsETH, uint256 currentLiquidationThreshold, uint256 ltv, uint256 healthFactor);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getUserAccountDataCall {
+        #[allow(missing_docs)]
         pub user: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`getUserAccountData(address)`](getUserAccountDataCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getUserAccountDataReturn {
+        #[allow(missing_docs)]
         pub totalCollateralETH: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub totalDebtETH: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub availableBorrowsETH: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub currentLiquidationThreshold: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub ltv: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub healthFactor: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -939,21 +988,31 @@ function getUserAccountData(address user) external view returns (uint256 totalCo
 ```solidity
 function repay(address asset, uint256 amount, uint256 rateMode, address onBehalfOf) external returns (uint256);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct repayCall {
+        #[allow(missing_docs)]
         pub asset: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub rateMode: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub onBehalfOf: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`repay(address,uint256,uint256,address)`](repayCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct repayReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1092,17 +1151,24 @@ function repay(address asset, uint256 amount, uint256 rateMode, address onBehalf
 ```solidity
 function swapBorrowRateMode(address asset, uint256 rateMode) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct swapBorrowRateModeCall {
+        #[allow(missing_docs)]
         pub asset: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub rateMode: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`swapBorrowRateMode(address,uint256)`](swapBorrowRateModeCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct swapBorrowRateModeReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1229,20 +1295,29 @@ function swapBorrowRateMode(address asset, uint256 rateMode) external;
 ```solidity
 function withdraw(address asset, uint256 amount, address to) external returns (uint256);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct withdrawCall {
+        #[allow(missing_docs)]
         pub asset: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amount: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub to: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`withdraw(address,uint256,address)`](withdrawCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct withdrawReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1372,12 +1447,19 @@ function withdraw(address asset, uint256 amount, address to) external returns (u
     };
     ///Container for all the [`IAaveV2Pool`](self) function calls.
     pub enum IAaveV2PoolCalls {
+        #[allow(missing_docs)]
         borrow(borrowCall),
+        #[allow(missing_docs)]
         deposit(depositCall),
+        #[allow(missing_docs)]
         flashLoan(flashLoanCall),
+        #[allow(missing_docs)]
         getUserAccountData(getUserAccountDataCall),
+        #[allow(missing_docs)]
         repay(repayCall),
+        #[allow(missing_docs)]
         swapBorrowRateMode(swapBorrowRateModeCall),
+        #[allow(missing_docs)]
         withdraw(withdrawCall),
     }
     #[automatically_derived]
@@ -1430,7 +1512,7 @@ function withdraw(address asset, uint256 amount, address to) external returns (u
             Self::SELECTORS.binary_search(&selector).is_ok()
         }
         #[inline]
-        #[allow(unsafe_code, non_snake_case)]
+        #[allow(non_snake_case)]
         fn abi_decode_raw(
             selector: [u8; 4],
             data: &[u8],
@@ -1540,7 +1622,7 @@ function withdraw(address asset, uint256 amount, address to) external returns (u
                     ),
                 );
             };
-            (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
+            DECODE_SHIMS[idx](data, validate)
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {

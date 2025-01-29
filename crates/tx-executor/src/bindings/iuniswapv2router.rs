@@ -409,7 +409,13 @@ interface IUniswapV2Router {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style,
+    clippy::empty_structs_with_brackets
+)]
 pub mod IUniswapV2Router {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
@@ -437,16 +443,22 @@ pub mod IUniswapV2Router {
 ```solidity
 function WETH() external pure returns (address);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct WETHCall {}
     ///Container type for the return parameters of the [`WETH()`](WETHCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct WETHReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -550,16 +562,22 @@ function WETH() external pure returns (address);
 ```solidity
 function factory() external pure returns (address);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct factoryCall {}
     ///Container type for the return parameters of the [`factory()`](factoryCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct factoryReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -663,20 +681,29 @@ function factory() external pure returns (address);
 ```solidity
 function getAmountIn(uint256 amountOut, uint256 reserveIn, uint256 reserveOut) external pure returns (uint256 amountIn);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAmountInCall {
+        #[allow(missing_docs)]
         pub amountOut: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub reserveIn: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub reserveOut: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`getAmountIn(uint256,uint256,uint256)`](getAmountInCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAmountInReturn {
+        #[allow(missing_docs)]
         pub amountIn: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -808,20 +835,29 @@ function getAmountIn(uint256 amountOut, uint256 reserveIn, uint256 reserveOut) e
 ```solidity
 function getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut) external pure returns (uint256 amountOut);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAmountOutCall {
+        #[allow(missing_docs)]
         pub amountIn: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub reserveIn: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub reserveOut: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`getAmountOut(uint256,uint256,uint256)`](getAmountOutCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAmountOutReturn {
+        #[allow(missing_docs)]
         pub amountOut: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -953,21 +989,29 @@ function getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut) e
 ```solidity
 function getAmountsIn(uint256 amountOut, address[] memory path) external view returns (uint256[] memory amounts);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAmountsInCall {
+        #[allow(missing_docs)]
         pub amountOut: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub path: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`getAmountsIn(uint256,address[])`](getAmountsInCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAmountsInReturn {
+        #[allow(missing_docs)]
         pub amounts: alloy::sol_types::private::Vec<
             alloy::sol_types::private::primitives::aliases::U256,
         >,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1098,21 +1142,29 @@ function getAmountsIn(uint256 amountOut, address[] memory path) external view re
 ```solidity
 function getAmountsOut(uint256 amountIn, address[] memory path) external view returns (uint256[] memory amounts);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAmountsOutCall {
+        #[allow(missing_docs)]
         pub amountIn: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub path: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
     }
     ///Container type for the return parameters of the [`getAmountsOut(uint256,address[])`](getAmountsOutCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAmountsOutReturn {
+        #[allow(missing_docs)]
         pub amounts: alloy::sol_types::private::Vec<
             alloy::sol_types::private::primitives::aliases::U256,
         >,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1243,20 +1295,29 @@ function getAmountsOut(uint256 amountIn, address[] memory path) external view re
 ```solidity
 function quote(uint256 amountA, uint256 reserveA, uint256 reserveB) external pure returns (uint256 amountB);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct quoteCall {
+        #[allow(missing_docs)]
         pub amountA: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub reserveA: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub reserveB: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`quote(uint256,uint256,uint256)`](quoteCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct quoteReturn {
+        #[allow(missing_docs)]
         pub amountB: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1388,23 +1449,33 @@ function quote(uint256 amountA, uint256 reserveA, uint256 reserveB) external pur
 ```solidity
 function swapETHForExactTokens(uint256 amountOut, address[] memory path, address to, uint256 deadline) external payable returns (uint256[] memory amounts);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct swapETHForExactTokensCall {
+        #[allow(missing_docs)]
         pub amountOut: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub path: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub to: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub deadline: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`swapETHForExactTokens(uint256,address[],address,uint256)`](swapETHForExactTokensCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct swapETHForExactTokensReturn {
+        #[allow(missing_docs)]
         pub amounts: alloy::sol_types::private::Vec<
             alloy::sol_types::private::primitives::aliases::U256,
         >,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1553,23 +1624,33 @@ function swapETHForExactTokens(uint256 amountOut, address[] memory path, address
 ```solidity
 function swapExactETHForTokens(uint256 amountOutMin, address[] memory path, address to, uint256 deadline) external payable returns (uint256[] memory amounts);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct swapExactETHForTokensCall {
+        #[allow(missing_docs)]
         pub amountOutMin: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub path: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub to: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub deadline: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`swapExactETHForTokens(uint256,address[],address,uint256)`](swapExactETHForTokensCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct swapExactETHForTokensReturn {
+        #[allow(missing_docs)]
         pub amounts: alloy::sol_types::private::Vec<
             alloy::sol_types::private::primitives::aliases::U256,
         >,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1718,24 +1799,35 @@ function swapExactETHForTokens(uint256 amountOutMin, address[] memory path, addr
 ```solidity
 function swapExactTokensForETH(uint256 amountIn, uint256 amountOutMin, address[] memory path, address to, uint256 deadline) external returns (uint256[] memory amounts);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct swapExactTokensForETHCall {
+        #[allow(missing_docs)]
         pub amountIn: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub amountOutMin: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub path: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub to: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub deadline: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`swapExactTokensForETH(uint256,uint256,address[],address,uint256)`](swapExactTokensForETHCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct swapExactTokensForETHReturn {
+        #[allow(missing_docs)]
         pub amounts: alloy::sol_types::private::Vec<
             alloy::sol_types::private::primitives::aliases::U256,
         >,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1897,24 +1989,35 @@ function swapExactTokensForETH(uint256 amountIn, uint256 amountOutMin, address[]
 ```solidity
 function swapExactTokensForTokens(uint256 amountIn, uint256 amountOutMin, address[] memory path, address to, uint256 deadline) external returns (uint256[] memory amounts);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct swapExactTokensForTokensCall {
+        #[allow(missing_docs)]
         pub amountIn: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub amountOutMin: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub path: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub to: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub deadline: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`swapExactTokensForTokens(uint256,uint256,address[],address,uint256)`](swapExactTokensForTokensCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct swapExactTokensForTokensReturn {
+        #[allow(missing_docs)]
         pub amounts: alloy::sol_types::private::Vec<
             alloy::sol_types::private::primitives::aliases::U256,
         >,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2076,24 +2179,35 @@ function swapExactTokensForTokens(uint256 amountIn, uint256 amountOutMin, addres
 ```solidity
 function swapTokensForExactETH(uint256 amountOut, uint256 amountInMax, address[] memory path, address to, uint256 deadline) external returns (uint256[] memory amounts);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct swapTokensForExactETHCall {
+        #[allow(missing_docs)]
         pub amountOut: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub amountInMax: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub path: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub to: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub deadline: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`swapTokensForExactETH(uint256,uint256,address[],address,uint256)`](swapTokensForExactETHCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct swapTokensForExactETHReturn {
+        #[allow(missing_docs)]
         pub amounts: alloy::sol_types::private::Vec<
             alloy::sol_types::private::primitives::aliases::U256,
         >,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2255,24 +2369,35 @@ function swapTokensForExactETH(uint256 amountOut, uint256 amountInMax, address[]
 ```solidity
 function swapTokensForExactTokens(uint256 amountOut, uint256 amountInMax, address[] memory path, address to, uint256 deadline) external returns (uint256[] memory amounts);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct swapTokensForExactTokensCall {
+        #[allow(missing_docs)]
         pub amountOut: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub amountInMax: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub path: alloy::sol_types::private::Vec<alloy::sol_types::private::Address>,
+        #[allow(missing_docs)]
         pub to: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub deadline: alloy::sol_types::private::primitives::aliases::U256,
     }
     ///Container type for the return parameters of the [`swapTokensForExactTokens(uint256,uint256,address[],address,uint256)`](swapTokensForExactTokensCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct swapTokensForExactTokensReturn {
+        #[allow(missing_docs)]
         pub amounts: alloy::sol_types::private::Vec<
             alloy::sol_types::private::primitives::aliases::U256,
         >,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2432,18 +2557,31 @@ function swapTokensForExactTokens(uint256 amountOut, uint256 amountInMax, addres
     };
     ///Container for all the [`IUniswapV2Router`](self) function calls.
     pub enum IUniswapV2RouterCalls {
+        #[allow(missing_docs)]
         WETH(WETHCall),
+        #[allow(missing_docs)]
         factory(factoryCall),
+        #[allow(missing_docs)]
         getAmountIn(getAmountInCall),
+        #[allow(missing_docs)]
         getAmountOut(getAmountOutCall),
+        #[allow(missing_docs)]
         getAmountsIn(getAmountsInCall),
+        #[allow(missing_docs)]
         getAmountsOut(getAmountsOutCall),
+        #[allow(missing_docs)]
         quote(quoteCall),
+        #[allow(missing_docs)]
         swapETHForExactTokens(swapETHForExactTokensCall),
+        #[allow(missing_docs)]
         swapExactETHForTokens(swapExactETHForTokensCall),
+        #[allow(missing_docs)]
         swapExactTokensForETH(swapExactTokensForETHCall),
+        #[allow(missing_docs)]
         swapExactTokensForTokens(swapExactTokensForTokensCall),
+        #[allow(missing_docs)]
         swapTokensForExactETH(swapTokensForExactETHCall),
+        #[allow(missing_docs)]
         swapTokensForExactTokens(swapTokensForExactTokensCall),
     }
     #[automatically_derived]
@@ -2522,7 +2660,7 @@ function swapTokensForExactTokens(uint256 amountOut, uint256 amountInMax, addres
             Self::SELECTORS.binary_search(&selector).is_ok()
         }
         #[inline]
-        #[allow(unsafe_code, non_snake_case)]
+        #[allow(non_snake_case)]
         fn abi_decode_raw(
             selector: [u8; 4],
             data: &[u8],
@@ -2710,7 +2848,7 @@ function swapTokensForExactTokens(uint256 amountOut, uint256 amountInMax, addres
                     ),
                 );
             };
-            (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
+            DECODE_SHIMS[idx](data, validate)
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {

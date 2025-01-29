@@ -538,7 +538,13 @@ interface IPoolAddressesProvider {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style,
+    clippy::empty_structs_with_brackets
+)]
 pub mod IPoolAddressesProvider {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
@@ -566,7 +572,12 @@ pub mod IPoolAddressesProvider {
 ```solidity
 event ACLAdminUpdated(address indexed oldAddress, address indexed newAddress);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct ACLAdminUpdated {
         #[allow(missing_docs)]
@@ -574,7 +585,12 @@ event ACLAdminUpdated(address indexed oldAddress, address indexed newAddress);
         #[allow(missing_docs)]
         pub newAddress: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -703,7 +719,12 @@ event ACLAdminUpdated(address indexed oldAddress, address indexed newAddress);
 ```solidity
 event ACLManagerUpdated(address indexed oldAddress, address indexed newAddress);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct ACLManagerUpdated {
         #[allow(missing_docs)]
@@ -711,7 +732,12 @@ event ACLManagerUpdated(address indexed oldAddress, address indexed newAddress);
         #[allow(missing_docs)]
         pub newAddress: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -840,7 +866,12 @@ event ACLManagerUpdated(address indexed oldAddress, address indexed newAddress);
 ```solidity
 event AddressSet(bytes32 indexed id, address indexed oldAddress, address indexed newAddress);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct AddressSet {
         #[allow(missing_docs)]
@@ -850,7 +881,12 @@ event AddressSet(bytes32 indexed id, address indexed oldAddress, address indexed
         #[allow(missing_docs)]
         pub newAddress: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -985,7 +1021,12 @@ event AddressSet(bytes32 indexed id, address indexed oldAddress, address indexed
 ```solidity
 event AddressSetAsProxy(bytes32 indexed id, address indexed proxyAddress, address oldImplementationAddress, address indexed newImplementationAddress);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct AddressSetAsProxy {
         #[allow(missing_docs)]
@@ -997,7 +1038,12 @@ event AddressSetAsProxy(bytes32 indexed id, address indexed proxyAddress, addres
         #[allow(missing_docs)]
         pub newImplementationAddress: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -1137,7 +1183,12 @@ event AddressSetAsProxy(bytes32 indexed id, address indexed proxyAddress, addres
 ```solidity
 event MarketIdSet(string indexed oldMarketId, string indexed newMarketId);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct MarketIdSet {
         #[allow(missing_docs)]
@@ -1145,7 +1196,12 @@ event MarketIdSet(string indexed oldMarketId, string indexed newMarketId);
         #[allow(missing_docs)]
         pub newMarketId: alloy::sol_types::private::FixedBytes<32>,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -1274,7 +1330,12 @@ event MarketIdSet(string indexed oldMarketId, string indexed newMarketId);
 ```solidity
 event PoolConfiguratorUpdated(address indexed oldAddress, address indexed newAddress);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct PoolConfiguratorUpdated {
         #[allow(missing_docs)]
@@ -1282,7 +1343,12 @@ event PoolConfiguratorUpdated(address indexed oldAddress, address indexed newAdd
         #[allow(missing_docs)]
         pub newAddress: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -1413,7 +1479,12 @@ event PoolConfiguratorUpdated(address indexed oldAddress, address indexed newAdd
 ```solidity
 event PoolDataProviderUpdated(address indexed oldAddress, address indexed newAddress);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct PoolDataProviderUpdated {
         #[allow(missing_docs)]
@@ -1421,7 +1492,12 @@ event PoolDataProviderUpdated(address indexed oldAddress, address indexed newAdd
         #[allow(missing_docs)]
         pub newAddress: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -1552,7 +1628,12 @@ event PoolDataProviderUpdated(address indexed oldAddress, address indexed newAdd
 ```solidity
 event PoolUpdated(address indexed oldAddress, address indexed newAddress);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct PoolUpdated {
         #[allow(missing_docs)]
@@ -1560,7 +1641,12 @@ event PoolUpdated(address indexed oldAddress, address indexed newAddress);
         #[allow(missing_docs)]
         pub newAddress: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -1689,7 +1775,12 @@ event PoolUpdated(address indexed oldAddress, address indexed newAddress);
 ```solidity
 event PriceOracleSentinelUpdated(address indexed oldAddress, address indexed newAddress);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct PriceOracleSentinelUpdated {
         #[allow(missing_docs)]
@@ -1697,7 +1788,12 @@ event PriceOracleSentinelUpdated(address indexed oldAddress, address indexed new
         #[allow(missing_docs)]
         pub newAddress: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -1828,7 +1924,12 @@ event PriceOracleSentinelUpdated(address indexed oldAddress, address indexed new
 ```solidity
 event PriceOracleUpdated(address indexed oldAddress, address indexed newAddress);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct PriceOracleUpdated {
         #[allow(missing_docs)]
@@ -1836,7 +1937,12 @@ event PriceOracleUpdated(address indexed oldAddress, address indexed newAddress)
         #[allow(missing_docs)]
         pub newAddress: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -1965,7 +2071,12 @@ event PriceOracleUpdated(address indexed oldAddress, address indexed newAddress)
 ```solidity
 event ProxyCreated(bytes32 indexed id, address indexed proxyAddress, address indexed implementationAddress);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     #[derive(Clone)]
     pub struct ProxyCreated {
         #[allow(missing_docs)]
@@ -1975,7 +2086,12 @@ event ProxyCreated(bytes32 indexed id, address indexed proxyAddress, address ind
         #[allow(missing_docs)]
         pub implementationAddress: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[automatically_derived]
@@ -2110,16 +2226,22 @@ event ProxyCreated(bytes32 indexed id, address indexed proxyAddress, address ind
 ```solidity
 function getACLAdmin() external view returns (address);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getACLAdminCall {}
     ///Container type for the return parameters of the [`getACLAdmin()`](getACLAdminCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getACLAdminReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2223,16 +2345,22 @@ function getACLAdmin() external view returns (address);
 ```solidity
 function getACLManager() external view returns (address);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getACLManagerCall {}
     ///Container type for the return parameters of the [`getACLManager()`](getACLManagerCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getACLManagerReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2336,18 +2464,25 @@ function getACLManager() external view returns (address);
 ```solidity
 function getAddress(bytes32 id) external view returns (address);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAddressCall {
+        #[allow(missing_docs)]
         pub id: alloy::sol_types::private::FixedBytes<32>,
     }
     ///Container type for the return parameters of the [`getAddress(bytes32)`](getAddressCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getAddressReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2455,16 +2590,22 @@ function getAddress(bytes32 id) external view returns (address);
 ```solidity
 function getMarketId() external view returns (string memory);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMarketIdCall {}
     ///Container type for the return parameters of the [`getMarketId()`](getMarketIdCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getMarketIdReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::String,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2568,16 +2709,22 @@ function getMarketId() external view returns (string memory);
 ```solidity
 function getPool() external view returns (address);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getPoolCall {}
     ///Container type for the return parameters of the [`getPool()`](getPoolCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getPoolReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2681,16 +2828,22 @@ function getPool() external view returns (address);
 ```solidity
 function getPoolConfigurator() external view returns (address);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getPoolConfiguratorCall {}
     ///Container type for the return parameters of the [`getPoolConfigurator()`](getPoolConfiguratorCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getPoolConfiguratorReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2798,16 +2951,22 @@ function getPoolConfigurator() external view returns (address);
 ```solidity
 function getPoolDataProvider() external view returns (address);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getPoolDataProviderCall {}
     ///Container type for the return parameters of the [`getPoolDataProvider()`](getPoolDataProviderCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getPoolDataProviderReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -2915,16 +3074,22 @@ function getPoolDataProvider() external view returns (address);
 ```solidity
 function getPriceOracle() external view returns (address);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getPriceOracleCall {}
     ///Container type for the return parameters of the [`getPriceOracle()`](getPriceOracleCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getPriceOracleReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3030,16 +3195,22 @@ function getPriceOracle() external view returns (address);
 ```solidity
 function getPriceOracleSentinel() external view returns (address);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getPriceOracleSentinelCall {}
     ///Container type for the return parameters of the [`getPriceOracleSentinel()`](getPriceOracleSentinelCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct getPriceOracleSentinelReturn {
+        #[allow(missing_docs)]
         pub _0: alloy::sol_types::private::Address,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3147,16 +3318,22 @@ function getPriceOracleSentinel() external view returns (address);
 ```solidity
 function setACLAdmin(address newAclAdmin) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setACLAdminCall {
+        #[allow(missing_docs)]
         pub newAclAdmin: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setACLAdmin(address)`](setACLAdminCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setACLAdminReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3264,16 +3441,22 @@ function setACLAdmin(address newAclAdmin) external;
 ```solidity
 function setACLManager(address newAclManager) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setACLManagerCall {
+        #[allow(missing_docs)]
         pub newAclManager: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setACLManager(address)`](setACLManagerCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setACLManagerReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3381,17 +3564,24 @@ function setACLManager(address newAclManager) external;
 ```solidity
 function setAddress(bytes32 id, address newAddress) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAddressCall {
+        #[allow(missing_docs)]
         pub id: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub newAddress: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setAddress(bytes32,address)`](setAddressCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAddressReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3514,17 +3704,24 @@ function setAddress(bytes32 id, address newAddress) external;
 ```solidity
 function setAddressAsProxy(bytes32 id, address newImplementationAddress) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAddressAsProxyCall {
+        #[allow(missing_docs)]
         pub id: alloy::sol_types::private::FixedBytes<32>,
+        #[allow(missing_docs)]
         pub newImplementationAddress: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setAddressAsProxy(bytes32,address)`](setAddressAsProxyCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setAddressAsProxyReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3651,16 +3848,22 @@ function setAddressAsProxy(bytes32 id, address newImplementationAddress) externa
 ```solidity
 function setMarketId(string memory newMarketId) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setMarketIdCall {
+        #[allow(missing_docs)]
         pub newMarketId: alloy::sol_types::private::String,
     }
     ///Container type for the return parameters of the [`setMarketId(string)`](setMarketIdCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setMarketIdReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3768,16 +3971,22 @@ function setMarketId(string memory newMarketId) external;
 ```solidity
 function setPoolConfiguratorImpl(address newPoolConfiguratorImpl) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setPoolConfiguratorImplCall {
+        #[allow(missing_docs)]
         pub newPoolConfiguratorImpl: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setPoolConfiguratorImpl(address)`](setPoolConfiguratorImplCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setPoolConfiguratorImplReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -3891,16 +4100,22 @@ function setPoolConfiguratorImpl(address newPoolConfiguratorImpl) external;
 ```solidity
 function setPoolDataProvider(address newDataProvider) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setPoolDataProviderCall {
+        #[allow(missing_docs)]
         pub newDataProvider: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setPoolDataProvider(address)`](setPoolDataProviderCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setPoolDataProviderReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -4012,16 +4227,22 @@ function setPoolDataProvider(address newDataProvider) external;
 ```solidity
 function setPoolImpl(address newPoolImpl) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setPoolImplCall {
+        #[allow(missing_docs)]
         pub newPoolImpl: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setPoolImpl(address)`](setPoolImplCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setPoolImplReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -4129,16 +4350,22 @@ function setPoolImpl(address newPoolImpl) external;
 ```solidity
 function setPriceOracle(address newPriceOracle) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setPriceOracleCall {
+        #[allow(missing_docs)]
         pub newPriceOracle: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setPriceOracle(address)`](setPriceOracleCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setPriceOracleReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -4248,16 +4475,22 @@ function setPriceOracle(address newPriceOracle) external;
 ```solidity
 function setPriceOracleSentinel(address newPriceOracleSentinel) external;
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setPriceOracleSentinelCall {
+        #[allow(missing_docs)]
         pub newPriceOracleSentinel: alloy::sol_types::private::Address,
     }
     ///Container type for the return parameters of the [`setPriceOracleSentinel(address)`](setPriceOracleSentinelCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct setPriceOracleSentinelReturn {}
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -4369,24 +4602,43 @@ function setPriceOracleSentinel(address newPriceOracleSentinel) external;
     };
     ///Container for all the [`IPoolAddressesProvider`](self) function calls.
     pub enum IPoolAddressesProviderCalls {
+        #[allow(missing_docs)]
         getACLAdmin(getACLAdminCall),
+        #[allow(missing_docs)]
         getACLManager(getACLManagerCall),
+        #[allow(missing_docs)]
         getAddress(getAddressCall),
+        #[allow(missing_docs)]
         getMarketId(getMarketIdCall),
+        #[allow(missing_docs)]
         getPool(getPoolCall),
+        #[allow(missing_docs)]
         getPoolConfigurator(getPoolConfiguratorCall),
+        #[allow(missing_docs)]
         getPoolDataProvider(getPoolDataProviderCall),
+        #[allow(missing_docs)]
         getPriceOracle(getPriceOracleCall),
+        #[allow(missing_docs)]
         getPriceOracleSentinel(getPriceOracleSentinelCall),
+        #[allow(missing_docs)]
         setACLAdmin(setACLAdminCall),
+        #[allow(missing_docs)]
         setACLManager(setACLManagerCall),
+        #[allow(missing_docs)]
         setAddress(setAddressCall),
+        #[allow(missing_docs)]
         setAddressAsProxy(setAddressAsProxyCall),
+        #[allow(missing_docs)]
         setMarketId(setMarketIdCall),
+        #[allow(missing_docs)]
         setPoolConfiguratorImpl(setPoolConfiguratorImplCall),
+        #[allow(missing_docs)]
         setPoolDataProvider(setPoolDataProviderCall),
+        #[allow(missing_docs)]
         setPoolImpl(setPoolImplCall),
+        #[allow(missing_docs)]
         setPriceOracle(setPriceOracleCall),
+        #[allow(missing_docs)]
         setPriceOracleSentinel(setPriceOracleSentinelCall),
     }
     #[automatically_derived]
@@ -4493,7 +4745,7 @@ function setPriceOracleSentinel(address newPriceOracleSentinel) external;
             Self::SELECTORS.binary_search(&selector).is_ok()
         }
         #[inline]
-        #[allow(unsafe_code, non_snake_case)]
+        #[allow(non_snake_case)]
         fn abi_decode_raw(
             selector: [u8; 4],
             data: &[u8],
@@ -4759,7 +5011,7 @@ function setPriceOracleSentinel(address newPriceOracleSentinel) external;
                     ),
                 );
             };
-            (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
+            DECODE_SHIMS[idx](data, validate)
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {
@@ -4974,16 +5226,27 @@ function setPriceOracleSentinel(address newPriceOracleSentinel) external;
     }
     ///Container for all the [`IPoolAddressesProvider`](self) events.
     pub enum IPoolAddressesProviderEvents {
+        #[allow(missing_docs)]
         ACLAdminUpdated(ACLAdminUpdated),
+        #[allow(missing_docs)]
         ACLManagerUpdated(ACLManagerUpdated),
+        #[allow(missing_docs)]
         AddressSet(AddressSet),
+        #[allow(missing_docs)]
         AddressSetAsProxy(AddressSetAsProxy),
+        #[allow(missing_docs)]
         MarketIdSet(MarketIdSet),
+        #[allow(missing_docs)]
         PoolConfiguratorUpdated(PoolConfiguratorUpdated),
+        #[allow(missing_docs)]
         PoolDataProviderUpdated(PoolDataProviderUpdated),
+        #[allow(missing_docs)]
         PoolUpdated(PoolUpdated),
+        #[allow(missing_docs)]
         PriceOracleSentinelUpdated(PriceOracleSentinelUpdated),
+        #[allow(missing_docs)]
         PriceOracleUpdated(PriceOracleUpdated),
+        #[allow(missing_docs)]
         ProxyCreated(ProxyCreated),
     }
     #[automatically_derived]

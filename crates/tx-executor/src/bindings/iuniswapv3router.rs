@@ -240,7 +240,13 @@ interface IUniswapV3Router {
   }
 ]
 ```*/
-#[allow(non_camel_case_types, non_snake_case, clippy::style)]
+#[allow(
+    non_camel_case_types,
+    non_snake_case,
+    clippy::pub_underscore_fields,
+    clippy::style,
+    clippy::empty_structs_with_brackets
+)]
 pub mod IUniswapV3Router {
     use super::*;
     use alloy::sol_types as alloy_sol_types;
@@ -267,15 +273,24 @@ pub mod IUniswapV3Router {
     /**```solidity
 struct ExactInputParams { bytes path; address recipient; uint256 amountIn; uint256 amountOutMinimum; }
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ExactInputParams {
+        #[allow(missing_docs)]
         pub path: alloy::sol_types::private::Bytes,
+        #[allow(missing_docs)]
         pub recipient: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amountIn: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub amountOutMinimum: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -524,18 +539,30 @@ struct ExactInputParams { bytes path; address recipient; uint256 amountIn; uint2
     /**```solidity
 struct ExactInputSingleParams { address tokenIn; address tokenOut; uint24 fee; address recipient; uint256 amountIn; uint256 amountOutMinimum; uint160 sqrtPriceLimitX96; }
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ExactInputSingleParams {
+        #[allow(missing_docs)]
         pub tokenIn: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub tokenOut: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub fee: alloy::sol_types::private::primitives::aliases::U24,
+        #[allow(missing_docs)]
         pub recipient: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amountIn: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub amountOutMinimum: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub sqrtPriceLimitX96: alloy::sol_types::private::primitives::aliases::U160,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -848,15 +875,24 @@ struct ExactInputSingleParams { address tokenIn; address tokenOut; uint24 fee; a
     /**```solidity
 struct ExactOutputParams { bytes path; address recipient; uint256 amountOut; uint256 amountInMaximum; }
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ExactOutputParams {
+        #[allow(missing_docs)]
         pub path: alloy::sol_types::private::Bytes,
+        #[allow(missing_docs)]
         pub recipient: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amountOut: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub amountInMaximum: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -1105,18 +1141,30 @@ struct ExactOutputParams { bytes path; address recipient; uint256 amountOut; uin
     /**```solidity
 struct ExactOutputSingleParams { address tokenIn; address tokenOut; uint24 fee; address recipient; uint256 amountOut; uint256 amountInMaximum; uint160 sqrtPriceLimitX96; }
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct ExactOutputSingleParams {
+        #[allow(missing_docs)]
         pub tokenIn: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub tokenOut: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub fee: alloy::sol_types::private::primitives::aliases::U24,
+        #[allow(missing_docs)]
         pub recipient: alloy::sol_types::private::Address,
+        #[allow(missing_docs)]
         pub amountOut: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub amountInMaximum: alloy::sol_types::private::primitives::aliases::U256,
+        #[allow(missing_docs)]
         pub sqrtPriceLimitX96: alloy::sol_types::private::primitives::aliases::U160,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         #[doc(hidden)]
@@ -1430,18 +1478,25 @@ struct ExactOutputSingleParams { address tokenIn; address tokenOut; uint24 fee; 
 ```solidity
 function exactInput(ExactInputParams memory params) external payable returns (uint256 amountOut);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct exactInputCall {
+        #[allow(missing_docs)]
         pub params: <ExactInputParams as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`exactInput((bytes,address,uint256,uint256))`](exactInputCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct exactInputReturn {
+        #[allow(missing_docs)]
         pub amountOut: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1549,18 +1604,25 @@ function exactInput(ExactInputParams memory params) external payable returns (ui
 ```solidity
 function exactInputSingle(ExactInputSingleParams memory params) external payable returns (uint256 amountOut);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct exactInputSingleCall {
+        #[allow(missing_docs)]
         pub params: <ExactInputSingleParams as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`exactInputSingle((address,address,uint24,address,uint256,uint256,uint160))`](exactInputSingleCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct exactInputSingleReturn {
+        #[allow(missing_docs)]
         pub amountOut: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1676,18 +1738,25 @@ function exactInputSingle(ExactInputSingleParams memory params) external payable
 ```solidity
 function exactOutput(ExactOutputParams memory params) external payable returns (uint256 amountIn);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct exactOutputCall {
+        #[allow(missing_docs)]
         pub params: <ExactOutputParams as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`exactOutput((bytes,address,uint256,uint256))`](exactOutputCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct exactOutputReturn {
+        #[allow(missing_docs)]
         pub amountIn: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1799,18 +1868,25 @@ function exactOutput(ExactOutputParams memory params) external payable returns (
 ```solidity
 function exactOutputSingle(ExactOutputSingleParams memory params) external payable returns (uint256 amountIn);
 ```*/
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct exactOutputSingleCall {
+        #[allow(missing_docs)]
         pub params: <ExactOutputSingleParams as alloy::sol_types::SolType>::RustType,
     }
     ///Container type for the return parameters of the [`exactOutputSingle((address,address,uint24,address,uint256,uint256,uint160))`](exactOutputSingleCall) function.
-    #[allow(non_camel_case_types, non_snake_case)]
+    #[allow(non_camel_case_types, non_snake_case, clippy::pub_underscore_fields)]
     #[derive(Clone)]
     pub struct exactOutputSingleReturn {
+        #[allow(missing_docs)]
         pub amountIn: alloy::sol_types::private::primitives::aliases::U256,
     }
-    #[allow(non_camel_case_types, non_snake_case, clippy::style)]
+    #[allow(
+        non_camel_case_types,
+        non_snake_case,
+        clippy::pub_underscore_fields,
+        clippy::style
+    )]
     const _: () = {
         use alloy::sol_types as alloy_sol_types;
         {
@@ -1924,9 +2000,13 @@ function exactOutputSingle(ExactOutputSingleParams memory params) external payab
     };
     ///Container for all the [`IUniswapV3Router`](self) function calls.
     pub enum IUniswapV3RouterCalls {
+        #[allow(missing_docs)]
         exactInput(exactInputCall),
+        #[allow(missing_docs)]
         exactInputSingle(exactInputSingleCall),
+        #[allow(missing_docs)]
         exactOutput(exactOutputCall),
+        #[allow(missing_docs)]
         exactOutputSingle(exactOutputSingleCall),
     }
     #[automatically_derived]
@@ -1975,7 +2055,7 @@ function exactOutputSingle(ExactOutputSingleParams memory params) external payab
             Self::SELECTORS.binary_search(&selector).is_ok()
         }
         #[inline]
-        #[allow(unsafe_code, non_snake_case)]
+        #[allow(non_snake_case)]
         fn abi_decode_raw(
             selector: [u8; 4],
             data: &[u8],
@@ -2046,7 +2126,7 @@ function exactOutputSingle(ExactOutputSingleParams memory params) external payab
                     ),
                 );
             };
-            (unsafe { DECODE_SHIMS.get_unchecked(idx) })(data, validate)
+            DECODE_SHIMS[idx](data, validate)
         }
         #[inline]
         fn abi_encoded_size(&self) -> usize {
