@@ -271,6 +271,33 @@ pub async fn unwrap_eth_command(chain_id: u64, amount: &str) -> Result<(), Error
     Ok(())
 }
 
+pub async fn withdraw_command(chain_id: u64) -> Result<(), Error> {
+    let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
+    let provider = get_default_signer_provider(chain).await;
+    let addressbook = Addressbook::load().unwrap();
+    let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+    let named_chain = chain.named().unwrap();
+    let weth = addressbook.get_weth(&named_chain).unwrap();
+
+    let mut encoder =
+        BatchExecutorClient::new(executor_address, named_chain, provider.clone()).await;
+    let recipient = Address::from_str(&env::var("DEV_ADDRESS").unwrap()).unwrap();
+    let gas_estimate = encoder
+        .withdraw_funds(weth, recipient)
+        .estimate_gas()
+        .await
+        .unwrap_or(0);
+
+    if gas_estimate > 0 {
+        let (_, receipt) = encoder.exec().await.unwrap();
+        println!("Transaction succeeded. Receipt: {:?}", receipt);
+    } else {
+        println!("Simulation failed");
+    }
+
+    Ok(())
+}
+
 #[cfg(test)]
 mod cmd_test {
     use crate::cmd::cross_chain_swap_command;

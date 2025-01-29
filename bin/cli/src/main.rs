@@ -41,6 +41,7 @@ enum Commands {
     CrossChainSwap(CrossChainSwapArgs),
     WrapEth(WrapEthArgs),
     UnwrapEth(UnwrapEthArgs),
+    Withdraw(WithdrawArgs),
 }
 
 #[derive(Args)]
@@ -147,6 +148,12 @@ struct UnwrapEthArgs {
     amount: String,
 }
 
+#[derive(Args)]
+struct WithdrawArgs {
+    #[arg(short, long)]
+    chain_id: u64,
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Error> {
     let cli = Cli::parse();
@@ -231,6 +238,9 @@ async fn main() -> Result<(), Error> {
         }
         Commands::UnwrapEth(args) => {
             cmd::unwrap_eth_command(args.chain_id, &args.amount).await?;
+        }
+        Commands::Withdraw(args) => {
+            cmd::withdraw_command(args.chain_id).await?;
         }
     }
 
