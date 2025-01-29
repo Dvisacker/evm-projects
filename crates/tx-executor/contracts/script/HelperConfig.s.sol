@@ -21,12 +21,10 @@ contract HelperConfig is Script {
     }
 
     constructor() {
-        console2.log(block.chainid);
         uint256 deployerKey;
         address deployerAddress;
 
-        bool isAnvil = vm.envBool("USE_ANVIL");
-        if (isAnvil) {
+        if (isAnvilChain()) {
             console2.log("Anvil detected");
             deployerKey = vm.envUint("ANVIL_DEV_PRIVATE_KEY");
             deployerAddress = vm.envAddress("ANVIL_DEV_ADDRESS");
@@ -77,6 +75,15 @@ contract HelperConfig is Script {
         } else {
             revert("Unsupported network");
         }
+    }
+
+    function isAnvilChain() public view returns (bool) {
+        uint256 difficulty;
+        assembly {
+            difficulty := prevrandao()
+        }
+        // Anvil usually has a constant difficulty
+        return difficulty == 0;
     }
 
     function getActiveNetworkConfig() public view returns (NetworkConfig memory) {
