@@ -58,5 +58,13 @@ once_cell = "1.19.0"
 panic = 'abort'
 
 [profile.dev]
-panic = 'abort'
-incremental = true
+opt-level = 1          # Basic optimizations for better dev experience
+debug = "full"         # Full debug info for development
+incremental = true     # Faster recompilation
+codegen-units = 256    # Parallel compilation
+debug-assertions = true
+overflow-checks = true
+panic = "unwind"       # Enable stack traces
+lto = false           # Faster compilation
+split-debuginfo = "unpacked"  # Faster linking on some systems
+rpath = false         # Don't embed library search paths
