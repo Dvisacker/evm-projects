@@ -4,9 +4,10 @@ use addressbook::Addressbook;
 use alloy::primitives::utils::parse_units;
 use alloy::primitives::{Bytes, I256, U256};
 use alloy::providers::Provider;
-use alloy::{dyn_abi::DynSolValue, primitives::Address, rpc::types::Log};
+use alloy::{primitives::Address, rpc::types::Log};
 use alloy_chains::Chain;
 use alloy_sol_types::SolEvent;
+use amms::bindings::getuniv2pooldata::PoolHelpers::UniswapV2PoolData;
 use amms::bindings::iaerodromepool::IAerodromePool;
 use amms::bindings::iuniswapv2pool::IUniswapV2Pool;
 use amms::{
@@ -387,6 +388,8 @@ impl BaseArb {
             .await
             .map_err(|e| eyre::eyre!("Failed to fetch pool data: {}", e))?;
 
+        let pool_data = pool_data[0].clone();
+
         let mut conn = establish_connection(&self.db_url);
         let new_pool = self.parse_univ2_pool_data(pool_data, &mut conn, pool_address)?;
         batch_upsert_uni_v2_pools(&mut conn, &vec![new_pool])?;
@@ -396,47 +399,33 @@ impl BaseArb {
 
     fn parse_univ2_pool_data(
         &self,
-        pool_data: DynSolValue,
+        pool_data: UniswapV2PoolData,
         mut conn: &mut PgConnection,
         pool_address: Address,
     ) -> Result<NewDbUniV2Pool> {
-        let pool_data = pool_data
-            .as_array()
-            .ok_or_else(|| eyre::eyre!("Failed to parse pool data"))?;
+        let pool_data = pool_data;
 
-        for token in pool_data {
-            let pool_data = token
-                .as_tuple()
-                .ok_or_else(|| eyre::eyre!("Failed to parse pool data"))?;
+        if !pool_data.tokenA.is_zero() {
+            let mut pool = UniswapV2Pool::default();
+            pool.address = pool_address;
 
-            let address = pool_data[0]
-                .as_address()
-                .ok_or_else(|| eyre::eyre!("Failed to parse pool data"))?;
+            let chain = self.chain.named().unwrap().to_string();
 
-            if !address.is_zero() {
-                let mut pool = UniswapV2Pool::default();
-                pool.address = pool_address;
+            populate_v2_pool_data(&mut pool, pool_data)?;
 
-                let chain = self.chain.named().unwrap().to_string();
+            let known_exchanges = get_exchanges_by_chain(&mut conn, &chain).unwrap();
+            let exchange_name = known_exchanges
+                .iter()
+                .find(|e| *e.factory_address.as_ref().unwrap() == pool.factory.to_string())
+                .map(|e| e.exchange_name.clone())
+                .unwrap_or("unknown".to_string());
 
-                populate_v2_pool_data(&mut pool, &pool_data)?;
+            let mut db_pool: NewDbUniV2Pool = pool.into();
+            db_pool.exchange_name = Some(exchange_name);
+            db_pool.exchange_type = Some("univ2".to_string());
+            db_pool.chain = chain;
 
-                let known_exchanges = get_exchanges_by_chain(&mut conn, &chain).unwrap();
-                let exchange_name = known_exchanges
-                    .iter()
-                    .find(|e| *e.factory_address.as_ref().unwrap() == pool.factory.to_string())
-                    .map(|e| e.exchange_name.clone())
-                    .unwrap_or("unknown".to_string());
-
-                let mut db_pool: NewDbUniV2Pool = pool.into();
-                db_pool.exchange_name = Some(exchange_name);
-                db_pool.exchange_type = Some("univ2".to_string());
-                db_pool.chain = chain;
-
-                return Ok(db_pool);
-            } else {
-                break;
-            };
+            return Ok(db_pool);
         }
         return Err(eyre::eyre!("Failed to parse pool data"));
     }
