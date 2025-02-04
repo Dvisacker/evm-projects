@@ -182,7 +182,7 @@ pub fn get_exchange_type(exchange_name: ExchangeName) -> ExchangeType {
 }
 
 impl Addressbook {
-    // TODO - Messy, make this cleaner
+    // TODO - Messy, make this cleaner and make this a singleton
     pub fn load() -> Result<Self, Box<dyn std::error::Error>> {
         let workspace_dir = get_workspace_dir()?;
         let current_file = std::path::Path::new(file!());

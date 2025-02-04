@@ -22,7 +22,6 @@ pub type SignerProvider = FillProvider<
     >,
     RootProvider<BoxTransport>,
     BoxTransport,
-    Ethereum,
 >;
 
 pub type Token = IERC20Instance<BoxTransport, Arc<SignerProvider>>;

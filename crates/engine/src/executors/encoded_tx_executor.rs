@@ -8,6 +8,7 @@ use alloy::{
 use async_trait::async_trait;
 use eyre::Result;
 use provider::SignerProvider;
+use tracing::warn;
 use tx_executor::bindings::batchexecutor::BatchExecutor::BatchExecutorInstance;
 
 // The EncodedTxExecutor (to be renamed BundledTxExecutor)
@@ -30,6 +31,7 @@ pub struct GasBidInfo {
 pub struct SubmitEncodedTx {
     /// The calldata to submit
     pub calldata: Vec<Bytes>,
+    pub total_value: U256,
     /// Optional gas bidding information
     pub gas_bid_info: Option<GasBidInfo>,
 }
@@ -49,22 +51,25 @@ impl EncodedTxExecutor {
 #[async_trait]
 impl Executor<SubmitEncodedTx> for EncodedTxExecutor {
     async fn execute(&self, action: SubmitEncodedTx) -> Result<()> {
-        println!("Executing encoded tx...!!!!!!!");
-        // let total_value = U256::from(10000000000000_i64);
-        let total_value = U256::ZERO;
+        let total_value = action.total_value;
         let calldata = action.calldata.clone();
-        println!("Calldata: {:?}", calldata);
         let _gas_bid_info = action.gas_bid_info.clone();
+        let owner = self.executor.OWNER().call().await.unwrap()._0;
 
-        let call = self.executor.batchCall(calldata).value(total_value);
-        let _tx_request = call.clone().into_transaction_request();
+        let call = self
+            .executor
+            .batchCall(calldata)
+            .value(total_value)
+            .from(owner);
 
-        // let gas_usage = call.estimate_gas().await.unwrap_or_else(|e| {
-        //     warn!("Error estimating gas: {:?}", e);
-        //     0
-        // });
+        let gas_usage = call.estimate_gas().await.unwrap_or_else(|e| {
+            warn!("Error estimating gas: {:?}", e);
+            0
+        });
 
-        let _return_value = call.call().await.unwrap();
+        // info!("Gas usage: {:?}", gas_usage);
+
+        // let _return_value = call.call().await.unwrap();
         // println!("Gas usage: {:?}", gas_usage);
         // if gas_usage == 0 {
         //     return Ok(());

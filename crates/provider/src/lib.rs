@@ -26,7 +26,6 @@ pub type SignerProvider = FillProvider<
     >,
     RootProvider<BoxTransport>,
     BoxTransport,
-    Ethereum,
 >;
 
 // read provider without wallet
@@ -37,7 +36,6 @@ pub type BasicProvider = FillProvider<
     >,
     RootProvider<BoxTransport>,
     BoxTransport,
-    Ethereum,
 >;
 
 pub type SignerProviderMap = HashMap<NamedChain, Arc<SignerProvider>>;

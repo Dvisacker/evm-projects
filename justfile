@@ -13,7 +13,14 @@ test-contracts:
     forge test --root ./contracts
 
 generate-amm-bindings:
-    forge bind --bindings-path ./crates/amms/src/bindings --root ./crates/amms/contracts --module --alloy --alloy-version v0.5.4 --overwrite
+    forge bind \
+    --bindings-path ./crates/amms/src/bindings \
+    --root ./crates/amms/contracts \
+    --remappings "forge-std/=lib/forge-std/src/" \
+    --remappings "@uniswap/v3-core/=lib/v3-core/" \
+    --remappings "@aperture/=lib/uni-v3-lib/src/" \
+    --remappings "solady/=lib/solady/" \
+    --module --alloy --alloy-version v0.5.4 --overwrite
 
 generate-shared-bindings:
     forge bind --bindings-path ./crates/shared/src/bindings --root ./crates/shared/contracts --module --alloy --alloy-version v0.7.0 --overwrite
