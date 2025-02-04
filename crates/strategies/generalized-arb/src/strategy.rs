@@ -19,6 +19,7 @@ use amms::{
         },
         AutomatedMarketMaker, AMM,
     },
+    bindings::getuniv3pooldata::PoolUtils::UniswapV3PoolData,
     sync::{self},
 };
 use async_trait::async_trait;
@@ -357,13 +358,13 @@ impl GeneralizedArb {
         }
 
         info!("New uniswap v3 swap on unknown pool {:?}", pool_address);
-        let result =
-            fetch_v3_pool_data_batch_request(&[pool_address], None, self.client.clone()).await;
+        let logs = fetch_v3_pool_data_batch_request(&[pool_address], None, self.client.clone())
+            .await
+            .expect("Failed to fetch v3 pool data");
 
-        let uniswap_v3_log =
-            result.map_err(|e| eyre::eyre!("Failed to pool batch request: {:?}", e))?;
+        let pool_data = logs.get(0).expect("Failed to get pool data");
 
-        let new_pool = self.parse_univ3_pool_data(uniswap_v3_log, &mut conn, pool_address)?;
+        let new_pool = self.parse_univ3_pool_data(pool_data, &mut conn, pool_address)?;
         batch_upsert_uni_v3_pools(&mut conn, &vec![new_pool]).unwrap();
         Ok(())
     }
@@ -417,55 +418,35 @@ impl GeneralizedArb {
 
     fn parse_univ3_pool_data(
         &self,
-        data: DynSolValue,
+        pool_data: &UniswapV3PoolData,
         mut conn: &mut PgConnection,
         pool_address: Address,
     ) -> Result<NewDbUniV3Pool> {
-        let data = data
-            .as_array()
-            .ok_or_else(|| eyre::eyre!("Failed to parse pool data"))?;
+        let mut pool = UniswapV3Pool::default();
+        pool.address = pool_address;
 
-        for token in data {
-            let pool_data = token
-                .as_tuple()
-                .ok_or_else(|| eyre::eyre!("Failed to parse pool data"))?;
+        let chain = self.chain.named().unwrap().to_string();
+        let known_exchanges = get_exchanges_by_chain(&mut conn, &chain).unwrap();
 
-            let address = pool_data[0]
-                .as_address()
-                .ok_or_else(|| eyre::eyre!("Failed to parse pool data"))?;
+        populate_v3_pool_data(&mut pool, &pool_data)?;
 
-            // If the pool token A is not zero, signaling that the pool data was populated
-            if !address.is_zero() {
-                let mut pool = UniswapV3Pool::default();
-                pool.address = pool_address;
+        let exchange_name = known_exchanges
+            .iter()
+            .find(|e| *e.factory_address.as_ref().unwrap() == pool.factory.to_string())
+            .map(|e| e.exchange_name.clone())
+            .unwrap_or("unknown".to_string());
 
-                let chain = self.chain.named().unwrap().to_string();
-                let known_exchanges = get_exchanges_by_chain(&mut conn, &chain).unwrap();
+        let mut db_pool: NewDbUniV3Pool = pool.into();
+        db_pool.exchange_name = Some(exchange_name);
+        db_pool.exchange_type = Some("univ3".to_string());
+        db_pool.chain = chain;
 
-                populate_v3_pool_data(&mut pool, &pool_data)?;
+        info!(
+            "Parsed pool: Factory: {}, Exchange: {}",
+            db_pool.factory_address.as_ref().unwrap(),
+            db_pool.exchange_name.as_ref().unwrap()
+        );
 
-                let exchange_name = known_exchanges
-                    .iter()
-                    .find(|e| *e.factory_address.as_ref().unwrap() == pool.factory.to_string())
-                    .map(|e| e.exchange_name.clone())
-                    .unwrap_or("unknown".to_string());
-
-                let mut db_pool: NewDbUniV3Pool = pool.into();
-                db_pool.exchange_name = Some(exchange_name);
-                db_pool.exchange_type = Some("univ3".to_string());
-                db_pool.chain = chain;
-
-                info!(
-                    "Parsed pool: Factory: {}, Exchange: {}",
-                    db_pool.factory_address.as_ref().unwrap(),
-                    db_pool.exchange_name.as_ref().unwrap()
-                );
-
-                return Ok(db_pool);
-            } else {
-                break;
-            }
-        }
-        return Err(eyre::eyre!("Failed to parse pool data"));
+        return Ok(db_pool);
     }
 }
