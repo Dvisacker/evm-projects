@@ -2,16 +2,13 @@ use crate::state::State;
 
 use super::types::{Action, Event};
 use addressbook::Addressbook;
-use alloy::{
-    dyn_abi::DynSolValue, primitives::Address, providers::Provider, rpc::types::Log,
-    sol_types::SolEvent,
-};
+use alloy::{primitives::Address, providers::Provider, rpc::types::Log, sol_types::SolEvent};
 use alloy_chains::Chain;
 use amms::{
     amm::{
         uniswap_v2::{
             batch_request::{fetch_v2_pool_data_batch_request, populate_v2_pool_data},
-            UniswapV2Pool,
+            IUniswapV2Pair, UniswapV2Pool,
         },
         uniswap_v3::{
             batch_request::{fetch_v3_pool_data_batch_request, populate_v3_pool_data},
@@ -26,7 +23,6 @@ use amms::{
     sync::{self},
 };
 use async_trait::async_trait;
-use bindings::iuniswapv2pair::IUniswapV2Pair;
 use db::{
     establish_connection,
     models::{db_pool::DbPool, NewDbUniV2Pool},

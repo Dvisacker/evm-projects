@@ -1,16 +1,16 @@
 pub mod lifi_types;
 use alloy::network::Ethereum;
-use alloy::{hex, providers::Provider, transports::Transport};
+use alloy::{hex, providers::Provider};
 use alloy_chains::NamedChain;
 use alloy_primitives::{Address, U256};
 use alloy_rpc_types::TransactionRequest;
-use bindings::ierc20::IERC20;
 use eyre::{eyre, Context, Result};
 use lifi_types::{LiFiQuoteRequest, LiFiQuoteResponse, LiFiTransactionRequest};
 use reqwest;
 use std::str::FromStr;
 use std::sync::Arc;
 use std::time::Duration;
+use types::bindings::ierc20::IERC20;
 use types::bridge::BridgeName;
 
 pub struct LifiClient {
@@ -26,7 +26,7 @@ impl LifiClient {
         }
     }
 
-    pub async fn bridge<T, P>(
+    pub async fn bridge<P>(
         &self,
         origin_chain_provider: Arc<P>,
         destination_chain_provider: Arc<P>,
@@ -40,8 +40,7 @@ impl LifiClient {
         bridge_name: BridgeName,
     ) -> Result<U256>
     where
-        T: Transport + Clone,
-        P: Provider<T, Ethereum>,
+        P: Provider<Ethereum>,
     {
         // 1. Get quote
         let quote = self
@@ -130,14 +129,13 @@ impl LifiClient {
         Ok(quote_response)
     }
 
-    async fn execute_bridge_transaction<T, P>(
+    async fn execute_bridge_transaction<P>(
         &self,
         tx_request: &LiFiTransactionRequest,
         provider: Arc<P>,
     ) -> Result<alloy_primitives::B256>
     where
-        T: Transport + Clone,
-        P: Provider<T, Ethereum>,
+        P: Provider<Ethereum>,
     {
         let data =
             hex::decode(&tx_request.data[2..]).wrap_err("Failed to decode transaction data")?;

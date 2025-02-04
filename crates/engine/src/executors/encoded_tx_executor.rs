@@ -1,10 +1,7 @@
 use std::{env, str::FromStr, sync::Arc};
 
 use crate::types::Executor;
-use alloy::{
-    primitives::{Address, Bytes, U256},
-    transports::BoxTransport,
-};
+use alloy::primitives::{Address, Bytes, U256};
 use async_trait::async_trait;
 use eyre::Result;
 use provider::SignerProvider;
@@ -15,7 +12,7 @@ use tx_executor::bindings::batchexecutor::BatchExecutor::BatchExecutorInstance;
 pub struct EncodedTxExecutor {
     #[allow(unused)]
     client: Arc<SignerProvider>,
-    executor: BatchExecutorInstance<BoxTransport, Arc<SignerProvider>>,
+    executor: BatchExecutorInstance<(), Arc<SignerProvider>>,
 }
 
 #[derive(Debug, Clone)]
@@ -39,7 +36,7 @@ pub struct SubmitEncodedTx {
 impl EncodedTxExecutor {
     pub fn new(client: Arc<SignerProvider>) -> Self {
         let address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
-        let executor: BatchExecutorInstance<BoxTransport, Arc<SignerProvider>> =
+        let executor: BatchExecutorInstance<(), Arc<SignerProvider>> =
             BatchExecutorInstance::new(address, client.clone());
         Self {
             client: client.clone(),

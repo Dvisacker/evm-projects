@@ -1,5 +1,5 @@
 use alloy::rpc::types::Log;
-use bindings::{iuniswapv2pair::IUniswapV2Pair, iuniswapv3pool::IUniswapV3Pool};
+use amms::amm::{uniswap_v2::IUniswapV2Pair, uniswap_v3::IUniswapV3Pool};
 use engine::{
     collectors::block_collector::NewBlock, executors::mempool_executor::SubmitTxToMempool,
 };

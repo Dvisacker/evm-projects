@@ -20,27 +20,21 @@ generate-amm-bindings:
     --remappings "@uniswap/v3-core/=lib/v3-core/" \
     --remappings "@aperture/=lib/uni-v3-lib/src/" \
     --remappings "solady/=lib/solady/" \
-    --module --alloy --alloy-version v0.5.4 --overwrite
+    --module --alloy --alloy-version v0.11.0 --overwrite
 
 generate-shared-bindings:
-    forge bind --bindings-path ./crates/shared/src/bindings --root ./crates/shared/contracts --module --alloy --alloy-version v0.7.0 --overwrite
-
-generate-bindings:
-    #!/usr/bin/env bash
-    bindings_path="./crates/bindings"
-    contract_root_path="./crates/strategies/uni-tri-arb/contracts/"
-    rm -rf $bindings_path
-    forge bind --bindings-path $bindings_path --root $contract_root_path --crate-name bindings --force --skip-cargo-toml --alloy
+    forge bind --bindings-path ./crates/shared/src/bindings --root ./crates/shared/contracts --module --alloy --alloy-version v0.11.0 --overwrite
+    forge bind --bindings-path ./crates/types/src/bindings --root ./crates/types/contracts --module --alloy --alloy-version v0.11.0 --overwrite
 
 generate-executor-binding:
     #!/usr/bin/env bash
     bindings_path="./crates/tx-executor/src/bindings"
     contract_root_path="./crates/tx-executor/contracts"
     rm -rf $bindings_path
-    forge bind --bindings-path $bindings_path --root $contract_root_path --module --alloy --alloy-version v0.5.4 --via-ir --overwrite
+    forge bind --bindings-path $bindings_path --root $contract_root_path --module --alloy --alloy-version v0.11.0 --via-ir --overwrite
 
 generate-simulator-bindings:
-    forge bind --bindings-path ./crates/tx-simulator/src/bindings --root ./crates/tx-simulator/contracts --module --alloy --alloy-version v0.7.0 --via-ir --overwrite
+    forge bind --bindings-path ./crates/tx-simulator/src/bindings --root ./crates/tx-simulator/contracts --module --alloy --alloy-version v0.11.0 --via-ir --overwrite
 
 fmt: 
     cargo +nightly fmt --all

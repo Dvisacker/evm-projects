@@ -82,8 +82,9 @@ impl TokenManager {
         if let Some(token) = tokens.get(&address) {
             Ok(token.clone())
         } else {
-            let provider = self.providers.get(chain).unwrap();
-            let new_token = Token::new(address, provider.clone());
+            let provider = (*(*self.providers.get(chain).unwrap()).clone()).clone();
+            let new_token = Token::new(address, provider);
+
             tokens.insert(address, new_token.clone());
             Ok(new_token)
         }

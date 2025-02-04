@@ -1,6 +1,5 @@
 use alloy::network::Ethereum;
 use alloy::providers::Provider;
-use alloy::transports::Transport;
 use alloy::{hex, sol};
 use alloy_chains::NamedChain;
 use alloy_primitives::{Address, Bytes, FixedBytes, U256};
@@ -66,13 +65,12 @@ pub struct ContractAddresses {
     pub aerodrome_router_address: Address,
 }
 
-pub struct BatchExecutorClient<T, P>
+pub struct BatchExecutorClient<P>
 where
-    T: Transport + Clone,
-    P: Provider<T, Ethereum>,
+    P: Provider<Ethereum>,
 {
     pub chain: NamedChain,
-    pub executor: BatchExecutorInstance<T, P>,
+    pub executor: BatchExecutorInstance<(), P>,
     pub owner: Address,
     pub total_value: U256,
     pub calldata: Vec<Bytes>,
@@ -80,10 +78,9 @@ where
     addresses: ContractAddresses,
 }
 
-impl<T, P> BatchExecutorClient<T, P>
+impl<P> BatchExecutorClient<P>
 where
-    T: Transport + Clone,
-    P: Provider<T, Ethereum> + Clone,
+    P: Provider<Ethereum>,
 {
     pub async fn new(address: Address, chain: NamedChain, provider: P) -> Self {
         let executor = BatchExecutorInstance::new(address, provider);

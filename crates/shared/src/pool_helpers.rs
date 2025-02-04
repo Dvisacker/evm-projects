@@ -92,13 +92,12 @@ pub fn extract_camelot_v3_pools(amms: &[AMM]) -> Vec<CamelotV3Pool> {
 ///
 /// # Returns
 /// A Result containing the ExchangeType or an AMMError
-pub async fn get_pool_type<P, T, N>(
+pub async fn get_pool_type<P, N>(
     address: Address,
     provider: Arc<P>,
 ) -> Result<ExchangeType, AMMError>
 where
-    P: Provider<T, N>,
-    T: Transport + Clone,
+    P: Provider<N>,
     N: Network,
 {
     let univ2_pool = IUniswapV2Pair::new(address, provider.clone());
@@ -145,7 +144,7 @@ where
 ///
 /// # Returns
 /// A Result indicating success or an AMMError
-pub async fn store_uniswap_v3_pools<P, T, N>(
+pub async fn store_uniswap_v3_pools<P, N>(
     provider: Arc<P>,
     chain: Chain,
     exchange_name: ExchangeName,
@@ -156,8 +155,7 @@ pub async fn store_uniswap_v3_pools<P, T, N>(
     db_url: &str,
 ) -> Result<(), AMMError>
 where
-    P: Provider<T, N>,
-    T: Transport + Clone,
+    P: Provider<N>,
     N: Network,
 {
     let mut conn = establish_connection(db_url);
@@ -228,7 +226,7 @@ where
 ///
 /// # Returns
 /// A Result indicating success or an AMMError
-pub async fn store_uniswap_v2_pools<P, T, N>(
+pub async fn store_uniswap_v2_pools<P, N>(
     provider: Arc<P>,
     chain: Chain,
     exchange_name: ExchangeName,
@@ -236,8 +234,7 @@ pub async fn store_uniswap_v2_pools<P, T, N>(
     db_url: &str,
 ) -> Result<(), AMMError>
 where
-    P: Provider<T, N> + 'static,
-    T: Transport + Clone,
+    P: Provider<N> + 'static,
     N: Network,
 {
     let mut conn = establish_connection(db_url);
@@ -279,7 +276,7 @@ where
 }
 
 // ve33 pools are stored as uni-v2 pools as of now because they have the same data.
-pub async fn store_ve33_pools<P, T, N>(
+pub async fn store_ve33_pools<P, N>(
     provider: Arc<P>,
     chain: Chain,
     exchange_name: ExchangeName,
@@ -287,8 +284,7 @@ pub async fn store_ve33_pools<P, T, N>(
     db_url: &str,
 ) -> Result<(), AMMError>
 where
-    P: Provider<T, N> + 'static,
-    T: Transport + Clone,
+    P: Provider<N> + 'static,
     N: Network,
 {
     let mut conn = establish_connection(db_url);
@@ -613,15 +609,14 @@ pub async fn filter_amms(
     Ok(active_pools)
 }
 
-pub async fn filter_univ2_pools<P, T, N>(
+pub async fn filter_univ2_pools<P, N>(
     amms: Vec<AMM>,
     chain: Chain,
     provider: Arc<P>,
     usd_threshold: f64,
 ) -> Result<Vec<AMM>, AMMError>
 where
-    P: Provider<T, N> + 'static,
-    T: Transport + Clone,
+    P: Provider<N> + 'static,
     N: Network,
 {
     let addressbook = Addressbook::load().unwrap();
@@ -673,15 +668,14 @@ where
     Ok(v2_active_pools)
 }
 
-pub async fn filter_univ3_pools<P, T, N>(
+pub async fn filter_univ3_pools<P, N>(
     amms: Vec<AMM>,
     chain: Chain,
     provider: Arc<P>,
     usd_threshold: f64,
 ) -> Result<Vec<AMM>, AMMError>
 where
-    P: Provider<T, N> + 'static,
-    T: Transport + Clone,
+    P: Provider<N> + 'static,
     N: Network,
 {
     let addressbook = Addressbook::load().unwrap();

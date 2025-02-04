@@ -1,6 +1,5 @@
 use std::{env, fmt, str::FromStr};
 
-use alloy::transports::BoxTransport;
 use alloy_chains::{Chain, NamedChain};
 use alloy_primitives::Address;
 use encoder::BatchExecutorClient;
@@ -10,7 +9,6 @@ pub mod bindings;
 pub mod encoder;
 
 pub type BasicEncoder = BatchExecutorClient<
-    BoxTransport,
     std::sync::Arc<
         alloy::providers::fillers::FillProvider<
             alloy::providers::fillers::JoinFill<
@@ -29,8 +27,7 @@ pub type BasicEncoder = BatchExecutorClient<
                 >,
                 alloy::providers::fillers::WalletFiller<alloy::network::EthereumWallet>,
             >,
-            alloy::providers::RootProvider<BoxTransport>,
-            BoxTransport,
+            alloy::providers::RootProvider,
             alloy::network::Ethereum,
         >,
     >,

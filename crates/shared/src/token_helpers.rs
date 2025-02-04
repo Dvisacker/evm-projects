@@ -1,16 +1,12 @@
+use crate::bindings::geterc20tokendatabatchrequest::GetERC20TokenDataBatchRequest;
+use crate::bindings::ierc20::IERC20;
 use crate::token_manager::TokenManager;
 use alloy::providers::WalletProvider;
-use alloy::{
-    dyn_abi::DynSolType, network::Network, primitives::Address, providers::Provider,
-    transports::Transport,
-};
+use alloy::{dyn_abi::DynSolType, network::Network, primitives::Address, providers::Provider};
 use alloy_chains::NamedChain;
 use alloy_primitives::utils::parse_units;
 use alloy_primitives::U256;
 use amms::errors::AMMError;
-use bindings::geterc20tokendatabatchrequest::GetERC20TokenDataBatchRequest;
-use bindings::ierc20::IERC20;
-use eyre::Context;
 use eyre::{eyre, Error, Result};
 use provider::SignerProvider;
 use serde_json::Value;
@@ -99,6 +95,7 @@ pub async fn transfer_approve_token_if_needed(
 pub async fn parse_token_units(chain: &NamedChain, token: &TokenIsh, amount: &str) -> Result<U256> {
     let token_manager = TokenManager::instance().await;
     let token = token_manager.get(chain, token).unwrap();
+
     let decimals = match token.decimals().call().await {
         Ok(decimals) => decimals._0,
         Err(e) => return Err(eyre!("Failed to get decimals: {}", e)),
@@ -107,14 +104,13 @@ pub async fn parse_token_units(chain: &NamedChain, token: &TokenIsh, amount: &st
     Ok(amount)
 }
 
-pub async fn get_erc20_data_batch_request<T, N, P>(
+pub async fn get_erc20_data_batch_request<N, P>(
     token_addresses: Vec<Address>,
     provider: Arc<P>,
 ) -> Result<Vec<ERC20TokenData>, AMMError>
 where
-    T: Transport + Clone,
     N: Network,
-    P: Provider<T, N>,
+    P: Provider<N>,
 {
     const BATCH_SIZE: usize = 50;
     let mut all_token_data = Vec::new();
@@ -158,11 +154,10 @@ where
     Ok(all_token_data)
 }
 
-pub async fn load_pools_and_fetch_token_data<T, N, P>(provider: Arc<P>) -> Result<()>
+pub async fn load_pools_and_fetch_token_data<N, P>(provider: Arc<P>) -> Result<()>
 where
-    T: Transport + Clone,
     N: Network,
-    P: Provider<T, N>,
+    P: Provider<N>,
 {
     let active_pools_json: String = fs::read_to_string("checkpoints/active-pools.json")?;
     let mut active_pools: Value = serde_json::from_str(&active_pools_json)?;
@@ -254,27 +249,27 @@ pub async fn verify_erc20_interface(
         .name()
         .call()
         .await
-        .wrap_err("Failed to get token name - name() method may not be implemented")?;
+        .expect("Failed to get token name - name() method may not be implemented");
 
     // Test symbol() - Optional in ERC20 but commonly implemented
     token
         .symbol()
         .call()
         .await
-        .wrap_err("Failed to get token symbol - symbol() method may not be implemented")?;
+        .expect("Failed to get token symbol - symbol() method may not be implemented");
 
     // Test decimals() - Optional in ERC20 but commonly implemented
     token
         .decimals()
         .call()
         .await
-        .wrap_err("Failed to get token decimals - decimals() method may not be implemented")?;
+        .expect("Failed to get token decimals - decimals() method may not be implemented");
 
     token
         .totalSupply()
         .call()
         .await
-        .wrap_err("Failed to get total supply - totalSupply() method not working")?;
+        .expect("Failed to get total supply - totalSupply() method not working");
 
     // Test balanceOf() - Required by ERC20
     // Using address(0) as test address
@@ -282,7 +277,7 @@ pub async fn verify_erc20_interface(
         .balanceOf(Address::ZERO)
         .call()
         .await
-        .wrap_err("Failed to get balance - balanceOf() method not working")?;
+        .expect("Failed to get balance - balanceOf() method not working");
 
     // Test allowance() - Required by ERC20
     // Using address(0) for both owner and spender as test addresses
@@ -290,7 +285,7 @@ pub async fn verify_erc20_interface(
         .allowance(Address::ZERO, Address::ZERO)
         .call()
         .await
-        .wrap_err("Failed to get allowance - allowance() method not working")?;
+        .expect("Failed to get allowance - allowance() method not working");
 
     Ok(())
 }

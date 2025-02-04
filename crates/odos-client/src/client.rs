@@ -1,8 +1,6 @@
-use alloy::sol_types::SolType;
 use alloy_chains::{Chain, NamedChain};
 use alloy_primitives::{Address, U256};
-use alloy_sol_types::sol_data::Bytes as SolBytes;
-use alloy_sol_types::{SolCall, SolValue};
+use alloy_sol_types::SolCall;
 use eyre::Result;
 use reqwest;
 use serde::{Deserialize, Serialize};
@@ -231,10 +229,10 @@ mod tests {
     use alloy_chains::{Chain, NamedChain};
     use alloy_primitives::Bytes;
     use alloy_rpc_types::TransactionRequest;
-    use bindings::ierc20::IERC20;
-    use bindings::iweth;
     use provider::{get_anvil_signer, get_anvil_signer_provider};
     use shared::token_helpers::parse_token_units;
+    use types::bindings::ierc20::IERC20;
+    use types::bindings::iweth;
     use types::token::TokenIsh;
 
     use super::*;
@@ -321,7 +319,7 @@ mod tests {
 
         let approve_tx = IERC20::approveCall {
             spender: router,
-            value: input_amount,
+            amount: input_amount,
         };
         let encoded = approve_tx.abi_encode();
         let approve_tx = TransactionRequest::default()

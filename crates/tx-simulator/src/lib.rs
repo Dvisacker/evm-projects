@@ -9,7 +9,6 @@ pub mod bindings;
 pub mod simulator;
 
 pub type SimulatorClient = TxSimulatorClient<
-    alloy::transports::BoxTransport,
     std::sync::Arc<
         alloy::providers::fillers::FillProvider<
             alloy::providers::fillers::JoinFill<
@@ -28,8 +27,7 @@ pub type SimulatorClient = TxSimulatorClient<
                 >,
                 alloy::providers::fillers::WalletFiller<alloy::network::EthereumWallet>,
             >,
-            alloy::providers::RootProvider<alloy::transports::BoxTransport>,
-            alloy::transports::BoxTransport,
+            alloy::providers::RootProvider,
             alloy::network::Ethereum,
         >,
     >,

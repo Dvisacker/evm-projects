@@ -8,7 +8,6 @@ use alloy::{
         Identity, ProviderBuilder, RootProvider,
     },
     signers::local::PrivateKeySigner,
-    transports::BoxTransport,
 };
 use alloy_chains::{Chain, NamedChain};
 use once_cell::sync::Lazy;
@@ -24,18 +23,17 @@ pub type SignerProvider = FillProvider<
         >,
         WalletFiller<EthereumWallet>,
     >,
-    RootProvider<BoxTransport>,
-    BoxTransport,
+    RootProvider,
+    Ethereum,
 >;
 
-// read provider without wallet
 pub type BasicProvider = FillProvider<
     JoinFill<
         Identity,
         JoinFill<GasFiller, JoinFill<BlobGasFiller, JoinFill<NonceFiller, ChainIdFiller>>>,
     >,
-    RootProvider<BoxTransport>,
-    BoxTransport,
+    RootProvider,
+    Ethereum,
 >;
 
 pub type SignerProviderMap = HashMap<NamedChain, Arc<SignerProvider>>;
@@ -67,8 +65,7 @@ pub async fn get_anvil_signer_provider() -> Arc<SignerProvider> {
     let signer: PrivateKeySigner = get_anvil_signer();
     let wallet = EthereumWallet::new(signer);
     let url = "http://localhost:8545";
-    let provider = ProviderBuilder::new()
-        .with_recommended_fillers()
+    let provider: SignerProvider = ProviderBuilder::new()
         .wallet(wallet)
         .on_builtin(url)
         .await
@@ -79,11 +76,7 @@ pub async fn get_anvil_signer_provider() -> Arc<SignerProvider> {
 // read provider without wallet and all recommended fillers
 pub async fn get_anvil_basic_provider() -> Arc<BasicProvider> {
     let url = "http://localhost:8545";
-    let provider: BasicProvider = ProviderBuilder::new()
-        .with_recommended_fillers()
-        .on_builtin(url)
-        .await
-        .unwrap();
+    let provider: BasicProvider = ProviderBuilder::new().on_builtin(url).await.unwrap();
     return Arc::new(provider);
 }
 
@@ -102,7 +95,6 @@ pub async fn get_basic_provider(chain: Chain) -> Arc<BasicProvider> {
     let rpc_url = get_chain_rpc_url(chain).await;
 
     let provider = ProviderBuilder::new()
-        .with_recommended_fillers()
         .on_builtin(rpc_url.as_str())
         .await
         .unwrap();
@@ -115,7 +107,6 @@ pub async fn get_signer_provider(chain: Chain, wallet: EthereumWallet) -> Arc<Si
     let rpc_url = get_chain_rpc_url(chain).await;
 
     let provider = ProviderBuilder::new()
-        .with_recommended_fillers()
         .wallet(wallet)
         .on_builtin(rpc_url.as_str())
         .await

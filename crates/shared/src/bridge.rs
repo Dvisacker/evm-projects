@@ -200,7 +200,7 @@ pub struct LiFiIncludedStep {
     pub estimate: LiFiEstimate,
 }
 
-pub async fn bridge_lifi<T, P>(
+pub async fn bridge_lifi<P>(
     origin_chain_provider: Arc<P>,
     destination_chain_provider: Arc<P>,
     from_chain: &NamedChain,
@@ -213,8 +213,7 @@ pub async fn bridge_lifi<T, P>(
     bridge_name: BridgeName,
 ) -> Result<U256>
 where
-    T: Transport + Clone,
-    P: Provider<T, Ethereum>,
+    P: Provider<Ethereum>,
 {
     // 1. Get quote from Li.Fi API
     let client = reqwest::Client::new();

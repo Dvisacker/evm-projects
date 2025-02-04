@@ -17,7 +17,7 @@
 // where
 //     T: Transport + Clone,
 //     N: Network,
-//     P: Provider<T, N> + 'static,
+//     P: Provider<N> + 'static,
 // {
 //     pub provider: Arc<P>,
 //     pub owner: Address,
@@ -52,13 +52,13 @@
 // where
 //     T: Transport + Clone,
 //     N: Network,
-//     P: Provider<T, N>,
+//     P: Provider<N>,
 // {
 //     pub async fn new(provider: P, owner: Address, block_number: u64) -> Self
 //     where
 //         T: Transport + Clone,
 //         N: Network,
-//         P: Provider<T, N>,
+//         P: Provider<N>,
 //     {
 //         let provider = Arc::new(provider);
 //         let block_id = BlockId::Number(block_number.into());

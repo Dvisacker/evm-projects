@@ -3,9 +3,9 @@ use alloy::providers::fillers::{
     BlobGasFiller, ChainIdFiller, FillProvider, GasFiller, JoinFill, NonceFiller, WalletFiller,
 };
 use alloy::providers::{Identity, RootProvider};
+use alloy::sol;
 use alloy::transports::BoxTransport;
 use alloy_primitives::Address;
-use bindings::ierc20::IERC20::IERC20Instance;
 use clap::ValueEnum;
 use serde::{Deserialize, Serialize};
 use std::fmt;
@@ -20,11 +20,31 @@ pub type SignerProvider = FillProvider<
         >,
         WalletFiller<EthereumWallet>,
     >,
-    RootProvider<BoxTransport>,
-    BoxTransport,
+    RootProvider,
+    Ethereum,
 >;
 
-pub type Token = IERC20Instance<BoxTransport, Arc<SignerProvider>>;
+// sol! {
+//     #[derive(Debug, PartialEq, Eq)]
+//     #[sol(rpc)]
+//     contract IERC20 {
+//         event Transfer(address indexed from, address indexed to, uint256 value);
+//         event Approval(address indexed owner, address indexed spender, uint256 value);
+
+//         function totalSupply() external view returns (uint256);
+//         function balanceOf(address account) external view returns (uint256);
+//         function transfer(address to, uint256 value) external returns (bool);
+//         function allowance(address owner, address spender) external view returns (uint256);
+//         function approve(address spender, uint256 value) external returns (bool);
+//         function transferFrom(address from, address to, uint256 value) external returns (bool);
+//     }
+// }
+
+// pub type Token = IERC20Instance<SignerProvider, Ethereum>;
+
+pub type Token = crate::bindings::ierc20::IERC20::IERC20Instance<(), SignerProvider>;
+// pub type Token = crate::bindings::ierc20::IERC20::IERC20Instance<SignerProvider>;
+// pub type Token = crate::bindings::ierc20::IERC20::IERC20Instance<SignerProvider, Ethereum>;
 
 #[derive(Debug, Serialize, Deserialize, Clone, Copy, ValueEnum, PartialEq, Eq, Hash)]
 pub enum NamedToken {

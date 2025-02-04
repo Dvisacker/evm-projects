@@ -1,7 +1,6 @@
 use alloy::network::Network;
 use alloy::primitives::Address;
 use alloy::providers::Provider;
-use alloy::transports::Transport;
 use foundry_config::Config;
 use foundry_evm::backend::Backend;
 use foundry_evm::executors::Executor;
@@ -13,9 +12,8 @@ use std::sync::Arc;
 // #[derive(Clone)]
 pub struct FoundrySimulator<T, N, P>
 where
-    T: Transport + Clone,
     N: Network,
-    P: Provider<T, N> + 'static,
+    P: Provider<N> + 'static,
 {
     pub provider: Arc<P>,
     pub owner: Address,
@@ -31,15 +29,13 @@ where
 
 impl<T, N, P> FoundrySimulator<T, N, P>
 where
-    T: Transport + Clone,
     N: Network,
-    P: Provider<T, N>,
+    P: Provider<N>,
 {
     pub async fn new(provider: P, owner: Address, block_number: u64, url: String) -> Self
     where
-        T: Transport + Clone,
         N: Network,
-        P: Provider<T, N>,
+        P: Provider<N>,
     {
         // let evm_opts = EvmOpts::default();
         // let env = Env::default();
@@ -47,7 +43,7 @@ where
         let config = Config::figment();
         let mut evm_opts = config.extract::<EvmOpts>().unwrap();
         evm_opts.fork_block_number = Some(block_number);
-        let (env, _block) = evm_opts.fork_evm_env(url.clone()).await.unwrap();
+        let (env, _block) = evm_opts.fork_evm_env(&url.clone()).await.unwrap();
         let fork = CreateFork {
             enable_caching: true,
             url: url.clone(),

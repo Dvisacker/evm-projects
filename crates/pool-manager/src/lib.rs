@@ -57,7 +57,7 @@ impl PoolStorageManager {
         step: u64,
     ) -> Result<(), AMMError>
     where
-        P: Provider<T, N>,
+        P: Provider<N>,
         T: Transport + Clone,
         N: Network,
     {
@@ -125,7 +125,7 @@ impl PoolStorageManager {
         factory_address: Address,
     ) -> Result<(), AMMError>
     where
-        P: Provider<T, N> + 'static,
+        P: Provider<N> + 'static,
         T: Transport + Clone,
         N: Network,
     {
@@ -175,7 +175,7 @@ impl PoolStorageManager {
         factory_address: Address,
     ) -> Result<(), AMMError>
     where
-        P: Provider<T, N> + 'static,
+        P: Provider<N> + 'static,
         T: Transport + Clone,
         N: Network,
     {

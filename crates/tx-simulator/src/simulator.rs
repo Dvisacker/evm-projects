@@ -4,7 +4,6 @@ use alloy::{
     network::Ethereum,
     primitives::{aliases::U24, Address, U256},
     providers::Provider,
-    transports::Transport,
 };
 use alloy_chains::NamedChain;
 use amms::amm::{AutomatedMarketMaker, AMM};
@@ -12,24 +11,22 @@ use eyre::Error;
 use types::exchange::ExchangeName;
 
 #[derive(Clone)]
-pub struct TxSimulatorClient<T, P>
+pub struct TxSimulatorClient<P>
 where
-    T: Transport + Clone,
-    P: Provider<T, Ethereum> + Clone,
+    P: Provider<Ethereum> + Clone,
 {
     #[allow(unused)]
     address: Address,
-    simulator: TxSimulatorInstance<T, P>,
+    simulator: TxSimulatorInstance<(), P>,
     chain: NamedChain,
     addressbook: Addressbook,
     #[allow(unused)]
     provider: P,
 }
 
-impl<T, P> TxSimulatorClient<T, P>
+impl<P> TxSimulatorClient<P>
 where
-    T: Transport + Clone,
-    P: Provider<T, Ethereum> + Clone,
+    P: Provider<Ethereum> + Clone,
 {
     pub async fn new(address: Address, provider: P) -> Self {
         let addressbook = Addressbook::load().expect("Failed to load addressbook");

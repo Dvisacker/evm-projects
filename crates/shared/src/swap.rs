@@ -7,7 +7,6 @@ use addressbook::Addressbook;
 use alloy::{
     network::{Ethereum, Network},
     providers::Provider,
-    transports::Transport,
 };
 use alloy_chains::NamedChain;
 use alloy_primitives::{aliases::U24, Address, U160, U256};
@@ -173,27 +172,25 @@ pub fn sqrt_price_x96_to_price(
     Ok(price_f64)
 }
 
-pub async fn load_uni_v2_pool<T, N, P>(
+pub async fn load_uni_v2_pool<N, P>(
     pool_address: Address,
     provider: Arc<P>,
 ) -> Result<UniswapV2Pool, AMMError>
 where
-    T: Transport + Clone,
     N: Network,
-    P: Provider<T, N>,
+    P: Provider<N>,
 {
     let pool = UniswapV2Pool::new_from_address(pool_address, 300, provider).await?;
     Ok(pool)
 }
 
-pub async fn load_uni_v3_pool<T, N, P>(
+pub async fn load_uni_v3_pool<N, P>(
     pool_address: Address,
     provider: Arc<P>,
 ) -> Result<UniswapV3Pool, AMMError>
 where
-    T: Transport + Clone,
     N: Network,
-    P: Provider<T, N>,
+    P: Provider<N>,
 {
     let end_block = provider.get_block_number().await.unwrap();
     let contract_creation_block =
@@ -205,7 +202,7 @@ where
     Ok(pool)
 }
 
-pub async fn swap<T, P>(
+pub async fn swap<P>(
     provider: Arc<P>,
     chain: NamedChain,
     exchange_name: ExchangeName,
@@ -215,8 +212,7 @@ pub async fn swap<T, P>(
     amount_in: U256,
 ) -> Result<U256, Error>
 where
-    T: Transport + Clone,
-    P: Provider<T, Ethereum>,
+    P: Provider<Ethereum>,
 {
     match exchange_name {
         ExchangeName::UniswapV2 => {
@@ -247,7 +243,7 @@ where
     }
 }
 
-pub async fn swap_v2_pool<T, N, P>(
+pub async fn swap_v2_pool<N, P>(
     provider: Arc<P>,
     chain: NamedChain,
     exchange_name: ExchangeName,
@@ -257,9 +253,8 @@ pub async fn swap_v2_pool<T, N, P>(
     amount_in: U256,
 ) -> Result<U256, Error>
 where
-    T: Transport + Clone,
     N: Network,
-    P: Provider<T, N>,
+    P: Provider<N>,
 {
     let addressbook = Addressbook::load().unwrap();
     let router_address = addressbook
@@ -343,7 +338,7 @@ where
 // /* This function makes extra calls to get not only the best fee tier but also the corresponding pool address
 // When calling the router/quoter, the pool address is not needed so in that case, the find_best_v3_fee_tier function is preferred
 // because it uses less calls. */
-// pub async fn find_best_v3_pool<T, N, P>(
+// pub async fn find_best_v3_pool<N, P>(
 //     provider: Arc<P>,
 //     token_in: Address,
 //     token_out: Address,
@@ -352,7 +347,7 @@ where
 // where
 //     T: Transport + Clone,
 //     N: Network,
-//     P: Provider<T, N>,
+//     P: Provider<N>,
 // {
 //     let factory_address = Address::from_str("0x1F98431c8aD98523631AE4a59f267346ea31F984")
 //         .expect("Invalid factory address");
@@ -442,7 +437,7 @@ where
 /* This function makes extra calls to get not only the best fee tier but also the corresponding pool address
 When calling the router/quoter, the pool address is not needed so in that case, the find_best_v3_fee_tier function is preferred
 because it uses less calls. */
-pub async fn find_best_v3_fee_tier<T, N, P>(
+pub async fn find_best_v3_fee_tier<N, P>(
     provider: Arc<P>,
     chain: NamedChain,
     exchange_name: ExchangeName,
@@ -451,9 +446,8 @@ pub async fn find_best_v3_fee_tier<T, N, P>(
     amount_in: U256,
 ) -> Result<(u32, U256), Error>
 where
-    T: Transport + Clone,
     N: Network,
-    P: Provider<T, N>,
+    P: Provider<N>,
 {
     // Standard fee tiers
     let fee_tiers = vec![100, 500, 3000, 10000];
@@ -507,7 +501,7 @@ where
     Ok((best_fee, best_quote))
 }
 
-pub async fn swap_v3_pool<T, P>(
+pub async fn swap_v3_pool<P>(
     provider: Arc<P>,
     chain: NamedChain,
     exchange_name: ExchangeName,
@@ -517,8 +511,7 @@ pub async fn swap_v3_pool<T, P>(
     amount_in: U256,
 ) -> Result<U256, Error>
 where
-    T: Transport + Clone,
-    P: Provider<T, Ethereum>,
+    P: Provider<Ethereum>,
 {
     let addressbook = Addressbook::load().unwrap();
 
@@ -589,7 +582,6 @@ mod tests {
     use alloy::providers::WalletProvider;
     use alloy_chains::{Chain, NamedChain};
     use provider::get_default_signer_provider;
-    
 
     const EXCHANGE_NAME: ExchangeName = ExchangeName::UniswapV3;
     const CHAIN: NamedChain = NamedChain::Arbitrum;

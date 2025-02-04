@@ -1,4 +1,5 @@
 pub mod bigint;
+pub mod bindings;
 pub mod bridge;
 pub mod cycle;
 pub mod evm_helpers;

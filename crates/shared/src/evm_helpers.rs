@@ -21,7 +21,7 @@ pub async fn get_trace_call<P, T, N>(
     tx_request: TransactionRequest,
 ) -> TransportResult<GethTrace>
 where
-    P: Provider<T, N>,
+    P: Provider<N>,
     T: Transport + Clone,
     N: Network,
 {
@@ -38,15 +38,14 @@ where
         .await
 }
 
-pub async fn get_contract_creation_block<P, T, N>(
+pub async fn get_contract_creation_block<P, N>(
     provider: Arc<P>,
     contract_address: Address,
     start_block: u64,
     end_block: u64,
 ) -> Result<u64>
 where
-    P: Provider<T, N>,
-    T: Transport + Clone,
+    P: Provider<N>,
     N: Network,
 {
     let mut low = start_block;
@@ -73,10 +72,9 @@ where
     Err(eyre!("Contract creation block not found"))
 }
 
-async fn get_code_at_block<P, T, N>(provider: Arc<P>, address: Address, block: u64) -> Result<Bytes>
+async fn get_code_at_block<P, N>(provider: Arc<P>, address: Address, block: u64) -> Result<Bytes>
 where
-    P: Provider<T, N>,
-    T: Transport + Clone,
+    P: Provider<N>,
     N: Network,
 {
     tracing::info!("Getting code at block: {}", block);
@@ -195,21 +193,13 @@ pub fn compute_v3_pool_address(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use alloy::{
-        providers::{ProviderBuilder, RootProvider},
-        transports::http::{Client, Http},
-    };
+    use alloy_chains::Chain;
+    use provider::get_basic_provider;
     use std::env;
-
-    fn setup_provider() -> Arc<RootProvider<Http<Client>>> {
-        let rpc_endpoint = env::var("MAINNET_RPC_URL").expect("MAINNET_RPC_URL must be set");
-
-        Arc::new(ProviderBuilder::new().on_http(rpc_endpoint.parse().unwrap()))
-    }
 
     #[tokio::test]
     async fn test_get_contract_creation_block() {
-        let provider = setup_provider();
+        let provider = get_basic_provider(Chain::from_id(1)).await;
         // USDC contract address on Ethereum mainnet
         let contract_address = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
             .parse()
@@ -226,7 +216,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_code_at_block() {
-        let provider = setup_provider();
+        let provider = get_basic_provider(Chain::from_id(1)).await;
         // USDC contract address on Ethereum mainnet
         let contract_address = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
             .parse()
@@ -247,7 +237,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_contract_creation_block_not_found() {
-        let provider = setup_provider();
+        let provider = get_basic_provider(Chain::from_id(1)).await;
         // Use a random address that's unlikely to be a contract
         let contract_address = Address::random();
 
