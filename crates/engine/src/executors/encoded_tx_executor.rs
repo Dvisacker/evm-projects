@@ -1,11 +1,15 @@
 use std::{env, str::FromStr, sync::Arc};
 
 use crate::types::Executor;
-use alloy::primitives::{Address, Bytes, U256};
+use alloy::{
+    contract::Error,
+    primitives::{Address, Bytes, U256},
+    providers::Provider,
+};
 use async_trait::async_trait;
 use eyre::Result;
 use provider::SignerProvider;
-use tracing::warn;
+use tracing::{info, warn};
 use tx_executor::bindings::batchexecutor::BatchExecutor::BatchExecutorInstance;
 
 // The EncodedTxExecutor (to be renamed BundledTxExecutor)
@@ -50,7 +54,7 @@ impl Executor<SubmitEncodedTx> for EncodedTxExecutor {
     async fn execute(&self, action: SubmitEncodedTx) -> Result<()> {
         let total_value = action.total_value;
         let calldata = action.calldata.clone();
-        let _gas_bid_info = action.gas_bid_info.clone();
+        let gas_bid_info = action.gas_bid_info.clone();
         let owner = self.executor.OWNER().call().await.unwrap()._0;
 
         let call = self
@@ -59,44 +63,44 @@ impl Executor<SubmitEncodedTx> for EncodedTxExecutor {
             .value(total_value)
             .from(owner);
 
-        let gas_usage = call.estimate_gas().await.unwrap_or_else(|e| {
-            warn!("Error estimating gas: {:?}", e);
-            0
-        });
+        let result = call.estimate_gas().await;
 
-        // info!("Gas usage: {:?}", gas_usage);
+        if let Err(e) = result {
+            match e {
+                Error::TransportError(rpc_err) => {
+                    let error_response = rpc_err.as_error_resp();
+                    let message = error_response.unwrap().message.clone();
+                    let code = error_response.unwrap().code;
+                    warn!("message: {:?} (error code: {})", message, code);
+                    return Ok(());
+                }
+                _ => {
+                    warn!("Error estimating gas: {:?}", e);
+                    return Ok(());
+                }
+            }
+        }
 
-        // let _return_value = call.call().await.unwrap();
-        // println!("Gas usage: {:?}", gas_usage);
-        // if gas_usage == 0 {
-        //     return Ok(());
-        // }
+        let gas_usage = result.unwrap();
 
-        // let tx = self.client.send_transaction(tx_request).await?;
-        // let bid_gas_price: u128;
+        let bid_gas_price: u128;
+        if let Some(gas_bid_info) = gas_bid_info {
+            let breakeven_gas_price: u128 =
+                gas_bid_info.total_profit.to::<u128>() / u128::from(gas_usage);
+            bid_gas_price = breakeven_gas_price * u128::from(gas_bid_info.bid_percentage) / 100;
+        } else {
+            bid_gas_price = self.client.get_gas_price().await.unwrap();
+        }
 
-        // if let Some(gas_bid_info) = gas_bid_info {
-        //     // gas price at which we'd break even, meaning 100% of profit goes to validator
-        //     let breakeven_gas_price: u128 =
-        //         gas_bid_info.total_profit.to::<u128>() / u128::from(gas_usage);
-        //     bid_gas_price = breakeven_gas_price
-        //         .mul(u128::from(gas_bid_info.bid_percentage))
-        //         .div(100);
-        // } else {
-        //     bid_gas_price = self
-        //         .client
-        //         .get_gas_price()
-        //         .await
-        //         .context("Error getting gas price: {}")?
-        //         .try_into()
-        //         .context("Error converting gas price to u64: {}")?;
-        // }
-        // .gas_price(bid_gas_price)
+        info!("Sending tx with gas price: {}", bid_gas_price);
+        let receipt = call
+            .gas_price(bid_gas_price)
+            .send()
+            .await?
+            .get_receipt()
+            .await?;
+        info!("Transaction receipt: {:?}", receipt);
 
-        // println!("Sending tx with gas price: {}", bid_gas_price);
-        // let receipt = call.send().await?.get_receipt().await?;
-
-        // info!("Transaction receipt: {:?}", receipt);
         Ok(())
     }
 }
