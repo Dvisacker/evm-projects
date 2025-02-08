@@ -5,7 +5,6 @@ use addressbook::Addressbook;
 use alloy::network::Network;
 use alloy::primitives::{Address, U256};
 use alloy::providers::Provider;
-use alloy::transports::Transport;
 use alloy_chains::{Chain, NamedChain};
 use amms::amm::camelot_v3::CamelotV3Pool;
 use amms::amm::uniswap_v2::batch_request::get_v2_pool_data_batch_request;

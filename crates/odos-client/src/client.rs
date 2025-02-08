@@ -1,5 +1,6 @@
 use alloy_chains::{Chain, NamedChain};
 use alloy_primitives::{Address, U256};
+#[allow(unused_imports)]
 use alloy_sol_types::SolCall;
 use eyre::Result;
 use reqwest;

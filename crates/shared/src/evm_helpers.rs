@@ -134,14 +134,14 @@ pub fn compute_v2_pool_address(
         (token_b, token_a)
     };
 
-    let INIT_CODE_V2_HASH = "96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f";
+    let init_code_v2_hash = "96e8ac4277198ff8b6f785478aa9a39f403cb768dd02cbee326c3e7da348845f";
     let encode_packed = [token0.abi_encode_packed(), token1.abi_encode_packed()].concat();
     let salt = keccak256(encode_packed);
 
     Ok(get_create2_address(
         factory_address,
         salt,
-        INIT_CODE_V2_HASH,
+        init_code_v2_hash,
     ))
 }
 
@@ -174,7 +174,7 @@ pub fn compute_v3_pool_address(
             (token_b, token_a)
         };
 
-    let INIT_CODE_V3_HASH = "e34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54";
+    let init_code_v3_hash = "e34f199b19b2b4f47f68442619d555527d244f78a3297ea89325f843f87b8b54";
     let encoded = PoolParameters {
         token0,
         token1,
@@ -186,7 +186,7 @@ pub fn compute_v3_pool_address(
     Ok(get_create2_address(
         factory_address,
         salt,
-        INIT_CODE_V3_HASH,
+        init_code_v3_hash,
     ))
 }
 
@@ -195,7 +195,6 @@ mod tests {
     use super::*;
     use alloy_chains::Chain;
     use provider::get_basic_provider;
-    use std::env;
 
     #[tokio::test]
     async fn test_get_contract_creation_block() {

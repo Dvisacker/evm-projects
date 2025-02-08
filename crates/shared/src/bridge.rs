@@ -1,6 +1,6 @@
 use alloy::network::Ethereum;
+use alloy::providers::Provider;
 use alloy::{hex, sol};
-use alloy::{providers::Provider, transports::Transport};
 use alloy_chains::NamedChain;
 use alloy_primitives::{Address, U256};
 use alloy_rpc_types::TransactionRequest;
