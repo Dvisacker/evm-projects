@@ -26,6 +26,7 @@ diesel::table! {
         active -> Nullable<Bool>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
+        tag -> Nullable<Varchar>,
     }
 }
 
@@ -63,6 +64,12 @@ diesel::table! {
 }
 
 diesel::table! {
+    tags (name) {
+        name -> Varchar,
+    }
+}
+
+diesel::table! {
     uni_v2_pools (id) {
         id -> Int4,
         address -> Varchar,
@@ -82,6 +89,7 @@ diesel::table! {
         active -> Nullable<Bool>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
+        tag -> Nullable<Varchar>,
     }
 }
 
@@ -109,13 +117,19 @@ diesel::table! {
         active -> Nullable<Bool>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
+        tag -> Nullable<Varchar>,
     }
 }
+
+diesel::joinable!(curve_pools -> tags (tag));
+diesel::joinable!(uni_v2_pools -> tags (tag));
+diesel::joinable!(uni_v3_pools -> tags (tag));
 
 diesel::allow_tables_to_appear_in_same_query!(
     curve_pools,
     erc4626_vaults,
     exchanges,
+    tags,
     uni_v2_pools,
     uni_v3_pools,
 );

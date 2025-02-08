@@ -44,6 +44,8 @@ pub fn batch_upsert_uni_v2_pools(
             uni_v2_pools::reserve_0.eq(excluded(uni_v2_pools::reserve_0)),
             uni_v2_pools::reserve_1.eq(excluded(uni_v2_pools::reserve_1)),
             uni_v2_pools::fee.eq(excluded(uni_v2_pools::fee)),
+            uni_v2_pools::active.eq(excluded(uni_v2_pools::active)),
+            uni_v2_pools::tag.eq(excluded(uni_v2_pools::tag)),
         ))
         .get_results(conn)
 }
@@ -71,7 +73,7 @@ pub fn update_uni_v2_pool(
             uni_v2_pools::chain.eq(updated_pool.chain.clone()),
             uni_v2_pools::factory_address.eq(updated_pool.factory_address.clone()),
             uni_v2_pools::exchange_name.eq(updated_pool.exchange_name.clone()),
-            uni_v2_pools::exchange_type.eq(updated_pool.exchange_type.clone()), // Add this line
+            uni_v2_pools::exchange_type.eq(updated_pool.exchange_type.clone()),
             uni_v2_pools::token_a.eq(updated_pool.token_a.clone()),
             uni_v2_pools::token_a_symbol.eq(updated_pool.token_a_symbol.clone()),
             uni_v2_pools::token_a_decimals.eq(updated_pool.token_a_decimals),
@@ -81,10 +83,10 @@ pub fn update_uni_v2_pool(
             uni_v2_pools::reserve_0.eq(updated_pool.reserve_0.clone()),
             uni_v2_pools::reserve_1.eq(updated_pool.reserve_1.clone()),
             uni_v2_pools::fee.eq(updated_pool.fee),
+            uni_v2_pools::active.eq(updated_pool.active),
+            uni_v2_pools::tag.eq(updated_pool.tag.clone()),
         ))
-        .execute(conn)?;
-
-    get_uni_v2_pool_by_address(conn, pool_address)
+        .get_result(conn)
 }
 
 pub fn delete_uni_v2_pool(conn: &mut PgConnection, pool_address: &str) -> Result<usize, Error> {

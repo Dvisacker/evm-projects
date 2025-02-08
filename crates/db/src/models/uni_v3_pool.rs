@@ -30,6 +30,7 @@ pub struct DbUniV3Pool {
     pub active: Option<bool>,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
+    pub tag: Option<String>,
 }
 
 impl From<DbUniV3Pool> for DbPool {
@@ -60,4 +61,5 @@ pub struct NewDbUniV3Pool {
     pub exchange_type: Option<String>,
     pub factory_address: Option<String>,
     pub active: Option<bool>,
+    pub tag: Option<String>,
 }

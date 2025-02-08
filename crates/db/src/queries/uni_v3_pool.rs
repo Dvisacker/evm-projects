@@ -49,8 +49,7 @@ pub fn batch_upsert_uni_v3_pools(
             uni_v3_pools::exchange_type.eq(excluded(uni_v3_pools::exchange_type)),
             uni_v3_pools::factory_address.eq(excluded(uni_v3_pools::factory_address)),
             uni_v3_pools::active.eq(excluded(uni_v3_pools::active)),
-            uni_v3_pools::created_at.eq(excluded(uni_v3_pools::created_at)),
-            uni_v3_pools::updated_at.eq(excluded(uni_v3_pools::updated_at)),
+            uni_v3_pools::tag.eq(excluded(uni_v3_pools::tag)),
         ))
         .get_results(conn)
 }
@@ -126,6 +125,9 @@ pub fn update_uni_v3_pool(
             uni_v3_pools::ticks.eq(updated_pool.ticks.clone()),
             uni_v3_pools::exchange_name.eq(updated_pool.exchange_name.clone()),
             uni_v3_pools::exchange_type.eq(updated_pool.exchange_type.clone()),
+            uni_v3_pools::factory_address.eq(updated_pool.factory_address.clone()),
+            uni_v3_pools::active.eq(updated_pool.active),
+            uni_v3_pools::tag.eq(updated_pool.tag.clone()),
         ))
         .get_result(conn)
 }

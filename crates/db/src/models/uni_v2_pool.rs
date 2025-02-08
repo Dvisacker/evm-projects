@@ -24,6 +24,7 @@ pub struct DbUniV2Pool {
     pub active: Option<bool>,
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
+    pub tag: Option<String>,
 }
 
 impl From<DbUniV2Pool> for DbPool {
@@ -59,6 +60,7 @@ pub struct NewDbUniV2Pool {
     pub exchange_type: Option<String>,
     pub factory_address: Option<String>,
     pub active: Option<bool>,
+    pub tag: Option<String>,
 }
 
 impl From<NewDbUniV2Pool> for NewDbPool {

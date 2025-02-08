@@ -767,6 +767,7 @@ pub fn db_univ2_pool_to_amm(pool: &DbUniV2Pool) -> Result<AMM, AMMError> {
             exchange_type,
             chain: chain.named().ok_or(AMMError::ParseError)?,
             factory: Address::ZERO,
+            tag: None,
         })),
         ExchangeType::Ve33 => Ok(AMM::Ve33Pool(Ve33Pool {
             address,

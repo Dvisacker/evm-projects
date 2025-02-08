@@ -67,9 +67,6 @@ pub async fn get_uniswap_v3_pools_command(
     let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
     let factory_address = addressbook.get_factory(&named_chain, exchange).unwrap();
-
-    let from_block = from_block;
-    let step = step;
     let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
 
     store_uniswap_v3_pools(
