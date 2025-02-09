@@ -6070,7 +6070,7 @@ input PairFilters {
   buyCount4: NumberFilter
 
   """The list of exchange contract addresses to filter by."""
-  exchangeAddress: [String]
+  exchangeAddress: String
 
   """The highest price in USD in the past hour."""
   highPrice1: NumberFilter
