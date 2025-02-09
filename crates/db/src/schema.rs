@@ -50,6 +50,7 @@ diesel::table! {
         active -> Nullable<Bool>,
         created_at -> Timestamp,
         updated_at -> Timestamp,
+        tag -> Nullable<Varchar>,
     }
 }
 
@@ -122,6 +123,7 @@ diesel::table! {
 }
 
 diesel::joinable!(curve_pools -> tags (tag));
+diesel::joinable!(erc4626_vaults -> tags (tag));
 diesel::joinable!(uni_v2_pools -> tags (tag));
 diesel::joinable!(uni_v3_pools -> tags (tag));
 
