@@ -1,7 +1,6 @@
 use alloy::network::Network;
 use alloy::primitives::Address;
 use alloy::providers::Provider;
-use alloy::transports::Transport;
 use alloy_chains::Chain;
 use amms::amm::uniswap_v2::batch_request::get_v2_pool_data_batch_request;
 use amms::amm::uniswap_v3::batch_request::get_v3_pool_data_batch_request;
@@ -42,11 +41,63 @@ impl PoolStorageManager {
         }
     }
 
+    pub async fn store_pools<P, N>(
+        &self,
+        provider: Arc<P>,
+        chain: Chain,
+        exchange_name: ExchangeName,
+        factory_address: Address,
+        from_block: Option<u64>,
+        to_block: Option<u64>,
+        step: u64,
+        tag: Option<String>,
+    ) -> Result<(), AMMError>
+    where
+        P: Provider<N> + 'static,
+        N: Network,
+    {
+        let mut conn = establish_connection(&self.db_url);
+        let exchange = get_exchange_by_name(
+            &mut conn,
+            &chain.named().unwrap().to_string(),
+            &exchange_name.to_string(),
+        )
+        .unwrap();
+
+        let exchange_type =
+            ExchangeType::from_str(&exchange.exchange_type).expect("Invalid exchange type");
+
+        match exchange_type {
+            ExchangeType::UniV2 => {
+                self.store_uniswap_v2_pools(provider, chain, exchange_name, factory_address, tag)
+                    .await
+            }
+            ExchangeType::UniV3 => {
+                self.store_uniswap_v3_pools(
+                    provider,
+                    chain,
+                    exchange_name,
+                    factory_address,
+                    from_block,
+                    to_block,
+                    step,
+                    tag,
+                )
+                .await
+            }
+            ExchangeType::Ve33 => {
+                self.store_ve33_pools(provider, chain, exchange_name, factory_address, tag)
+                    .await
+            }
+            _ => Err(AMMError::UnknownPoolType),
+        }
+    }
+
     /// Stores Uniswap V3 pools in the database.
     ///
     /// This function fetches Uniswap V3 pools from logs within a specified block range,
     /// populates their data, and stores them in the database.
-    pub async fn store_uniswap_v3_pools<P, T, N>(
+    pub async fn store_uniswap_v3_pools<P, N>(
         &self,
         provider: Arc<P>,
         chain: Chain,
@@ -59,7 +110,6 @@ impl PoolStorageManager {
     ) -> Result<(), AMMError>
     where
         P: Provider<N>,
-        T: Transport + Clone,
         N: Network,
     {
         let mut conn = establish_connection(&self.db_url);
@@ -118,7 +168,7 @@ impl PoolStorageManager {
     }
 
     /// Stores Uniswap V2 pools in the database.
-    pub async fn store_uniswap_v2_pools<P, T, N>(
+    pub async fn store_uniswap_v2_pools<P, N>(
         &self,
         provider: Arc<P>,
         chain: Chain,
@@ -128,7 +178,6 @@ impl PoolStorageManager {
     ) -> Result<(), AMMError>
     where
         P: Provider<N> + 'static,
-        T: Transport + Clone,
         N: Network,
     {
         let mut conn = establish_connection(&self.db_url);
@@ -169,7 +218,7 @@ impl PoolStorageManager {
         Ok(())
     }
 
-    pub async fn store_ve33_pools<P, T, N>(
+    pub async fn store_ve33_pools<P, N>(
         &self,
         provider: Arc<P>,
         chain: Chain,
@@ -179,7 +228,6 @@ impl PoolStorageManager {
     ) -> Result<(), AMMError>
     where
         P: Provider<N> + 'static,
-        T: Transport + Clone,
         N: Network,
     {
         let mut conn = establish_connection(&self.db_url);
