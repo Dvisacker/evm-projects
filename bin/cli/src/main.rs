@@ -32,7 +32,7 @@ enum Commands {
     WrapEth(WrapEthArgs),
     UnwrapEth(UnwrapEthArgs),
     Withdraw(WithdrawArgs),
-    GetMostTradedUniswapV3Pools(GetMostTradedUniswapV3PoolsArgs),
+    GetMostTradedPools(GetMostTradedPoolsArgs),
 }
 
 #[tokio::main]
@@ -81,12 +81,13 @@ async fn main() -> Result<(), Error> {
             )
             .await?;
         }
-        Commands::GetMostTradedUniswapV3Pools(args) => {
-            cmd::get_most_traded_uniswap_pools_command(
-                args.common.chain.chain_id,
-                args.common.exchange.exchange,
+        Commands::GetMostTradedPools(args) => {
+            cmd::get_most_traded_pools_command(
+                args.chain.chain_id,
+                args.exchange.exchange,
                 args.limit,
                 args.min_volume,
+                args.tag.tag.clone(),
             )
             .await?;
         }

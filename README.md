@@ -13,9 +13,8 @@ The pub/sub engine is originally forked from [Artemis](https://github.com/paradi
 │   ├── addressbook/       # Address book to easily fetch known addresses
 │   ├── amms/              # Fork of amms-rs using alloy and with added support for curve, ramses, etc.  
 │   ├── engine/            # Pub/sub engine. Based on artemis.
-│   ├── bindings/          # Contract bindings (to be removed)
 │   ├── db/                # Database models and queries
-│   ├── pool-manager/      # Pool storage manager for example for fetching/flagging pools in the db
+│   ├── pool-manager/      # Pool storage manager for example for tagging and saving liquidity pools to db
 │   ├── tx-executor/       # Bundled tx encoder/executor
 │   ├── tx-simulator/      # Swap simulator
 │   ├── odos-client/       # Odos aggregator client
@@ -77,3 +76,16 @@ See `.env.example` for available configuration options.
 
 1. Create a new crate in `crates/strategies/`
 2. Implement the strategy traits from `engine`
+
+
+## Pool Storage Example CLI commands:
+
+### Get all Uniswap V3 pools on Base
+```bash
+cargo run --bin cli get-uniswap-v3-pools --chain-id 8453 --exchange uniswap-v3 --from-block 0 --step 5000 --tag univ3-base
+```
+
+### Get the most traded Uniswap V3 pools on Base
+```bash
+cargo run --bin cli get-most-traded-pools --chain-id 8453 --exchange uniswap-v3 --limit 100 --min-volume 100000 --tag univ3-base-most-traded
+```

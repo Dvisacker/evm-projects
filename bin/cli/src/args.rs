@@ -89,9 +89,13 @@ pub struct GetUniswapV2PoolsArgs {
 }
 
 #[derive(Args)]
-pub struct GetMostTradedUniswapV3PoolsArgs {
+pub struct GetMostTradedPoolsArgs {
     #[command(flatten)]
-    pub common: GetUniswapV3PoolsArgs,
+    pub chain: ChainArgs,
+    #[command(flatten)]
+    pub exchange: ExchangeArgs,
+    #[command(flatten)]
+    pub tag: TagArgs,
     #[arg(short, long)]
     pub limit: u64,
     #[arg(short, long)]
