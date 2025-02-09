@@ -36,12 +36,20 @@ pub async fn get_uniswap_v2_pools_command(
     let factory_address = addressbook.get_factory(&named_chain, exchange).unwrap();
     info!("Downloading pools from {:?}", factory_address);
     let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
-    store_uniswap_v2_pools(provider.clone(), chain, exchange, factory_address, &db_url).await?;
+    store_uniswap_v2_pools(
+        provider.clone(),
+        chain,
+        exchange,
+        factory_address,
+        &db_url,
+        None,
+    )
+    .await?;
 
     Ok(())
 }
 
-pub async fn get_aerodrome_pools_command() -> Result<(), Error> {
+pub async fn get_aerodrome_pools_command(tag: Option<String>) -> Result<(), Error> {
     let chain = Chain::from_named(NamedChain::Base);
     let provider = get_basic_provider(chain).await;
     let addressbook = Addressbook::load().unwrap();
@@ -51,7 +59,15 @@ pub async fn get_aerodrome_pools_command() -> Result<(), Error> {
         .unwrap();
     info!("Downloading pools from {:?}", factory_address);
     let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
-    store_ve33_pools(provider.clone(), chain, exchange, factory_address, &db_url).await?;
+    store_ve33_pools(
+        provider.clone(),
+        chain,
+        exchange,
+        factory_address,
+        &db_url,
+        tag,
+    )
+    .await?;
 
     Ok(())
 }
@@ -61,6 +77,7 @@ pub async fn get_uniswap_v3_pools_command(
     exchange: ExchangeName,
     from_block: u64,
     step: u64,
+    tag: Option<String>,
 ) -> Result<(), Error> {
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
     let provider = get_basic_provider(chain).await;
@@ -78,6 +95,7 @@ pub async fn get_uniswap_v3_pools_command(
         None,
         step,
         &db_url,
+        tag,
     )
     .await?;
 
