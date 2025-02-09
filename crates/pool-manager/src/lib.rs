@@ -55,6 +55,7 @@ impl PoolStorageManager {
         from_block: Option<u64>,
         to_block: Option<u64>,
         step: u64,
+        tag: Option<String>,
     ) -> Result<(), AMMError>
     where
         P: Provider<N>,
@@ -97,7 +98,7 @@ impl PoolStorageManager {
                         pool.exchange_type = ExchangeType::UniV3;
                         pool.exchange_name = exchange_name;
                         pool.chain = chain.named().unwrap();
-                        pool.to_new_db_pool()
+                        pool.to_new_db_pool(tag.clone())
                     })
                     .filter_map(|db_pool| {
                         if let NewDbPool::UniV3(v3_pool) = db_pool {
@@ -123,6 +124,7 @@ impl PoolStorageManager {
         chain: Chain,
         exchange_name: ExchangeName,
         factory_address: Address,
+        tag: Option<String>,
     ) -> Result<(), AMMError>
     where
         P: Provider<N> + 'static,
@@ -149,7 +151,7 @@ impl PoolStorageManager {
                     pool.exchange_type = ExchangeType::UniV2;
                     pool.exchange_name = exchange_name;
                     pool.chain = chain.named().unwrap();
-                    pool.to_new_db_pool()
+                    pool.to_new_db_pool(tag.clone())
                 })
                 .filter_map(|db_pool| {
                     if let NewDbPool::UniV2(v2_pool) = db_pool {
@@ -173,6 +175,7 @@ impl PoolStorageManager {
         chain: Chain,
         exchange_name: ExchangeName,
         factory_address: Address,
+        tag: Option<String>,
     ) -> Result<(), AMMError>
     where
         P: Provider<N> + 'static,
@@ -201,7 +204,7 @@ impl PoolStorageManager {
                     pool.exchange_type = ExchangeType::Ve33;
                     pool.exchange_name = exchange_name;
                     pool.chain = chain.named().unwrap();
-                    pool.to_new_db_pool()
+                    pool.to_new_db_pool(tag.clone())
                 })
                 .filter_map(|db_pool| {
                     if let NewDbPool::UniV2(v2_pool) = db_pool {

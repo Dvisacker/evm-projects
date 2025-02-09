@@ -152,6 +152,7 @@ pub async fn store_uniswap_v3_pools<P, N>(
     to_block: Option<u64>,
     step: u64,
     db_url: &str,
+    tag: Option<String>,
 ) -> Result<(), AMMError>
 where
     P: Provider<N>,
@@ -193,7 +194,7 @@ where
                     pool.exchange_type = ExchangeType::UniV3;
                     pool.exchange_name = exchange_name;
                     pool.chain = chain.named().unwrap();
-                    pool.to_new_db_pool()
+                    pool.to_new_db_pool(tag.clone())
                 })
                 .filter_map(|db_pool| {
                     if let NewDbPool::UniV3(v3_pool) = db_pool {
@@ -231,6 +232,7 @@ pub async fn store_uniswap_v2_pools<P, N>(
     exchange_name: ExchangeName,
     factory_address: Address,
     db_url: &str,
+    tag: Option<String>,
 ) -> Result<(), AMMError>
 where
     P: Provider<N> + 'static,
@@ -256,7 +258,7 @@ where
                 pool.exchange_type = ExchangeType::UniV2;
                 pool.exchange_name = exchange_name;
                 pool.chain = chain.named().unwrap();
-                pool.to_new_db_pool()
+                pool.to_new_db_pool(tag.clone())
             })
             .filter_map(|db_pool| {
                 if let NewDbPool::UniV2(v2_pool) = db_pool {
@@ -281,6 +283,7 @@ pub async fn store_ve33_pools<P, N>(
     exchange_name: ExchangeName,
     factory_address: Address,
     db_url: &str,
+    tag: Option<String>,
 ) -> Result<(), AMMError>
 where
     P: Provider<N> + 'static,
@@ -308,7 +311,7 @@ where
                 pool.exchange_type = ExchangeType::Ve33;
                 pool.exchange_name = exchange_name;
                 pool.chain = chain.named().unwrap();
-                pool.to_new_db_pool()
+                pool.to_new_db_pool(tag.clone())
             })
             .filter_map(|db_pool| {
                 if let NewDbPool::UniV2(v2_pool) = db_pool {
@@ -767,7 +770,6 @@ pub fn db_univ2_pool_to_amm(pool: &DbUniV2Pool) -> Result<AMM, AMMError> {
             exchange_type,
             chain: chain.named().ok_or(AMMError::ParseError)?,
             factory: Address::ZERO,
-            tag: None,
         })),
         ExchangeType::Ve33 => Ok(AMM::Ve33Pool(Ve33Pool {
             address,

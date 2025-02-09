@@ -23,6 +23,7 @@ pub struct DbErc4626Vault {
     pub active: Option<bool>,
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
+    pub tag: Option<String>,
 }
 
 #[derive(Insertable, Debug)]
@@ -43,4 +44,5 @@ pub struct NewDbErc4626Vault {
     pub active: Option<bool>,
     pub exchange_name: Option<String>,
     pub exchange_type: Option<String>,
+    pub tag: Option<String>,
 }
