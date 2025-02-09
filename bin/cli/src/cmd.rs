@@ -4,16 +4,18 @@ use alloy::primitives::Address;
 use alloy::providers::Provider;
 use alloy_chains::{Chain, NamedChain};
 use alloy_primitives::U256;
+use codex_client::{query_codex_filter_pairs, CodexClient};
 use engine::executors::sequence_executor::{
     BridgeBlock, SequenceExecutor, SwapBlock, TxBlock, TxSequence,
 };
 use engine::types::Executor;
 use eyre::{Error, Result};
+use pool_manager::PoolStorageManager;
 use provider::{
     get_basic_provider, get_default_signer, get_default_signer_provider, get_default_wallet,
     get_signer_provider, get_signer_provider_map,
 };
-use shared::pool_helpers::{store_uniswap_v2_pools, store_uniswap_v3_pools, store_ve33_pools};
+use shared::pool_helpers::get_amm_value;
 use shared::token_helpers::parse_token_units;
 use shared::token_manager::TokenManager;
 use shared::{bridge::bridge_lifi, evm_helpers::get_contract_creation_block};
@@ -28,6 +30,7 @@ use types::token::TokenIsh;
 pub async fn get_uniswap_v2_pools_command(
     chain_id: u64,
     exchange: ExchangeName,
+    tag: Option<String>,
 ) -> Result<(), Error> {
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
     let provider = get_basic_provider(chain).await;
@@ -36,15 +39,10 @@ pub async fn get_uniswap_v2_pools_command(
     let factory_address = addressbook.get_factory(&named_chain, exchange).unwrap();
     info!("Downloading pools from {:?}", factory_address);
     let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
-    store_uniswap_v2_pools(
-        provider.clone(),
-        chain,
-        exchange,
-        factory_address,
-        &db_url,
-        None,
-    )
-    .await?;
+    let pool_manager = PoolStorageManager::new(&db_url);
+    pool_manager
+        .store_uniswap_v2_pools(provider, chain, exchange, factory_address, tag)
+        .await?;
 
     Ok(())
 }
@@ -59,15 +57,10 @@ pub async fn get_aerodrome_pools_command(tag: Option<String>) -> Result<(), Erro
         .unwrap();
     info!("Downloading pools from {:?}", factory_address);
     let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
-    store_ve33_pools(
-        provider.clone(),
-        chain,
-        exchange,
-        factory_address,
-        &db_url,
-        tag,
-    )
-    .await?;
+    let pool_manager = PoolStorageManager::new(&db_url);
+    pool_manager
+        .store_ve33_pools(provider, chain, exchange, factory_address, tag)
+        .await?;
 
     Ok(())
 }
@@ -85,19 +78,106 @@ pub async fn get_uniswap_v3_pools_command(
     let named_chain = chain.named().unwrap();
     let factory_address = addressbook.get_factory(&named_chain, exchange).unwrap();
     let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
+    let pool_manager = PoolStorageManager::new(&db_url);
+    pool_manager
+        .store_uniswap_v3_pools(
+            provider,
+            chain,
+            exchange,
+            factory_address,
+            Some(from_block),
+            None,
+            step,
+            tag,
+        )
+        .await?;
 
-    store_uniswap_v3_pools(
-        provider.clone(),
-        chain,
-        exchange,
-        factory_address,
-        Some(from_block),
-        None,
-        step,
-        &db_url,
-        tag,
-    )
-    .await?;
+    Ok(())
+}
+
+pub async fn get_most_traded_uniswap_pools_command(
+    chain_id: u64,
+    exchange: ExchangeName,
+    limit: u64,
+    min_volume: f64,
+) -> Result<(), Error> {
+    let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
+    let addressbook = Addressbook::load().unwrap();
+    let named_chain = chain.named().unwrap();
+    let factory_address = addressbook.get_factory(&named_chain, exchange).unwrap();
+
+    // Initialize Codex client
+    let api_key = std::env::var("CODEX_API_KEY").expect("CODEX_API_KEY not set");
+    let client = CodexClient::new(api_key);
+    let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
+    let pool_manager = PoolStorageManager::new(&db_url);
+
+    // Set up filters for the query
+    let pairs = client
+        .filter_pairs(
+            Some(0.0), // No minimum liquidity filter
+            None,      // No minimum transaction count filter
+            vec![chain_id as i64],
+            Some(vec![factory_address.to_string()]),
+            None,
+            None,
+            Some(limit as i64),
+            query_codex_filter_pairs::PairRankingAttribute::volumeUSD24,
+            query_codex_filter_pairs::RankingDirection::DESC,
+        )
+        .await
+        .expect("Failed to fetch pairs");
+
+    // Filter pairs by minimum volume
+    let filtered_pairs: Vec<_> = pairs
+        .into_iter()
+        .filter(|pair| {
+            pair.volume_usd24
+                .as_ref()
+                .and_then(|v| v.parse::<f64>().ok())
+                .map(|v| v >= min_volume)
+                .unwrap_or(false)
+        })
+        .collect();
+
+    info!("Found {} high-volume pools:", filtered_pairs.len());
+    for pair in filtered_pairs {
+        let token0 = pair.token0.unwrap();
+        let token1 = pair.token1.unwrap();
+        let volume = pair.volume_usd24.unwrap_or_default();
+        let liquidity = pair.liquidity.unwrap_or_default();
+
+        info!(
+            "Pool: {} - {}/{} - Volume 24h: ${} - Liquidity: ${}",
+            pair.pair.unwrap().address,
+            token0.symbol.unwrap_or_default(),
+            token1.symbol.unwrap_or_default(),
+            volume,
+            liquidity
+        );
+    }
+
+    // Store the pools in the database with a tag indicating they are high-volume pools
+    let provider = get_basic_provider(chain).await;
+    let tag = format!(
+        "high_volume_{}_{}m",
+        exchange.to_string().to_lowercase(),
+        min_volume / 1_000_000.0
+    );
+    info!("Storing pools in database with tag: {}", tag);
+
+    pool_manager
+        .store_pools(
+            provider.clone(),
+            chain,
+            exchange,
+            factory_address,
+            None,
+            None,
+            10000, // Default step size
+            Some(tag),
+        )
+        .await?;
 
     Ok(())
 }
@@ -336,4 +416,26 @@ mod cmd_test {
         .await
         .unwrap();
     }
+}
+
+pub async fn activate_pools_command(
+    chain_id: u64,
+    exchange_name: ExchangeName,
+    usd_threshold: f64,
+) -> Result<(), Error> {
+    let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
+    let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
+    let pool_manager = PoolStorageManager::new(&db_url);
+    pool_manager
+        .activate_pools(chain, exchange_name, usd_threshold)
+        .await?;
+    Ok(())
+}
+
+pub async fn get_amm_value_command(chain_id: u64, pool_address: &str) -> Result<(), Error> {
+    let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
+    let pool_address = Address::from_str(pool_address).expect("Invalid pool address");
+    let amm_value = get_amm_value(chain, pool_address).await?;
+    println!("AMM value: {:?}", amm_value);
+    Ok(())
 }

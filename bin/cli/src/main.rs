@@ -1,14 +1,11 @@
 pub mod args;
 pub mod cmd;
 
-use alloy::primitives::Address;
 use alloy_chains::Chain;
 use clap::{Parser, Subcommand};
 use eyre::Error;
 use provider::get_basic_provider;
-use shared::pool_helpers::{activate_pools, get_amm_value};
 use shared::token_helpers::load_pools_and_fetch_token_data;
-use std::str::FromStr;
 use tracing::info;
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 
@@ -35,6 +32,7 @@ enum Commands {
     WrapEth(WrapEthArgs),
     UnwrapEth(UnwrapEthArgs),
     Withdraw(WithdrawArgs),
+    GetMostTradedUniswapV3Pools(GetMostTradedUniswapV3PoolsArgs),
 }
 
 #[tokio::main]
@@ -76,18 +74,28 @@ async fn main() -> Result<(), Error> {
             .await?;
         }
         Commands::GetUniswapV2Pools(args) => {
-            cmd::get_uniswap_v2_pools_command(args.chain.chain_id, args.exchange.exchange).await?;
+            cmd::get_uniswap_v2_pools_command(
+                args.chain.chain_id,
+                args.exchange.exchange,
+                args.tag.tag.clone(),
+            )
+            .await?;
+        }
+        Commands::GetMostTradedUniswapV3Pools(args) => {
+            cmd::get_most_traded_uniswap_pools_command(
+                args.common.chain.chain_id,
+                args.common.exchange.exchange,
+                args.limit,
+                args.min_volume,
+            )
+            .await?;
         }
         Commands::ActivatePools(args) => {
-            let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
-            let chain = Chain::try_from(args.chain.chain_id).expect("Invalid chain ID");
-            activate_pools(chain, args.exchange.exchange, args.min_usd, &db_url).await?;
+            cmd::activate_pools_command(args.chain.chain_id, args.exchange.exchange, args.min_usd)
+                .await?;
         }
         Commands::GetAMMValue(args) => {
-            let chain = Chain::try_from(args.chain.chain_id).expect("Invalid chain ID");
-            let pool_address = Address::from_str(&args.pool_address).expect("Invalid pool address");
-            let _amm_value = get_amm_value(chain, pool_address).await?;
-            // info!("AMM value: {:?}", amm_value);
+            cmd::get_amm_value_command(args.chain.chain_id, &args.pool_address).await?;
         }
         Commands::GetContractCreationBlock(args) => {
             cmd::get_contract_creation_block_command(
