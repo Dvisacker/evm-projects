@@ -68,7 +68,7 @@ pub fn get_uni_v3_pools(
     exchange_name: Option<&str>,
     exchange_type: Option<&str>,
     limit: Option<i64>,
-    active: Option<bool>,
+    tag: Option<&str>,
 ) -> Result<Vec<DbUniV3Pool>, Error> {
     let mut query = uni_v3_pools::table.into_boxed();
 
@@ -82,6 +82,10 @@ pub fn get_uni_v3_pools(
 
     if let Some(exchange_type) = exchange_type {
         query = query.filter(uni_v3_pools::exchange_type.eq(exchange_type));
+    }
+
+    if let Some(tag) = tag {
+        query = query.filter(uni_v3_pools::tag.eq(tag));
     }
 
     if let Some(limit) = limit {

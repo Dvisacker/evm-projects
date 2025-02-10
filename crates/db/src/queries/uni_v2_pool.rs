@@ -97,6 +97,7 @@ pub fn get_uni_v2_pools(
     exchange_name: Option<&str>,
     exchange_type: Option<&str>,
     limit: Option<i64>,
+    tag: Option<&str>,
 ) -> Result<Vec<DbUniV2Pool>, Error> {
     let mut query = uni_v2_pools::table.into_boxed();
 
@@ -114,6 +115,10 @@ pub fn get_uni_v2_pools(
 
     if let Some(limit) = limit {
         query = query.limit(limit);
+    }
+
+    if let Some(tag) = tag {
+        query = query.filter(uni_v2_pools::tag.eq(tag));
     }
 
     query.load::<DbUniV2Pool>(conn)
@@ -136,5 +141,14 @@ pub fn get_uni_v2_pools_by_exchange(
 ) -> Result<Vec<DbUniV2Pool>, Error> {
     uni_v2_pools::table
         .filter(uni_v2_pools::exchange_name.eq(exchange_name))
+        .load::<DbUniV2Pool>(conn)
+}
+
+pub fn get_uni_v2_pools_by_tag(
+    conn: &mut PgConnection,
+    tag: &str,
+) -> Result<Vec<DbUniV2Pool>, Error> {
+    uni_v2_pools::table
+        .filter(uni_v2_pools::tag.eq(tag))
         .load::<DbUniV2Pool>(conn)
 }
