@@ -6598,7 +6598,6 @@ dependencies = [
  "once_cell",
  "provider",
  "reqwest 0.12.12",
- "revm 14.0.3",
  "serde",
  "serde_json",
  "shared",
