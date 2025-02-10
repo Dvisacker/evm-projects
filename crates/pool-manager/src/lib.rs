@@ -19,7 +19,7 @@ use amms::{
 use db::establish_connection;
 use db::models::{NewDbPool, NewDbTag, NewDbUniV2Pool, NewDbUniV3Pool};
 use db::queries::exchange::get_exchange_by_name;
-use db::queries::tag::insert_tag;
+use db::queries::tag::upsert_tag;
 use db::queries::uni_v2_pool::batch_upsert_uni_v2_pools;
 use db::queries::uni_v3_pool::batch_upsert_uni_v3_pools;
 use shared::evm_helpers::get_contract_creation_block;
@@ -137,6 +137,9 @@ where
                 pool
             })
             .collect::<Vec<UniswapV3Pool>>();
+        if let Some(ref tag) = tag {
+            upsert_tag(&mut conn, &NewDbTag { name: tag.clone() }).unwrap();
+        }
 
         for chunk in pools.chunks_mut(50) {
             get_v3_pool_data_batch_request(chunk, None, self.provider.clone()).await?;
@@ -180,6 +183,9 @@ where
                 pool
             })
             .collect::<Vec<UniswapV2Pool>>();
+        if let Some(ref tag) = tag {
+            upsert_tag(&mut conn, &NewDbTag { name: tag.clone() }).unwrap();
+        }
 
         for chunk in pools.chunks_mut(50) {
             get_v2_pool_data_batch_request(chunk, self.provider.clone()).await?;
@@ -228,7 +234,7 @@ where
         let end_block = to_block.unwrap_or(self.provider.get_block_number().await.unwrap());
 
         if let Some(ref tag) = tag {
-            insert_tag(&mut conn, &NewDbTag { name: tag.clone() }).unwrap();
+            upsert_tag(&mut conn, &NewDbTag { name: tag.clone() }).unwrap();
         }
 
         let contract_creation_block = get_contract_creation_block(
@@ -249,8 +255,6 @@ where
         let factory = UniswapV3Factory::new(factory_address, contract_creation_block);
 
         for block in (contract_creation_block..=end_block).step_by(step as usize) {
-            tracing::info!("Fetching pools from block {:?}", block);
-
             let addresses = factory
                 .get_pools_from_logs(block, block + step - 1, step, self.provider.clone())
                 .await?
@@ -274,8 +278,6 @@ where
         tag: Option<String>,
     ) -> Result<(), AMMError> {
         let factory = Factory::UniswapV2Factory(UniswapV2Factory::new(factory_address, 0, 3000));
-
-        tracing::info!("Syncing uni-v2 like pools");
 
         // NOTE: The sync step seems redundant and can probably be removed
         let (amms, _) = sync::sync_amms(vec![factory], self.provider.clone(), None, 100000, false)

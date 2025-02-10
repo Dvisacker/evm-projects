@@ -10,6 +10,14 @@ pub fn insert_tag(conn: &mut PgConnection, new_tag: &NewDbTag) -> Result<DbTag, 
         .get_result(conn)
 }
 
+pub fn upsert_tag(conn: &mut PgConnection, new_tag: &NewDbTag) -> Result<DbTag, Error> {
+    diesel::insert_into(tags::table)
+        .values(new_tag)
+        .on_conflict(tags::name)
+        .do_nothing()
+        .get_result(conn)
+}
+
 pub fn batch_insert_tags(
     conn: &mut PgConnection,
     new_tags: &[NewDbTag],
