@@ -76,73 +76,16 @@ impl Strategy<Event, Action> for GeneralizedArb {
             None,
             None,
             None,
-            Some(true),
+            None,
         )
         .unwrap()
         .into_iter()
         .map(|p| p.into())
         .collect::<Vec<DbPool>>();
 
-        // let active_v3_pools = get_uni_v3_pools(
-        //     &mut establish_connection(&self.db_url),
-        //     Some(&chain.to_string()),
-        //     None,
-        //     None,
-        //     None,
-        //     Some(true),
-        // )
-        // .unwrap()
-        // .into_iter()
-        // .map(|p| p.into())
-        // .collect::<Vec<DbPool>>();
-
-        // let active_camelot_v3_pools = get_uni_v3_pools(
-        //     &mut establish_connection(&self.db_url),
-        //     Some(&chain.to_string()),
-        //     None,
-        //     None,
-        //     None,
-        //     Some(true),
-        // )
-        // .unwrap()
-        // .into_iter()
-        // .map(|p| p.into())
-        // .collect::<Vec<DbPool>>();
-
         let mut active_v2_amms = db_pools_to_amms(&active_v2_pools)?;
-        // let mut active_v3_amms = db_pools_to_amms(&active_v3_pools)?;
-        // let mut active_camelot_v3_amms = db_pools_to_amms(&active_camelot_v3_pools)?;
 
-        sync::populate_amms(&mut active_v2_amms, block_number, self.client.clone()).await?;
-        // sync::populate_amms(&mut active_v3_amms, block_number, self.client.clone()).await?;
-        // sync::populate_amms(
-        //     &mut active_camelot_v3_amms,
-        //     block_number,
-        //     self.client.clone(),
-        // )
-        // .await?;
-
-        // for pool in &mut active_v3_amms {
-        //     if let AMM::UniswapV3Pool(uniswap_v3_pool) = pool {
-        //         let tick_start = uniswap_v3_pool.tick - 40;
-        //         let num_ticks = 80;
-        //         let (tick_data, _) = get_uniswap_v3_tick_data_batch_request(
-        //             &uniswap_v3_pool,
-        //             tick_start,
-        //             false,
-        //             num_ticks,
-        //             Some(block_number),
-        //             self.client.clone(),
-        //         )
-        //         .await?;
-        //         uniswap_v3_pool.populate_ticks_from_tick_data(tick_data);
-        //         println!(
-        //             "Populated tick data for pool: {:?} - {:?}",
-        //             uniswap_v3_pool.address, uniswap_v3_pool
-        //         );
-        //     }
-        // }
-
+        sync::populate_amms(&mut active_v2_amms, block_number, self.client.clone(), true).await?;
         let synced_amms = vec![active_v2_amms].concat();
         // let synced_amms = vec![active_v2_amms, active_v3_amms, active_camelot_v3_amms].concat();
         self.state.set_pools(synced_amms);
