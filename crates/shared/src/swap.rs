@@ -18,7 +18,7 @@ use amms::{
 use eyre::Error;
 use types::exchange::ExchangeName;
 
-use crate::evm_helpers::get_contract_creation_block;
+use crate::evm_helpers::get_contract_creation_block_n_ary;
 use alloy::sol;
 
 sol! {
@@ -194,7 +194,7 @@ where
 {
     let end_block = provider.get_block_number().await.unwrap();
     let contract_creation_block =
-        get_contract_creation_block(provider.clone(), pool_address, 0, end_block)
+        get_contract_creation_block_n_ary(provider.clone(), pool_address, 0, end_block, 4)
             .await
             .unwrap();
     let pool =

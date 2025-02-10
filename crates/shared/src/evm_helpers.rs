@@ -3,7 +3,7 @@ use alloy::{
     network::Network,
     providers::{ext::DebugApi, Provider},
     sol,
-    transports::{Transport, TransportResult},
+    transports::TransportResult,
 };
 use alloy_chains::NamedChain;
 use alloy_primitives::{aliases::U24, keccak256, Address, Bytes};
@@ -13,16 +13,16 @@ use alloy_rpc_types::{
 };
 use alloy_sol_types::SolValue;
 use eyre::{eyre, Result};
+use futures::future::join_all;
 use std::sync::Arc;
 use types::exchange::ExchangeName;
 
-pub async fn get_trace_call<P, T, N>(
+pub async fn get_trace_call<P, N>(
     provider: Arc<P>,
     tx_request: TransactionRequest,
 ) -> TransportResult<GethTrace>
 where
     P: Provider<N>,
-    T: Transport + Clone,
     N: Network,
 {
     let s = "{\"tracer\": \"callTracer\"}";
@@ -38,7 +38,7 @@ where
         .await
 }
 
-pub async fn get_contract_creation_block<P, N>(
+pub async fn get_contract_creation_block_binary<P, N>(
     provider: Arc<P>,
     contract_address: Address,
     start_block: u64,
@@ -66,6 +66,90 @@ where
                 return Ok(mid);
             }
             high = mid - 1;
+        }
+    }
+
+    Err(eyre!("Contract creation block not found"))
+}
+
+// N-ary search for the contract creation block
+pub async fn get_contract_creation_block_n_ary<P, N>(
+    provider: Arc<P>,
+    contract_address: Address,
+    start_block: u64,
+    end_block: u64,
+    n: u64,
+) -> Result<u64>
+where
+    P: Provider<N>,
+    N: Network,
+{
+    if n < 2 {
+        return Err(eyre!("n must be at least 2"));
+    }
+
+    let mut low = start_block;
+    let mut high = end_block;
+
+    while low <= high {
+        // Generate n points including low and high
+        let mut points = Vec::with_capacity(n as usize);
+        points.push(low);
+        let range = high - low;
+        for i in 1..n - 1 {
+            points.push(low + (range * i) / (n - 1));
+        }
+        points.push(high);
+
+        // Create futures for all point checks in parallel
+        let point_futures: Vec<_> = points
+            .iter()
+            .map(|&point| get_code_at_block(provider.clone(), contract_address, point))
+            .collect();
+
+        // Execute all point checks in parallel
+        let point_results = join_all(point_futures).await;
+        let codes: Result<Vec<_>> = point_results.into_iter().collect();
+        let codes = codes?;
+
+        // Find the first point where code exists
+        let mut transition_idx = None;
+        for (i, code) in codes.iter().enumerate() {
+            if !code.is_empty() {
+                transition_idx = Some(i);
+                break;
+            }
+        }
+
+        match transition_idx {
+            None => {
+                // No code found in any point, search in next range
+                low = high + 1;
+            }
+            Some(0) => {
+                // First point has code, check if it's the creation block
+                if points[0] == start_block {
+                    return Ok(points[0]);
+                }
+                // Check if previous block is empty
+                let prev_code =
+                    get_code_at_block(provider.clone(), contract_address, points[0] - 1).await?;
+                if prev_code.is_empty() {
+                    return Ok(points[0]);
+                }
+                // Code exists before our range, search earlier
+                high = points[0] - 1;
+            }
+            Some(i) => {
+                // Found a transition point, narrow search to this range
+                let prev_point = points[i - 1];
+                let curr_point = points[i];
+                if curr_point - prev_point <= 1 {
+                    return Ok(curr_point);
+                }
+                low = prev_point + 1;
+                high = curr_point;
+            }
         }
     }
 
@@ -205,7 +289,7 @@ mod tests {
             .unwrap();
 
         let result =
-            get_contract_creation_block(provider, contract_address, 6_000_000, 7_000_000).await;
+            get_contract_creation_block_binary(provider, contract_address, 0, 21_000_000).await;
 
         assert!(result.is_ok());
         let creation_block = result.unwrap();
@@ -241,12 +325,49 @@ mod tests {
         let contract_address = Address::random();
 
         let result =
-            get_contract_creation_block(provider, contract_address, 14_000_000, 14_001_000).await;
+            get_contract_creation_block_binary(provider, contract_address, 14_000_000, 14_001_000)
+                .await;
 
         assert!(result.is_err());
         assert_eq!(
             result.unwrap_err().to_string(),
             "Contract creation block not found"
         );
+    }
+
+    #[tokio::test]
+    async fn test_get_contract_creation_block_2() {
+        let provider = get_basic_provider(Chain::from_id(1)).await;
+        // USDC contract address on Ethereum mainnet
+        let contract_address = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+            .parse()
+            .unwrap();
+
+        let result =
+            get_contract_creation_block_n_ary(provider.clone(), contract_address, 0, 21_000_000, 4)
+                .await;
+
+        assert!(result.is_ok());
+        let creation_block = result.unwrap();
+        println!("USDC contract creation block (n-ary): {}", creation_block);
+        assert_eq!(creation_block, 6_082_465);
+    }
+
+    #[tokio::test]
+    async fn test_get_contract_creation_block_n_ary_invalid_n() {
+        let provider = get_basic_provider(Chain::from_id(1)).await;
+        let contract_address = Address::random();
+
+        let result = get_contract_creation_block_n_ary(
+            provider,
+            contract_address,
+            14_000_000,
+            14_001_000,
+            1,
+        )
+        .await;
+
+        assert!(result.is_err());
+        assert_eq!(result.unwrap_err().to_string(), "n must be at least 2");
     }
 }

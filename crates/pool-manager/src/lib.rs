@@ -22,7 +22,7 @@ use db::queries::exchange::get_exchange_by_name;
 use db::queries::tag::upsert_tag;
 use db::queries::uni_v2_pool::batch_upsert_uni_v2_pools;
 use db::queries::uni_v3_pool::batch_upsert_uni_v3_pools;
-use shared::evm_helpers::get_contract_creation_block;
+use shared::evm_helpers::get_contract_creation_block_n_ary;
 use shared::pool_helpers::extract_v2_pools;
 use std::sync::Arc;
 use types::exchange::{ExchangeName, ExchangeType};
@@ -237,11 +237,12 @@ where
             upsert_tag(&mut conn, &NewDbTag { name: tag.clone() }).unwrap();
         }
 
-        let contract_creation_block = get_contract_creation_block(
+        let contract_creation_block = get_contract_creation_block_n_ary(
             self.provider.clone(),
             factory_address,
             start_block,
             end_block,
+            4,
         )
         .await
         .unwrap();

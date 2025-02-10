@@ -18,7 +18,7 @@ use provider::{
 use shared::pool_helpers::get_amm_value;
 use shared::token_helpers::parse_token_units;
 use shared::token_manager::TokenManager;
-use shared::{bridge::bridge_lifi, evm_helpers::get_contract_creation_block};
+use shared::{bridge::bridge_lifi, evm_helpers::get_contract_creation_block_n_ary};
 use std::env;
 use std::str::FromStr;
 use tracing::info;
@@ -187,7 +187,9 @@ pub async fn get_contract_creation_block_command(
         None => provider.get_block_number().await?,
     };
 
-    match get_contract_creation_block(provider, contract_address, start_block, end_block).await {
+    match get_contract_creation_block_n_ary(provider, contract_address, start_block, end_block, 4)
+        .await
+    {
         Ok(block) => info!("Contract creation block: {}", block),
         Err(e) => info!("Error finding contract creation block: {}", e),
     }
