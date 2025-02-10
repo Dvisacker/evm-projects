@@ -273,7 +273,7 @@ where
 
     let mut v2_active_pools = Vec::new();
     if !v2_pools.is_empty() {
-        populate_amms(&mut v2_pools, block_number, provider.clone())
+        populate_amms(&mut v2_pools, block_number, provider.clone(), true)
             .await
             .unwrap();
 
@@ -334,7 +334,7 @@ where
 
     let mut v3_active_pools = Vec::new();
     if !v3_pools.is_empty() {
-        populate_amms(&mut v3_pools, block_number, provider.clone())
+        populate_amms(&mut v3_pools, block_number, provider.clone(), false)
             .await
             .unwrap();
 

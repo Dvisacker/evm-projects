@@ -189,7 +189,7 @@ impl State {
             .map(|entry| entry.value().clone())
             .collect();
 
-        sync::populate_amms(&mut amms, self.block_number, self.provider.clone()).await?;
+        sync::populate_amms(&mut amms, self.block_number, self.provider.clone(), false).await?;
 
         for amm in amms {
             self.pools.insert(amm.address(), amm);

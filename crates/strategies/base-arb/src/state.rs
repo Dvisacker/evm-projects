@@ -238,7 +238,7 @@ impl State {
             .map(|entry| entry.value().clone())
             .collect();
 
-        sync::populate_amms(&mut amms, self.block_number, self.provider.clone())
+        sync::populate_amms(&mut amms, self.block_number, self.provider.clone(), true)
             .await
             .map_err(|e| eyre!("AMM Error: {}", e))?;
 

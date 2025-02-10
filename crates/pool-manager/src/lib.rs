@@ -278,7 +278,7 @@ where
         tracing::info!("Syncing uni-v2 like pools");
 
         // NOTE: The sync step seems redundant and can probably be removed
-        let (amms, _) = sync::sync_amms(vec![factory], self.provider.clone(), None, 100000)
+        let (amms, _) = sync::sync_amms(vec![factory], self.provider.clone(), None, 100000, false)
             .await
             .unwrap();
         let pools = extract_v2_pools(&amms);
@@ -303,7 +303,7 @@ where
         let mut conn = establish_connection(&self.db_url);
         let factory = Factory::Ve33Factory(Ve33Factory::new(factory_address, 0, 3000));
 
-        let (amms, _) = sync::sync_amms(vec![factory], self.provider.clone(), None, 100000)
+        let (amms, _) = sync::sync_amms(vec![factory], self.provider.clone(), None, 100000, true)
             .await
             .unwrap();
 
