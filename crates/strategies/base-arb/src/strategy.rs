@@ -100,7 +100,6 @@ impl BaseArb {
             Some("aerodrome"),
             Some("ve33"),
             None,
-            None,
         )?;
 
         let db_pools = aerodrome_pools

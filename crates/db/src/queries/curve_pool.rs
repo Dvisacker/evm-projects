@@ -91,7 +91,6 @@ pub fn batch_upsert_curve_pools(
             curve_pools::token_d_balance.eq(excluded(curve_pools::token_d_balance)),
             curve_pools::exchange_name.eq(excluded(curve_pools::exchange_name)),
             curve_pools::exchange_type.eq(excluded(curve_pools::exchange_type)),
-            curve_pools::active.eq(excluded(curve_pools::active)),
             curve_pools::tag.eq(excluded(curve_pools::tag)),
         ))
         .get_results(conn)
@@ -123,7 +122,6 @@ pub fn update_curve_pool(
             curve_pools::token_d_balance.eq(updated_pool.token_d_balance.clone()),
             curve_pools::exchange_name.eq(updated_pool.exchange_name.clone()),
             curve_pools::exchange_type.eq(updated_pool.exchange_type.clone()),
-            curve_pools::active.eq(updated_pool.active),
             curve_pools::tag.eq(updated_pool.tag.clone()),
         ))
         .get_result(conn)

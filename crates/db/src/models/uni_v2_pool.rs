@@ -21,7 +21,6 @@ pub struct DbUniV2Pool {
     pub exchange_name: Option<String>,
     pub exchange_type: Option<String>,
     pub factory_address: Option<String>,
-    pub active: Option<bool>,
     pub created_at: chrono::NaiveDateTime,
     pub updated_at: chrono::NaiveDateTime,
     pub tag: Option<String>,
@@ -59,7 +58,6 @@ pub struct NewDbUniV2Pool {
     pub exchange_name: Option<String>,
     pub exchange_type: Option<String>,
     pub factory_address: Option<String>,
-    pub active: Option<bool>,
     pub tag: Option<String>,
 }
 

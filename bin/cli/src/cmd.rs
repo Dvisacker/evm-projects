@@ -407,21 +407,6 @@ mod cmd_test {
     }
 }
 
-pub async fn activate_pools_command(
-    chain_id: u64,
-    exchange_name: ExchangeName,
-    usd_threshold: f64,
-) -> Result<(), Error> {
-    let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
-    let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
-    let provider = get_basic_provider(chain).await;
-    let pool_manager = PoolStorageManager::new(&db_url, provider);
-    pool_manager
-        .activate_pools(chain, exchange_name, usd_threshold)
-        .await?;
-    Ok(())
-}
-
 pub async fn get_amm_value_command(chain_id: u64, pool_address: &str) -> Result<(), Error> {
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
     let pool_address = Address::from_str(pool_address).expect("Invalid pool address");

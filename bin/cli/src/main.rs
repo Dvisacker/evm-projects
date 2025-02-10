@@ -25,7 +25,6 @@ enum Commands {
     GetUniswapV3Pools(GetUniswapV3PoolsArgs),
     GetUniswapV2Pools(GetUniswapV2PoolsArgs),
     GetAMMValue(GetAMMValueArgs),
-    ActivatePools(ActivatePoolsArgs),
     GetContractCreationBlock(GetContractCreationBlockArgs),
     Bridge(BridgeArgs),
     CrossChainSwap(CrossChainSwapArgs),
@@ -90,10 +89,6 @@ async fn main() -> Result<(), Error> {
                 args.tag.tag.clone(),
             )
             .await?;
-        }
-        Commands::ActivatePools(args) => {
-            cmd::activate_pools_command(args.chain.chain_id, args.exchange.exchange, args.min_usd)
-                .await?;
         }
         Commands::GetAMMValue(args) => {
             cmd::get_amm_value_command(args.chain.chain_id, &args.pool_address).await?;

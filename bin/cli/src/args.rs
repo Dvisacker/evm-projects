@@ -109,16 +109,6 @@ pub struct GetAerodromePoolsArgs {
 }
 
 #[derive(Args)]
-pub struct ActivatePoolsArgs {
-    #[command(flatten)]
-    pub chain: ChainArgs,
-    #[arg(short, long)]
-    pub min_usd: f64,
-    #[command(flatten)]
-    pub exchange: ExchangeArgs,
-}
-
-#[derive(Args)]
 pub struct GetAMMValueArgs {
     #[command(flatten)]
     pub chain: ChainArgs,

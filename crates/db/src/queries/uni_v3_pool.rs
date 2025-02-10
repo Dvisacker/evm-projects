@@ -48,7 +48,6 @@ pub fn batch_upsert_uni_v3_pools(
             uni_v3_pools::exchange_name.eq(excluded(uni_v3_pools::exchange_name)),
             uni_v3_pools::exchange_type.eq(excluded(uni_v3_pools::exchange_type)),
             uni_v3_pools::factory_address.eq(excluded(uni_v3_pools::factory_address)),
-            uni_v3_pools::active.eq(excluded(uni_v3_pools::active)),
             uni_v3_pools::tag.eq(excluded(uni_v3_pools::tag)),
         ))
         .get_results(conn)
@@ -89,16 +88,6 @@ pub fn get_uni_v3_pools(
         query = query.limit(limit);
     }
 
-    if let Some(active) = active {
-        if active {
-            query = query.filter(uni_v3_pools::active.eq(true));
-        } else {
-            query = query.filter(uni_v3_pools::active.eq(false));
-        }
-    } else {
-        query = query.filter(uni_v3_pools::active.is_null());
-    }
-
     query.load::<DbUniV3Pool>(conn)
 }
 
@@ -126,21 +115,9 @@ pub fn update_uni_v3_pool(
             uni_v3_pools::exchange_name.eq(updated_pool.exchange_name.clone()),
             uni_v3_pools::exchange_type.eq(updated_pool.exchange_type.clone()),
             uni_v3_pools::factory_address.eq(updated_pool.factory_address.clone()),
-            uni_v3_pools::active.eq(updated_pool.active),
             uni_v3_pools::tag.eq(updated_pool.tag.clone()),
         ))
         .get_result(conn)
-}
-
-pub fn batch_update_uni_v3_pool_active(
-    conn: &mut PgConnection,
-    pool_addresses: &[String],
-    active: bool,
-) -> QueryResult<usize> {
-    diesel::update(uni_v3_pools::table)
-        .filter(uni_v3_pools::address.eq_any(pool_addresses))
-        .set(uni_v3_pools::active.eq(active))
-        .execute(conn)
 }
 
 pub fn delete_uni_v3_pool(conn: &mut PgConnection, pool_address: &str) -> Result<usize, Error> {

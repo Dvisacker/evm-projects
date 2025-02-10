@@ -44,7 +44,6 @@ pub fn batch_upsert_uni_v2_pools(
             uni_v2_pools::reserve_0.eq(excluded(uni_v2_pools::reserve_0)),
             uni_v2_pools::reserve_1.eq(excluded(uni_v2_pools::reserve_1)),
             uni_v2_pools::fee.eq(excluded(uni_v2_pools::fee)),
-            uni_v2_pools::active.eq(excluded(uni_v2_pools::active)),
             uni_v2_pools::tag.eq(excluded(uni_v2_pools::tag)),
         ))
         .get_results(conn)
@@ -83,7 +82,6 @@ pub fn update_uni_v2_pool(
             uni_v2_pools::reserve_0.eq(updated_pool.reserve_0.clone()),
             uni_v2_pools::reserve_1.eq(updated_pool.reserve_1.clone()),
             uni_v2_pools::fee.eq(updated_pool.fee),
-            uni_v2_pools::active.eq(updated_pool.active),
             uni_v2_pools::tag.eq(updated_pool.tag.clone()),
         ))
         .get_result(conn)
@@ -99,7 +97,6 @@ pub fn get_uni_v2_pools(
     exchange_name: Option<&str>,
     exchange_type: Option<&str>,
     limit: Option<i64>,
-    active: Option<bool>,
 ) -> Result<Vec<DbUniV2Pool>, Error> {
     let mut query = uni_v2_pools::table.into_boxed();
 
@@ -117,16 +114,6 @@ pub fn get_uni_v2_pools(
 
     if let Some(limit) = limit {
         query = query.limit(limit);
-    }
-
-    if let Some(active) = active {
-        if active {
-            query = query.filter(uni_v2_pools::active.eq(true));
-        } else {
-            query = query.filter(uni_v2_pools::active.eq(false));
-        }
-    } else {
-        query = query.filter(uni_v2_pools::active.is_null());
     }
 
     query.load::<DbUniV2Pool>(conn)
@@ -149,26 +136,5 @@ pub fn get_uni_v2_pools_by_exchange(
 ) -> Result<Vec<DbUniV2Pool>, Error> {
     uni_v2_pools::table
         .filter(uni_v2_pools::exchange_name.eq(exchange_name))
-        .load::<DbUniV2Pool>(conn)
-}
-
-pub fn batch_update_uni_v2_pool_active(
-    conn: &mut PgConnection,
-    pool_addresses: &[String],
-    active: bool,
-) -> QueryResult<usize> {
-    diesel::update(uni_v2_pools::table)
-        .filter(uni_v2_pools::address.eq_any(pool_addresses))
-        .set(uni_v2_pools::active.eq(active))
-        .execute(conn)
-}
-
-pub fn get_uni_v2_active_pools(
-    conn: &mut PgConnection,
-    chain_name: &str,
-) -> Result<Vec<DbUniV2Pool>, Error> {
-    uni_v2_pools::table
-        .filter(uni_v2_pools::chain.eq(chain_name))
-        .filter(uni_v2_pools::active.eq(true))
         .load::<DbUniV2Pool>(conn)
 }

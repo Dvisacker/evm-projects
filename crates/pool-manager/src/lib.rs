@@ -17,19 +17,13 @@ use amms::{
     sync::{self},
 };
 use db::establish_connection;
-use db::models::db_pool::DbPool;
 use db::models::{NewDbPool, NewDbTag, NewDbUniV2Pool, NewDbUniV3Pool};
 use db::queries::exchange::get_exchange_by_name;
 use db::queries::tag::insert_tag;
-use db::queries::uni_v2_pool::{
-    batch_update_uni_v2_pool_active, batch_upsert_uni_v2_pools, get_uni_v2_pools,
-};
-use db::queries::uni_v3_pool::{
-    batch_update_uni_v3_pool_active, batch_upsert_uni_v3_pools, get_uni_v3_pools,
-};
-use diesel::PgConnection;
+use db::queries::uni_v2_pool::batch_upsert_uni_v2_pools;
+use db::queries::uni_v3_pool::batch_upsert_uni_v3_pools;
 use shared::evm_helpers::get_contract_creation_block;
-use shared::pool_helpers::{db_pools_to_amms, extract_v2_pools, extract_v3_pools, filter_amms};
+use shared::pool_helpers::extract_v2_pools;
 use std::sync::Arc;
 use types::exchange::{ExchangeName, ExchangeType};
 
@@ -338,158 +332,6 @@ where
             // upsert pools in the database
             batch_upsert_uni_v2_pools(&mut conn, &new_pools).unwrap();
             tracing::info!("Inserted {:?} pools", new_pools.len());
-        }
-
-        Ok(())
-    }
-
-    async fn activate_v3_pools(
-        &self,
-        chain: Chain,
-        mut conn: &mut PgConnection,
-        exchange_name: ExchangeName,
-        usd_threshold: f64,
-    ) -> Result<(), AMMError> {
-        let named_chain = chain.named().unwrap();
-
-        let pools = get_uni_v3_pools(
-            &mut conn,
-            Some(&named_chain.to_string()),
-            Some(&exchange_name.to_string()),
-            None,
-            None,
-            None,
-        )
-        .unwrap();
-
-        let v3_pools = pools
-            .iter()
-            .map(|pool| DbPool::UniV3((*pool).clone()))
-            .collect::<Vec<DbPool>>();
-
-        let amms = db_pools_to_amms(&v3_pools)?;
-
-        tracing::info!("Got {:?} uni v3 pools", pools.len());
-
-        for chunk in amms.chunks(1000) {
-            let result = filter_amms(chain, usd_threshold, chunk.to_vec()).await;
-            if result.is_err() {
-                tracing::error!("Error filtering amms: {:?}", result.err());
-                continue;
-            }
-            let active_pools = result.unwrap();
-            let active_pools = active_pools
-                .iter()
-                .map(|amm| amm.address().to_string())
-                .collect::<Vec<String>>();
-
-            let inactive_pools = chunk
-                .iter()
-                .filter(|amm| !active_pools.contains(&amm.address().to_string()))
-                .map(|amm| amm.address().to_string())
-                .collect::<Vec<String>>();
-
-            batch_update_uni_v3_pool_active(&mut conn, &active_pools, true).unwrap();
-            batch_update_uni_v3_pool_active(&mut conn, &inactive_pools, false).unwrap();
-
-            tracing::info!(
-                "Processed pool chunk. Active pools: {:?}. Inactive pools: {:?}",
-                active_pools.len(),
-                inactive_pools.len()
-            );
-        }
-
-        Ok(())
-    }
-
-    async fn activate_v2_pools(
-        &self,
-        chain: Chain,
-        mut conn: &mut PgConnection,
-        exchange_name: ExchangeName,
-        usd_threshold: f64,
-    ) -> Result<(), AMMError> {
-        let named_chain = chain.named().unwrap();
-
-        let pools = get_uni_v2_pools(
-            &mut conn,
-            Some(&named_chain.to_string()),
-            Some(&exchange_name.to_string()),
-            None,
-            None,
-            None,
-        )
-        .unwrap();
-
-        let v2_pools = pools
-            .iter()
-            .map(|pool| DbPool::UniV2((*pool).clone()))
-            .collect::<Vec<DbPool>>();
-
-        let amms = db_pools_to_amms(&v2_pools)?;
-
-        for chunk in amms.chunks(1000) {
-            let result = filter_amms(chain, usd_threshold, chunk.to_vec()).await;
-            if result.is_err() {
-                tracing::error!("Error filtering amms: {:?}", result.err());
-                continue;
-            }
-            let active_pools = result.unwrap();
-            let active_pools = active_pools
-                .iter()
-                .map(|amm| amm.address().to_string())
-                .collect::<Vec<String>>();
-
-            let inactive_pools = chunk
-                .iter()
-                .filter(|amm| !active_pools.contains(&amm.address().to_string()))
-                .map(|amm| amm.address().to_string())
-                .collect::<Vec<String>>();
-
-            batch_update_uni_v2_pool_active(&mut conn, &active_pools, true).unwrap();
-            batch_update_uni_v2_pool_active(&mut conn, &inactive_pools, false).unwrap();
-
-            tracing::info!(
-                "Processed pool chunk. Active pools: {:?}. Inactive pools: {:?}",
-                active_pools.len(),
-                inactive_pools.len()
-            );
-        }
-
-        Ok(())
-    }
-
-    /// Activates pools that meet a certain USD value threshold.
-    pub async fn activate_pools(
-        &self,
-        chain: Chain,
-        exchange_name: ExchangeName,
-        usd_threshold: f64,
-    ) -> Result<(), AMMError> {
-        let mut conn = establish_connection(&self.db_url);
-
-        let exchange = get_exchange_by_name(
-            &mut conn,
-            &chain.named().unwrap().to_string(),
-            &exchange_name.to_string(),
-        )
-        .unwrap();
-
-        let exchange_type =
-            ExchangeType::from_str(&exchange.exchange_type).expect("Invalid exchange type");
-
-        match exchange_type {
-            ExchangeType::UniV2 => {
-                self.activate_v2_pools(chain, &mut conn, exchange_name, usd_threshold)
-                    .await?;
-            }
-            ExchangeType::UniV3 => {
-                self.activate_v3_pools(chain, &mut conn, exchange_name, usd_threshold)
-                    .await?;
-            }
-            _ => {
-                return Err(AMMError::UnknownPoolType);
-            }
         }
 
         Ok(())
