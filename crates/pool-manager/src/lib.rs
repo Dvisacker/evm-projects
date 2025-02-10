@@ -279,40 +279,22 @@ where
         factory_address: Address,
         tag: Option<String>,
     ) -> Result<(), AMMError> {
-        let mut conn = establish_connection(&self.db_url);
         let factory = Factory::UniswapV2Factory(UniswapV2Factory::new(factory_address, 0, 3000));
 
         tracing::info!("Syncing uni-v2 like pools");
 
+        // NOTE: The sync step seems redundant and can probably be removed
         let (amms, _) = sync::sync_amms(vec![factory], self.provider.clone(), None, 100000)
             .await
             .unwrap();
+        let pools = extract_v2_pools(&amms);
+        let addresses = pools
+            .iter()
+            .map(|pool| pool.address())
+            .collect::<Vec<Address>>();
 
-        let mut pools = extract_v2_pools(&amms);
-
-        for mut chunk in pools.chunks_mut(50) {
-            get_v2_pool_data_batch_request(&mut chunk, self.provider.clone()).await?;
-
-            let new_pools = chunk
-                .iter_mut()
-                .map(|pool| {
-                    pool.exchange_type = ExchangeType::UniV2;
-                    pool.exchange_name = exchange_name;
-                    pool.chain = chain.named().unwrap();
-                    pool.to_new_db_pool(tag.clone())
-                })
-                .filter_map(|db_pool| {
-                    if let NewDbPool::UniV2(v2_pool) = db_pool {
-                        Some(v2_pool)
-                    } else {
-                        None
-                    }
-                })
-                .collect::<Vec<NewDbUniV2Pool>>();
-
-            batch_upsert_uni_v2_pools(&mut conn, &new_pools).unwrap();
-            tracing::info!("Inserted {:?} pools", new_pools.len());
-        }
+        self.store_univ2_pools(chain, exchange_name, addresses, tag.clone())
+            .await?;
 
         Ok(())
     }
