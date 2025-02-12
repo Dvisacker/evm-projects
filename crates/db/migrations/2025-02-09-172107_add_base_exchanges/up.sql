@@ -15,6 +15,9 @@ INSERT INTO exchanges (chain, factory_address, exchange_name, exchange_type) VAL
 -- Base Alien Base (UniV2 fork)
 ('base', '0x3E84D913803b02A4a7f027165E8cA42C14C0FdE7', 'alienbase', 'univ2'),
 
+-- Base Slipstream
+('base', '0x5e7BB104d84c7CB9B682AaC2F3d509f5F406809A', 'slipstream', 'slipstream'); 
+
 -- Base Uniswap V2
-('base', '0x8909Dc15e40173Ff4699343b6eB8132c65e18eC6', 'slipstream', 'slipstream'); 
+('base', '0x8909Dc15e40173Ff4699343b6eB8132c65e18eC6', 'uniswapv2', 'univ2');
 
