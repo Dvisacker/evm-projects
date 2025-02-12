@@ -400,7 +400,10 @@ impl BaseArb {
 
         let mut conn = establish_connection(&self.db_url);
         let new_pool = self.parse_univ2_pool_data(pool_data, &mut conn, pool_address)?;
-        batch_upsert_uni_v2_pools(&mut conn, &vec![new_pool])?;
+
+        if new_pool.exchange_type != Some("unknown".to_string()) {
+            batch_upsert_uni_v2_pools(&mut conn, &vec![new_pool])?;
+        }
 
         Ok(())
     }
@@ -422,15 +425,16 @@ impl BaseArb {
             populate_v2_pool_data(&mut pool, pool_data)?;
 
             let known_exchanges = get_exchanges_by_chain(&mut conn, &chain).unwrap();
-            let exchange_name = known_exchanges
+            let exchange = known_exchanges
                 .iter()
                 .find(|e| *e.factory_address.as_ref().unwrap() == pool.factory.to_string())
-                .map(|e| e.exchange_name.clone())
-                .unwrap_or("unknown".to_string());
+                .unwrap();
 
+            let exchange_name = exchange.exchange_name.clone();
+            let exchange_type = exchange.exchange_type.clone();
             let mut db_pool: NewDbUniV2Pool = pool.into();
             db_pool.exchange_name = Some(exchange_name);
-            db_pool.exchange_type = Some("univ2".to_string());
+            db_pool.exchange_type = Some(exchange_type);
             db_pool.chain = chain;
 
             return Ok(db_pool);
