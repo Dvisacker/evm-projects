@@ -19,7 +19,6 @@ use tracing::info;
 /// │   ├── Pool 1
 /// │   ├── Pool 2
 /// │   └── Pool N
-/// ├── Inactive Pools
 /// ├── Cycles (trading cycles)
 /// │   ├── Cycle 1: Token A -> Token B -> Token C -> Token A
 /// │   └── Cycle 2: Token X -> Token Y -> Token X
@@ -29,8 +28,7 @@ use tracing::info;
 pub struct State {
     provider: Arc<SignerProvider>,
     pub block_number: u64,
-    pub inactive_pools: DashMap<Address, AMM>, // Pools that are currently marked an inactive (because under tvl limit for example)
-    pub pools: DashMap<Address, AMM>,          // Active trading pools
+    pub pools: DashMap<Address, AMM>,
     pub pools_cycles_map: DashMap<Address, HashSet<String>>, // Maps pool addresses to cycles they're part of
     pub cycles: HashMap<String, Cycle>,                      // All valid trading cycles identified
     pub inventory: Vec<Address>,
@@ -42,7 +40,6 @@ impl State {
         Self {
             provider,
             inventory,
-            inactive_pools: DashMap::new(),
             block_number: 0,
             pools: DashMap::new(),
             pools_cycles_map: DashMap::new(),
@@ -129,13 +126,6 @@ impl State {
     pub fn set_pools(&self, amms: Vec<AMM>) {
         for amm in amms {
             self.pools.insert(amm.address(), amm);
-        }
-    }
-
-    /// Updates the inactive pools list
-    pub fn set_inactive_pools(&self, amms: Vec<AMM>) {
-        for amm in amms {
-            self.inactive_pools.insert(amm.address(), amm);
         }
     }
 
