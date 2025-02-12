@@ -108,7 +108,10 @@ where
                             Ok(_) => {}
                             Err(e) => error!("error executing action: {}", e),
                         },
-                        Err(e) => error!("error receiving action: {}", e),
+                        Err(e) => {
+                            error!("error receiving action: {}", e);
+                            break;
+                        }
                     }
                 }
             });
@@ -129,12 +132,16 @@ where
                                 match action_sender.send(action) {
                                     Ok(_) => {}
                                     Err(e) => {
-                                        error!("error sending action: {}", e)
+                                        error!("error sending action: {}", e);
+                                        // break;
                                     }
                                 }
                             }
                         }
-                        Err(e) => error!("error receiving event: {}", e),
+                        Err(e) => {
+                            error!("error receiving event: {}", e);
+                            // break;
+                        }
                     }
                 }
             });

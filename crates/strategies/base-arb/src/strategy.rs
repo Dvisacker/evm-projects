@@ -82,7 +82,8 @@ impl BaseArb {
 
     async fn load_simulator(&mut self) -> Result<()> {
         let simulator = TxSimulatorClient::new(
-            Address::from_str(&env::var("SIMULATOR_ADDRESS").unwrap()).unwrap(),
+            Address::from_str(&env::var("SIMULATOR_ADDRESS").unwrap())
+                .expect("Failed to parse simulator address"),
             self.client.clone(),
         )
         .await;
@@ -175,11 +176,12 @@ impl BaseArb {
             eyre::bail!("Pool is not a aerodrome pool");
         };
 
-        let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+        let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap())
+            .expect("Failed to parse executor address");
         let weth = self
             .addressbook
             .get_weth(&self.chain.named().unwrap())
-            .unwrap();
+            .expect("Failed to get WETH address");
 
         encoder
             .add_wrap_eth(weth, amount_in)
@@ -275,11 +277,13 @@ impl Strategy<Event, Action> for BaseArb {
 
         for cycle in most_profitable_cycles {
             let token_first = cycle.get_entry_token();
-            let amount_in = parse_units("0.001", 18).unwrap().into();
+            let amount_in = parse_units("0.001", 18)
+                .expect("Failed to parse amount in")
+                .into();
             let amount_out = self
                 .simulator
                 .as_ref()
-                .unwrap()
+                .expect("Simulator must be loaded")
                 .simulate_route(token_first, amount_in, &cycle.amms)
                 .await
                 .unwrap_or_else(|e| {
@@ -428,7 +432,7 @@ impl BaseArb {
             let exchange = known_exchanges
                 .iter()
                 .find(|e| *e.factory_address.as_ref().unwrap() == pool.factory.to_string())
-                .unwrap();
+                .ok_or(eyre::eyre!("Failed to find exchange"))?;
 
             let exchange_name = exchange.exchange_name.clone();
             let exchange_type = exchange.exchange_type.clone();
