@@ -198,7 +198,6 @@ mod tests {
             Address::from_str("0xd0b53d9277642d899df5c87a3966a349a798f224").unwrap(),
             NamedChain::Base,
         )
-        .await
         .unwrap();
 
         weth_usdc_pool.populate_data(None, provider).await.unwrap();

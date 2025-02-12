@@ -47,7 +47,6 @@ impl State {
         }
     }
 
-    /// Logs all pool addresses for debugging purposes
     pub fn print_pools(&self) {
         for pool in self.pools.iter() {
             info!("Pool: {}", pool.key().to_string().to_lowercase());
@@ -221,19 +220,45 @@ impl State {
     }
 
     /// Synchronizes pool states with current blockchain state
+    /// TODO: Very inefficient/inelegant, should be optimized
     pub async fn update_pools(&self) -> Result<()> {
-        let mut amms: Vec<AMM> = self
+        let mut univ3_pools = self
             .pools
             .iter()
             .map(|entry| entry.value().clone())
-            .collect();
+            .filter(|amm| matches!(amm, AMM::UniswapV3Pool(_)))
+            .collect::<Vec<_>>();
 
-        sync::populate_amms(&mut amms, self.block_number, self.provider.clone(), true)
-            .await
-            .map_err(|e| eyre!("AMM Error: {}", e))?;
+        sync::populate_amms(
+            &mut univ3_pools,
+            self.block_number,
+            self.provider.clone(),
+            true,
+        )
+        .await?;
 
-        for amm in amms {
-            self.pools.insert(amm.address(), amm);
+        for amm in univ3_pools.iter() {
+            self.pools.insert(amm.address(), amm.clone());
+        }
+
+        // univ2 pools
+        let mut univ2_pools = self
+            .pools
+            .iter()
+            .map(|entry| entry.value().clone())
+            .filter(|amm| matches!(amm, AMM::UniswapV2Pool(_)))
+            .collect::<Vec<_>>();
+
+        sync::populate_amms(
+            &mut univ2_pools,
+            self.block_number,
+            self.provider.clone(),
+            true,
+        )
+        .await?;
+
+        for amm in univ2_pools.iter() {
+            self.pools.insert(amm.address(), amm.clone());
         }
 
         Ok(())

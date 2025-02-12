@@ -21,6 +21,7 @@ use amms::{
     sync,
 };
 use async_trait::async_trait;
+use db::queries::uni_v3_pool::get_uni_v3_pools;
 use db::{
     establish_connection,
     models::{db_pool::DbPool, NewDbUniV2Pool},
@@ -100,18 +101,36 @@ impl BaseArb {
             Some("aerodrome"),
             Some("ve33"),
             None,
+            None,
         )?;
 
-        let db_pools = aerodrome_pools
+        let most_traded_univ2_pools = get_uni_v2_pools(
+            &mut conn,
+            Some(&chain),
+            Some("uniswapv2"),
+            Some("univ2"),
+            Some(3),
+            Some("univ2-base-most-traded"),
+        )?;
+
+        let aerodrome_db_pools = aerodrome_pools
             .into_iter()
             .map(|p| p.into())
             .collect::<Vec<DbPool>>();
 
-        let mut amms = db_pools_to_amms(&db_pools)?;
+        let most_traded_univ2_db_pools = most_traded_univ2_pools
+            .into_iter()
+            .map(|p| p.into())
+            .collect::<Vec<DbPool>>();
 
-        let block_number = self.state.block_number;
-        sync::populate_amms(&mut amms, block_number, self.client.clone()).await?;
+        let mut db_pools = vec![];
+        db_pools.extend(aerodrome_db_pools);
+        db_pools.extend(most_traded_univ2_db_pools);
+
+        let amms = db_pools_to_amms(&db_pools)?;
+
         self.state.set_pools(amms);
+        self.state.update_pools().await?;
 
         Ok(())
     }
@@ -349,11 +368,6 @@ impl BaseArb {
             return self.handle_known_pool_sync(&mut pool, log).await;
         }
 
-        if self.state.inactive_pools.contains_key(&pool_address) {
-            self.handle_inactive_pool_sync(pool_address).await?;
-            return Ok(vec![]);
-        }
-
         self.handle_unknown_pool_sync(pool_address).await?;
         Ok(vec![])
     }
@@ -373,11 +387,6 @@ impl BaseArb {
         let amms: &mut [AMM] = std::slice::from_mut(pool);
         let updated_cycles = self.state.get_updated_cycles(amms.to_vec())?;
         Ok(updated_cycles)
-    }
-
-    async fn handle_inactive_pool_sync(&self, pool_address: Address) -> Result<()> {
-        info!("New sync on inactive pool {:?}", pool_address);
-        Ok(())
     }
 
     async fn handle_unknown_pool_sync(&self, pool_address: Address) -> Result<()> {
