@@ -186,8 +186,7 @@ impl BaseArb {
         encoder
             .add_wrap_eth(weth, amount_in)
             .add_transfer_erc20(weth, executor_address, amount_in)
-            .add_aerodrome_router_swap(amount_in, token_in, token_out, None, Some(stable))
-            .require_profitable(token_in, amount_in);
+            .add_aerodrome_router_swap(amount_in, token_in, token_out, None, Some(stable));
 
         let mut last_token = token_out;
 
@@ -201,12 +200,10 @@ impl BaseArb {
             if last_token == token_a {
                 token_out = token_b;
                 token_in = token_a;
-            } else if last_token == token_b {
+            } else {
                 token_out = token_a;
                 token_in = token_b;
-            } else {
-                todo!()
-            }
+            };
 
             let stable = if let AMM::Ve33Pool(ve33_pool) = amm {
                 ve33_pool.stable
@@ -217,6 +214,8 @@ impl BaseArb {
             encoder.add_aerodrome_swap_all(token_in, token_out, None, Some(stable));
             last_token = token_out;
         }
+
+        encoder.require_profitable(weth, amount_in);
 
         let (calldata, total_value) = encoder.flush();
 
@@ -306,7 +305,10 @@ impl Strategy<Event, Action> for BaseArb {
                 let (calldata, total_value) = self
                     .get_cycle_calldata(token_first, amount_in, &cycle)
                     .await
-                    .unwrap();
+                    .unwrap_or_else(|e| {
+                        warn!("Failed to get cycle calldata: {}", e);
+                        (vec![], U256::from(0))
+                    });
 
                 let action = Action::SubmitEncodedTx(SubmitEncodedTx {
                     calldata,
