@@ -2,7 +2,8 @@ use alloy::network::Ethereum;
 use alloy::providers::Provider;
 use alloy::{hex, sol};
 use alloy_chains::NamedChain;
-use alloy_primitives::{Address, Bytes, FixedBytes, U256};
+use alloy_primitives::aliases::U24;
+use alloy_primitives::{Address, Bytes, FixedBytes, U160, U256};
 use alloy_rpc_types::TransactionReceipt;
 use alloy_sol_types::{SolCall, SolValue};
 use eyre::Result;
@@ -25,7 +26,7 @@ use crate::bindings::ipool::IPool::{
 use crate::bindings::iuniswapv2router::IUniswapV2Router;
 use crate::bindings::iuniswapv3pool::IUniswapV3Pool;
 use crate::bindings::iuniswapv3router::IUniswapV3Router::{
-    self, exactInputCall, ExactInputParams, ExactInputSingleParams, ExactOutputSingleParams,
+    self, exactInputCall, ExactInputParams, ExactInputSingleParams,
 };
 use crate::bindings::weth::WETH;
 
@@ -374,20 +375,8 @@ where
 
     // UNISWAP V3
 
-    pub fn add_uniswap_v3_exact_input(&mut self, swap: ExactInputSingleParams) -> &mut Self {
-        let call = IUniswapV3Router::exactInputSingleCall { params: swap };
-        let encoded = call.abi_encode();
-
-        self.add_call(
-            self.addresses.uniswap_v3_router_address,
-            U256::ZERO,
-            Bytes::from(encoded),
-            None,
-            None,
-        )
-    }
-
-    pub fn add_uniswap_v3_exact_input_all(
+    // this is for a multi-hop swap
+    pub fn add_uniswap_v3_multihop_swap(
         &mut self,
         path: Vec<Address>,
         amount_out_minimum: U256,
@@ -412,33 +401,96 @@ where
         )
     }
 
-    pub fn add_uniswap_v3_exact_output(&mut self, swap: ExactOutputSingleParams) -> &mut Self {
-        let call = IUniswapV3Router::exactOutputSingleCall { params: swap };
-        let encoded = call.abi_encode();
+    pub fn add_uniswap_v3_single_swap(
+        &mut self,
+        token_in: Address,
+        token_out: Address,
+        amount_in: U256,
+        fee: U24,
+    ) -> &mut Self {
+        let swap = ExactInputSingleParams {
+            tokenIn: token_in,
+            tokenOut: token_out,
+            fee: fee,
+            recipient: *self.executor.address(),
+            amountIn: amount_in,
+            amountOutMinimum: U256::ZERO,
+            sqrtPriceLimitX96: U160::ZERO,
+        };
+
+        let call = IUniswapV3Router::exactInputSingleCall { params: swap };
 
         self.add_call(
             self.addresses.uniswap_v3_router_address,
             U256::ZERO,
-            Bytes::from(encoded),
+            Bytes::from(call.abi_encode()),
             None,
             None,
         )
     }
 
+    pub fn add_uniswap_v3_single_swap_all(
+        &mut self,
+        token_in: Address,
+        token_out: Address,
+        fee: U24,
+    ) -> &mut Self {
+        let swap = ExactInputSingleParams {
+            tokenIn: token_in,
+            tokenOut: token_out,
+            fee: fee,
+            recipient: *self.executor.address(),
+            amountIn: U256::ZERO, // replaced by dynamic balance call.
+            amountOutMinimum: U256::ZERO,
+            sqrtPriceLimitX96: U160::ZERO,
+        };
+
+        let dynamic_call = DynamicCall {
+            to: token_in,
+            data: Bytes::from(
+                ERC20::balanceOfCall {
+                    account: *self.executor.address(),
+                }
+                .abi_encode(),
+            ),
+            offset: 4 + 32 * 4, // amount is the 5th parameter
+            length: 32,
+            resOffset: 0,
+        };
+
+        let call = IUniswapV3Router::exactInputSingleCall { params: swap };
+
+        self.add_call(
+            self.addresses.uniswap_v3_router_address,
+            U256::ZERO,
+            Bytes::from(call.abi_encode()),
+            None,
+            Some(vec![dynamic_call]),
+        )
+    }
+
     // UNISWAP V2
-    pub fn add_uniswap_v2_swap(
+    pub fn add_uniswap_v2_single_swap(
         &mut self,
         amount_in: U256,
         token_in: Address,
         token_out: Address,
-        deadline: U256,
+        deadline: Option<U256>,
     ) -> &mut Self {
+        let default_deadline = U256::from(
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_secs()
+                + 1000,
+        );
+
         let call = IUniswapV2Router::swapExactTokensForTokensCall {
             amountIn: amount_in,
             amountOutMin: U256::ZERO,
             path: vec![token_in, token_out],
             to: *self.executor.address(),
-            deadline,
+            deadline: deadline.unwrap_or(default_deadline),
         };
         let encoded = call.abi_encode();
 
@@ -448,6 +500,54 @@ where
             Bytes::from(encoded),
             None,
             None,
+        )
+    }
+
+    pub fn add_uniswap_v2_single_swap_all(
+        &mut self,
+        token_in: Address,
+        token_out: Address,
+        deadline: Option<U256>,
+    ) -> &mut Self {
+        let default_deadline = U256::from(
+            SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .unwrap()
+                .as_secs()
+                + 1000,
+        );
+
+        let deadline = deadline.unwrap_or(default_deadline);
+
+        let dynamic_call = DynamicCall {
+            to: token_in,
+            data: Bytes::from(
+                ERC20::balanceOfCall {
+                    account: *self.executor.address(),
+                }
+                .abi_encode(),
+            ),
+            offset: 4 + 0, // amount is the first parameter
+            length: 32,
+            resOffset: 0,
+        };
+
+        let call = IUniswapV2Router::swapExactTokensForTokensCall {
+            amountIn: U256::ZERO,
+            amountOutMin: U256::ZERO,
+            path: vec![token_in, token_out],
+            to: *self.executor.address(),
+            deadline,
+        };
+
+        let encoded = call.abi_encode();
+
+        self.add_call(
+            self.addresses.uniswap_v2_router_address,
+            U256::ZERO,
+            Bytes::from(encoded),
+            None,
+            Some(vec![dynamic_call]),
         )
     }
 
@@ -512,7 +612,7 @@ where
 
     // AERODROME
 
-    pub fn add_aerodrome_router_swap(
+    pub fn add_aerodrome_single_swap(
         &mut self,
         amount_in: U256,
         token_in: Address,
@@ -561,7 +661,7 @@ where
             )
     }
 
-    pub fn add_aerodrome_swap_all(
+    pub fn add_aerodrome_single_swap_all(
         &mut self,
         token_in: Address,
         token_out: Address,
@@ -629,6 +729,59 @@ where
                 None,
                 Some(vec![dynamic_call]),
             )
+    }
+
+    pub fn add_swap(
+        &mut self,
+        exchange: ExchangeName,
+        token_in: Address,
+        token_out: Address, // not sure if this is needed
+        amount_in: U256,
+        deadline: Option<U256>,
+        stable: Option<bool>,
+        fee: Option<U24>,
+    ) -> &mut Self {
+        match exchange {
+            ExchangeName::UniswapV3 => {
+                let swap_fee = fee.expect("Fee is required for UniswapV3");
+                self.add_uniswap_v3_single_swap(token_in, token_out, amount_in, swap_fee)
+            }
+            ExchangeName::UniswapV2 => {
+                self.add_uniswap_v2_single_swap(amount_in, token_in, token_out, deadline)
+            }
+            ExchangeName::Aerodrome => {
+                self.add_aerodrome_single_swap_all(token_in, token_out, deadline, stable)
+            }
+            _ => {
+                panic!("Unsupported exchange: {}", exchange);
+            }
+        }
+    }
+
+    pub fn add_swap_all(
+        &mut self,
+        exchange: ExchangeName,
+        token_in: Address,
+        token_out: Address,
+        deadline: Option<U256>,
+        stable: Option<bool>,
+        fee: Option<U24>,
+    ) -> &mut Self {
+        match exchange {
+            ExchangeName::UniswapV3 => {
+                let swap_fee = fee.expect("Fee is required for UniswapV3");
+                self.add_uniswap_v3_single_swap_all(token_in, token_out, swap_fee)
+            }
+            ExchangeName::UniswapV2 => {
+                self.add_uniswap_v2_single_swap_all(token_in, token_out, deadline)
+            }
+            ExchangeName::Aerodrome => {
+                self.add_aerodrome_single_swap_all(token_in, token_out, deadline, stable)
+            }
+            _ => {
+                panic!("Unsupported exchange: {}", exchange);
+            }
+        }
     }
 
     // MORPHO
@@ -1048,15 +1201,7 @@ mod tests {
         let (success, _tx_hash) = encoder
             .add_wrap_eth(weth, amount)
             .add_approve_erc20(weth, uni_v3_router, U256::MAX)
-            .add_uniswap_v3_exact_input(ExactInputSingleParams {
-                tokenIn: weth,
-                tokenOut: usdc,
-                fee: U24::from(500u32),
-                recipient: executor_address,
-                amountIn: amount,
-                amountOutMinimum: U256::ZERO,
-                sqrtPriceLimitX96: U160::ZERO,
-            })
+            .add_uniswap_v3_single_swap(weth, usdc, amount, U24::from(500u32))
             .exec()
             .await?;
 
@@ -1303,7 +1448,7 @@ mod tests {
         let (_success, receipt) = encoder
             .add_wrap_eth(weth, amount)
             .add_transfer_erc20(weth, executor_address, amount)
-            .add_aerodrome_swap_all(weth, usdc, None, None)
+            .add_aerodrome_single_swap_all(weth, usdc, None, None)
             .exec()
             .await?;
 

@@ -1,6 +1,7 @@
 use super::types::{Action, Event};
 use crate::state::State;
 use addressbook::Addressbook;
+use alloy::primitives::aliases::U24;
 use alloy::primitives::utils::parse_units;
 use alloy::primitives::{Bytes, I256, U256};
 use alloy::providers::Provider;
@@ -171,9 +172,14 @@ impl BaseArb {
 
         let amount_in = amount_in;
         let stable = if let AMM::Ve33Pool(ve33_pool) = first_amm {
-            ve33_pool.stable
+            Some(ve33_pool.stable)
         } else {
-            eyre::bail!("Pool is not a aerodrome pool");
+            None
+        };
+        let fee = if let AMM::UniswapV3Pool(uniswap_v3_pool) = first_amm {
+            Some(U24::from(uniswap_v3_pool.fee))
+        } else {
+            None
         };
 
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap())
@@ -186,7 +192,15 @@ impl BaseArb {
         encoder
             .add_wrap_eth(weth, amount_in)
             .add_transfer_erc20(weth, executor_address, amount_in)
-            .add_aerodrome_router_swap(amount_in, token_in, token_out, None, Some(stable));
+            .add_swap(
+                first_amm.exchange_name(),
+                token_in,
+                token_out,
+                amount_in,
+                None,
+                stable,
+                fee,
+            );
 
         let mut last_token = token_out;
 
@@ -205,13 +219,18 @@ impl BaseArb {
                 token_in = token_b;
             };
 
-            let stable = if let AMM::Ve33Pool(ve33_pool) = amm {
-                ve33_pool.stable
+            let stable = if let AMM::Ve33Pool(ve33_pool) = &amm {
+                Some(ve33_pool.stable)
             } else {
-                eyre::bail!("Pool is not an aerodrome pool");
+                None
+            };
+            let fee = if let AMM::UniswapV3Pool(uniswap_v3_pool) = &amm {
+                Some(U24::from(uniswap_v3_pool.fee))
+            } else {
+                None
             };
 
-            encoder.add_aerodrome_swap_all(token_in, token_out, None, Some(stable));
+            encoder.add_swap_all(amm.exchange_name(), token_in, token_out, None, stable, fee);
             last_token = token_out;
         }
 
