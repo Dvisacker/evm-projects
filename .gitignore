@@ -25,3 +25,5 @@ checkpoints/*
 crates/db/dev.db
 
 data/
+
+infra/
