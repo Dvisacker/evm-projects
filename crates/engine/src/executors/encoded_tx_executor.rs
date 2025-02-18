@@ -8,7 +8,6 @@ use alloy::{
 };
 use async_trait::async_trait;
 use eyre::Result;
-use provider::SignerProvider;
 use tracing::{info, warn};
 use tx_executor::bindings::batchexecutor::BatchExecutor::BatchExecutorInstance;
 

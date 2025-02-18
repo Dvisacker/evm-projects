@@ -4,7 +4,6 @@ use amms::amm::{AutomatedMarketMaker, AMM};
 use amms::sync;
 use dashmap::DashMap;
 use eyre::{eyre, Result};
-use provider::SignerProvider;
 use shared::cycle::Cycle;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;

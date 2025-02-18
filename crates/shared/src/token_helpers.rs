@@ -8,7 +8,6 @@ use alloy_primitives::utils::parse_units;
 use alloy_primitives::U256;
 use amms::errors::AMMError;
 use eyre::{eyre, Error, Result};
-use provider::SignerProvider;
 use serde_json::Value;
 use std::collections::HashSet;
 use std::fs;
@@ -22,8 +21,8 @@ pub struct ERC20TokenData {
     pub total_supply: u128,
 }
 
-pub async fn get_token_balance(
-    provider: Arc<SignerProvider>,
+pub async fn get_token_balance<P: Provider>(
+    provider: Arc<P>,
     token: Address,
     holder: Address,
 ) -> Result<U256> {
@@ -32,8 +31,8 @@ pub async fn get_token_balance(
     Ok(balance._0)
 }
 
-pub async fn get_token_allowance(
-    provider: Arc<SignerProvider>,
+pub async fn get_token_allowance<P: Provider>(
+    provider: Arc<P>,
     token: Address,
     holder: Address,
     spender: Address,
@@ -43,8 +42,8 @@ pub async fn get_token_allowance(
     Ok(allowance._0)
 }
 
-pub async fn approve_token_if_needed(
-    provider: Arc<SignerProvider>,
+pub async fn approve_token_if_needed<P: Provider + WalletProvider>(
+    provider: Arc<P>,
     token: Address,
     spender: Address,
     amount: U256,
@@ -66,8 +65,8 @@ pub async fn approve_token_if_needed(
     Ok(())
 }
 
-pub async fn transfer_token_if_needed(
-    provider: Arc<SignerProvider>,
+pub async fn transfer_token_if_needed<P: Provider + WalletProvider>(
+    provider: Arc<P>,
     token: Address,
     to: Address,
     amount: U256,
@@ -81,8 +80,8 @@ pub async fn transfer_token_if_needed(
     Ok(())
 }
 
-pub async fn transfer_approve_token_if_needed(
-    provider: Arc<SignerProvider>,
+pub async fn transfer_approve_token_if_needed<P: Provider + WalletProvider>(
+    provider: Arc<P>,
     token: Address,
     to: Address,
     amount: U256,
@@ -238,8 +237,8 @@ where
     Ok(())
 }
 
-pub async fn verify_erc20_interface(
-    provider: Arc<SignerProvider>,
+pub async fn verify_erc20_interface<P: Provider>(
+    provider: Arc<P>,
     token_address: Address,
 ) -> Result<(), Error> {
     let token = IERC20::new(token_address, provider.clone());

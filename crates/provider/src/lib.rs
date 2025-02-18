@@ -5,7 +5,7 @@ use alloy::{
             BlobGasFiller, ChainIdFiller, FillProvider, GasFiller, JoinFill, NonceFiller,
             WalletFiller,
         },
-        Identity, ProviderBuilder, RootProvider,
+        Identity, Provider, ProviderBuilder, RootProvider,
     },
     signers::local::PrivateKeySigner,
 };
@@ -14,7 +14,6 @@ use once_cell::sync::Lazy;
 use std::sync::{Arc, Mutex};
 use std::{collections::HashMap, env};
 
-// read/write provider with wallet and all recommended fillers
 pub type SignerProvider = FillProvider<
     JoinFill<
         JoinFill<
@@ -27,20 +26,9 @@ pub type SignerProvider = FillProvider<
     Ethereum,
 >;
 
-pub type BasicProvider = FillProvider<
-    JoinFill<
-        Identity,
-        JoinFill<GasFiller, JoinFill<BlobGasFiller, JoinFill<NonceFiller, ChainIdFiller>>>,
-    >,
-    RootProvider,
-    Ethereum,
->;
-
 pub type SignerProviderMap = HashMap<NamedChain, Arc<SignerProvider>>;
-pub type BasicProviderMap = HashMap<NamedChain, Arc<BasicProvider>>;
 
 static SIGNER_PROVIDER_MAP: Lazy<Mutex<Option<SignerProviderMap>>> = Lazy::new(|| Mutex::new(None));
-static BASIC_PROVIDER_MAP: Lazy<Mutex<Option<BasicProviderMap>>> = Lazy::new(|| Mutex::new(None));
 
 pub fn get_default_signer() -> PrivateKeySigner {
     std::env::var("DEV_PRIVATE_KEY")
@@ -74,9 +62,9 @@ pub async fn get_anvil_signer_provider() -> Arc<SignerProvider> {
 }
 
 // read provider without wallet and all recommended fillers
-pub async fn get_anvil_basic_provider() -> Arc<BasicProvider> {
+pub async fn get_anvil_basic_provider() -> Arc<impl Provider> {
     let url = "http://localhost:8545";
-    let provider: BasicProvider = ProviderBuilder::new().on_builtin(url).await.unwrap();
+    let provider = ProviderBuilder::new().on_builtin(url).await.unwrap();
     return Arc::new(provider);
 }
 
@@ -90,7 +78,7 @@ pub async fn get_chain_rpc_url(chain: NamedChain) -> String {
     }
 }
 
-pub async fn get_basic_provider(chain: Chain) -> Arc<BasicProvider> {
+pub async fn get_basic_provider(chain: Chain) -> Arc<impl Provider> {
     let chain = NamedChain::try_from(chain.id()).unwrap();
     let rpc_url = get_chain_rpc_url(chain).await;
 
@@ -143,29 +131,4 @@ pub async fn get_signer_provider_map() -> Arc<SignerProviderMap> {
     }
 
     Arc::new(provider_guard.as_ref().unwrap().clone())
-}
-
-pub async fn get_basic_provider_map() -> Arc<BasicProviderMap> {
-    let mut provider_guard = BASIC_PROVIDER_MAP.lock().unwrap();
-
-    if provider_guard.is_none() {
-        let mut providers = BasicProviderMap::new();
-
-        for chain in [
-            NamedChain::Mainnet,
-            NamedChain::Arbitrum,
-            NamedChain::Optimism,
-            NamedChain::Base,
-        ] {
-            providers.insert(chain, get_basic_provider(Chain::from_named(chain)).await);
-        }
-
-        *provider_guard = Some(providers);
-    }
-
-    Arc::new(provider_guard.as_ref().unwrap().clone())
-}
-
-pub fn is_signer_provider_map_initialized() -> bool {
-    SIGNER_PROVIDER_MAP.lock().unwrap().is_some()
 }

@@ -1,4 +1,3 @@
-use alloy::network::Ethereum;
 use alloy::providers::Provider;
 use alloy::{hex, sol};
 use alloy_chains::NamedChain;
@@ -212,9 +211,8 @@ pub async fn bridge_lifi<P>(
     bridge_name: BridgeName,
 ) -> Result<U256>
 where
-    P: Provider<Ethereum>,
+    P: Provider,
 {
-    // 1. Get quote from Li.Fi API
     let client = reqwest::Client::new();
     let from_token = IERC20::new(from_token_address, origin_chain_provider.clone());
     let to_token = IERC20::new(to_token_address, destination_chain_provider.clone());

@@ -1,5 +1,5 @@
 use alloy::primitives::{Address, U256};
-use alloy::providers::WalletProvider;
+use alloy::providers::{Provider, WalletProvider};
 use alloy::sol;
 use alloy_chains::NamedChain;
 use eyre::{Context, Result};
@@ -7,7 +7,6 @@ use std::sync::Arc;
 
 use crate::token_helpers::approve_token_if_needed;
 use addressbook::Addressbook;
-use provider::SignerProvider;
 
 sol! {
     #[derive(Debug, PartialEq, Eq)]
@@ -18,8 +17,8 @@ sol! {
     }
 }
 
-pub async fn aave_v3_supply(
-    provider: Arc<SignerProvider>,
+pub async fn aave_v3_supply<P: Provider + WalletProvider>(
+    provider: Arc<P>,
     chain: NamedChain,
     token_address: Address,
     amount: U256,
@@ -45,8 +44,8 @@ pub async fn aave_v3_supply(
     Ok(())
 }
 
-pub async fn aave_v3_withdraw(
-    provider: Arc<SignerProvider>,
+pub async fn aave_v3_withdraw<P: Provider + WalletProvider>(
+    provider: Arc<P>,
     chain: NamedChain,
     token: Address,
     amount: U256,
