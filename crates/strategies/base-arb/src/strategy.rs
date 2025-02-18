@@ -8,19 +8,16 @@ use alloy::providers::Provider;
 use alloy::{primitives::Address, rpc::types::Log};
 use alloy_chains::Chain;
 use alloy_sol_types::SolEvent;
+use amms::amm::{
+    uniswap_v2::{
+        batch_request::{fetch_v2_pool_data_batch_request, populate_v2_pool_data},
+        UniswapV2Pool,
+    },
+    AutomatedMarketMaker, AMM,
+};
 use amms::bindings::getuniv2pooldata::PoolHelpers::UniswapV2PoolData;
 use amms::bindings::iaerodromepool::IAerodromePool;
 use amms::bindings::iuniswapv2pool::IUniswapV2Pool;
-use amms::{
-    amm::{
-        uniswap_v2::{
-            batch_request::{fetch_v2_pool_data_batch_request, populate_v2_pool_data},
-            UniswapV2Pool,
-        },
-        AutomatedMarketMaker, AMM,
-    },
-    sync,
-};
 use async_trait::async_trait;
 use db::queries::uni_v3_pool::get_uni_v3_pools;
 use db::{
@@ -35,7 +32,6 @@ use diesel::PgConnection;
 use engine::executors::encoded_tx_executor::SubmitEncodedTx;
 use engine::types::Strategy;
 use eyre::Result;
-use provider::SignerProvider;
 use shared::cycle::{get_most_profitable_cycles, Cycle};
 use shared::pool_helpers::db_pools_to_amms;
 use std::env;
@@ -44,21 +40,20 @@ use std::sync::Arc;
 use tracing::{debug, info, warn};
 use tx_executor::{get_default_encoder, BasicEncoder};
 use tx_simulator::simulator::TxSimulatorClient;
-use tx_simulator::SimulatorClient;
 
 #[derive(Clone)]
-pub struct BaseArb {
+pub struct BaseArb<P: Provider + Clone> {
     pub chain: Chain,
-    pub client: Arc<SignerProvider>,
+    pub client: Arc<P>,
     pub encoder: Option<Arc<BasicEncoder>>,
     pub addressbook: Addressbook,
-    pub state: State,
+    pub state: State<P>,
     pub db_url: String,
-    pub simulator: Option<SimulatorClient>,
+    pub simulator: Option<TxSimulatorClient<P>>,
 }
 
-impl BaseArb {
-    pub fn new(chain: Chain, client: Arc<SignerProvider>, db_url: String) -> Self {
+impl<P: Provider + Clone> BaseArb<P> {
+    pub fn new(chain: Chain, client: Arc<P>, db_url: String) -> Self {
         let addressbook = Addressbook::load().expect("Failed to load addressbook");
         let chain_name = chain.named().expect("Chain must be named");
         let weth = addressbook
@@ -243,7 +238,7 @@ impl BaseArb {
 }
 
 #[async_trait]
-impl Strategy<Event, Action> for BaseArb {
+impl<P: Provider + Clone> Strategy<Event, Action> for BaseArb<P> {
     async fn init_state(&mut self) -> Result<()> {
         info!("Initializing state... 🚀");
 
@@ -350,7 +345,7 @@ impl Strategy<Event, Action> for BaseArb {
 }
 
 // Private implementation details
-impl BaseArb {
+impl<P: Provider + Clone> BaseArb<P> {
     async fn handle_log_event(&mut self, log: Log) -> Vec<Cycle> {
         let pool_address = log.address();
         let block_number = log.block_number.expect("Log must have block number");

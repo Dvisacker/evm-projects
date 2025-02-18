@@ -35,21 +35,20 @@ use db::{models::NewDbUniV3Pool, queries::exchange::get_exchanges_by_chain};
 use diesel::PgConnection;
 use engine::types::Strategy;
 use eyre::Result;
-use provider::SignerProvider;
 use shared::pool_helpers::db_pools_to_amms;
 use std::sync::Arc;
 use tracing::{debug, info, warn};
 
 #[derive(Debug, Clone)]
-pub struct GeneralizedArb {
+pub struct GeneralizedArb<P: Provider + Clone> {
     pub chain: Chain,
-    pub client: Arc<SignerProvider>,
-    pub state: State,
+    pub client: Arc<P>,
+    pub state: State<P>,
     pub db_url: String,
 }
 
-impl GeneralizedArb {
-    pub fn new(chain: Chain, client: Arc<SignerProvider>, db_url: String) -> Self {
+impl<P: Provider + Clone> GeneralizedArb<P> {
+    pub fn new(chain: Chain, client: Arc<P>, db_url: String) -> Self {
         let addressbook = Addressbook::load().unwrap();
         let weth = addressbook.get_weth(&chain.named().unwrap()).unwrap();
         Self {
@@ -62,7 +61,7 @@ impl GeneralizedArb {
 }
 
 #[async_trait]
-impl Strategy<Event, Action> for GeneralizedArb {
+impl<P: Provider + Clone> Strategy<Event, Action> for GeneralizedArb<P> {
     async fn init_state(&mut self) -> Result<()> {
         info!("Initializing state...");
 
@@ -213,7 +212,7 @@ impl Strategy<Event, Action> for GeneralizedArb {
     }
 }
 
-impl GeneralizedArb {
+impl<P: Provider + Clone> GeneralizedArb<P> {
     async fn handle_uniswap_v2_sync(
         &self,
         mut conn: &mut PgConnection,

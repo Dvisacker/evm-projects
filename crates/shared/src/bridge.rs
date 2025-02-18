@@ -13,7 +13,6 @@ use std::sync::Arc;
 use types::bridge::BridgeName;
 
 sol! {
-    /// Interface of the ERC20 token
     #[derive(Debug, PartialEq, Eq)]
     #[sol(rpc)]
     contract IERC20 {

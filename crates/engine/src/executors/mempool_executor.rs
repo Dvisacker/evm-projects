@@ -9,32 +9,6 @@ use async_trait::async_trait;
 use eyre::{Context, Result};
 use provider::SignerProvider;
 
-/// MempoolExecutor is responsible for submitting transactions to the public mempool.
-/// It supports both basic transaction submission and gas price optimization based on
-/// expected profit from MEV opportunities.
-///
-/// Type Parameters:
-/// - M: The provider type that implements the Provider trait
-///
-/// # Example
-/// ```rust,no_run
-/// use std::sync::Arc;
-/// use engine::executors::{MempoolExecutor, SubmitTxToMempool};
-///
-/// async fn example(provider: Arc<impl Provider>) {
-///     let executor = MempoolExecutor::new(provider);
-///     let tx = SubmitTxToMempool {
-///         tx: TransactionRequest::default(),
-///         gas_bid_info: None,
-///     };
-///     executor.execute(tx).await.unwrap();
-/// }
-/// ```
-pub struct MempoolExecutor {
-    /// The blockchain provider used to submit transactions
-    client: Arc<SignerProvider>,
-}
-
 /// Information about the gas bid for a transaction.
 #[derive(Debug, Clone)]
 pub struct GasBidInfo {
@@ -57,8 +31,34 @@ pub struct SubmitTxToMempool {
     pub gas_bid_info: Option<GasBidInfo>,
 }
 
-impl MempoolExecutor {
-    pub fn new(client: Arc<SignerProvider>) -> Self {
+/// MempoolExecutor is responsible for submitting transactions to the public mempool.
+/// It supports both basic transaction submission and gas price optimization based on
+/// expected profit from MEV opportunities.
+///
+/// Type Parameters:
+/// - M: The provider type that implements the Provider trait
+///
+/// # Example
+/// ```rust,no_run
+/// use std::sync::Arc;
+/// use engine::executors::{MempoolExecutor, SubmitTxToMempool};
+///
+/// async fn example(provider: Arc<impl Provider>) {
+///     let executor = MempoolExecutor::new(provider);
+///     let tx = SubmitTxToMempool {
+///         tx: TransactionRequest::default(),
+///         gas_bid_info: None,
+///     };
+///     executor.execute(tx).await.unwrap();
+/// }
+/// ```
+pub struct MempoolExecutor<P: Provider> {
+    /// The blockchain provider used to submit transactions
+    client: Arc<P>,
+}
+
+impl<P: Provider> MempoolExecutor<P> {
+    pub fn new(client: Arc<P>) -> Self {
         Self { client }
     }
 }
@@ -70,7 +70,7 @@ impl MempoolExecutor {
 /// 3. Submits the transaction to the mempool
 /// 4. Waits for and returns the transaction receipt
 #[async_trait]
-impl Executor<SubmitTxToMempool> for MempoolExecutor {
+impl<P: Provider> Executor<SubmitTxToMempool> for MempoolExecutor<P> {
     /// Executes a transaction submission to the mempool.
     ///
     /// # Arguments

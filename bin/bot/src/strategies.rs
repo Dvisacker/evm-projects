@@ -1,5 +1,6 @@
 use alloy::{
     eips::BlockNumberOrTag,
+    providers::Provider,
     rpc::types::{Filter, Log},
     sol_types::SolEvent,
 };
@@ -21,12 +22,11 @@ use generalized_arb_strategy::{
     strategy::GeneralizedArb,
     types::{Action as GeneralizedArbAction, Event as GeneralizedArbEvent},
 };
-use provider::SignerProvider;
 use std::sync::Arc;
 
-pub fn init_generalized_arbitrage_bot(
+pub fn init_generalized_arbitrage_bot<P: Provider + Clone + 'static>(
     chain: Chain,
-    provider: Arc<SignerProvider>,
+    provider: Arc<P>,
     db_url: String,
 ) -> Engine<GeneralizedArbEvent, GeneralizedArbAction> {
     let mut engine: Engine<GeneralizedArbEvent, GeneralizedArbAction> = Engine::default();
@@ -59,9 +59,9 @@ pub fn init_generalized_arbitrage_bot(
     engine
 }
 
-pub fn init_base_arbitrage_bot(
+pub fn init_base_arbitrage_bot<P: Provider + Clone + 'static>(
     chain: Chain,
-    provider: Arc<SignerProvider>,
+    provider: Arc<P>,
     db_url: String,
 ) -> Engine<BaseArbEvent, BaseArbAction> {
     let mut engine: Engine<BaseArbEvent, BaseArbAction> = Engine::default();

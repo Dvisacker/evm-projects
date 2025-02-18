@@ -1,7 +1,8 @@
+use std::sync::Arc;
+
 use crate::bindings::txsimulator::TxSimulator::{SwapParams, TxSimulatorInstance};
 use addressbook::Addressbook;
 use alloy::{
-    network::Ethereum,
     primitives::{aliases::U24, Address, U256},
     providers::Provider,
 };
@@ -13,7 +14,7 @@ use types::exchange::ExchangeName;
 #[derive(Clone)]
 pub struct TxSimulatorClient<P>
 where
-    P: Provider<Ethereum> + Clone,
+    P: Provider + Clone,
 {
     #[allow(unused)]
     address: Address,
@@ -21,14 +22,11 @@ where
     chain: NamedChain,
     addressbook: Addressbook,
     #[allow(unused)]
-    provider: P,
+    provider: Arc<P>,
 }
 
-impl<P> TxSimulatorClient<P>
-where
-    P: Provider<Ethereum> + Clone,
-{
-    pub async fn new(address: Address, provider: P) -> Self {
+impl<P: Provider + Clone> TxSimulatorClient<P> {
+    pub async fn new(address: Address, provider: Arc<P>) -> Self {
         let addressbook = Addressbook::load().expect("Failed to load addressbook");
         let chain_id = provider
             .get_chain_id()
@@ -37,7 +35,7 @@ where
         let chain = NamedChain::try_from(chain_id).expect("Unknown chain");
         Self {
             address,
-            simulator: TxSimulatorInstance::new(address, provider.clone()),
+            simulator: TxSimulatorInstance::new(address, (*provider).clone()),
             addressbook,
             chain,
             provider,

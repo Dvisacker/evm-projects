@@ -1,4 +1,5 @@
 use alloy::primitives::Address;
+use alloy::providers::Provider;
 use amms::amm::{AutomatedMarketMaker, AMM};
 use amms::errors::AMMError;
 use amms::sync;
@@ -7,11 +8,10 @@ use shared::cycle::Cycle;
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 use tracing::info;
-use types::token::SignerProvider;
 
 #[derive(Debug, Clone)]
-pub struct State {
-    provider: Arc<SignerProvider>,
+pub struct State<P: Provider> {
+    provider: Arc<P>,
     pub block_number: u64,
     pub inactive_pools: DashMap<Address, AMM>,
     pub pools: DashMap<Address, AMM>,
@@ -20,8 +20,8 @@ pub struct State {
     pub inventory: Vec<Address>,                             // list of tokens that can be traded
 }
 
-impl State {
-    pub fn new(provider: Arc<SignerProvider>, inventory: Vec<Address>) -> Self {
+impl<P: Provider> State<P> {
+    pub fn new(provider: Arc<P>, inventory: Vec<Address>) -> Self {
         Self {
             provider,
             inventory,

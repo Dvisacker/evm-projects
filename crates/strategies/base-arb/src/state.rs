@@ -1,4 +1,5 @@
 use alloy::primitives::Address;
+use alloy::providers::Provider;
 use amms::amm::{AutomatedMarketMaker, AMM};
 use amms::sync;
 use dashmap::DashMap;
@@ -25,8 +26,8 @@ use tracing::info;
 /// └── Inventory (tokens that are allowed to be traded)
 /// ```
 #[derive(Debug, Clone)]
-pub struct State {
-    provider: Arc<SignerProvider>,
+pub struct State<P: Provider> {
+    provider: Arc<P>,
     pub block_number: u64,
     pub pools: DashMap<Address, AMM>,
     pub pools_cycles_map: DashMap<Address, HashSet<String>>, // Maps pool addresses to cycles they're part of
@@ -34,9 +35,9 @@ pub struct State {
     pub inventory: Vec<Address>,
 }
 
-impl State {
+impl<P: Provider> State<P> {
     /// Creates a new State instance with the given provider and inventory of tradeable tokens
-    pub fn new(provider: Arc<SignerProvider>, inventory: Vec<Address>) -> Self {
+    pub fn new(provider: Arc<P>, inventory: Vec<Address>) -> Self {
         Self {
             provider,
             inventory,

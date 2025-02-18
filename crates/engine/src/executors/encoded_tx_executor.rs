@@ -12,13 +12,6 @@ use provider::SignerProvider;
 use tracing::{info, warn};
 use tx_executor::bindings::batchexecutor::BatchExecutor::BatchExecutorInstance;
 
-// The EncodedTxExecutor (to be renamed BundledTxExecutor)
-pub struct EncodedTxExecutor {
-    #[allow(unused)]
-    client: Arc<SignerProvider>,
-    executor: BatchExecutorInstance<(), Arc<SignerProvider>>,
-}
-
 #[derive(Debug, Clone)]
 pub struct GasBidInfo {
     /// Total profit expected from opportunity in wei
@@ -37,10 +30,17 @@ pub struct SubmitEncodedTx {
     pub gas_bid_info: Option<GasBidInfo>,
 }
 
-impl EncodedTxExecutor {
-    pub fn new(client: Arc<SignerProvider>) -> Self {
+// The EncodedTxExecutor (to be renamed BundledTxExecutor)
+pub struct EncodedTxExecutor<P: Provider> {
+    #[allow(unused)]
+    client: Arc<P>,
+    executor: BatchExecutorInstance<(), Arc<P>>,
+}
+
+impl<P: Provider> EncodedTxExecutor<P> {
+    pub fn new(client: Arc<P>) -> Self {
         let address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
-        let executor: BatchExecutorInstance<(), Arc<SignerProvider>> =
+        let executor: BatchExecutorInstance<(), Arc<P>> =
             BatchExecutorInstance::new(address, client.clone());
         Self {
             client: client.clone(),
@@ -50,7 +50,7 @@ impl EncodedTxExecutor {
 }
 
 #[async_trait]
-impl Executor<SubmitEncodedTx> for EncodedTxExecutor {
+impl<P: Provider> Executor<SubmitEncodedTx> for EncodedTxExecutor<P> {
     async fn execute(&self, action: SubmitEncodedTx) -> Result<()> {
         let total_value = action.total_value;
         let calldata = action.calldata.clone();
