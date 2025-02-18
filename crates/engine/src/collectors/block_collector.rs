@@ -13,7 +13,7 @@ use tokio_stream::StreamExt;
 /// each new block as it is mined.
 ///
 /// Type Parameters:
-/// - M: The provider type that implements the Provider trait
+/// - P: The provider type that implements the Provider trait
 ///
 /// # Example
 /// ```rust,no_run
@@ -28,9 +28,9 @@ use tokio_stream::StreamExt;
 ///     }
 /// }
 /// ```
-pub struct BlockCollector<M: Provider> {
+pub struct BlockCollector<P: Provider> {
     /// The blockchain provider used to subscribe to new blocks
-    provider: Arc<M>,
+    provider: Arc<P>,
 }
 
 /// Represents a newly mined block on the blockchain.
@@ -43,12 +43,12 @@ pub struct NewBlock {
     pub number: U64,
 }
 
-impl<M: Provider> BlockCollector<M> {
+impl<P: Provider> BlockCollector<P> {
     /// Creates a new BlockCollector instance.
     ///
     /// # Arguments
     /// * `provider` - An Arc-wrapped provider that implements the Provider trait
-    pub fn new(provider: Arc<M>) -> Self {
+    pub fn new(provider: Arc<P>) -> Self {
         Self { provider }
     }
 }
@@ -59,9 +59,9 @@ impl<M: Provider> BlockCollector<M> {
 /// 2. Converts block headers into NewBlock events
 /// 3. Provides a stream of these events
 #[async_trait]
-impl<M> Collector<NewBlock> for BlockCollector<M>
+impl<P> Collector<NewBlock> for BlockCollector<P>
 where
-    M: Provider,
+    P: Provider,
 {
     /// Returns a stream of NewBlock events.
     /// The stream will emit a new event each time a block is mined.
