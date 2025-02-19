@@ -105,6 +105,17 @@ impl<P: Provider> BaseArb<P> {
             None,
         )?;
 
+        let most_traded_univ3_pools = get_uni_v3_pools(
+            &mut conn,
+            Some(&chain),
+            Some("uniswapv3"),
+            Some("univ3"),
+            Some(10),
+            Some("univ3-base-most-traded"),
+        )?;
+
+        println!("Most traded univ3 pools: {:?}", most_traded_univ3_pools);
+
         let most_traded_univ2_pools = get_uni_v2_pools(
             &mut conn,
             Some(&chain),
@@ -124,9 +135,15 @@ impl<P: Provider> BaseArb<P> {
             .map(|p| p.into())
             .collect::<Vec<DbPool>>();
 
+        let most_traded_univ3_db_pools = most_traded_univ3_pools
+            .into_iter()
+            .map(|p| p.into())
+            .collect::<Vec<DbPool>>();
+
         let mut db_pools = vec![];
         db_pools.extend(aerodrome_db_pools);
         db_pools.extend(most_traded_univ2_db_pools);
+        db_pools.extend(most_traded_univ3_db_pools);
 
         let amms = db_pools_to_amms(&db_pools)?;
 
@@ -236,7 +253,10 @@ impl<P: Provider> BaseArb<P> {
             last_token = token_out;
         }
 
-        encoder.require_profitable(weth, amount_in);
+        encoder.require_profitable(
+            weth,
+            U256::from(amount_in) * U256::from(50) / U256::from(100),
+        );
 
         let (calldata, total_value) = encoder.flush();
 
@@ -256,7 +276,9 @@ impl<P: Provider + Clone> Strategy<Event, Action> for BaseArb<P> {
         info!("Loaded {} pools 🏊", self.state.pools.len());
 
         self.load_encoder().await?;
+        info!("Loaded encoder 📦");
         self.load_simulator().await?;
+        info!("Loaded simulator 📡");
 
         let arb_cycles = self.state.update_cycles()?;
         self.log_arbitrage_cycles(&arb_cycles);
@@ -293,7 +315,7 @@ impl<P: Provider + Clone> Strategy<Event, Action> for BaseArb<P> {
         self.log_arbitrage_cycles(&updated_cycles);
         info!("--------------------------------");
 
-        let most_profitable_cycles = get_most_profitable_cycles(updated_cycles, 1);
+        let most_profitable_cycles = get_most_profitable_cycles(updated_cycles, 3);
 
         for cycle in most_profitable_cycles {
             let token_first = cycle.get_entry_token();
