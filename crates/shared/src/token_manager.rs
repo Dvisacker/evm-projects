@@ -3,8 +3,8 @@ use alloy::sol;
 use alloy_chains::NamedChain;
 use alloy_primitives::Address;
 use lazy_static::lazy_static;
-use provider::get_signer_provider_map;
-use provider::SignerProviderMap;
+use provider::get_provider_map;
+use provider::ProviderMap;
 use std::collections::HashMap;
 use std::error::Error;
 use std::sync::{Arc, Mutex};
@@ -29,7 +29,7 @@ lazy_static! {
 pub struct TokenManager {
     tokens: Mutex<HashMap<Address, Token>>,
     addressbook: Arc<Addressbook>,
-    providers: Arc<SignerProviderMap>,
+    providers: Arc<ProviderMap>,
 }
 
 impl TokenManager {
@@ -51,7 +51,7 @@ impl TokenManager {
     }
 
     async fn new() -> Self {
-        let providers = get_signer_provider_map().await;
+        let providers = get_provider_map().await;
         let addressbook = Addressbook::load().unwrap();
 
         TokenManager {
@@ -82,8 +82,8 @@ impl TokenManager {
         if let Some(token) = tokens.get(&address) {
             Ok(token.clone())
         } else {
-            let provider = (*(*self.providers.get(chain).unwrap()).clone()).clone();
-            let new_token = Token::new(address, provider);
+            let provider = self.providers.get(chain).unwrap();
+            let new_token = Token::new(address, provider.clone());
 
             tokens.insert(address, new_token.clone());
             Ok(new_token)

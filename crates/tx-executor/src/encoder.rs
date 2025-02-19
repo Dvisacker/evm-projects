@@ -1,4 +1,3 @@
-use alloy::network::Ethereum;
 use alloy::providers::Provider;
 use alloy::{hex, sol};
 use alloy_chains::NamedChain;
@@ -8,6 +7,7 @@ use alloy_rpc_types::TransactionReceipt;
 use alloy_sol_types::{SolCall, SolValue};
 use eyre::Result;
 use std::str::FromStr;
+use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 use types::exchange::ExchangeName;
 
@@ -68,10 +68,10 @@ pub struct ContractAddresses {
 
 pub struct BatchExecutorClient<P>
 where
-    P: Provider<Ethereum>,
+    P: Provider,
 {
     pub chain: NamedChain,
-    pub executor: BatchExecutorInstance<(), P>,
+    pub executor: BatchExecutorInstance<(), Arc<P>>,
     pub owner: Address,
     pub total_value: U256,
     pub calldata: Vec<Bytes>,
@@ -81,10 +81,10 @@ where
 
 impl<P> BatchExecutorClient<P>
 where
-    P: Provider<Ethereum>,
+    P: Provider,
 {
-    pub async fn new(address: Address, chain: NamedChain, provider: P) -> Self {
-        let executor = BatchExecutorInstance::new(address, provider);
+    pub async fn new(address: Address, chain: NamedChain, provider: Arc<P>) -> Self {
+        let executor = BatchExecutorInstance::new(address, provider.clone());
         let addressbook = Addressbook::load().unwrap();
         let total_value = U256::ZERO;
         let owner = executor.OWNER().call().await.unwrap()._0;
@@ -1138,14 +1138,14 @@ where
 
 #[cfg(test)]
 mod tests {
-    use provider::get_anvil_signer_provider;
+    use provider::get_anvil_provider_arc;
     use shared::{
         evm_helpers::compute_v3_pool_address,
         token_helpers::{get_token_balance, parse_token_units},
     };
 
     use super::*;
-    use alloy_primitives::{aliases::U24, U160, U256};
+    use alloy_primitives::{aliases::U24, U256};
     use std::{env, str::FromStr};
     use types::token::TokenIsh;
 
@@ -1156,7 +1156,7 @@ mod tests {
         dotenv::dotenv().ok();
         let addressbook = Addressbook::load().unwrap();
         let weth = addressbook.get_weth(&CHAIN).unwrap();
-        let provider = get_anvil_signer_provider().await;
+        let provider = get_anvil_provider_arc().await;
 
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
         let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
@@ -1189,7 +1189,7 @@ mod tests {
         let uni_v3_router = addressbook
             .get_uni_v3_swap_router(&CHAIN, ExchangeName::UniswapV3)
             .unwrap();
-        let provider = get_anvil_signer_provider().await;
+        let provider = get_anvil_provider_arc().await;
 
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
         let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
@@ -1220,7 +1220,7 @@ mod tests {
     async fn test_uniswap_v3_flash_loan() -> Result<()> {
         dotenv::dotenv().ok();
         let addressbook = Addressbook::load().unwrap();
-        let provider = get_anvil_signer_provider().await;
+        let provider = get_anvil_provider_arc().await;
 
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
         let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
@@ -1251,7 +1251,7 @@ mod tests {
     async fn test_morpho_flash_loan() -> Result<()> {
         dotenv::dotenv().ok();
         let addressbook = Addressbook::load().unwrap();
-        let provider = get_anvil_signer_provider().await;
+        let provider = get_anvil_provider_arc().await;
 
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
         let pool_address = addressbook.get_lending_pool(&CHAIN, "morpho").unwrap();
@@ -1277,7 +1277,7 @@ mod tests {
     async fn test_aave_v3_supply() -> Result<()> {
         dotenv::dotenv().ok();
         let addressbook = Addressbook::load().unwrap();
-        let provider = get_anvil_signer_provider().await;
+        let provider = get_anvil_provider_arc().await;
 
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
         let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
@@ -1304,7 +1304,7 @@ mod tests {
     async fn test_aave_v3_borrow() -> Result<()> {
         dotenv::dotenv().ok();
         let addressbook = Addressbook::load().unwrap();
-        let provider = get_anvil_signer_provider().await;
+        let provider = get_anvil_provider_arc().await;
 
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
         let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
@@ -1336,7 +1336,7 @@ mod tests {
     async fn test_aave_v3_repay() -> Result<()> {
         dotenv::dotenv().ok();
         let addressbook = Addressbook::load().unwrap();
-        let provider = get_anvil_signer_provider().await;
+        let provider = get_anvil_provider_arc().await;
 
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
         let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
@@ -1375,7 +1375,7 @@ mod tests {
     async fn test_aave_v3_flashloan() -> Result<()> {
         dotenv::dotenv().ok();
         let addressbook = Addressbook::load().unwrap();
-        let provider = get_anvil_signer_provider().await;
+        let provider = get_anvil_provider_arc().await;
 
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
         let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
@@ -1403,7 +1403,7 @@ mod tests {
     #[tokio::test]
     async fn test_odos_swap() -> Result<()> {
         dotenv::dotenv().ok();
-        let provider = get_anvil_signer_provider().await;
+        let provider = get_anvil_provider_arc().await;
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
         let chain = NamedChain::Base;
         let addressbook = Addressbook::load().unwrap();
@@ -1431,7 +1431,7 @@ mod tests {
     async fn test_aerodrome_swap_all() -> Result<()> {
         dotenv::dotenv().ok();
         let addressbook = Addressbook::load().unwrap();
-        let provider = get_anvil_signer_provider().await;
+        let provider = get_anvil_provider_arc().await;
         let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
         let mut encoder = BatchExecutorClient::new(executor_address, CHAIN, provider.clone()).await;
 

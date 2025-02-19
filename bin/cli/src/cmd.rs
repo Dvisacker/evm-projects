@@ -12,8 +12,8 @@ use engine::types::Executor;
 use eyre::{Error, Result};
 use pool_manager::PoolStorageManager;
 use provider::{
-    get_basic_provider, get_default_signer, get_default_signer_provider, get_default_wallet,
-    get_signer_provider, get_signer_provider_map,
+    get_basic_provider_arc, get_default_signer, get_default_signer_provider_arc,
+    get_default_wallet, get_provider_map, get_signer_provider_arc,
 };
 use shared::pool_helpers::get_amm_value;
 use shared::token_helpers::parse_token_units;
@@ -21,6 +21,7 @@ use shared::token_manager::TokenManager;
 use shared::{bridge::bridge_lifi, evm_helpers::get_contract_creation_block_n_ary};
 use std::env;
 use std::str::FromStr;
+use std::sync::Arc;
 use tracing::info;
 use tx_executor::encoder::BatchExecutorClient;
 use types::bridge::BridgeName;
@@ -33,7 +34,7 @@ pub async fn get_uniswap_v2_pools_command(
     tag: Option<String>,
 ) -> Result<(), Error> {
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
-    let provider = get_basic_provider(chain).await;
+    let provider = get_basic_provider_arc(chain).await;
     let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
     let factory_address = addressbook.get_factory(&named_chain, exchange).unwrap();
@@ -49,7 +50,8 @@ pub async fn get_uniswap_v2_pools_command(
 
 pub async fn get_aerodrome_pools_command(tag: Option<String>) -> Result<(), Error> {
     let chain = Chain::from_named(NamedChain::Base);
-    let provider = get_basic_provider(chain).await;
+    let provider = get_basic_provider_arc(chain).await;
+    let provider = Arc::new(provider);
     let addressbook = Addressbook::load().unwrap();
     let exchange = ExchangeName::Aerodrome;
     let factory_address = addressbook
@@ -73,7 +75,7 @@ pub async fn get_uniswap_v3_pools_command(
     tag: Option<String>,
 ) -> Result<(), Error> {
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
-    let provider = get_basic_provider(chain).await;
+    let provider = get_basic_provider_arc(chain).await;
     let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
     let factory_address = addressbook.get_factory(&named_chain, exchange).unwrap();
@@ -105,7 +107,7 @@ pub async fn get_most_traded_pools_command(
     let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
     let factory_address = addressbook.get_factory(&named_chain, exchange).unwrap();
-    let provider = get_basic_provider(chain).await;
+    let provider = get_basic_provider_arc(chain).await;
 
     // Initialize Codex client
     let api_key = std::env::var("CODEX_API_KEY").expect("CODEX_API_KEY not set");
@@ -178,7 +180,7 @@ pub async fn get_contract_creation_block_command(
     end_block: Option<u64>,
 ) -> Result<(), Error> {
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
-    let provider = get_basic_provider(chain).await;
+    let provider = get_basic_provider_arc(chain).await;
     let contract_address = Address::from_str(contract_address).expect("Invalid contract address");
 
     let start_block = start_block.unwrap_or(0);
@@ -208,9 +210,8 @@ pub async fn bridge_command(
     let wallet = EthereumWallet::new(signer);
     let origin_chain = Chain::from_named(*from_chain_name);
     let destination_chain = Chain::from_named(*to_chain_name);
-
-    let origin_provider = get_signer_provider(origin_chain, wallet.clone()).await;
-    let destination_provider = get_signer_provider(destination_chain, wallet.clone()).await;
+    let origin_provider = get_signer_provider_arc(origin_chain, wallet.clone()).await;
+    let destination_provider = get_signer_provider_arc(destination_chain, wallet.clone()).await;
     let token_manager = TokenManager::instance().await;
 
     // Convert TokenIsh to &TokenIsh for the token_manager.get() calls
@@ -270,7 +271,7 @@ pub async fn cross_chain_swap_command(
     let destination_bridge_token = token_manager
         .get(&destination_chain_name, &bridge_token)
         .unwrap();
-    let providers = get_signer_provider_map().await;
+    let providers = get_provider_map().await;
     let default_wallet: EthereumWallet = get_default_wallet();
     let default_wallet_address = default_wallet.default_signer().address();
 
@@ -302,8 +303,7 @@ pub async fn cross_chain_swap_command(
 
 pub async fn wrap_eth_command(chain_id: u64, amount: &str) -> Result<(), Error> {
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
-    let provider = get_default_signer_provider(chain).await;
-    // let provider = get_anvil_signer_provider().await;
+    let provider = get_default_signer_provider_arc(chain).await;
     let addressbook = Addressbook::load().unwrap();
     let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
     let named_chain = chain.named().unwrap();
@@ -331,7 +331,7 @@ pub async fn wrap_eth_command(chain_id: u64, amount: &str) -> Result<(), Error> 
 
 pub async fn unwrap_eth_command(chain_id: u64, amount: &str) -> Result<(), Error> {
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
-    let provider = get_default_signer_provider(chain).await;
+    let provider = get_default_signer_provider_arc(chain).await;
     let addressbook = Addressbook::load().unwrap();
     let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
     let named_chain = chain.named().unwrap();
@@ -359,7 +359,7 @@ pub async fn unwrap_eth_command(chain_id: u64, amount: &str) -> Result<(), Error
 
 pub async fn withdraw_command(chain_id: u64) -> Result<(), Error> {
     let chain = Chain::try_from(chain_id).expect("Invalid chain ID");
-    let provider = get_default_signer_provider(chain).await;
+    let provider = get_default_signer_provider_arc(chain).await;
     let addressbook = Addressbook::load().unwrap();
     let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
     let named_chain = chain.named().unwrap();

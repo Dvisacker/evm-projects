@@ -1,4 +1,4 @@
-use alloy::providers::Provider;
+use alloy::providers::{DynProvider, Provider};
 use alloy::{hex, sol};
 use alloy_chains::NamedChain;
 use alloy_primitives::{Address, U256};
@@ -337,7 +337,7 @@ mod tests {
     use addressbook::Addressbook;
     use alloy::{network::EthereumWallet, signers::local::PrivateKeySigner};
     use alloy_chains::{Chain, NamedChain};
-    use provider::{get_default_signer, get_signer_provider, get_signer_provider_map};
+    use provider::{get_default_signer, get_provider_map, get_signer_provider};
     use types::token::{NamedToken, TokenIsh};
 
     #[tokio::test]
@@ -347,7 +347,7 @@ mod tests {
         let addressbook = Addressbook::load().unwrap();
         let signer: PrivateKeySigner = get_default_signer();
         let wallet_address = signer.address();
-        let provider_map = get_signer_provider_map().await;
+        let provider_map = get_provider_map().await;
         let origin_provider = provider_map.get(&NamedChain::Arbitrum).unwrap();
         let destination_provider = provider_map.get(&NamedChain::Base).unwrap();
         let from_address = wallet_address;
@@ -366,8 +366,8 @@ mod tests {
         let amount = U256::from(1_000_000u64);
 
         let result = bridge_lifi(
-            origin_provider.clone(),
-            destination_provider.clone(),
+            Arc::new(origin_provider.clone()),
+            Arc::new(destination_provider.clone()),
             &from_chain,
             &to_chain,
             usdc_arb,
@@ -407,8 +407,8 @@ mod tests {
         let amount = parse_token_units(&from_chain, &TokenIsh::Address(weth_arb), "0.0004").await?;
 
         let result = bridge_lifi(
-            origin_provider,
-            destination_provider,
+            Arc::new(origin_provider),
+            Arc::new(destination_provider),
             &from_chain,
             &to_chain,
             weth_arb,

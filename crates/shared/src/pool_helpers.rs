@@ -25,7 +25,7 @@ use amms::{
 };
 use db::models::db_pool::DbPool;
 use db::models::{DbUniV2Pool, DbUniV3Pool};
-use provider::get_basic_provider;
+use provider::get_basic_provider_arc;
 use types::exchange::{ExchangeName, ExchangeType};
 
 pub fn extract_v2_pools(amms: &[AMM]) -> Vec<UniswapV2Pool> {
@@ -124,7 +124,7 @@ where
 /// # Returns
 /// A Result containing the U256 value of the pool or an AMMError
 pub async fn get_amm_value(chain: Chain, pool_address: Address) -> Result<U256, AMMError> {
-    let provider = get_basic_provider(chain).await;
+    let provider = get_basic_provider_arc(chain).await;
     let addressbook = Addressbook::load().unwrap();
     let named_chain = chain.named().unwrap();
     let weth_address = addressbook.get_weth(&named_chain).unwrap();
@@ -219,12 +219,10 @@ pub async fn filter_amms(
     usd_threshold: f64,
     amms: Vec<AMM>,
 ) -> Result<Vec<AMM>, AMMError> {
-    let provider = get_basic_provider(chain).await;
-
+    let provider = get_basic_provider_arc(chain).await;
     let v2_active_pools =
         filter_univ2_pools(amms.clone(), chain, provider.clone(), usd_threshold).await?;
-    let v3_active_pools =
-        filter_univ3_pools(amms.clone(), chain, provider.clone(), usd_threshold).await?;
+    let v3_active_pools = filter_univ3_pools(amms.clone(), chain, provider, usd_threshold).await?;
 
     let active_pools = v2_active_pools
         .into_iter()

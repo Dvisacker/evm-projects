@@ -1,12 +1,6 @@
 use alloy::{
-    network::{Ethereum, EthereumWallet},
-    providers::{
-        fillers::{
-            BlobGasFiller, ChainIdFiller, FillProvider, GasFiller, JoinFill, NonceFiller,
-            WalletFiller,
-        },
-        Identity, Provider, ProviderBuilder, RootProvider,
-    },
+    network::EthereumWallet,
+    providers::{DynProvider, Provider, ProviderBuilder},
     signers::local::PrivateKeySigner,
 };
 use alloy_chains::{Chain, NamedChain};
@@ -14,21 +8,9 @@ use once_cell::sync::Lazy;
 use std::sync::{Arc, Mutex};
 use std::{collections::HashMap, env};
 
-pub type SignerProvider = FillProvider<
-    JoinFill<
-        JoinFill<
-            Identity,
-            JoinFill<GasFiller, JoinFill<BlobGasFiller, JoinFill<NonceFiller, ChainIdFiller>>>,
-        >,
-        WalletFiller<EthereumWallet>,
-    >,
-    RootProvider,
-    Ethereum,
->;
+pub type ProviderMap = HashMap<NamedChain, DynProvider>;
 
-pub type SignerProviderMap = HashMap<NamedChain, Arc<SignerProvider>>;
-
-static SIGNER_PROVIDER_MAP: Lazy<Mutex<Option<SignerProviderMap>>> = Lazy::new(|| Mutex::new(None));
+static PROVIDER_MAP: Lazy<Mutex<Option<ProviderMap>>> = Lazy::new(|| Mutex::new(None));
 
 pub fn get_default_signer() -> PrivateKeySigner {
     std::env::var("DEV_PRIVATE_KEY")
@@ -49,26 +31,25 @@ pub fn get_anvil_signer() -> PrivateKeySigner {
         .unwrap()
 }
 
-pub async fn get_anvil_signer_provider() -> Arc<SignerProvider> {
+pub async fn get_anvil_provider() -> DynProvider {
     let signer: PrivateKeySigner = get_anvil_signer();
     let wallet = EthereumWallet::new(signer);
     let url = "http://localhost:8545";
-    let provider: SignerProvider = ProviderBuilder::new()
+    let provider = ProviderBuilder::new()
         .wallet(wallet)
         .on_builtin(url)
         .await
-        .unwrap();
-    return Arc::new(provider);
+        .unwrap()
+        .erased();
+
+    return provider;
 }
 
-// read provider without wallet and all recommended fillers
-pub async fn get_anvil_basic_provider() -> Arc<impl Provider> {
-    let url = "http://localhost:8545";
-    let provider = ProviderBuilder::new().on_builtin(url).await.unwrap();
-    return Arc::new(provider);
+pub async fn get_anvil_provider_arc() -> Arc<DynProvider> {
+    Arc::new(get_anvil_provider().await)
 }
 
-pub async fn get_chain_rpc_url(chain: NamedChain) -> String {
+pub fn get_chain_rpc_url(chain: NamedChain) -> String {
     match chain {
         NamedChain::Mainnet => env::var("MAINNET_WS_URL").expect("MAINNET_WS_URL is not set"),
         NamedChain::Arbitrum => env::var("ARBITRUM_WS_URL").expect("ARBITRUM_WS_URL is not set"),
@@ -78,42 +59,56 @@ pub async fn get_chain_rpc_url(chain: NamedChain) -> String {
     }
 }
 
-pub async fn get_basic_provider(chain: Chain) -> Arc<impl Provider> {
+pub async fn get_basic_provider(chain: Chain) -> DynProvider {
     let chain = NamedChain::try_from(chain.id()).unwrap();
-    let rpc_url = get_chain_rpc_url(chain).await;
+    let rpc_url = get_chain_rpc_url(chain);
 
     let provider = ProviderBuilder::new()
         .on_builtin(rpc_url.as_str())
         .await
-        .unwrap();
+        .unwrap()
+        .erased();
 
-    return Arc::new(provider);
+    return provider;
 }
 
-pub async fn get_signer_provider(chain: Chain, wallet: EthereumWallet) -> Arc<SignerProvider> {
+pub async fn get_basic_provider_arc(chain: Chain) -> Arc<DynProvider> {
+    Arc::new(get_basic_provider(chain).await)
+}
+
+pub async fn get_signer_provider(chain: Chain, wallet: EthereumWallet) -> DynProvider {
     let chain = NamedChain::try_from(chain.id()).unwrap();
-    let rpc_url = get_chain_rpc_url(chain).await;
+    let rpc_url = get_chain_rpc_url(chain);
 
     let provider = ProviderBuilder::new()
         .wallet(wallet)
         .on_builtin(rpc_url.as_str())
         .await
-        .unwrap();
+        .unwrap()
+        .erased();
 
-    return Arc::new(provider);
+    return provider;
 }
 
-pub async fn get_default_signer_provider(chain: Chain) -> Arc<SignerProvider> {
+pub async fn get_signer_provider_arc(chain: Chain, wallet: EthereumWallet) -> Arc<DynProvider> {
+    Arc::new(get_signer_provider(chain, wallet).await)
+}
+
+pub async fn get_default_signer_provider(chain: Chain) -> DynProvider {
     let wallet = get_default_wallet();
     get_signer_provider(chain, wallet).await
 }
 
-pub async fn get_signer_provider_map() -> Arc<SignerProviderMap> {
-    let mut provider_guard = SIGNER_PROVIDER_MAP.lock().unwrap();
+pub async fn get_default_signer_provider_arc(chain: Chain) -> Arc<DynProvider> {
+    Arc::new(get_default_signer_provider(chain).await)
+}
+
+pub async fn get_provider_map() -> Arc<ProviderMap> {
+    let mut provider_guard = PROVIDER_MAP.lock().unwrap();
 
     if provider_guard.is_none() {
         let wallet = get_default_wallet();
-        let mut providers = SignerProviderMap::new();
+        let mut providers = ProviderMap::new();
 
         for chain in [
             NamedChain::Mainnet,

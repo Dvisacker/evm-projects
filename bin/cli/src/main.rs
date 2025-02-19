@@ -4,7 +4,7 @@ pub mod cmd;
 use alloy_chains::Chain;
 use clap::{Parser, Subcommand};
 use eyre::Error;
-use provider::get_basic_provider;
+use provider::get_basic_provider_arc;
 use shared::token_helpers::load_pools_and_fetch_token_data;
 use tracing::info;
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
@@ -58,7 +58,7 @@ async fn main() -> Result<(), Error> {
         }
         Commands::GetNamedPools(args) => {
             let chain = Chain::try_from(args.chain.chain_id).expect("Invalid chain ID");
-            let provider = get_basic_provider(chain).await;
+            let provider = get_basic_provider_arc(chain).await;
             load_pools_and_fetch_token_data(provider).await?;
             info!("Token data has been fetched and saved to tokens.json");
         }

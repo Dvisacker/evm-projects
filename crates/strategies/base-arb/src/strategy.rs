@@ -6,7 +6,7 @@ use alloy::primitives::utils::parse_units;
 use alloy::primitives::{Bytes, I256, U256};
 use alloy::providers::Provider;
 use alloy::{primitives::Address, rpc::types::Log};
-use alloy_chains::Chain;
+use alloy_chains::{Chain, NamedChain};
 use alloy_sol_types::SolEvent;
 use amms::amm::{
     uniswap_v2::{
@@ -38,21 +38,21 @@ use std::env;
 use std::str::FromStr;
 use std::sync::Arc;
 use tracing::{debug, info, warn};
-use tx_executor::{get_default_encoder, BasicEncoder};
+use tx_executor::encoder::BatchExecutorClient;
+// use tx_executor::{get_default_encoder, BasicEncoder};
 use tx_simulator::simulator::TxSimulatorClient;
 
-#[derive(Clone)]
-pub struct BaseArb<P: Provider + Clone> {
+pub struct BaseArb<P: Provider> {
     pub chain: Chain,
     pub client: Arc<P>,
-    pub encoder: Option<Arc<BasicEncoder>>,
+    pub encoder: Option<BatchExecutorClient<P>>,
     pub addressbook: Addressbook,
     pub state: State<P>,
     pub db_url: String,
     pub simulator: Option<TxSimulatorClient<P>>,
 }
 
-impl<P: Provider + Clone> BaseArb<P> {
+impl<P: Provider> BaseArb<P> {
     pub fn new(chain: Chain, client: Arc<P>, db_url: String) -> Self {
         let addressbook = Addressbook::load().expect("Failed to load addressbook");
         let chain_name = chain.named().expect("Chain must be named");
@@ -72,7 +72,11 @@ impl<P: Provider + Clone> BaseArb<P> {
     }
 
     async fn load_encoder(&mut self) -> Result<()> {
-        self.encoder = Some(Arc::new(get_default_encoder(self.chain).await));
+        let named_chain = NamedChain::try_from(self.chain).unwrap();
+        let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+        self.encoder = Some(
+            BatchExecutorClient::new(executor_address, named_chain, self.client.clone()).await,
+        );
         Ok(())
     }
 
@@ -145,7 +149,10 @@ impl<P: Provider + Clone> BaseArb<P> {
         amount_in: U256,
         cycle: &Cycle,
     ) -> Result<(Vec<Bytes>, U256)> {
-        let mut encoder = get_default_encoder(self.chain).await;
+        let named_chain = NamedChain::try_from(self.chain).unwrap();
+        let executor_address = Address::from_str(&env::var("EXECUTOR_ADDRESS").unwrap()).unwrap();
+        let mut encoder =
+            BatchExecutorClient::new(executor_address, named_chain, self.client.clone()).await;
 
         let amms = cycle.amms.clone();
         let first_amm = amms.first().unwrap();

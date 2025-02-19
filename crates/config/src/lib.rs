@@ -70,9 +70,9 @@ pub fn get_chain_id_from_string(chain_name: &str) -> Option<u64> {
     }
 }
 
-pub async fn get_chain_config(chain: Chain) -> ChainConfig {
+pub fn get_chain_config(chain: Chain) -> ChainConfig {
     let chain = NamedChain::try_from(chain.id()).unwrap();
-    let default_rpc_url = get_chain_rpc_url(chain).await;
+    let default_rpc_url = get_chain_rpc_url(chain);
 
     match chain {
         NamedChain::Mainnet => {

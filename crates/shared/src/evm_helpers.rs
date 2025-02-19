@@ -278,11 +278,11 @@ pub fn compute_v3_pool_address(
 mod tests {
     use super::*;
     use alloy_chains::Chain;
-    use provider::get_basic_provider;
+    use provider::get_basic_provider_arc;
 
     #[tokio::test]
     async fn test_get_contract_creation_block() {
-        let provider = get_basic_provider(Chain::from_id(1)).await;
+        let provider = get_basic_provider_arc(Chain::from_id(1)).await;
         // USDC contract address on Ethereum mainnet
         let contract_address = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
             .parse()
@@ -299,7 +299,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_code_at_block() {
-        let provider = get_basic_provider(Chain::from_id(1)).await;
+        let provider = get_basic_provider_arc(Chain::from_id(1)).await;
         // USDC contract address on Ethereum mainnet
         let contract_address = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
             .parse()
@@ -320,7 +320,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_contract_creation_block_not_found() {
-        let provider = get_basic_provider(Chain::from_id(1)).await;
+        let provider = get_basic_provider_arc(Chain::from_id(1)).await;
         // Use a random address that's unlikely to be a contract
         let contract_address = Address::random();
 
@@ -337,15 +337,14 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_contract_creation_block_2() {
-        let provider = get_basic_provider(Chain::from_id(1)).await;
+        let provider = get_basic_provider_arc(Chain::from_id(1)).await;
         // USDC contract address on Ethereum mainnet
         let contract_address = "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
             .parse()
             .unwrap();
 
         let result =
-            get_contract_creation_block_n_ary(provider.clone(), contract_address, 0, 21_000_000, 4)
-                .await;
+            get_contract_creation_block_n_ary(provider, contract_address, 0, 21_000_000, 4).await;
 
         assert!(result.is_ok());
         let creation_block = result.unwrap();
@@ -355,7 +354,7 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_contract_creation_block_n_ary_invalid_n() {
-        let provider = get_basic_provider(Chain::from_id(1)).await;
+        let provider = get_basic_provider_arc(Chain::from_id(1)).await;
         let contract_address = Address::random();
 
         let result = get_contract_creation_block_n_ary(

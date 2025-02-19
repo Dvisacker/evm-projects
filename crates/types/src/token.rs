@@ -2,7 +2,7 @@ use alloy::network::{Ethereum, EthereumWallet};
 use alloy::providers::fillers::{
     BlobGasFiller, ChainIdFiller, FillProvider, GasFiller, JoinFill, NonceFiller, WalletFiller,
 };
-use alloy::providers::{Identity, RootProvider};
+use alloy::providers::{DynProvider, Identity, RootProvider};
 use alloy_primitives::Address;
 use clap::ValueEnum;
 use serde::{Deserialize, Serialize};
@@ -21,7 +21,7 @@ pub type SignerProvider = FillProvider<
     Ethereum,
 >;
 
-pub type Token = crate::bindings::ierc20::IERC20::IERC20Instance<(), SignerProvider>;
+pub type Token = crate::bindings::ierc20::IERC20::IERC20Instance<(), DynProvider>;
 
 #[derive(Debug, Serialize, Deserialize, Clone, Copy, ValueEnum, PartialEq, Eq, Hash)]
 pub enum NamedToken {

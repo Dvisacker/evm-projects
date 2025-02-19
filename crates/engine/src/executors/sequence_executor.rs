@@ -5,7 +5,7 @@ use alloy::primitives::{Address, U256};
 use alloy_chains::NamedChain;
 use async_trait::async_trait;
 use eyre::{Context, Result};
-use provider::SignerProviderMap;
+use provider::ProviderMap;
 
 /// SequenceExecutor is responsible for executing complex sequences of transactions
 /// across multiple chains and protocols. It can handle:
@@ -14,7 +14,7 @@ use provider::SignerProviderMap;
 /// - Multi-step MEV opportunities
 pub struct SequenceExecutor {
     /// Map of providers for different chains
-    providers: Arc<SignerProviderMap>,
+    providers: Arc<ProviderMap>,
     /// Address of the wallet executing transactions
     wallet_address: Address,
 }
@@ -105,7 +105,7 @@ impl SequenceExecutor {
     /// # Arguments
     /// * `providers` - Map of providers for different chains
     /// * `wallet_address` - Address of the wallet that will execute transactions
-    pub fn new(providers: Arc<SignerProviderMap>, wallet_address: Address) -> Self {
+    pub fn new(providers: Arc<ProviderMap>, wallet_address: Address) -> Self {
         Self {
             providers,
             wallet_address,
@@ -142,8 +142,9 @@ impl Executor<TxSequence> for SequenceExecutor {
         for block in sequence.txs {
             match block {
                 TxBlock::Swap(swap) => {
+                    let provider = Arc::new(self.providers[&swap.chain].clone());
                     amount_in = shared::swap::swap(
-                        self.providers[&swap.chain].clone(),
+                        provider,
                         current_chain,
                         swap.exchange_name,
                         self.wallet_address,
@@ -159,8 +160,8 @@ impl Executor<TxSequence> for SequenceExecutor {
                 }
                 TxBlock::Bridge(bridge) => {
                     amount_in = shared::bridge::bridge_lifi(
-                        self.providers[&current_chain].clone(),
-                        self.providers[&bridge.destination_chain].clone(),
+                        Arc::new(self.providers[&current_chain].clone()),
+                        Arc::new(self.providers[&bridge.destination_chain].clone()),
                         &current_chain,
                         &bridge.destination_chain,
                         token_in,
@@ -187,7 +188,7 @@ impl Executor<TxSequence> for SequenceExecutor {
 mod tests {
     use super::*;
     use alloy::network::EthereumWallet;
-    use provider::{get_default_wallet, get_signer_provider_map};
+    use provider::{get_default_wallet, get_provider_map};
     use shared::token_helpers::parse_token_units;
     use shared::token_manager::TokenManager;
     use types::{
@@ -200,7 +201,7 @@ mod tests {
     async fn test_sequence_executor() {
         dotenv::dotenv().ok();
         let token_manager = TokenManager::instance().await;
-        let providers = get_signer_provider_map().await;
+        let providers = get_provider_map().await;
         let default_wallet: EthereumWallet = get_default_wallet();
         let default_wallet_address = default_wallet.default_signer().address();
         let executor = SequenceExecutor::new(providers, default_wallet_address);

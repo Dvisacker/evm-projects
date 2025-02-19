@@ -292,7 +292,7 @@ pub async fn verify_erc20_interface<P: Provider>(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use provider::get_anvil_signer_provider;
+    use provider::get_anvil_provider_arc;
 
     #[tokio::test]
     // TODO make this test independant of anvil
@@ -301,7 +301,7 @@ mod tests {
             .parse()
             .expect("Invalid address");
 
-        let provider = get_anvil_signer_provider().await;
+        let provider = get_anvil_provider_arc().await;
 
         let result = verify_erc20_interface(provider.clone(), usdc_address).await;
         println!("{:?}", result);
@@ -322,7 +322,7 @@ mod tests {
             .parse()
             .expect("Invalid address");
 
-        let provider = get_anvil_signer_provider().await;
+        let provider = get_anvil_provider_arc().await;
 
         let result = verify_erc20_interface(provider.clone(), usdc_address).await;
         println!("{:?}", result);

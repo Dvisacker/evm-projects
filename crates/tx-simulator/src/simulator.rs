@@ -11,21 +11,18 @@ use amms::amm::{AutomatedMarketMaker, AMM};
 use eyre::Error;
 use types::exchange::ExchangeName;
 
-#[derive(Clone)]
 pub struct TxSimulatorClient<P>
 where
-    P: Provider + Clone,
+    P: Provider,
 {
     #[allow(unused)]
     address: Address,
-    simulator: TxSimulatorInstance<(), P>,
+    simulator: TxSimulatorInstance<(), Arc<P>>,
     chain: NamedChain,
     addressbook: Addressbook,
-    #[allow(unused)]
-    provider: Arc<P>,
 }
 
-impl<P: Provider + Clone> TxSimulatorClient<P> {
+impl<P: Provider> TxSimulatorClient<P> {
     pub async fn new(address: Address, provider: Arc<P>) -> Self {
         let addressbook = Addressbook::load().expect("Failed to load addressbook");
         let chain_id = provider
@@ -33,12 +30,12 @@ impl<P: Provider + Clone> TxSimulatorClient<P> {
             .await
             .expect("Failed to get chain id");
         let chain = NamedChain::try_from(chain_id).expect("Unknown chain");
+        let simulator = TxSimulatorInstance::new(address, provider);
         Self {
             address,
-            simulator: TxSimulatorInstance::new(address, (*provider).clone()),
+            simulator,
             addressbook,
             chain,
-            provider,
         }
     }
 
@@ -168,7 +165,7 @@ mod tests {
     use addressbook::utils::get_workspace_dir;
     use alloy_chains::{Chain, NamedChain};
     use amms::amm::{uniswap_v2::UniswapV2Pool, uniswap_v3::UniswapV3Pool, ve33::Ve33Pool};
-    use provider::{get_anvil_signer_provider, get_default_signer_provider};
+    use provider::{get_anvil_provider_arc, get_default_signer_provider_arc};
     use shared::utils::get_most_recent_deployment;
     use std::str::FromStr;
 
@@ -185,7 +182,7 @@ mod tests {
     async fn test_simulate_route_uniswap_v3() -> Result<(), Error> {
         dotenv::dotenv().ok();
         let chain = Chain::try_from(8453).unwrap();
-        let provider = get_default_signer_provider(chain).await;
+        let provider = get_default_signer_provider_arc(chain).await;
         let broadcast_dir_path = get_broadcast_dir_path().await;
         let simulator_address =
             get_most_recent_deployment("TxSimulator", 8453, Some(broadcast_dir_path)).unwrap();
@@ -215,7 +212,7 @@ mod tests {
     #[tokio::test]
     async fn test_simulate_route_uniswap_v2() -> Result<(), Error> {
         dotenv::dotenv().ok();
-        let provider = get_anvil_signer_provider().await;
+        let provider = get_anvil_provider_arc().await;
         let simulator = TxSimulatorClient::new(
             Address::from_str(&env::var("SIMULATOR_ADDRESS").unwrap()).unwrap(),
             provider.clone(),
@@ -249,7 +246,7 @@ mod tests {
     #[tokio::test]
     async fn test_simulate_route_aerodrome() -> Result<(), Error> {
         dotenv::dotenv().ok();
-        let provider = get_anvil_signer_provider().await;
+        let provider = get_anvil_provider_arc().await;
         let broadcast_dir_path = get_broadcast_dir_path().await;
         let simulator_address =
             get_most_recent_deployment("TxSimulator", 8453, Some(broadcast_dir_path)).unwrap();
@@ -282,7 +279,7 @@ mod tests {
     #[tokio::test]
     async fn test_simulate_route_aerodrome_2() -> Result<(), Error> {
         dotenv::dotenv().ok();
-        let provider = get_anvil_signer_provider().await;
+        let provider = get_anvil_provider_arc().await;
         let broadcast_dir_path = get_broadcast_dir_path().await;
         let simulator_address =
             get_most_recent_deployment("TxSimulator", 8453, Some(broadcast_dir_path)).unwrap();

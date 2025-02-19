@@ -5,8 +5,8 @@ use std::{
 
 use addressbook::Addressbook;
 use alloy::{
-    network::{Ethereum, Network},
-    providers::Provider,
+    network::Network,
+    providers::{DynProvider, Provider},
 };
 use alloy_chains::NamedChain;
 use alloy_primitives::{aliases::U24, Address, U160, U256};
@@ -172,25 +172,23 @@ pub fn sqrt_price_x96_to_price(
     Ok(price_f64)
 }
 
-pub async fn load_uni_v2_pool<N, P>(
+pub async fn load_uni_v2_pool<P>(
     pool_address: Address,
     provider: Arc<P>,
 ) -> Result<UniswapV2Pool, AMMError>
 where
-    N: Network,
-    P: Provider<N>,
+    P: Provider,
 {
     let pool = UniswapV2Pool::new_from_address(pool_address, 300, provider).await?;
     Ok(pool)
 }
 
-pub async fn load_uni_v3_pool<N, P>(
+pub async fn load_uni_v3_pool<P>(
     pool_address: Address,
     provider: Arc<P>,
 ) -> Result<UniswapV3Pool, AMMError>
 where
-    N: Network,
-    P: Provider<N>,
+    P: Provider,
 {
     let end_block = provider.get_block_number().await.unwrap();
     let contract_creation_block =
@@ -212,7 +210,7 @@ pub async fn swap<P>(
     amount_in: U256,
 ) -> Result<U256, Error>
 where
-    P: Provider<Ethereum>,
+    P: Provider,
 {
     match exchange_name {
         ExchangeName::UniswapV2 => {
@@ -243,7 +241,7 @@ where
     }
 }
 
-pub async fn swap_v2_pool<N, P>(
+pub async fn swap_v2_pool<P>(
     provider: Arc<P>,
     chain: NamedChain,
     exchange_name: ExchangeName,
@@ -253,8 +251,7 @@ pub async fn swap_v2_pool<N, P>(
     amount_in: U256,
 ) -> Result<U256, Error>
 where
-    N: Network,
-    P: Provider<N>,
+    P: Provider,
 {
     let addressbook = Addressbook::load().unwrap();
     let router_address = addressbook
@@ -511,7 +508,7 @@ pub async fn swap_v3_pool<P>(
     amount_in: U256,
 ) -> Result<U256, Error>
 where
-    P: Provider<Ethereum>,
+    P: Provider,
 {
     let addressbook = Addressbook::load().unwrap();
 
@@ -579,9 +576,8 @@ where
 mod tests {
     use super::*;
     use addressbook::Addressbook;
-    use alloy::providers::WalletProvider;
     use alloy_chains::{Chain, NamedChain};
-    use provider::get_default_signer_provider;
+    use provider::get_default_signer_provider_arc;
 
     const EXCHANGE_NAME: ExchangeName = ExchangeName::UniswapV3;
     const CHAIN: NamedChain = NamedChain::Arbitrum;
@@ -593,8 +589,8 @@ mod tests {
         let addressbook = Addressbook::load().unwrap();
         let weth = addressbook.get_weth(&CHAIN).unwrap();
         let usdc = addressbook.get_usdc(&CHAIN).unwrap();
-        let provider = get_default_signer_provider(Chain::from_named(CHAIN)).await;
-        let wallet_address = provider.default_signer_address();
+        let provider = get_default_signer_provider_arc(Chain::from_named(CHAIN)).await;
+        let wallet_address = provider.get_accounts().await.unwrap()[0];
         let amount_in = U256::from(100000000000000u64); // few cents
 
         println!("Starting swap of {} ETH for USDC", amount_in);

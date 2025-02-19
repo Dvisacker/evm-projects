@@ -213,7 +213,7 @@ mod tests {
     use addressbook::Addressbook;
     use alloy::signers::local::PrivateKeySigner;
     use alloy_chains::NamedChain;
-    use provider::{get_default_signer, get_signer_provider_map};
+    use provider::{get_default_signer, get_provider_map};
     use types::token::NamedToken;
 
     #[tokio::test]
@@ -224,12 +224,12 @@ mod tests {
         let addressbook = Addressbook::load().unwrap();
         let signer: PrivateKeySigner = get_default_signer();
         let wallet_address = signer.address();
-        let provider_map = get_signer_provider_map().await;
+        let provider_map = get_provider_map().await;
 
         let result = lifi_client
             .bridge(
-                provider_map.get(&NamedChain::Arbitrum).unwrap().clone(),
-                provider_map.get(&NamedChain::Base).unwrap().clone(),
+                Arc::new(provider_map.get(&NamedChain::Arbitrum).unwrap().clone()),
+                Arc::new(provider_map.get(&NamedChain::Base).unwrap().clone()),
                 &NamedChain::Arbitrum,
                 &NamedChain::Base,
                 addressbook

@@ -1,12 +1,11 @@
 mod cli;
 mod strategies;
-
 use alloy_chains::Chain;
 use clap::Parser;
 use cli::{Args, StrategyType};
 use dotenv::dotenv;
 use eyre::Result;
-use provider::get_default_signer_provider;
+use provider::get_default_signer_provider_arc;
 use tracing::info;
 use tracing_subscriber::{fmt, prelude::*, EnvFilter};
 
@@ -29,7 +28,7 @@ async fn main() -> Result<()> {
     let args = Args::parse();
     let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
     let chain = Chain::try_from(args.chain_id).expect("Invalid chain ID");
-    let provider = get_default_signer_provider(chain).await;
+    let provider = get_default_signer_provider_arc(chain).await;
 
     match args.strategy {
         StrategyType::GeneralizedArb => {

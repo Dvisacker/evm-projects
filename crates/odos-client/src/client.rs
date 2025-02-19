@@ -230,7 +230,7 @@ mod tests {
     use alloy_chains::{Chain, NamedChain};
     use alloy_primitives::Bytes;
     use alloy_rpc_types::TransactionRequest;
-    use provider::{get_anvil_signer, get_anvil_signer_provider};
+    use provider::{get_anvil_provider, get_anvil_signer};
     use shared::token_helpers::parse_token_units;
     use types::bindings::ierc20::IERC20;
     use types::bindings::iweth;
@@ -294,11 +294,7 @@ mod tests {
         let addressbook = Addressbook::load().unwrap();
         let anvil_signer = get_anvil_signer();
         let user_address = anvil_signer.address();
-        let anvil_provider = get_anvil_signer_provider().await;
-        // let providers = get_signer_provider_map().await;
-        // let anvil_provider: &std::sync::Arc<alloy::providers::fillers::FillProvider<alloy::providers::fillers::JoinFill<alloy::providers::fillers::JoinFill<alloy::providers::Identity, alloy::providers::fillers::JoinFill<alloy::providers::fillers::GasFiller, alloy::providers::fillers::JoinFill<alloy::providers::fillers::BlobGasFiller, alloy::providers::fillers::JoinFill<alloy::providers::fillers::NonceFiller, alloy::providers::fillers::ChainIdFiller>>>>, alloy::providers::fillers::WalletFiller<EthereumWallet>>, alloy::providers::RootProvider<alloy::transports::BoxTransport>, alloy::transports::BoxTransport, alloy::network::Ethereum>> = providers.get(&chain).unwrap();
-        // let signer = get_default_wallet().default_signer();
-        // let user_address = signer.address();
+        let anvil_provider = get_anvil_provider().await;
         let weth = addressbook.get_weth(&chain).unwrap();
         let usdc = addressbook.get_usdc(&chain).unwrap();
         let input_amount = parse_token_units(&chain, &TokenIsh::Address(weth), "0.001")
