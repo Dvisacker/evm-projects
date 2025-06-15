@@ -1,4 +1,4 @@
-# EVM projects 
+# EVM crates 
 
 Various crates and binaries to trade and interact with EVM chains.
 
